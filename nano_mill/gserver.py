@@ -1,0 +1,154 @@
+#! /usr/bin/python
+
+'''
+G90, for absolute position mode.
+G80, to cancel any previously used canned cycles.
+G28, to rapid to the home position.
+G17, to select the x, y circular motion field.
+G20, to select the inch coordinate system. (G21, to select metric)
+G40, to cancel cutter compensation.
+G49, to cancel the cutter height compensation.
+
+G00, rapid move to a position
+G01, linear cut from current position to programmed X, Y, Z
+G02, moves the cutter along a clock wise arc until the current position is the new programmed position
+G03, moves the cutter along a counter-clock wise arc until the current position is the new programmed position
+
+N## G## X## Y## Z## F## S## T## M##
+
+N: Line number
+G: Motion
+X: Horizontal position
+Y: Vertical position
+Z: Depth
+F: Feed rate (units/minute. units, G20 for inch, G21 for metric)
+S: Spindle speed
+T: Tool selection
+M: Miscellaneous functions
+I and J: Incremental center of an arc
+R: Radius of an arc 
+
+Miscellaneous Codes
+
+    M00: Program stop
+    M01: Optional program stop
+    M02: End of program
+    M03: Spindle on clockwise
+    M04: Spindle on counterclockwise
+    M05: Spindle stop
+    M06: Tool change
+    M08: Flood coolant on
+    M09: Flood coolant off
+    M30: End of program/return to start
+    M41: Spindle low gear range
+    M42: Spindle high gear range
+'''
+
+import re
+import getopt
+import sys
+import serial
+
+class CMD:
+   def __init__(self, function_code, callback):
+      self.function_code = function_code
+      self.callback = callback
+      
+## handler for G-words
+def handle_g(str):
+   retVal = ''
+
+   if (str == 'G0' or str == 'G00'): 
+      retVal = str
+      
+   if (str == 'G1' or str == 'G01'):
+      retVal = str
+    
+   return retVal
+
+## handler for X-words
+def handle_x(str):
+   return str
+
+## handler for Y-words
+def handle_y(str):
+   return str
+   
+## handler for Z-words
+def handle_z(str):
+   return str
+   
+## handler for F-words
+def handle_f(str):
+   return str
+   
+## handler for M-words
+def handle_m(str):
+   return str
+   
+### parse_line() #############################################
+def parse_line(str, f_hdlr):
+  
+  words = str.split()
+  tmp_cmd = []             #temp list to store commands to send
+ 
+  
+  for word in words:       #go through each word in splitted line
+    for cmd in cmds:       #compare word to each supported command
+      if word[0] == cmd.function_code:   #is the word any of the supported commands in cmds
+         send_word = cmd.callback(word)  #call command-specific handler, i.e parse command
+         if send_word != '':
+            tmp_cmd.append(send_word) #add command to send-message
+         
+  if tmp_cmd:
+    print '\tsending: ' + '*' + ' '.join(tmp_cmd) #start each send with '*'
+    print '\n'
+    f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
+    f_hdlr.write('\n')
+  
+### start of main script #############################################
+
+#these are the accepted/supported G-codes, everything else will be thrown away
+cmds = [CMD('G', handle_g), CMD('X', handle_x), CMD('Y', handle_y), CMD('Z', handle_z), CMD('F', handle_f), ]
+in_file = ''
+out_file = ''
+
+try:
+  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output="])
+except getopt.GetoptError as err:
+  # print help information and exit:
+  print(err) # will print something like "option -a not recognized"
+  sys.exit(2)
+
+for o, a in opts:
+  if o == "-h":
+    print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --node=[RC]CIOM'
+    sys.exit()
+  elif o == "--input":
+    in_file = a
+  elif o == "--output":
+    out_file = a
+  else:
+    print o
+    assert False, "unhandled option"
+
+if in_file == '':
+   print 'usage gserver.py --input=<in.log> --output=<out.txt>'
+   sys.exit()
+   
+if out_file == '':
+   out_file = 'out.txt'
+   print 'using default log file out.txt'
+
+f_in = open(in_file,'r')
+f_out = open(out_file,'w')
+#ser = serial.Serial(port_name = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
+
+line = f_in.readline()
+while line != '':
+   print 'processing: ' + line
+   parse_line(line, f_out) 
+   line = f_in.readline()
+  
+f_in.close()
+f_out.close()
