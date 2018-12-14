@@ -142,7 +142,7 @@ if out_file == '':
 
 f_in = open(in_file,'r')
 f_out = open(out_file,'w')
-#ser = serial.Serial(port_name = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
+#ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
 
 line = f_in.readline()
 while line != '':
