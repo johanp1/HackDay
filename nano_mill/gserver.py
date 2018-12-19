@@ -103,6 +103,10 @@ def parse_line(str, f_hdlr):
   if tmp_cmd:
     print '\tsending: ' + '*' + ' '.join(tmp_cmd) #start each send with '*'
     print '\n'
+    
+    #ser.send(b = mystring.encode('utf-8')....
+    #serial expects a bytearray and not a string
+    
     f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
     f_hdlr.write('\n')
   
@@ -142,7 +146,26 @@ if out_file == '':
 
 f_in = open(in_file,'r')
 f_out = open(out_file,'w')
-#ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
+
+# open serial port
+ser = serial.Serial()
+ser.port = '\\\\.\\COM3'
+ser.baudrate = 9600
+ser.parity = 'N'
+ser.bytesize = 8
+ser.stopbits = 1
+#ser.timeout = 3
+ser.xonxoff = False      #disable software flow control
+#ser.rtscts = False       #disable hardware (RTS/CTS) flow control
+#ser.dsrdtr = False       #disable hardware (DSR/DTR) flow control
+#ser.writeTimeout = 2     #timeout for write
+
+try:
+   ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
+except serial.SerialException as e:
+   sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
+   sys.exit(1)
+
 
 line = f_in.readline()
 while line != '':
