@@ -103,19 +103,22 @@ def parse_line(str, f_hdlr):
   if tmp_cmd:
     print '\tsending: ' + '*' + ' '.join(tmp_cmd) #start each send with '*'
     print '\n'
+    ser.write(''.join(tmp_cmd).encode('utf-8'))
+    ser.write('\n')
+    #serial expects a byte-array and not a string
     
-    #ser.send(b = mystring.encode('utf-8')....
-    #serial expects a bytearray and not a string
-    
-    f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
-    f_hdlr.write('\n')
+    if debug != 0:
+      f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
+      f_hdlr.write('\n')
   
 ### start of main script #############################################
 
 #these are the accepted/supported G-codes, everything else will be thrown away
 cmds = [CMD('G', handle_g), CMD('X', handle_x), CMD('Y', handle_y), CMD('Z', handle_z), CMD('F', handle_f), ]
+
 in_file = ''
 out_file = ''
+debug = 0
 
 try:
   opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output="])
@@ -132,6 +135,8 @@ for o, a in opts:
     in_file = a
   elif o == "--output":
     out_file = a
+  elif o == "--debug":
+    debug = a
   else:
     print o
     assert False, "unhandled option"
@@ -148,17 +153,20 @@ f_in = open(in_file,'r')
 f_out = open(out_file,'w')
 
 # open serial port
+# list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
-ser.port = '\\\\.\\COM3'
+#ser.port = '\\\\.\\COM3'
+#ser.port = '/dev/ttyUSB3'
+ser.port = '/dev/ttyS2'
 ser.baudrate = 9600
 ser.parity = 'N'
 ser.bytesize = 8
 ser.stopbits = 1
-#ser.timeout = 3
 ser.xonxoff = False      #disable software flow control
 #ser.rtscts = False       #disable hardware (RTS/CTS) flow control
 #ser.dsrdtr = False       #disable hardware (DSR/DTR) flow control
 #ser.writeTimeout = 2     #timeout for write
+#ser.timeout = 3
 
 try:
    ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
@@ -171,6 +179,14 @@ line = f_in.readline()
 while line != '':
    print 'processing: ' + line
    parse_line(line, f_out) 
+   
+   if ser.in_waiting:
+      b = ser.read(1) #blocking
+      if ser.in_waiting:
+         while b != '\n':
+            print b
+            b = ser.read(1)
+   
    line = f_in.readline()
   
 f_in.close()
