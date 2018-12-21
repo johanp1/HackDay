@@ -3,6 +3,8 @@
 //
 // By Johan Pettersson
 
+#include <Servo.h>
+
 typedef struct 
 {
    byte spindle_speed;  // rpm
@@ -18,15 +20,30 @@ typedef struct
    byte ref_z;
 } mill_T;
 
-int incomingByte = 0;	// for incoming serial data
+// global variables ////////////////////////
+
+Servo xServo;
+Servo yServo;
+Servo zServo;
+
+mill_T myMill;
+
+int x_servo_angle = 1500;
+
+////////////////////////////////////////////
+
 
 void setup() {
 	Serial.begin(9600);	// opens serial port, sets data rate to 9600 bps
-   
-   Serial.println("Hello");
+
+	xServo.attach(9);
+	xServo.writeMicroseconds(x_servo_angle);
+	
+	Serial.println("Hello");
 }
 
 void loop() {
+	int incomingByte;	// for incoming serial data
 
 	// send data only when you receive data:
 	if (Serial.available() > 0) {
@@ -36,5 +53,26 @@ void loop() {
 		// say what you got:
 		//Serial.print("I received: ");
 		Serial.print(incomingByte, DEC);
+		
+		if (incommingByte = '+')
+		{
+			x_servo_angle += 10;
+			
+			Serial.print((x_servo_angle & 0xff00)>>8, DEC);
+			Serial.println((x_servo_angle & 0x00ff), DEC);
+			
+			xServo.writeMicroseconds(x_servo_angle);
+		}
+		if (incommingByte = '-')
+		{
+			x_servo_angle -= 10;
+			
+			Serial.print((x_servo_angle & 0xff00)>>8, DEC);
+			Serial.println((x_servo_angle & 0x00ff), DEC);
+			
+			xServo.writeMicroseconds(x_servo_angle);
+		}
 	}
+	
+	delay(50);                       // waits 50ms
 }
