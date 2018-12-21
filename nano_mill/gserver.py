@@ -54,29 +54,38 @@ class CMD:
       self.function_code = function_code
       self.callback = callback
       
-## handler for G-words
+## handler for G-words. only G0 and G1 currently supported
 def handle_g(str):
    retVal = ''
 
    if (str == 'G0' or str == 'G00'): 
-      retVal = str
+      retVal = 'G0'
       
    if (str == 'G1' or str == 'G01'):
-      retVal = str
+      retVal = 'G1'
     
    return retVal
 
-## handler for X-words
-def handle_x(str):
-   return str
+## handler for X-words, converts from mm to 10um unit
+def handle_x(in_str):
+   tmp_f = float(in_str[1:len(in_str)])
+   tmp_i = int(tmp_f*100 + 0.5)
+   ret_str = 'X' + str(tmp_i)
+   return ret_str
 
 ## handler for Y-words
-def handle_y(str):
-   return str
+def handle_y(in_str):
+   tmp_f = float(in_str[1:len(in_str)])
+   tmp_i = int(tmp_f*100 + 0.5)
+   ret_str = 'Y' + str(tmp_i)
+   return ret_str
    
 ## handler for Z-words
-def handle_z(str):
-   return str
+def handle_z(in_str):
+   tmp_f = float(in_str[1:len(in_str)])
+   tmp_i = int(tmp_f*100 + 0.5)
+   ret_str = 'Z' + str(tmp_i)
+   return ret_str
    
 ## handler for F-words
 def handle_f(str):
@@ -87,27 +96,35 @@ def handle_m(str):
    return str
    
 ### parse_line() #############################################
-def parse_line(str, f_hdlr):
+def parse_line(str):
   
   words = str.split()
-  tmp_cmd = []             #temp list to store commands to send
- 
+  send_cmd = []             #temp list to store commands to send
+  ret_str = ''
   
   for word in words:       #go through each word in splitted line
     for cmd in cmds:       #compare word to each supported command
       if word[0] == cmd.function_code:   #is the word any of the supported commands in cmds
-         send_word = cmd.callback(word)  #call command-specific handler, i.e parse command
-         if send_word != '':
-            tmp_cmd.append(send_word) #add command to send-message
-         
-  if tmp_cmd:
-    print '\tsending: ' + '*' + ' '.join(tmp_cmd) #start each send with '*'
-    print '\n'
-    ser.write(''.join(tmp_cmd).encode('utf-8'))
-    ser.write('\n')
-    #serial expects a byte-array and not a string
+         tmp_word = cmd.callback(word)  #call command-specific handler, i.e parse command
+         if tmp_word != '':
+            send_cmd.append(tmp_word) #add command to send-message, send_cmd is a list of strings
+  
+  return ''.join(send_cmd) #join will append the list of strings to one string
+  
+  
+### send_line() ############################################# 
+def send_data(str, f_hdlr):
+
+    if debug == 0:
+      ser.write(''.join(send_cmd).encode('utf-8'))
+      ser.write('\n')
+      #serial expects a byte-array and not a string
+      
+    if debug == '1':
+      print '\tsending: ' + '*' + str #start each send with '*'
+      print '\n'      
     
-    if debug != 0:
+    if debug == '2':
       f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
       f_hdlr.write('\n')
   
@@ -121,7 +138,7 @@ out_file = ''
 debug = 0
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output="])
+  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output=", "debug="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
@@ -155,37 +172,40 @@ f_out = open(out_file,'w')
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
-#ser.port = '\\\\.\\COM3'
-#ser.port = '/dev/ttyUSB3'
 ser.port = '/dev/ttyS2'
 ser.baudrate = 9600
 ser.parity = 'N'
 ser.bytesize = 8
 ser.stopbits = 1
-ser.xonxoff = False      #disable software flow control
+ser.xonxoff = False       #disable software flow control
 #ser.rtscts = False       #disable hardware (RTS/CTS) flow control
 #ser.dsrdtr = False       #disable hardware (DSR/DTR) flow control
 #ser.writeTimeout = 2     #timeout for write
 #ser.timeout = 3
 
-try:
-   ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
-except serial.SerialException as e:
-   sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
-   sys.exit(1)
+if debug == 0:
+   try:
+      ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
+   except serial.SerialException as e:
+      sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
+      sys.exit(1)
 
 
 line = f_in.readline()
 while line != '':
    print 'processing: ' + line
-   parse_line(line, f_out) 
+   send_str = parse_line(line) 
    
-   if ser.in_waiting:
-      b = ser.read(1) #blocking
+   if send_str != '':
+      send_data(send_str, f_out)
+   
+   if debug == 0:
       if ser.in_waiting:
-         while b != '\n':
-            print b
-            b = ser.read(1)
+         b = ser.read(1) #blocking
+         if ser.in_waiting:
+            while b != '\n':
+               print b
+               b = ser.read(1)
    
    line = f_in.readline()
   
