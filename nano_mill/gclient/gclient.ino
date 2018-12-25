@@ -43,18 +43,18 @@ void setup() {
 }
 
 void loop() {
-	int incomingByte;	// for incoming serial data
+	int ser_in;	// for incoming serial data
 
 	// send data only when you receive data:
 	if (Serial.available() > 0) {
 		// read the incoming byte:
-		incomingByte = Serial.read();
+		ser_in = Serial.read();
 
 		// say what you got:
 		//Serial.print("I received: ");
-		Serial.print(incomingByte, DEC);
+		Serial.print(ser_in, DEC);
 		
-		if (incommingByte = '+')
+		if (ser_in = '+')
 		{
 			x_servo_angle += 10;
 			
@@ -63,7 +63,7 @@ void loop() {
 			
 			xServo.writeMicroseconds(x_servo_angle);
 		}
-		if (incommingByte = '-')
+		if (ser_in = '-')
 		{
 			x_servo_angle -= 10;
 			
