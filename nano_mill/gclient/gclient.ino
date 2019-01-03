@@ -16,6 +16,18 @@
 #define MIN_100MS_MOVEMENT 5  // 5 [10um] = 0.05mm
 #define MIN_FEED 60
 
+// defines used for caculating servo control pulse width from requested angle
+#define DEGRES_TO_100URAD(a)  (a)*35 //(a)*2*pi/180*1000 
+#define MAX_SERVO_ANGLE DEGRES_TO_100URAD(180)
+#define MIN_SERVO_ANGLE DEGRES_TO_100URAD(0)
+#define SERVO_PW_MAX_ANGLE 2300 // [us]
+#define SERVO_PW_MIN_ANGLE 700  // [us]
+#define K ((SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)/(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE))
+#define M (SERVO_PW_MIN_ANGLE - K*MIN_SERVO_ANGLE)
+#define CALC_PW_FROM_ANGLE(a) K*(a)+M;
+
+#define debug_print(x)  if(debug_flag) {Serial.print(#x); Serial.print(": "); Serial.println(x);}
+
 typedef enum
 {
   Idle,
@@ -57,10 +69,15 @@ Servo yServo;
 Servo zServo;
 
 mill_T myMill;
-
+byte debug_flag = 1;
 int x_servo_angle = 1500;
 
 void setup() {
+  int angle_x;   // [100urad]
+  int angle_y;   // [100urad]
+  int pw_x;      // [us]
+  int pw_y;
+  
   myMill.state = Idle;
   myMill.spindle_speed = 100;
   myMill.cutting_feed = MIN_FEED;  // default cutting feed rate
@@ -76,8 +93,16 @@ void setup() {
 	xServo.writeMicroseconds(x_servo_angle);
 
   Serial.setTimeout(500);
-	Serial.println("Hello");
 
+/*  angle_x = calcAngle(myMill.curr_x);
+  angle_y = calcAngle(myMill.curr_y);
+    
+  pw_x = calcServoPw(angle_x);
+  pw_y = calcServoPw(angle_y);
+
+  xServo.writeMicroseconds(pw_x);
+  yServo.writeMicroseconds(pw_y);
+*/
   debug_dump();
 }
 
@@ -87,6 +112,10 @@ void loop() {
   long tmpD;
   int D, dD, n, dx, dy;
   bool done = 0;
+  int angle_x;   // [100urad]
+  int angle_y;   // [100urad]
+  int pw_x;      // [us]
+  int pw_y;
   
 	// send data only when you receive data:
 	if (Serial.available() > 0) {
@@ -108,8 +137,8 @@ void loop() {
     dD = myMill.curr_feed / 6;  // travel per 100ms, [mm/minut] = 100*[10um]/60*10[100ms]   
     
     // calculate number of 100ms iterations it will require to travel distance D.
-    // will be rounded
-    n = (D/dD + 0.5);           // number of 100ms to move distance D
+    // n will be rounded.
+    n = (int)(D/dD + 0.5);           // number of 100ms to move distance D
     if (n == 0)                 // if distance to travel takes lesser than 100 ms
     {
       n = 1;                    // travel that distace in 100 ms anyway
@@ -117,10 +146,14 @@ void loop() {
 
     Serial.print("D: ");
     Serial.println(D);
+    debug_print(D);
     Serial.print("n: ");
     Serial.println(n);
-
-    // if this is the last iteration to reach target or n really was 1.xy, then set curr to target
+    debug_print(n);
+    
+    // if this is the last iteration to reach target, then set curr to target
+    // in the casees where n was smaller/bigger than 1 and rounded to 1, 
+    // this construction will make the last travle slightly slower/faster than feed_rate
     if (n == 1)
     {
       myMill.curr_x = myMill.ref_x;
@@ -151,8 +184,6 @@ void loop() {
       }
     }
     
-    //set servo angle..... based on curr_x and curr_y
-    
     Serial.print("dx: ");
     Serial.println(dx);
     Serial.print("dy: ");
@@ -166,7 +197,23 @@ void loop() {
     Serial.println("done");
     done = 0;
   }
-	
+
+  if(myMill.state == Moving)
+  {
+    //calc servo angle..... based on curr_x and curr_y
+    angle_x = calcAngle(myMill.curr_x);
+    angle_y = calcAngle(myMill.curr_y);
+    debug_print(angle_x);
+    
+    //convert to servo control signal
+    pw_x = calcServoPw(angle_x);
+    pw_y = calcServoPw(angle_y);
+    debug_print(pw_x)
+
+    //xServo.writeMicroseconds(pw_x);
+    //yServo.writeMicroseconds(pw_y);
+  }
+  
   delay(100);                       // waits 100ms
 }
 
@@ -254,6 +301,7 @@ void parseCmdLn(char* cmd_ln, byte len)
     else if (cmd_ln[i] == 'D')
     {
       debug_dump(); 
+      debug_flag = cmd_ln[i+1];
     }
     else
     {
@@ -362,5 +410,42 @@ void debug_dump(void)
   
   Serial.print("myMill.ref_y: ");
   Serial.println(myMill.ref_y);
+  debug_print(myMill.ref_y);
+}
+
+// calculate servo pulse width to get servo angle
+// angle in 100 urad unit
+int calcServoPw(int angle)
+{
+  int pw;
+  
+  pw = CALC_PW_FROM_ANGLE(angle)
+  
+  return pw;
+}
+
+// calculate angle of servo given wanted coordinate using "cosinus satsen"
+// angle =  acosd( (c*c+b*b-a*a)/(2*b*c) )
+// returns angle in 100 micro radian units
+int calcAngle(int x)
+{
+  int a = 4000; // 40mm = 4000 [10um]
+  int b = 2000;
+  int c = x+a;
+  long numerator;
+  long denominator;
+  float tmp_angle;
+  int angle; 
+    
+  numerator = (long)(c*c);
+  numerator += (long)(b*b);
+  numerator -= (long)(a*a);
+
+  denominator = (long)(2*b*c);
+
+  tmp_angle = acos(numerator/denominator); // tmp_angle in radians
+  angle = (int)(1000*tmp_angle);           // angle in 100 micro radians
+  
+  return angle;
 }
 
