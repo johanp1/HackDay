@@ -17,14 +17,16 @@
 #define MIN_FEED 60
 
 // defines used for caculating servo control pulse width from requested angle
-#define DEGRES_TO_100URAD(a)  (a)*35 //(a)*2*pi/180*1000 
+#define DEGRES_TO_100URAD(a)  (long)((long)(a)*175)/10    // (a)*pi/180*1000 *10/10 
 #define MAX_SERVO_ANGLE DEGRES_TO_100URAD(180)
 #define MIN_SERVO_ANGLE DEGRES_TO_100URAD(0)
 #define SERVO_PW_MAX_ANGLE 2300 // [us]
 #define SERVO_PW_MIN_ANGLE 700  // [us]
-#define K ((SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)/(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE))
-#define M (SERVO_PW_MIN_ANGLE - K*MIN_SERVO_ANGLE)
-#define CALC_PW_FROM_ANGLE(a) K*(a)+M;
+#define KX1_PLUS_Y1 ((SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)*MIN_SERVO_ANGLE)/(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) + SERVO_PW_MIN_ANGLE;
+
+// y = (y2- y1)/(x2-x1)(x-x1)+y1
+//re-organised to y = ((y2- y1)*x)/(y2- y1) - ((y2- y1)*x1)/(y2- y1)
+#define CALC_PW_FROM_ANGLE(a) ((long)(SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)*(long)(a))/(long)(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) + KX1_PLUS_Y1;
 
 #define debug_print(x)  if(debug_flag) {Serial.print(#x); Serial.print(": "); Serial.println(x);}
 
@@ -70,7 +72,6 @@ Servo zServo;
 
 mill_T myMill;
 byte debug_flag = 1;
-int x_servo_angle = 1500;
 
 void setup() {
   int angle_x;   // [100urad]
@@ -81,7 +82,7 @@ void setup() {
   myMill.state = Idle;
   myMill.spindle_speed = 100;
   myMill.cutting_feed = MIN_FEED;  // default cutting feed rate
-  myMill.curr_feed = MIN_FEED;    // current cutting feed rate
+  myMill.curr_feed = MIN_FEED;    // current cutting feed rate [mm/minut]
   myMill.curr_x = 0;
   myMill.ref_x = 0;
   myMill.curr_y = 0;
@@ -90,11 +91,11 @@ void setup() {
 	Serial.begin(9600);	// opens serial port, sets data rate to 9600 bps
 
 	xServo.attach(9);
-	xServo.writeMicroseconds(x_servo_angle);
+	xServo.writeMicroseconds(1500);
 
   Serial.setTimeout(500);
 
-/*  angle_x = calcAngle(myMill.curr_x);
+  angle_x = calcAngle(myMill.curr_x);
   angle_y = calcAngle(myMill.curr_y);
     
   pw_x = calcServoPw(angle_x);
@@ -102,7 +103,7 @@ void setup() {
 
   xServo.writeMicroseconds(pw_x);
   yServo.writeMicroseconds(pw_y);
-*/
+
   debug_dump();
 }
 
@@ -144,11 +145,7 @@ void loop() {
       n = 1;                    // travel that distace in 100 ms anyway
     }
 
-    Serial.print("D: ");
-    Serial.println(D);
     debug_print(D);
-    Serial.print("n: ");
-    Serial.println(n);
     debug_print(n);
     
     // if this is the last iteration to reach target, then set curr to target
@@ -183,19 +180,9 @@ void loop() {
         myMill.curr_y -= dy;
       }
     }
-    
-    Serial.print("dx: ");
-    Serial.println(dx);
-    Serial.print("dy: ");
-    Serial.println(dy);
-    Serial.println("");
-  }
 
-  if (done)
-  {
-    myMill.state = Idle;
-    Serial.println("done");
-    done = 0;
+    debug_print(myMill.curr_x);
+    debug_print(myMill.curr_y);
   }
 
   if(myMill.state == Moving)
@@ -204,14 +191,25 @@ void loop() {
     angle_x = calcAngle(myMill.curr_x);
     angle_y = calcAngle(myMill.curr_y);
     debug_print(angle_x);
+    debug_print(angle_y);
     
     //convert to servo control signal
     pw_x = calcServoPw(angle_x);
     pw_y = calcServoPw(angle_y);
-    debug_print(pw_x)
+    debug_print(pw_x);
+    debug_print(pw_y);
 
-    //xServo.writeMicroseconds(pw_x);
-    //yServo.writeMicroseconds(pw_y);
+    Serial.println("");
+
+    xServo.writeMicroseconds(pw_x);
+    yServo.writeMicroseconds(pw_y);
+  }
+
+  if (done)
+  {
+    myMill.state = Idle;
+    Serial.println("done");
+    done = 0;
   }
   
   delay(100);                       // waits 100ms
@@ -227,8 +225,7 @@ void parseCmdLn(char* cmd_ln, byte len)
   //temp debug ////////////////
   String tmp_str = cmd_ln;
   tmp_str.remove(len);
-  Serial.print("rec: ");
-  Serial.println(tmp_str);
+  debug_print(tmp_str);
   /////////////////////////////
 
   //traverse the command line looking for individual commands
@@ -237,9 +234,6 @@ void parseCmdLn(char* cmd_ln, byte len)
     if (cmd_ln[i] == 'G')
     {
       handleG(cmd_ln[i+1]);
-      
-      Serial.print("feed: ");
-      Serial.println(myMill.curr_feed);
     }
     else if (cmd_ln[i] == 'X')
     {
@@ -247,9 +241,6 @@ void parseCmdLn(char* cmd_ln, byte len)
       tmp_int = snipInt(cmd_ln, i+1, len);
 
       myMill.ref_x = saturate(tmp_int, X_MAX, X_MIN);
-      
-      Serial.print("X: ");
-      Serial.println(tmp_int);
     }
     else if (cmd_ln[i] == 'Y')
     {
@@ -257,9 +248,6 @@ void parseCmdLn(char* cmd_ln, byte len)
       tmp_int = snipInt(cmd_ln, i+1, len);
 
       myMill.ref_y = saturate(tmp_int, Y_MAX, Y_MIN);
-      
-      Serial.print("Y: ");
-      Serial.println(tmp_int);
     }
     else if (cmd_ln[i] == 'F')
     {
@@ -273,24 +261,17 @@ void parseCmdLn(char* cmd_ln, byte len)
       
       myMill.cutting_feed = tmp_int;
       myMill.curr_feed = myMill.cutting_feed;
-
-      Serial.print("F: ");
-      Serial.println(tmp_int);
     }
     else if (cmd_ln[i] == 'M')
     {
       // hopefully the next few positions in cmd_ln contains our y-coordinate
       tmp_int = snipInt(cmd_ln, i+1, len);
-      
-      Serial.print("M: ");
-      Serial.println(tmp_int);
 
       // debug ////////////////////
       if ((tmp_int<=2350) && (tmp_int >= 750)) 
       {
         myMill.state = Test;
-        x_servo_angle = tmp_int;
-        xServo.writeMicroseconds(x_servo_angle);
+        xServo.writeMicroseconds(tmp_int);
       }
       if (tmp_int == 0)
       {
@@ -299,9 +280,9 @@ void parseCmdLn(char* cmd_ln, byte len)
       //////////////////////////////
     }
     else if (cmd_ln[i] == 'D')
-    {
-      debug_dump(); 
-      debug_flag = cmd_ln[i+1];
+    { 
+      debug_flag = (cmd_ln[i+1] == '0' ? 0 : 1);
+      debug_dump();
     }
     else
     {
@@ -310,8 +291,6 @@ void parseCmdLn(char* cmd_ln, byte len)
     
     i = i+1;
   }
-  
-  Serial.println("done parsing cmd_ln");
 }
 
 // set the feed_rate
@@ -387,30 +366,15 @@ int saturate(int in, int max_limit, int min_limit)
 
 void debug_dump(void)
 {
-  Serial.print("myMill.state: ");
-  Serial.println(myMill.state);
-  
-  Serial.print("myMill.spindle_speed: ");
-  Serial.println(myMill.spindle_speed);
-    
-  Serial.print("myMill.cutting_feed: ");
-  Serial.println(myMill.cutting_feed);
-  
-  Serial.print("myMill.curr_feed: ");
-  Serial.println(myMill.curr_feed);
-  
-  Serial.print("myMill.curr_x: ");
-  Serial.println(myMill.curr_x);
-  
-  Serial.print("myMill.ref_x: ");
-  Serial.println(myMill.ref_x);
-  
-  Serial.print("myMill.curr_y: ");
-  Serial.println(myMill.curr_y);
-  
-  Serial.print("myMill.ref_y: ");
-  Serial.println(myMill.ref_y);
+  debug_print(myMill.state);
+  debug_print(myMill.spindle_speed);
+  debug_print(myMill.cutting_feed);
+  debug_print(myMill.curr_feed);
+  debug_print(myMill.curr_x);
+  debug_print(myMill.ref_x);
+  debug_print(myMill.curr_y);
   debug_print(myMill.ref_y);
+  debug_print(debug_flag);
 }
 
 // calculate servo pulse width to get servo angle
@@ -418,9 +382,19 @@ void debug_dump(void)
 int calcServoPw(int angle)
 {
   int pw;
+  /*
+  //test code.....
+  int k_x1_plus_y1 = KX1_PLUS_Y1;
+  long tmp;
   
-  pw = CALC_PW_FROM_ANGLE(angle)
-  
+  tmp = ((long)(SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)*(long)angle);
+  debug_print(tmp);
+  pw = (int)(tmp/(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE));
+  debug_print(pw);
+  pw += k_x1_plus_y1;
+  debug_print(pw);
+  */
+  pw = CALC_PW_FROM_ANGLE(angle);
   return pw;
 }
 
@@ -429,21 +403,24 @@ int calcServoPw(int angle)
 // returns angle in 100 micro radian units
 int calcAngle(int x)
 {
-  int a = 4000; // 40mm = 4000 [10um]
-  int b = 2000;
-  int c = x+a;
-  long numerator;
-  long denominator;
+  long a = 4000; // 40mm = 4000 [10um]
+  long b = 2000;
+  long c = x+a;
+  long num; //numerator
+  long den; //denominator
   float tmp_angle;
+  float ratio;
   int angle; 
     
-  numerator = (long)(c*c);
-  numerator += (long)(b*b);
-  numerator -= (long)(a*a);
+  num = c*c;  //numerator
+  num += b*b;
+  num -= a*a;
 
-  denominator = (long)(2*b*c);
+  den = (2*b*c);  //denominator
 
-  tmp_angle = acos(numerator/denominator); // tmp_angle in radians
+  ratio = (float)((float)num/(float)den);
+  
+  tmp_angle = acos(ratio); // tmp_angle in radians
   angle = (int)(1000*tmp_angle);           // angle in 100 micro radians
   
   return angle;
