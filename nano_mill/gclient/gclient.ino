@@ -5,7 +5,7 @@
 
 #include <Servo.h>
 
-#define MAX_TRAVERSE_FEED 100  // default G0 feed rate, fastest possible
+#define MAX_TRAVERSE_FEED 1000  // default G0 feed rate, fastest possible
 
 #define X_MAX 2000 //[10 mico meter unit]
 #define X_MIN -2000
@@ -25,7 +25,9 @@
 #define KX1_PLUS_Y1 ((SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)*MIN_SERVO_ANGLE)/(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) + SERVO_PW_MIN_ANGLE;
 
 // y = (y2- y1)/(x2-x1)(x-x1)+y1
-//re-organised to y = ((y2- y1)*x)/(y2- y1) - ((y2- y1)*x1)/(y2- y1)
+// re-organised to y = ((y2 - y1)*x)/(x2 - x1) - ((y2 - y1)*x1)/(x2 - x1) + y1
+// y1 is always 0, y2 is the max angle, gives:
+// y = y2*x/dx - kx1 where dx = (x2-x1) and kx1 = y2*x1/dx
 #define CALC_PW_FROM_ANGLE(a) ((long)(SERVO_PW_MAX_ANGLE - SERVO_PW_MIN_ANGLE)*(long)(a))/(long)(MAX_SERVO_ANGLE - MIN_SERVO_ANGLE) + KX1_PLUS_Y1;
 
 #define debug_print(x)  if(debug_flag) {Serial.print(#x); Serial.print(": "); Serial.println(x);}
@@ -40,10 +42,10 @@ typedef enum
 typedef struct 
 {
    //config parameters
-   byte spindle_speed;   // rpm
+   int spindle_speed;   // rpm
    
-   byte cutting_feed;    // mm/minute
-   byte curr_feed; // the current feed rate 10um/100ms
+   int cutting_feed;    // mm/minute
+   int curr_feed; // the current feed rate 10um/100ms
       
    int curr_x;          //[10 mico meter unit]
    int curr_y;
@@ -58,17 +60,31 @@ typedef struct
 
 typedef struct
 {
-  int high_limit;
-  int low_limit;
-
-  Servo servo;
+  // config parameters
+  int max_angle;  // [100urad]
+  int pw_max_angle; // [us]
+  int pw_min_angle;
+  byte pin;  // servo connection pin  
+  
+  //internal parameters used for calculations
+  long k_x1;
+  long dx;
 } servo_T;
+
+typedef struct
+{
+  // position calculation parameters
+  int a;
+  int b;
+
+  servo_T servo;
+} slide_ctrl_T;
 
 // global variables ////////////////////////
 
 Servo xServo;
 Servo yServo;
-Servo zServo;
+//Servo zServo;
 
 mill_T myMill;
 byte debug_flag = 1;
@@ -81,8 +97,8 @@ void setup() {
   
   myMill.state = Idle;
   myMill.spindle_speed = 100;
-  myMill.cutting_feed = MIN_FEED;  // default cutting feed rate
-  myMill.curr_feed = MIN_FEED;    // current cutting feed rate [mm/minut]
+  myMill.cutting_feed = 180; //MIN_FEED;  // default cutting feed rate
+  myMill.curr_feed = 180;    //MIN_FEED;    // current cutting feed rate [mm/minut]
   myMill.curr_x = 0;
   myMill.ref_x = 0;
   myMill.curr_y = 0;
@@ -253,7 +269,7 @@ void parseCmdLn(char* cmd_ln, byte len)
     {
       // hopefully the next few positions in cmd_ln contains our y-coordinate
       tmp_int = snipInt(cmd_ln, i+1, len);
-            
+      
       if (tmp_int < MIN_FEED)
       {
         tmp_int = MIN_FEED;
@@ -268,7 +284,7 @@ void parseCmdLn(char* cmd_ln, byte len)
       tmp_int = snipInt(cmd_ln, i+1, len);
 
       // debug ////////////////////
-      if ((tmp_int<=2350) && (tmp_int >= 750)) 
+      if ((tmp_int<=2550) && (tmp_int >= 650)) 
       {
         myMill.state = Test;
         xServo.writeMicroseconds(tmp_int);
