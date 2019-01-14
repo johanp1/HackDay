@@ -14,14 +14,30 @@ void C_Mill::init()
   ref_x = 0;
   curr_y = 0;
   ref_y = 0;
-  
+  home_x = 0;
+  home_y = 0;
   debug_flag = 1;
   
-//  x_slide_ctrl = new C_SlideCtrl();
-//  x_slide_ctrl = new C_SlideCtrl();
-  
-  x_slide_ctrl.init("x", 9, 4000, 2000, 180, 0, 2300, 700);
-  y_slide_ctrl.init("y", 10, 4000, 2000, 180, 0, 2300, 700);
+  x_slide_ctrl.init("x",    // name
+                     9,     // pin (servo connected to)
+                     4000,  // length of arm connected to table [100um]
+                     2100,  // length of arm connected to servo  
+                     180,   // servo's max angle [deg]
+                     0,     // servo's min angle
+                     750,   // pulse width @ max angle [us]
+                     2300); // pulse width @ min angle
+                     
+  y_slide_ctrl.init("y",    // name 
+                     10,    // pin (servo connected to)
+                     4000,  // length of arm connected to table [100um]
+                     2250,  // length of arm connected to servo
+                     180,   // servo's max angle [deg]
+                     0,     // servo's min angle 
+                     2400,  // pulse width @ max angle [us]
+                     630);  // pulse width @ min angle
+
+  x_slide_ctrl.run(home_x);
+  y_slide_ctrl.run(home_y);
 }
 
 void C_Mill::run()
@@ -92,24 +108,8 @@ void C_Mill::run()
   if(state == Moving)
   {
     //calc servo angle..... based on curr_x and curr_y
-/*    angle_x = calcAngle(this.curr_x);
-    angle_y = calcAngle(this.curr_y);
-    debug_print(angle_x);
-    debug_print(angle_y);
-    
-    //convert to servo control signal
-    pw_x = calcServoPw(angle_x);
-    pw_y = calcServoPw(angle_y);
-    debug_print(pw_x);
-    debug_print(pw_y);
-
-    Serial.println("");
-
-    xServo.writeMicroseconds(pw_x);
-    yServo.writeMicroseconds(pw_y);
-	*/
-	x_slide_ctrl.run(curr_x);
-	y_slide_ctrl.run(curr_y);
+    x_slide_ctrl.run(curr_x);
+    y_slide_ctrl.run(curr_y);
   }
 
   if (done)
@@ -167,10 +167,7 @@ void C_Mill::setRefY(int y)
   
 	if(state == Test)
 	{
-		if ((y <= 2350) && (y >= 650)) 
-		{
-			y_slide_ctrl.setPWM(y);
-		}
+	  y_slide_ctrl.setPWM(y);
 	}
 }
 
@@ -211,6 +208,24 @@ void C_Mill::setTestState(bool in)
 	{
 		state = Idle;
 	}
+}
+
+void C_Mill::setHome(int x, int y)
+{
+  home_x = x;
+  home_y = y;
+}
+
+void C_Mill::goHome(void)
+{
+  setRefX(home_x);
+  setRefY(home_y);
+}
+
+void C_Mill::setOffset(int x, int y)
+{
+  offset_x = x;
+  offset_y = y;
 }
 
 

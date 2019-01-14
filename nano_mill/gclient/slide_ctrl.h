@@ -32,6 +32,7 @@ class C_SlideCtrl
 		void setPWM(int pwm);
 		void setDebugFlag(byte f);
     void debug_dump();
+    
 	private:
 		int calcServoPw(int angle);
 		int calcAngle(int x);

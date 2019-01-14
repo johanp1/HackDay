@@ -5,7 +5,7 @@
 
 C_SlideCtrl::C_SlideCtrl() {}
 
-// local functions
+// private functions
 
 // calculate servo pulse width to get servo angle
 // angle in 100 urad unit
@@ -50,7 +50,7 @@ int C_SlideCtrl::calcAngle(int x)
 
 
 
-// global functions
+// public functions
 
 void C_SlideCtrl::init(String str_name, byte pin, int a_in, int b_in, int max_ang, int min_ang, int pw_max, int pw_min)
 {
@@ -98,7 +98,7 @@ void C_SlideCtrl::run(int x)
 // used for testing
 void C_SlideCtrl::setPWM(int pwm)
 {
-	if ((pwm <= 2350) && (pwm >= 650))
+	if ((pwm <= 2400) && (pwm >= 600))
 	{
 		servo.writeMicroseconds(pwm);
     debug_print(name);

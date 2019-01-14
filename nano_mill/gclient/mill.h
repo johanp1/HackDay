@@ -17,24 +17,24 @@ class C_Mill
 	public:
 		C_Mill();
 		
-	   //config parameters
-	   int spindle_speed;   // rpm
+	  //config parameters
+	  int spindle_speed;   // rpm
 	   
-	   int cutting_feed;    // mm/minute
-	   int curr_feed; // the current feed rate 10um/100ms
+	  int cutting_feed;    // mm/minute
+	  int curr_feed; // the current feed rate 10um/100ms
 		  
-	   int curr_x;          //[10 mico meter unit]
-	   int curr_y;
-	   int curr_z;
+	  int curr_x;          //[10 mico meter unit]
+	  int curr_y;
+	  int curr_z;
 	   
-	   int ref_x;
-	   int ref_y;
-	   int ref_z;
+	  int ref_x;
+	  int ref_y;
+	  int ref_z;
 
-	   C_SlideCtrl x_slide_ctrl;
-	   C_SlideCtrl y_slide_ctrl;
+	  C_SlideCtrl x_slide_ctrl;
+	  C_SlideCtrl y_slide_ctrl;
 	   
-	   state_T state;
+	  state_T state;
 
 		void init();
 		void run();
@@ -47,9 +47,17 @@ class C_Mill
 		void setLinInterTravFeed(void);
 		void setDebugFlag(byte f);
     void setTestState(bool in);
-		
+		void setHome(int x, int y);
+    void goHome(void);
+    void setOffset(int x, int y);
+    
 	private:
 		byte debug_flag;
+    int home_x;
+    int home_y;
+    int offset_x;
+    int offset_y;
+    
 		int saturate(int in, int max_limit, int min_limit);
 };
 
