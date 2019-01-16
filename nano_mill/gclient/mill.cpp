@@ -178,10 +178,14 @@ void C_Mill::setSpindleSpeed(int s)
 void C_Mill::setCuttingFeed(int f)
 {
 	if (f < MIN_FEED)
-    {
+  {
 		cutting_feed = MIN_FEED;
-    }
-    else 
+  }
+  else if (f > MAX_TRAVERSE_FEED)
+  {
+    f = MAX_TRAVERSE_FEED;
+  }
+  else
 	{
 		cutting_feed = f;
 	}

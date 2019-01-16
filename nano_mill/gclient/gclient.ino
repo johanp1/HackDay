@@ -21,7 +21,7 @@ void setup()
   
   debug_dump();
 
-  Serial.print("*"); // ask server for new command
+  Serial.print("#"); // tell server setup is done
 }
 
 void loop() {
@@ -36,16 +36,15 @@ void loop() {
     // read the incoming byte:
     in_len = Serial.readBytes(ser_in, 20);
 
-    parseCmdLn(ser_in, in_len);
-
-    cmdLn_rec = 1;
+    cmdLn_rec = 1;  //flag for cmd received
+    parseCmdLn(ser_in, in_len); 
   }
 
   prevState = mill.getState();
   mill.run();
   
   if( ((mill.getState() == Idle) && (prevState != Idle)) ||  // if the mill goes from moving state to idle, it is ready for new command
-      ((mill.getState() == Idle) && (cmdLn_rec == 1)) )      // if command was sent, mill still in idle, it is ready for new command
+      ((mill.getState() == Idle) && (cmdLn_rec == 1)) )      // if command was received, mill still in idle, it is ready for new command
   {
     Serial.print("*"); // ask server for new command
   }

@@ -138,6 +138,19 @@ def send_data(str, f_hdlr):
       f_hdlr.write(' '.join(str))  #join will append the list of strings to one string
       f_hdlr.write('\n')
   
+## wait for character ch sent from client ################################## 
+def waitForToken(ch):
+    if debug == 0:
+        b = ser.read(1) #blocking
+        print 'rec: ' + b
+        if ser.in_waiting:
+            while b != ch:
+               print b
+               b = ser.read(1)
+   
+    if debug == '1':
+        s = raw_input('\tpress any key:')
+ 
 ### start of main script #############################################
 
 #these are the accepted/supported G-codes, everything else will be thrown away
@@ -200,8 +213,8 @@ if debug == 0:
       sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
       sys.exit(1)
 
-#wait for something from client here, before sending first command line
-      
+#wait for # sent from client indicating it is done with it's init, before sending first command line
+waitForToken('#')      
       
 line = f_in.readline()
 while line != '':
@@ -211,18 +224,9 @@ while line != '':
    if send_str != '':
       send_data(send_str, f_out)
 
-      #do not send next line if current not confirmed by client/user
-      if debug == 0:
-         b = ser.read(1) #blocking
-         print 'rec: ' + b
-         if ser.in_waiting:
-            while b != '*':
-               print b
-               b = ser.read(1)
-   
-      if debug == '1':
-         s = raw_input('\tpress any key:')
-   
+	  #do not send next line if not confirmed by client/user
+	  waitForToken('*')
+         
    line = f_in.readline()
   
 f_in.close()
