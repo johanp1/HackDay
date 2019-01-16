@@ -63,44 +63,56 @@ def handle_g(str):
       
    if (str == 'G1' or str == 'G01'):
       retVal = 'G1'
-    
+      
+   if (str == 'G28'):
+      retVal = 'G28'
+
    return retVal
 
 ## handler for X-words, converts from mm to 10um unit
 def handle_x(in_str):
    tmp_f = float(in_str[1:len(in_str)])
-   tmp_i = int(tmp_f*100 + 0.5)
+   tmp_i = int(round(tmp_f*100))
    ret_str = 'X' + str(tmp_i)
    return ret_str
 
 ## handler for Y-words
 def handle_y(in_str):
    tmp_f = float(in_str[1:len(in_str)])
-   tmp_i = int(tmp_f*100 + 0.5)
+   tmp_i = int(round(tmp_f*100))
    ret_str = 'Y' + str(tmp_i)
    return ret_str
    
 ## handler for Z-words
 def handle_z(in_str):
    tmp_f = float(in_str[1:len(in_str)])
-   tmp_i = int(tmp_f*100 + 0.5)
+   tmp_i = int(round(tmp_f*100))
    ret_str = 'Z' + str(tmp_i)
    return ret_str
    
 ## handler for F-words
-def handle_f(str):
-   return str
+def handle_f(in_str):
+   try:
+      ret_str = 'F' + str(int(in_str[1:len(in_str)]))
+   except ValueError:
+      ret_str = ''
+
+   return ret_str
    
 ## handler for M-words
 def handle_m(str):
-   return str
+   try:
+      ret_str = 'M' + str(int(in_str[1:len(in_str)]))
+   except ValueError:
+      ret_str = ''
+
+   return ret_str
    
 ### parse_line() #############################################
 def parse_line(str):
   
   words = str.split()
   send_cmd = []             #temp list to store commands to send
-  ret_str = ''
   
   for word in words:       #go through each word in splitted line
     for cmd in cmds:       #compare word to each supported command
@@ -108,24 +120,22 @@ def parse_line(str):
          tmp_word = cmd.callback(word)  #call command-specific handler, i.e parse command
          if tmp_word != '':
             send_cmd.append(tmp_word) #add command to send-message, send_cmd is a list of strings
-  
+
   return ''.join(send_cmd) #join will append the list of strings to one string
   
   
 ### send_line() ############################################# 
 def send_data(str, f_hdlr):
 
-    if debug == 0:
-      ser.write(''.join(send_cmd).encode('utf-8'))
+   print '\tsending: ' +  str
+
+   if debug == 0:
+      ser.write(''.join(str).encode('utf-8'))
       ser.write('\n')
       #serial expects a byte-array and not a string
-      
-    if debug == '1':
-      print '\tsending: ' + '*' + str #start each send with '*'
-      print '\n'      
-    
-    if debug == '2':
-      f_hdlr.write(' '.join(tmp_cmd))  #join will append the list of strings to one string
+          
+   if debug == '2':
+      f_hdlr.write(' '.join(str))  #join will append the list of strings to one string
       f_hdlr.write('\n')
   
 ### start of main script #############################################
@@ -190,22 +200,28 @@ if debug == 0:
       sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
       sys.exit(1)
 
-
+#wait for something from client here, before sending first command line
+      
+      
 line = f_in.readline()
 while line != '':
    print 'processing: ' + line
    send_str = parse_line(line) 
-   
+
    if send_str != '':
       send_data(send_str, f_out)
-   
-   if debug == 0:
-      if ser.in_waiting:
+
+      #do not send next line if current not confirmed by client/user
+      if debug == 0:
          b = ser.read(1) #blocking
+         print 'rec: ' + b
          if ser.in_waiting:
-            while b != '\n':
+            while b != '*':
                print b
                b = ser.read(1)
+   
+      if debug == '1':
+         s = raw_input('\tpress any key:')
    
    line = f_in.readline()
   

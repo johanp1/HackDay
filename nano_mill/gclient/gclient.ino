@@ -9,34 +9,46 @@
 
 // global variables ////////////////////////
 
-byte debug_flag = 1;
+byte debug_flag = 0;
 C_Mill mill;
 
-void setup() {
-
+void setup() 
+{
   Serial.begin(9600);	// opens serial port, sets data rate to 9600 bps
-
   Serial.setTimeout(500);
 
-  //mill = new C_Mill;
   mill.init();
-
+  
   debug_dump();
+
+  Serial.print("*"); // ask server for new command
 }
 
 void loop() {
   char ser_in[20];	// for incoming serial data
   char in_len;
-
+  state_T prevState;
+  bool cmdLn_rec = 0;;
+  
   // send data only when you receive data:
-  if (Serial.available() > 0) {
+  if (Serial.available() > 0)
+  {
     // read the incoming byte:
     in_len = Serial.readBytes(ser_in, 20);
 
     parseCmdLn(ser_in, in_len);
+
+    cmdLn_rec = 1;
   }
 
+  prevState = mill.getState();
   mill.run();
+  
+  if( ((mill.getState() == Idle) && (prevState != Idle)) ||  // if the mill goes from moving state to idle, it is ready for new command
+      ((mill.getState() == Idle) && (cmdLn_rec == 1)) )      // if command was sent, mill still in idle, it is ready for new command
+  {
+    Serial.print("*"); // ask server for new command
+  }
 
   delay(100);                       // waits 100ms
 }

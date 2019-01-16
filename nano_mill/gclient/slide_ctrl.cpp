@@ -55,7 +55,7 @@ int C_SlideCtrl::calcAngle(int x)
 void C_SlideCtrl::init(String str_name, byte pin, int a_in, int b_in, int max_ang, int min_ang, int pw_max, int pw_min)
 {
   name = str_name;
-  debug_flag = 1;
+  debug_flag = 0;
   // set config parameters
   a = a_in;  // length of arm attached to servo [10um]
   b = b_in;  // length of arm attached to sliding part [10um]

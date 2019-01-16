@@ -50,6 +50,10 @@ class C_Mill
 		void setHome(int x, int y);
     void goHome(void);
     void setOffset(int x, int y);
+
+    state_T getState(void);
+    int getCurrX(void);
+    int getCurrY(void);
     
 	private:
 		byte debug_flag;

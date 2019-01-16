@@ -16,7 +16,7 @@ void C_Mill::init()
   ref_y = 0;
   home_x = 0;
   home_y = 0;
-  debug_flag = 1;
+  debug_flag = 0;
   
   x_slide_ctrl.init("x",    // name
                      9,     // pin (servo connected to)
@@ -115,7 +115,6 @@ void C_Mill::run()
   if (done)
   {
     state = Idle;
-    Serial.println("done");
     done = 0;
   }
 }
@@ -228,6 +227,20 @@ void C_Mill::setOffset(int x, int y)
   offset_y = y;
 }
 
+state_T C_Mill::getState(void)
+{
+  return state;
+}
+
+int C_Mill::getCurrX(void)
+{
+  return curr_x;
+}
+
+int C_Mill::getCurrY(void)
+{
+  return curr_y;
+}
 
 int C_Mill::saturate(int in, int max_limit, int min_limit)
 {
