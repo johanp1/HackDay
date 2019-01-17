@@ -140,16 +140,16 @@ def send_data(str, f_hdlr):
   
 ## wait for character ch sent from client ################################## 
 def waitForToken(ch):
-    if debug == 0:
-        b = ser.read(1) #blocking
-        print 'rec: ' + b
-        if ser.in_waiting:
-            while b != ch:
-               print b
-               b = ser.read(1)
+   if debug == 0:
+      b = ser.read(1) #blocking
+      print 'rec: ' + b
+      if ser.in_waiting:
+         while b != ch:
+            print b
+            b = ser.read(1)
    
-    if debug == '1':
-        s = raw_input('\tpress any key:')
+   if debug == '1':
+      s = raw_input('\tpress any key:')
  
 ### start of main script #############################################
 
@@ -223,9 +223,9 @@ while line != '':
 
    if send_str != '':
       send_data(send_str, f_out)
-
-	  #do not send next line if not confirmed by client/user
-	  waitForToken('*')
+	   #do not send next line if not confirmed by client/user
+      
+      waitForToken('*')
          
    line = f_in.readline()
   
