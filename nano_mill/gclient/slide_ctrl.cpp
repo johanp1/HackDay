@@ -12,9 +12,8 @@ C_SlideCtrl::C_SlideCtrl() {}
 int C_SlideCtrl::calcServoPw(int angle)
 {
   int pw;
-
   long tmp;
-  
+
   tmp = (long) ((long)dy*(long)angle);
   pw = (int)(tmp/dx);
   pw += y1_minus_kx1;
@@ -27,7 +26,7 @@ int C_SlideCtrl::calcServoPw(int angle)
 // returns angle in 100 micro radian units
 int C_SlideCtrl::calcAngle(int x)
 {
-  long c = (long)x + a;
+  long c = (long)a-x;
   long num; //numerator
   long den; //denominator
   float tmp_angle;
@@ -44,7 +43,7 @@ int C_SlideCtrl::calcAngle(int x)
   
   tmp_angle = acos(ratio);         // tmp_angle in radians
   angle = (int)(1000*tmp_angle);   // angle in 100 micro radians
-  
+
   return angle;
 }
 
@@ -81,15 +80,18 @@ void C_SlideCtrl::run(int x)
 {
 	int ang;   // [100urad]
   int pw;      // [us]
-    	
+  float ang_deg;
+  
 	//calc servo angle..... based on curr_x and curr_y
   ang = calcAngle(x); 
-      
+  ang_deg = (float)(180/3.1416)*(float)ang/1000;
+
   //convert to servo control signal
   pw = calcServoPw(ang);
   
   debug_print(name);
   debug_print(ang);
+  debug_print(ang_deg);
   debug_print(pw)
 
   servo.writeMicroseconds(pw);

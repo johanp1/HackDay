@@ -21,20 +21,20 @@ void C_Mill::init()
   x_slide_ctrl.init("x",    // name
                      9,     // pin (servo connected to)
                      4000,  // length of arm connected to table [100um]
-                     2100,  // length of arm connected to servo  
+                     2250,  // length of arm connected to servo  
                      180,   // servo's max angle [deg]
                      0,     // servo's min angle
-                     750,   // pulse width @ max angle [us]
-                     2300); // pulse width @ min angle
+                     2300,   // pulse width @ max angle [us]
+                     750); // pulse width @ min angle
                      
   y_slide_ctrl.init("y",    // name 
                      10,    // pin (servo connected to)
                      4000,  // length of arm connected to table [100um]
-                     2250,  // length of arm connected to servo
+                     2100,  // length of arm connected to servo
                      180,   // servo's max angle [deg]
                      0,     // servo's min angle 
-                     2400,  // pulse width @ max angle [us]
-                     630);  // pulse width @ min angle
+                     630,  // pulse width @ max angle [us]
+                     2400);  // pulse width @ min angle
 
   x_slide_ctrl.run(home_x);
   y_slide_ctrl.run(home_y);
