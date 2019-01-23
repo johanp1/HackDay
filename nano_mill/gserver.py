@@ -66,6 +66,12 @@ def handle_g(str):
       
    if (str == 'G28'):
       retVal = 'G28'
+      
+   if (str == 'G92'):
+      retVal = 'G92'
+      
+   if (str == 'G52'):
+      retVal = 'G52'
 
    return retVal
 

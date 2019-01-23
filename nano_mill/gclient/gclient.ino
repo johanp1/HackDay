@@ -58,7 +58,12 @@ void parseCmdLn(char* cmd_ln, byte len)
   byte i = 0;
   bool done = 0;
   int tmp_int;
+  bool needAllWords = 0;
+  int x = 0;
+  int y = 0;
+  int g = 0;
 
+  
   //temp debug ////////////////
   String tmp_str = cmd_ln;
   tmp_str.remove(len);
@@ -83,20 +88,39 @@ void parseCmdLn(char* cmd_ln, byte len)
       {
         mill.goHome();
       }
+      if((tmp_int == 92) || (tmp_int == 52))
+      {
+        g = tmp_int;
+        needAllWords = 1;
+      }
     }
     else if (cmd_ln[i] == 'X')
     {
       // hopefully the next few positions in cmd_ln contains our x-coordinate
       tmp_int = snipInt(cmd_ln, i + 1, len);
-
-      mill.setRefX(tmp_int);
+      
+      if(needAllWords == 0)
+      {
+        mill.setRefX(tmp_int);
+      }
+      else
+      {
+        x = tmp_int;
+      }
     }
     else if (cmd_ln[i] == 'Y')
     {
       // hopefully the next few positions in cmd_ln contains our y-coordinate
       tmp_int = snipInt(cmd_ln, i + 1, len);
 
-      mill.setRefY(tmp_int);
+      if(needAllWords == 0)
+      {
+        mill.setRefY(tmp_int);
+      }
+      else
+      {
+        y = tmp_int;
+      }
     }
     else if (cmd_ln[i] == 'F')
     {
@@ -137,6 +161,20 @@ void parseCmdLn(char* cmd_ln, byte len)
     }
 
     i = i + 1;
+  }
+
+  if (needAllWords)
+  {
+    if (g = 52)
+    {
+      mill.setOffset(x, y);
+    }
+    if (g == 92)
+    {
+      int currx = mill.getCurrX();
+      debug_print(currx);
+      mill.setOffset(mill.getCurrX() - x, mill.getCurrY() - y);
+    }
   }
 }
 

@@ -14,8 +14,6 @@ void C_Mill::init()
   ref_x = 0;
   curr_y = 0;
   ref_y = 0;
-  home_x = 0;
-  home_y = 0;
   debug_flag = 0;
   
   x_slide_ctrl.init("x",    // name
@@ -34,10 +32,10 @@ void C_Mill::init()
                      180,   // servo's max angle [deg]
                      0,     // servo's min angle 
                      630,  // pulse width @ max angle [us]
-                     2400);  // pulse width @ min angle
+                     2375);  // pulse width @ min angle
 
-  x_slide_ctrl.run(home_x);
-  y_slide_ctrl.run(home_y);
+  x_slide_ctrl.run(x_slide_ctrl.getOrigin());
+  y_slide_ctrl.run(y_slide_ctrl.getOrigin());
 }
 
 void C_Mill::run()
@@ -213,22 +211,16 @@ void C_Mill::setTestState(bool in)
 	}
 }
 
-void C_Mill::setHome(int x, int y)
-{
-  home_x = x;
-  home_y = y;
-}
-
 void C_Mill::goHome(void)
 {
-  setRefX(home_x);
-  setRefY(home_y);
+  setRefX(x_slide_ctrl.getOrigin());
+  setRefY(y_slide_ctrl.getOrigin());
 }
 
-void C_Mill::setOffset(int x, int y)
+void C_Mill::setOffset(int x_o, int y_o)
 {
-  offset_x = x;
-  offset_y = y;
+   x_slide_ctrl.setOffset(x_o);
+   y_slide_ctrl.setOffset(y_o);
 }
 
 state_T C_Mill::getState(void)

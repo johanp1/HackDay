@@ -26,7 +26,7 @@ int C_SlideCtrl::calcServoPw(int angle)
 // returns angle in 100 micro radian units
 int C_SlideCtrl::calcAngle(int x)
 {
-  long c = (long)a-x;
+  long c = (long)a - x + offset;
   long num; //numerator
   long den; //denominator
   float tmp_angle;
@@ -73,6 +73,9 @@ void C_SlideCtrl::init(String str_name, byte pin, int a_in, int b_in, int max_an
   dy = (pw_max - pw_min);
   y1_minus_kx1 = pw_min - (int)((long)dy*(long)min_angle)/(long)dx;
   
+  offset = 0;
+  origin = 0;
+  
   servo.attach(pin);
 }
 
@@ -104,7 +107,7 @@ void C_SlideCtrl::setPWM(int pwm)
 	{
 		servo.writeMicroseconds(pwm);
     debug_print(name);
-    debug_print(pwm)
+    debug_print(pwm);
 	}
 }
 
@@ -125,4 +128,21 @@ void C_SlideCtrl::debug_dump()
     debug_print(y1_minus_kx1);
     debug_print(dx);
     debug_print(dy);
+    debug_print(origin);
+    debug_print(offset);
 }
+
+int C_SlideCtrl::getOrigin(void)
+{
+  return origin;
+}
+
+void C_SlideCtrl::setOffset(int o)
+{
+  offset = o;
+  origin += offset; 
+  
+  debug_print(name);
+  debug_print(offset);
+}
+

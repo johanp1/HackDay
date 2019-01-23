@@ -32,11 +32,15 @@ class C_SlideCtrl
 		void setPWM(int pwm);
 		void setDebugFlag(byte f);
     void debug_dump();
+    int getOrigin();
+    void setOffset(int o);
     
 	private:
 		int calcServoPw(int angle);
 		int calcAngle(int x);
 		byte debug_flag;
+    int offset;
+    int origin;
 };
 
 #endif

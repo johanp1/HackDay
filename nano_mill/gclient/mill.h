@@ -47,20 +47,14 @@ class C_Mill
 		void setLinInterTravFeed(void);
 		void setDebugFlag(byte f);
     void setTestState(bool in);
-		void setHome(int x, int y);
     void goHome(void);
     void setOffset(int x, int y);
-
     state_T getState(void);
     int getCurrX(void);
     int getCurrY(void);
     
 	private:
 		byte debug_flag;
-    int home_x;
-    int home_y;
-    int offset_x;
-    int offset_y;
     
 		int saturate(int in, int max_limit, int min_limit);
 };
