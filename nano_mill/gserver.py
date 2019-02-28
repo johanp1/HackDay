@@ -48,6 +48,7 @@ import re
 import getopt
 import sys
 import serial
+import subprocess
 
 class CMD:
    def __init__(self, function_code, callback):
@@ -165,9 +166,10 @@ cmds = [CMD('G', handle_g), CMD('X', handle_x), CMD('Y', handle_y), CMD('Z', han
 in_file = ''
 out_file = ''
 debug = 0
+port = '/dev/ttyS2'
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output=", "debug="])
+  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output=", "debug=", "port="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
@@ -175,7 +177,7 @@ except getopt.GetoptError as err:
 
 for o, a in opts:
   if o == "-h":
-    print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --node=[RC]CIOM'
+    print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --debug=[012] --port=<serial port>'
     sys.exit()
   elif o == "--input":
     in_file = a
@@ -183,12 +185,14 @@ for o, a in opts:
     out_file = a
   elif o == "--debug":
     debug = a
+  elif o == "--port":
+    port = a
   else:
     print o
     assert False, "unhandled option"
 
 if in_file == '':
-   print 'usage gserver.py --input=<in.log> --output=<out.txt>'
+   print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --debug=[012] --port=<serial port>'
    sys.exit()
    
 if out_file == '':
@@ -201,7 +205,7 @@ f_out = open(out_file,'w')
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
-ser.port = '/dev/ttyS2'
+ser.port = port
 ser.baudrate = 9600
 ser.parity = 'N'
 ser.bytesize = 8
@@ -216,7 +220,10 @@ if debug == 0:
    try:
       ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
    except serial.SerialException as e:
-      sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
+      sys.stderr.write('{} {}\n'.format(ser.name, e))
+      #sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
+      subprocess.call("echo available ports:", shell=True) 
+      subprocess.call("python -m serial.tools.list_ports", shell=True) 
       sys.exit(1)
 
 #wait for # sent from client indicating it is done with it's init, before sending first command line
