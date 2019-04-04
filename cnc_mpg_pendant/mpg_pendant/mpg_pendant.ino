@@ -3,18 +3,16 @@
 #include "encoder.h"
 
 C_Buffer buffer;
-C_Button button(3, 100);
+C_Button button(&buffer, "x", 3, 50);
 C_RotaryEncoder encoder(2, 4);
 
 void setup() {
-  buffer.push('h'); 
-  buffer.push('e');
-  buffer.push('j');
-
   Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
   Serial.setTimeout(500);
 
   attachInterrupt(digitalPinToInterrupt(2), encoderISR, CHANGE);
+
+  Serial.println("hej");
 }
 
 void loop() {
@@ -22,19 +20,12 @@ void loop() {
   
   while(buffer.pop(&data))
   {
-    Serial.print((char)data);
+    Serial.println(data);
   }
 
-  if(button.scan() == HIGH)
-  {
-    //buffer.push('1');
-    Serial.print('*');
-  }
+  button.scan();
 
-  Serial.print("encoder: ");
-  Serial.println(encoder.getPosition());
-
-  delay(50); // waits 100ms
+  delay(10); // waits 10ms
 }
 
 void encoderISR(void)

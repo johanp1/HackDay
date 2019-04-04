@@ -1,25 +1,22 @@
  #ifndef __C_BUTTON_H__
 #define __C_BUTTON_H__
+#include "event_generator.h"
 
-
-class C_Button {
+class C_Button : public C_EventGenerator {
  
    public:
 
     // constructor 
-   C_Button(int argPin, long argDebounceDelay) 
+   C_Button(C_Buffer* b, const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(b), name(argName), pin(argPin), debounceTime(argDebounceDelay)
    {
       prevState = LOW;
-      pin = argPin;
       time = 0;
-      debounceTime = argDebounceDelay;
-      
       pinMode(pin, INPUT);
    };
 
 
    // returns debounced button state
-   int scan(void)
+   void scan(void)
    {
       int currState = digitalRead(pin); // read pin
       //Serial.print("curr_state: ");
@@ -35,14 +32,13 @@ class C_Button {
          // take the new reading since debounce timer elapsed
          if (currState != state) 
          {
-          //Serial.print("accept");
+//            Serial.println("accept");
             state = currState;
+            generateEvent((byte)state);
          }
       }
       
       prevState = currState;
-      
-      return state;
    };
 
 
@@ -53,6 +49,7 @@ class C_Button {
    int prevState; // previuos read button state
    unsigned long debounceTime;
    unsigned long time;
+   String name;
 };
 
 #endif // __BUTTON_H__

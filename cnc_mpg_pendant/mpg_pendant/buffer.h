@@ -23,6 +23,9 @@ class C_Buffer {
    {
       noInterrupts();    // dissable INT interrupts while sending
 
+//Serial.print("pushing: ");
+//Serial.println(data);
+
       buffer[pushIdx] = data;
 
       pushIdx++;
@@ -42,6 +45,9 @@ class C_Buffer {
       if(!bufferEmpty)
       {
          *data = buffer[popIdx];
+
+//Serial.print("poping: ");
+//Serial.println(*data);
 
          popIdx++;
          if(popIdx > BUFFER_SIZE-1)
