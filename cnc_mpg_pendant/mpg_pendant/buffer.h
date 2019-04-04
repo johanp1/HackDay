@@ -1,7 +1,11 @@
  #ifndef __C_BUFFER_H__
 #define __C_BUFFER_H__
 
+#include "event.h"
+#include "event_listner.h"
+
 #define BUFFER_SIZE 20
+
 class C_Buffer {
  
   public:
@@ -9,24 +13,19 @@ class C_Buffer {
     // constructor 
    C_Buffer() 
    {
-      byte i;
-       
-      for (i = 0; i<BUFFER_SIZE; i++)  
-      {
-         buffer[i] = 0;
-      }
+      byte i;      
       pushIdx = 0;
       popIdx = 0;
    };
 
-   void push(const byte data) 
+   void push(const C_Event& e) 
    {
       noInterrupts();    // dissable INT interrupts while sending
 
-//Serial.print("pushing: ");
-//Serial.println(data);
+      buffer[pushIdx] = e;
 
-      buffer[pushIdx] = data;
+//Serial.print("pushing: ");
+//buffer[pushIdx].who();
 
       pushIdx++;
       if(pushIdx > BUFFER_SIZE-1)
@@ -35,19 +34,22 @@ class C_Buffer {
       }
        
       interrupts();       // restore interrupts
+
+      l_p->handleEvent(e);
    };
 
    // returns true if data was poped
-   bool pop(byte* data)
+   C_Event* pop(void)
    {
       bool bufferEmpty = isEmpty();
+      C_Event* e_p = 0;
       
       if(!bufferEmpty)
       {
-         *data = buffer[popIdx];
+         e_p = &buffer[popIdx];
 
-//Serial.print("poping: ");
-//Serial.println(*data);
+//Serial.print("poping: ");Serial.print(popIdx);
+//e_p->who();
 
          popIdx++;
          if(popIdx > BUFFER_SIZE-1)
@@ -55,8 +57,8 @@ class C_Buffer {
             popIdx = 0;
          }
       }
-       
-      return !bufferEmpty;
+
+      return e_p;
    };
    
    bool isEmpty()
@@ -64,10 +66,15 @@ class C_Buffer {
       return popIdx == pushIdx;
    };
    
+   void addEventListner(C_EventListner* lp)
+   {
+     l_p = lp;
+   }
    
    private:
   
-   byte buffer[BUFFER_SIZE];
+   C_Event buffer[BUFFER_SIZE];
+   C_EventListner* l_p;
    byte popIdx;
    byte pushIdx;
 };

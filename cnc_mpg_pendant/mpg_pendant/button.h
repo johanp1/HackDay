@@ -32,9 +32,8 @@ class C_Button : public C_EventGenerator {
          // take the new reading since debounce timer elapsed
          if (currState != state) 
          {
-//            Serial.println("accept");
             state = currState;
-            generateEvent((byte)state);
+            generateEvent(C_Event(name, state));
          }
       }
       
