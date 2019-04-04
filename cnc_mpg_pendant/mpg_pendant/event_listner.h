@@ -5,7 +5,7 @@
 class C_EventListner {
  
    public:
-   virtual void handleEvent(const C_Event& e) = 0;
+   virtual void handleEvent(C_Event& e) = 0;
 };
 
 #endif // __EVENT_LISTNER_H__

@@ -7,7 +7,7 @@ class C_Button : public C_EventGenerator {
    public:
 
     // constructor 
-   C_Button(C_Buffer* b, const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(b), name(argName), pin(argPin), debounceTime(argDebounceDelay)
+   C_Button(const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
    {
       prevState = LOW;
       time = 0;
@@ -33,7 +33,7 @@ class C_Button : public C_EventGenerator {
          if (currState != state) 
          {
             state = currState;
-            generateEvent(C_Event(name, state));
+            generateEvent(state);
          }
       }
       
@@ -48,7 +48,6 @@ class C_Button : public C_EventGenerator {
    int prevState; // previuos read button state
    unsigned long debounceTime;
    unsigned long time;
-   String name;
 };
 
 #endif // __BUTTON_H__

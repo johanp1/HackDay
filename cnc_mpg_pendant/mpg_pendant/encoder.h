@@ -1,9 +1,9 @@
  #ifndef __C_ROTARY_ENCODER_H__
 #define __C_ROTARY_ENCODER_H__
 
-//#include "WProgram.h"
+#include "event_generator.h"
 
-class C_RotaryEncoder {
+class C_RotaryEncoder : public C_EventGenerator{
     /*
       wraps encoder setup and update functions in a class
 
@@ -45,7 +45,7 @@ class C_RotaryEncoder {
 
     // constructor : sets pins as inputs and turns on pullup resistors
 
-    C_RotaryEncoder( int8_t argClkPin, int8_t argDtPin) : clkPin ( argClkPin), dtPin( argDtPin ) 
+    C_RotaryEncoder( const String& argName, int8_t argClkPin, int8_t argDtPin) : C_EventGenerator(argName), clkPin ( argClkPin), dtPin( argDtPin ) 
     {
       // set pin a and b to be input
       pinMode(clkPin, INPUT);
@@ -67,11 +67,12 @@ class C_RotaryEncoder {
       {
          digitalRead(dtPin) ? position-- : position++;
       }
+      generateEvent(position);
     };
 
     // returns current position
 
-    long int getPosition ()
+    int getPosition ()
     {
       return position;
     };
@@ -85,7 +86,8 @@ class C_RotaryEncoder {
 
   private:
 
-    long int position;
+    String name;
+    int position;
     int8_t clkPin;  // clock pin
     int8_t dtPin;   // direction pin
 };

@@ -5,18 +5,15 @@
 class C_Sender : public C_EventListner {
  
   public:
-    void handleEvent(const C_Event& e)
+    void handleEvent(C_Event& e)
     {
       String tmp_str = e.getSource();
-      byte data = e.getData();
-      Serial.print("handleEvent:");
+      int data = e.getData();
+      Serial.print("handleEvent: ");
       Serial.print(tmp_str);
+      Serial.print(", data: ");
       Serial.println(data);
     };
-    
-      
-   private:
-   
 };
 
 #endif // __C_SENDER_H__

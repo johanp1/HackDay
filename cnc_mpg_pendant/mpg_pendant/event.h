@@ -6,7 +6,7 @@ class C_Event {
  
   public:
     C_Event() : source(""), data(0) {};
-    C_Event(String& str, byte argData) : source(str), data(argData) {};
+    C_Event(String& str, int argData) : source(str), data(argData) {};
 
     void who(void)
     {
@@ -18,14 +18,14 @@ class C_Event {
       return source;
     };
 
-    byte getData(void)
+    int getData(void)
     {
       return data;
     }
     
-   private:
+  private:
       String source;
-      byte data;
+      int data;
    
 };
 
