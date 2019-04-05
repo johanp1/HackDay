@@ -1,6 +1,7 @@
  #ifndef __C_ROTARY_ENCODER_H__
 #define __C_ROTARY_ENCODER_H__
 
+#include <Arduino.h>
 #include "event_generator.h"
 
 class C_RotaryEncoder : public C_EventGenerator{
@@ -45,51 +46,20 @@ class C_RotaryEncoder : public C_EventGenerator{
 
     // constructor : sets pins as inputs and turns on pullup resistors
 
-    C_RotaryEncoder( const String& argName, int8_t argClkPin, int8_t argDtPin) : C_EventGenerator(argName), clkPin ( argClkPin), dtPin( argDtPin ) 
-    {
-      // set pin a and b to be input
-      pinMode(clkPin, INPUT);
-      pinMode(dtPin, INPUT);
-      // and turn on pull-up resistors
-      digitalWrite(clkPin, HIGH);
-      digitalWrite(dtPin, HIGH);
-    };
+    C_RotaryEncoder( const String& argName, int argClkPin, int argDtPin);
 
     // call this from your interrupt function
-
-    void update () 
-    {
-      if (digitalRead(clkPin))
-      {
-         digitalRead(dtPin) ? position++ : position--;
-      }
-      else 
-      {
-         digitalRead(dtPin) ? position-- : position++;
-      }
-      generateEvent(position);
-    };
-
-    // returns current position
-
-    int getPosition ()
-    {
-      return position;
-    };
-
-    // set the position value
-
-    void setPosition ( const long int p)
-    {
-      position = p;
-    };
+    void update();
+    
+    unsigned int getPosition();
+    void setPosition( unsigned int p);
 
   private:
 
     String name;
-    int position;
-    int8_t clkPin;  // clock pin
-    int8_t dtPin;   // direction pin
+    unsigned int position;
+    int clkPin;  // clock pin
+    int dtPin;   // direction pin
 };
 
 #endif // __ENCODER_H__

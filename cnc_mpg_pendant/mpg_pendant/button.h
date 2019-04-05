@@ -1,5 +1,7 @@
  #ifndef __C_BUTTON_H__
 #define __C_BUTTON_H__
+
+#include <Arduino.h>
 #include "event_generator.h"
 
 class C_Button : public C_EventGenerator {
@@ -7,39 +9,9 @@ class C_Button : public C_EventGenerator {
    public:
 
     // constructor 
-   C_Button(const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
-   {
-      prevState = LOW;
-      time = 0;
-      pinMode(pin, INPUT);
-   };
-
-
-   // returns debounced button state
-   void scan(void)
-   {
-      int currState = digitalRead(pin); // read pin
-      //Serial.print("curr_state: ");
-      //Serial.println(currState);
-      if (currState != prevState)
-      {
-        //Serial.print("new state?");
-         // reset the debouncing timer
-         time = millis();
-      }
-
-      if ((millis() - time) > debounceTime) {
-         // take the new reading since debounce timer elapsed
-         if (currState != state) 
-         {
-            state = currState;
-            generateEvent(state);
-         }
-      }
-      
-      prevState = currState;
-   };
-
+   C_Button(const String& argName, const int argPin, const long argDebounceDelay);
+  
+   void scan(void);
 
    private:
  
