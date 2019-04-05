@@ -6,7 +6,7 @@
 
 #define BUFFER_SIZE 20
 
-class C_Buffer {
+class C_Buffer : public C_EventListner {
  
   public:
 
@@ -17,6 +17,11 @@ class C_Buffer {
       pushIdx = 0;
       popIdx = 0;
    };
+
+  void handleEvent(C_Event& e)
+  {
+    push((const C_Event&)e);
+  }
 
    void push(const C_Event& e) 
    {
@@ -34,8 +39,6 @@ class C_Buffer {
       }
        
       interrupts();       // restore interrupts
-
-      l_p->handleEvent(e);
    };
 
    // returns true if data was poped
@@ -66,15 +69,9 @@ class C_Buffer {
       return popIdx == pushIdx;
    };
    
-   void addEventListner(C_EventListner* lp)
-   {
-     l_p = lp;
-   }
-   
    private:
   
    C_Event buffer[BUFFER_SIZE];
-   C_EventListner* l_p;
    byte popIdx;
    byte pushIdx;
 };
