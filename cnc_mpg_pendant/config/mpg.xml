@@ -1,0 +1,86 @@
+<pyvcp> 
+   <labelframe text="MPG">
+      <font>("Helvetica",16)</font> 
+         <vbox> 
+            <relief>RIDGE</relief> 
+            <bd>6</bd> 
+            <hbox> 
+               <jogwheel> 
+                  <halpin>"jog-counts"</halpin> 
+                  <cpr>45</cpr> 
+                  <size>250</size> 
+               </jogwheel>
+            </hbox>   
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <label>
+                  <text>"jog count:"</text>
+               </label> 
+               <number> 
+                  <halpin>"number-jog-count"</halpin>
+                  <font>("Helvetica",24)</font>
+                  <format>"+4.4f"</format> 
+               </number>
+            </hbox>
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <label>
+                  <text>"jog scale:"</text>
+               </label> 
+               <scale> 
+                  <font>("Helvetica",14)</font>
+                  <halpin>"jog-scale"</halpin> 
+                  <resolution>1</resolution>
+                  <orient>HORIZONTAL</orient>
+                  <min_>1</min_>
+                  <max_>80</max_>
+               </scale>
+            </hbox>
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <label> 
+                  <text>"jog active"</text> 
+                  <font>("Helvetica",14)</font> 
+               </label> 
+               <checkbutton>
+                  <halpin>"jog-vel-mode "</halpin> 
+                  <text>"velocity mode"</text>
+                  <initval>0</initval>
+               </checkbutton>
+            </hbox>
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <label> 
+                  <text>"jog active"</text> 
+                  <font>("Helvetica",14)</font> 
+               </label> 
+               <led> 
+                  <halpin>"jog-active"</halpin>
+                  <size>25</size> 
+                  <on_color>"green"</on_color> 
+                  <off_color>"red"</off_color> 
+               </led> 
+            </hbox>
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <button> 
+                  <halpin>"rth-button"</halpin> 
+                  <text>"Rapid to Home"</text> 
+               </button>
+            </hbox>
+            <hbox> 
+               <relief>RIDGE</relief>
+               <bd>2</bd> 
+               <button> 
+                  <halpin>"prog-run"</halpin> 
+                  <text>"Run"</text> 
+               </button>
+            </hbox>
+         </vbox>
+   </labelframe>
+</pyvcp>
