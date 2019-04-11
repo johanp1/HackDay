@@ -1,10 +1,10 @@
 loadrt and2
 addf and2.0 servo-thread
 
-net mpg-jog-counts      axis.0.jog-counts          <= pyvcp.jog-counts-f
-net number-jog-counts   pyvcp.number-jog-counts-f  <= pyvcp.jog-counts-f
+net mpg-jog-counts      axis.0.jog-counts          <= pyvcp.jog-counts
+net number-jog-counts   pyvcp.number-jog-counts    <= pyvcp.jog-counts
 
-net jog-scale           pyvcp.jog-scale-f          => axis.0.jog.scale
+net jog-scale           pyvcp.jog-scale            => axis.0.jog.scale
 
 net vel-mode            pyvcp.jog-vel-mode         => axis.0.jog-vel-mode 
 
