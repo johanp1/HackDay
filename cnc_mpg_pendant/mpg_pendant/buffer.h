@@ -16,7 +16,7 @@ public:
 
    void handleEvent(C_Event& e);
    void push(const C_Event& e); 
-   C_Event* pop(void);
+   bool pop(C_Event& e);
    bool isEmpty();
    
 private:

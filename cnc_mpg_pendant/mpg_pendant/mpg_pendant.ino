@@ -24,17 +24,16 @@ void setup() {
 
 void loop() {  
   byte i;
+  C_Event e;
 
   for (i = 0; i<2; i++)
   {
     buttons[i].scan();
   }
 
-  if(!buffer.isEmpty())
+  if(buffer.pop(e))
   {
-    C_Event* e = buffer.pop();
-    
-    sender.sendEvent(*e);
+    sender.sendEvent(e);
   }
   
   delay(10); // waits 10ms

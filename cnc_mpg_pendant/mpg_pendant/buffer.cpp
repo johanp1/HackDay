@@ -30,14 +30,13 @@ void C_Buffer::push(const C_Event& e)
    interrupts();       // restore interrupts
 }
 
-C_Event* C_Buffer::pop(void)
+bool C_Buffer::pop(C_Event& e)
 {
    bool bufferEmpty = isEmpty();
-   C_Event* e_p = 0;
       
    if(!bufferEmpty)
    {
-      e_p = &buffer[popIdx];
+      e = buffer[popIdx];
 
       popIdx++;
       if(popIdx > BUFFER_SIZE-1)
@@ -46,7 +45,7 @@ C_Event* C_Buffer::pop(void)
       }
    }
 
-   return e_p;
+   return !bufferEmpty;
 }
    
 bool C_Buffer::isEmpty()
