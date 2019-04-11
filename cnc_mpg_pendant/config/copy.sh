@@ -1,3 +1,3 @@
-cp mpg.hal /home/linuxCNC/configs/axis_mm/.
-cp mpg.xml /home/linuxCNC/configs/axis_mm/.
-#cp mpg.hal /home/linuxCNC/configs/axis_mm/.
+cp mpg.xml ~/linuxcnc/configs/sim.axis/.
+cp mpg.hal ~/linuxcnc/configs/sim.axis/.
+#cp axis_mm.ini ~/linuxcnc/configs/sim.axis/.

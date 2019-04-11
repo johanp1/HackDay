@@ -1,16 +1,16 @@
 loadrt and2
 addf and2.0 servo-thread
 
-net mpg-jog-counts      axis.0.jog-counts          <= pyvcp.jog-counts
-net number-jog-counts   pyvcp.number-jog-counts    <= pyvcp.jog-counts
+net mpg-jog-counts      axis.0.jog-counts          <= pyvcp.jog-counts #s32  float  nix
+net number-jog-counts   pyvcp.number-jog-count    <= pyvcp.jog-counts  #ok
 
-net jog-scale           pyvcp.jog-scale            => axis.0.jog.scale
+net jog-scale           pyvcp.jog-scale-f          => axis.0.jog-scale  #ok
 
-net vel-mode            pyvcp.jog-vel-mode         => axis.0.jog-vel-mode 
+net vel-mode            pyvcp.jog-vel-mode         => axis.0.jog-vel-mode #funkar inte???
 
-net jog-active          pyvcp.jog-active           => axis.0.kb-jog-active 
+net jog-active          pyvcp.jog-active           => axis.0.kb-jog-active #ok
 
-net rth-buton           halui.mdi-command-00       <= pyvcp.rth-button
+net rth-buton           halui.mdi-command-00       <= pyvcp.rth-button #ok
 
 net program-start-btn   halui.mode.auto and2.0.in0 <= pyvcp.prog-run
 net program-run-ok      and2.0.in1                 <= halui.mode.is-auto

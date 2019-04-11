@@ -41,12 +41,8 @@
             <hbox> 
                <relief>RIDGE</relief>
                <bd>2</bd> 
-               <label> 
-                  <text>"jog active"</text> 
-                  <font>("Helvetica",14)</font> 
-               </label> 
                <checkbutton>
-                  <halpin>"jog-vel-mode "</halpin> 
+                  <halpin>"jog-vel-mode"</halpin> 
                   <text>"velocity mode"</text>
                   <initval>0</initval>
                </checkbutton>
