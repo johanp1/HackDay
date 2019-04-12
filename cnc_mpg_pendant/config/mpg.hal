@@ -1,16 +1,35 @@
 loadrt and2
-loadrt conv_float_u32
+loadrt conv_float_s32
 
 addf and2.0 servo-thread
-addf conv_float_u32.0 servo-thread
+addf conv-float-s32.0 servo-thread
 
-net mpg-jog-counts      axis.0.jog-counts          <= pyvcp.jog-counts
-net number-jog-counts   pyvcp.number-jog-count     <= pyvcp.jog-counts
+net mpg-jog-counts-f    pyvcp.jog-counts           => conv-float-s32.0.in 
+net mpg-jog-counts      axis.0.jog-counts          <= conv-float-s32.0.out
+net mpg-jog-counts      axis.1.jog-counts
+net mpg-jog-counts      axis.2.jog-counts
+
+net mpg-jog-counts-f    pyvcp.number-jog-count
+
 net jog-scale           pyvcp.jog-scale-f          => axis.0.jog-scale
-net vel-mode            pyvcp.jog-vel-mode         => axis.0.jog-vel-mode 
-net jog-active          pyvcp.jog-active           => axis.0.kb-jog-active 
-net rth-buton           halui.mdi-command-00       <= pyvcp.rth-button 
+net jog-scale           axis.1.jog-scale
+net jog-scale           axis.2.jog-scale
 
-net program-start-btn   halui.mode.auto and2.0.in0 <= pyvcp.prog-run
+net vel-mode            pyvcp.jog-vel-mode         => axis.0.jog-vel-mode 
+net vel-mode            axis.1.jog-vel-mode 
+net vel-mode            axis.2.jog-vel-mode 
+
+net jog-active-x        pyvcp.jog-x-active         => axis.0.wheel-jog-active 
+net jog-active-y        pyvcp.jog-y-active         => axis.1.wheel-jog-active 
+net jog-active-z        pyvcp.jog-z-active         => axis.2.wheel-jog-active 
+
+net rth-buton           halui.mdi-command-00       <= pyvcp.rth-btn 
+net program-start-btn   halui.mode.auto and2.0.in0 <= pyvcp.prog-run-btn
 net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
 net remote-program-run  halui.program.run          <= and2.0.out
+
+net estop-btn           halui.estop.activate       <= pyvcp.estop-btn
+
+net jog-enable-x        pyvcp.selector.X           axis.0.jog-enable
+net jog-enable-y        pyvcp.selector.Y           axis.1.jog-enable
+net jog-enable-z        pyvcp.selector.Z           axis.2.jog-enable

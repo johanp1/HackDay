@@ -10,7 +10,12 @@
                   <cpr>45</cpr> 
                   <size>250</size> 
                </jogwheel>
-            </hbox>   
+               <radiobutton>
+                  <choices>["X","Y","Z"]</choices>
+                  <halpin>"selector"</halpin>
+                  <initval>0</initval>
+               </radiobutton>   
+            </hbox>           
             <hbox> 
                <relief>RIDGE</relief>
                <bd>2</bd> 
@@ -51,11 +56,31 @@
                <relief>RIDGE</relief>
                <bd>2</bd> 
                <label> 
-                  <text>"jog active"</text> 
+                  <text>"jog-x"</text> 
                   <font>("Helvetica",14)</font> 
                </label> 
                <led> 
-                  <halpin>"jog-active"</halpin>
+                  <halpin>"jog-x-active"</halpin>
+                  <size>25</size> 
+                  <on_color>"green"</on_color> 
+                  <off_color>"red"</off_color> 
+               </led> 
+               <label> 
+                  <text>"jog-y"</text> 
+                  <font>("Helvetica",14)</font> 
+               </label> 
+               <led> 
+                  <halpin>"jog-y-active"</halpin>
+                  <size>25</size> 
+                  <on_color>"green"</on_color> 
+                  <off_color>"red"</off_color> 
+               </led> 
+               <label> 
+                  <text>"jog-z"</text> 
+                  <font>("Helvetica",14)</font> 
+               </label> 
+               <led> 
+                  <halpin>"jog-z-active"</halpin>
                   <size>25</size> 
                   <on_color>"green"</on_color> 
                   <off_color>"red"</off_color> 
@@ -65,16 +90,16 @@
                <relief>RIDGE</relief>
                <bd>2</bd> 
                <button> 
-                  <halpin>"rth-button"</halpin> 
+                  <halpin>"rth-btn"</halpin> 
                   <text>"Rapid to Home"</text> 
                </button>
-            </hbox>
-            <hbox> 
-               <relief>RIDGE</relief>
-               <bd>2</bd> 
                <button> 
-                  <halpin>"prog-run"</halpin> 
+                  <halpin>"prog-run-btn"</halpin> 
                   <text>"Run"</text> 
+               </button>
+               <button> 
+                  <halpin>"estop-btn"</halpin> 
+                  <text>"E-Stop"</text> 
                </button>
             </hbox>
          </vbox>
