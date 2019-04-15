@@ -1,15 +1,18 @@
 #! /usr/bin/python
 
+### https://docs.python.org/2/library/xml.etree.elementtree.html
+
 import re
 import getopt
 import sys
 import serial
 import subprocess
+import xml.etree.ElementTree as ET
 
 class CMD:
-   def __init__(self, function_code, callback):
-      self.function_code = function_code
-      self.callback = callback
+   def __init__(self, name, val):
+      self.name = name
+      self.val = val
       
 ## handler for G-words. only G0 and G1 currently supported
 def handle_g(str):
@@ -72,7 +75,7 @@ def handle_m(str):
    return ret_str
    
 ### parse_line() #############################################
-def parse_line(str):
+def parse_cmd(str):
   
   words = str.split()
   send_cmd = []             #temp list to store commands to send
@@ -87,20 +90,6 @@ def parse_line(str):
   return ''.join(send_cmd) #join will append the list of strings to one string
   
   
-### send_line() ############################################# 
-def send_data(str, f_hdlr):
-
-   print '\tsending: ' +  str
-
-   if debug == 0:
-      ser.write(''.join(str).encode('utf-8'))
-      ser.write('\n')
-      #serial expects a byte-array and not a string
-          
-   if debug == '2':
-      f_hdlr.write(' '.join(str))  #join will append the list of strings to one string
-      f_hdlr.write('\n')
-  
 ## wait for character ch sent from client ################################## 
 def waitForToken(ch):
    if debug == 0:
@@ -112,20 +101,19 @@ def waitForToken(ch):
             b = ser.read(1)
    
    if debug == '1':
-      s = raw_input('\tpress any key:')
+      s = raw_input('\tpress any key:') 
  
 ### start of main script #############################################
 
-#these are the accepted/supported G-codes, everything else will be thrown away
+#these are the accepted commands everything else will be thrown away
 cmds = [CMD('G', handle_g), CMD('X', handle_x), CMD('Y', handle_y), CMD('Z', handle_z), CMD('F', handle_f), ]
 
 in_file = ''
-out_file = ''
-debug = 0
+debug = 1
 port = '/dev/ttyS2'
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "output=", "debug=", "port="])
+  opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "debug=", "port="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
@@ -133,12 +121,10 @@ except getopt.GetoptError as err:
 
 for o, a in opts:
   if o == "-h":
-    print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --debug=[012] --port=<serial port>'
+    print 'usage pendant_srv.py --input=<in.xml> --debug=[012] --port=<serial port>'
     sys.exit()
   elif o == "--input":
     in_file = a
-  elif o == "--output":
-    out_file = a
   elif o == "--debug":
     debug = a
   elif o == "--port":
@@ -148,15 +134,8 @@ for o, a in opts:
     assert False, "unhandled option"
 
 if in_file == '':
-   print 'usage gserver.py --input=<in.ngc> --output=<out.txt> --debug=[012] --port=<serial port>'
+   print 'usage pendant_srv.py --input=<in.xml> --debug=[012] --port=<serial port>'
    sys.exit()
-   
-if out_file == '':
-   out_file = 'out.txt'
-   print 'using default log file out.txt'
-
-f_in = open(in_file,'r')
-f_out = open(out_file,'w')
 
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
@@ -182,21 +161,14 @@ if debug == 0:
       subprocess.call("python -m serial.tools.list_ports", shell=True) 
       sys.exit(1)
 
-#wait for # sent from client indicating it is done with it's init, before sending first command line
-waitForToken('#')      
-      
-line = f_in.readline()
-while line != '':
-   print 'processing: ' + line
-   send_str = parse_line(line) 
 
-   if send_str != '':
-      send_data(send_str, f_out)
-	   #do not send next line if not confirmed by client/user
+tree = ET.parse(in_file)
+root = tree.getroot()
       
-      waitForToken('*')
-         
-   line = f_in.readline()
-  
-f_in.close()
-f_out.close()
+for halpin in root.iter('halpin'):
+   type = halpin.find('type')
+   event = halpin.find('event')
+   
+   if type is not None and event is not None:
+      print halpin.text, type.text, event.text
+      
