@@ -6,19 +6,13 @@
             <bd>6</bd> 
             <hbox> 
                <jogwheel> 
-                  <halpin>"jog-counts"
-                     <event>jog</event>
-                     <type>s32</type>
-                  </halpin>
+                  <halpin>"jog-counts"<event>jog</event><type>s32</type></halpin>
                   <cpr>45</cpr> 
                   <size>250</size> 
                </jogwheel>
                <radiobutton>
                   <choices>["X","Y","Z"]</choices>
-                  <halpin>"selector"
-                     <event>sel</event>
-                     <type>u32</type>
-                  </halpin>
+                  <halpin>"selector"<event>sel</event><type>u32</type></halpin>
                   <initval>0</initval>
                </radiobutton>   
             </hbox>           
@@ -96,24 +90,15 @@
                <relief>RIDGE</relief>
                <bd>2</bd> 
                <button> 
-                  <halpin>"rth-btn"
-                     <event>rth</event>
-                     <type>u32</type>
-                  </halpin>
+                  <halpin>"rth-btn"<event>rth</event><type>u32</type></halpin>
                   <text>"Rapid to Home"</text> 
                </button>
                <button> 
-                  <halpin>"prog-run-btn"
-                     <event>run</event>
-                     <type>u32</type>
-                  </halpin>
+                  <halpin>"prog-run-btn"<event>run</event><type>u32</type></halpin>
                   <text>"Run"</text> 
                </button>
                <button> 
-                  <halpin>"estop-btn"
-                     <event>est</event>
-                     <type>u32</type>
-                  </halpin>
+                  <halpin>"estop-btn"<event>est</event><type>u32</type></halpin>
                   <text>"E-Stop"</text> 
                </button>
             </hbox>
