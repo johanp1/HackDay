@@ -62,7 +62,7 @@ def parse_cmd(str):
 
 in_file = ''
 debug = 1
-port = '/dev/ttyS2'
+#port = '/dev/ttyS2'
 in_file = 'config/axis_mm.ini'
 
 f_in = open(in_file, 'r')
@@ -86,6 +86,25 @@ for line in f_in:
       # remove line ending
       xml_file = line.strip('\n')
 
+   if 'SERIAL_PORT' in line:  
+      # remove comment if any
+      i = line.find('#')
+      if i >= 0:
+         line = line[:i]
+
+      # get the name
+      i = line.find('=')
+      if i >= 0:
+         line = line[i+1:]
+
+      # remove blank-spaces
+      line = line.strip(' ')
+
+      # remove line ending
+      port = line.strip('\n')
+   
+print 'xml: ' + xml_file   
+print 'port: ' + port
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
