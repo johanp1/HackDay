@@ -57,54 +57,51 @@ def parse_cmd(str):
 #
 #  return ''.join(send_cmd) #join will append the list of strings to one string
   
+  
+def usage():
+   print 'usage pendant_srv.py -c name <path/>in_file.xml'
  
 ### start of main script #############################################
 
-in_file = ''
+xml_file = ''
+name = ''
 debug = 1
-#port = '/dev/ttyS2'
-in_file = 'config/axis_mm.ini'
+port = '/dev/ttyS2'
 
-f_in = open(in_file, 'r')
+try:
+  opts, args = getopt.getopt(sys.argv[1:], "hcp:", ["input=", "port="])
+except getopt.GetoptError as err:
+  # print help information and exit:
+  print(err) # will print something like "option -a not recognized"
+  sys.exit(2)
 
-# parse for .xml-file
-for line in f_in:
-   if 'ARPY_MPG' in line:     
-      # remove comment if any
-      i = line.find('#')
-      if i >= 0:
-         line = line[:i]
-      
-      # get the file name
-      i = line.find('=')
-      if i >= 0:
-         line = line[i+1:]
-         
-      # remove blank-spaces
-      line = line.strip(' ')
-      
-      # remove line ending
-      xml_file = line.strip('\n')
-
-   if 'SERIAL_PORT' in line:  
-      # remove comment if any
-      i = line.find('#')
-      if i >= 0:
-         line = line[:i]
-
-      # get the name
-      i = line.find('=')
-      if i >= 0:
-         line = line[i+1:]
-
-      # remove blank-spaces
-      line = line.strip(' ')
-
-      # remove line ending
-      port = line.strip('\n')
+for o, a in opts:
+  if o == "-h":
+    usage()
+    sys.exit()
+  if o == "-c":
+    name = a
+  elif o == "--input":
+    xml_file = a
+  elif o in ("-p", "--port"):
+    port = a
+  else:
+    print o
+    assert False, "unhandled option"
+   
+if xml_file == '':
+   if len(sys.argv) < 2:
+      usage()
+      sys.exit(2)
+   else:
+      xml_file = sys.argv[-1]
+   
+if name == '':
+   name = 'mpg'
    
 print 'xml: ' + xml_file   
 print 'port: ' + port
+print 'name: ' + name
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
@@ -131,7 +128,7 @@ if debug == 0:
 
 
 h = hal()
-h.component("mpg")
+h.component(name)
 
 tree = ET.parse(xml_file)
 root = tree.getroot()
