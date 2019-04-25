@@ -33,7 +33,7 @@ class hal:
    def component(self, name):
       self.name = name
    def newpin(self, pin_name, pin_type, dir):
-      self.pin_list.append(hal_pin(pin_name.strip('"'), pin_type))
+      self.pin_list.append(hal_pin(pin_name, pin_type))
    def ready():
       ready = 1
    def __getitem__(self, name):
@@ -126,7 +126,7 @@ if debug == 0:
       subprocess.call("python -m serial.tools.list_ports", shell=True) 
       sys.exit(1)
 
-
+event2pin = {}
 h = hal()
 h.component(name)
 
@@ -139,11 +139,17 @@ for halpin in root.iter('halpin'):
    
    if type is not None and event is not None:
       #print 'l'+halpin.text + 'r', type.text, event.text
-      h.newpin(halpin.text, type.text, hal.HAL_OUT)
+      h.newpin(halpin.text.strip('"'), type.text, hal.HAL_OUT)
+      event2pin[event.text] = halpin.text.strip('"')
+ 
 
-for pin in h.pin_list:
+for ev in event2pin:
+   print 'even: ' + ev + ' halpin: ' + event2pin[ev]
+   print h[event2pin[ev]].name
+   
+#for pin in h.pin_list:
    #print pin.name, pin.type
-   print h[pin.name].name
+#   print h[pin.name].name
 
  #ser.write(''.join(str).encode('utf-8'))
  #ser.write('\n')
