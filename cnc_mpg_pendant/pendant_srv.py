@@ -33,7 +33,7 @@ class hal:
    def component(self, name):
       self.name = name
    def newpin(self, pin_name, pin_type, dir):
-      self.pin_list.append(hal_pin(pin_name, pin_type))
+      self.pin_list.append(hal_pin(pin_name.strip('"'), pin_type))
    def ready():
       ready = 1
    def __getitem__(self, name):
@@ -69,7 +69,7 @@ debug = 1
 port = '/dev/ttyS2'
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "hcp:", ["input=", "port="])
+  opts, args = getopt.getopt(sys.argv[1:], "hpd:c:", ["input=", "port=", "debug="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
@@ -85,6 +85,8 @@ for o, a in opts:
     xml_file = a
   elif o in ("-p", "--port"):
     port = a
+  elif o in ("-d", "--debug"):
+   debug = a
   else:
     print o
     assert False, "unhandled option"
@@ -102,6 +104,7 @@ if name == '':
 print 'xml: ' + xml_file   
 print 'port: ' + port
 print 'name: ' + name
+print 'debug: ' + str(debug)
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
@@ -139,8 +142,8 @@ for halpin in root.iter('halpin'):
    
    if type is not None and event is not None:
       #print 'l'+halpin.text + 'r', type.text, event.text
-      h.newpin(halpin.text.strip('"'), type.text, hal.HAL_OUT)
-      event2pin[event.text] = halpin.text.strip('"')
+      h.newpin(halpin.text, type.text, hal.HAL_OUT)
+      event2pin[event.text] = halpin.text.strip('"') #dictionary to map between even and hal_pin in h
  
 
 for ev in event2pin:
