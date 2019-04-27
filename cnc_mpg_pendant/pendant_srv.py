@@ -2,17 +2,20 @@
 
 ### https://docs.python.org/2/library/xml.etree.elementtree.html
 
-import re
+#import re
+import time
 import getopt
 import sys
 import serial
 import subprocess
 import xml.etree.ElementTree as ET
 
-class CMD:
-   def __init__(self, name, val):
+class Pin:
+   """ Representation of a Pin and it's data"""
+   def __init__(self, name, val, type):
       self.name = name
       self.val = val
+      self.type = type
       
 class hal_pin:
    """stub sub class to hal-class"""
@@ -43,24 +46,19 @@ class hal:
    
    
 ### parse_line() #############################################
-def parse_cmd(str):
+def updatePin(str):
+   """parses incomming cmd and update Pin data value accordingly"""
+   cmd = str.split('_')
+   if len(cmd) == 2:
+      val = cmd[1] 
+      ev = cmd[0]
   
-  words = str.split('_')
-  send_cmd = []             #temp list to store commands to send
-  
-#  for word in words:       #go through each word in splitted line
-#    for cmd in cmds:       #compare word to each supported command
-#      if word[0] == cmd.function_code:   #is the word any of the supported commands in cmds
-#         tmp_word = cmd.callback(word)  #call command-specific handler, i.e parse command
-#         if tmp_word != '':
-#            send_cmd.append(tmp_word) #add command to send-message, send_cmd is a list of strings
-#
-#  return ''.join(send_cmd) #join will append the list of strings to one string
-  
+      event2PinDict[ev].val = int(val)
+      print ev + ' ' + val
   
 def usage():
    print 'usage pendant_srv.py -c name <path/>in_file.xml'
- 
+  
 ### start of main script #############################################
 
 xml_file = ''
@@ -100,11 +98,12 @@ if xml_file == '':
    
 if name == '':
    name = 'mpg'
-   
+
 print 'xml: ' + xml_file   
 print 'port: ' + port
 print 'name: ' + name
 print 'debug: ' + str(debug)
+
 # open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
@@ -119,7 +118,7 @@ ser.xonxoff = False       # disable software flow control
 #ser.writeTimeout = 2     # timeout for write
 ser.timeout = 1           # 1 sec timeout
 
-if debug == 0:
+if debug == '0':
    try:
       ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
    except serial.SerialException as e:
@@ -129,7 +128,7 @@ if debug == 0:
       subprocess.call("python -m serial.tools.list_ports", shell=True) 
       sys.exit(1)
 
-event2pin = {}
+event2PinDict = {}
 h = hal()
 h.component(name)
 
@@ -140,25 +139,42 @@ for halpin in root.iter('halpin'):
    type = halpin.find('type')
    event = halpin.find('event')
    
+   # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
    if type is not None and event is not None:
       #print 'l'+halpin.text + 'r', type.text, event.text
       h.newpin(halpin.text, type.text, hal.HAL_OUT)
-      event2pin[event.text] = halpin.text.strip('"') #dictionary to map between even and hal_pin in h
+      event2PinDict[event.text] = Pin(halpin.text.strip('"'), 0, type) #dictionary to map between event and hal_pin in h
  
 
-for ev in event2pin:
-   print 'even: ' + ev + ' halpin: ' + event2pin[ev]
-   print h[event2pin[ev]].name
+#serial expects a byte-array and not a string
+if debug == '0':
+   
+   ser.flush()
+
+   while 1:
+      if ser.in_waiting:
+         b = ser.read_until() #blocks until '\n' received or timeout
+         #print b
+         updatePin(b.decode('utf-8'))
+      
+      time.sleep(0.01)  
+      
+### test... ###################################
+for evKey in event2PinDict:
+   p = event2PinDict[evKey]
+   print 'event: ' + evKey + ' halpin: ' + p.name
+#   print h[p.name].name
    
 #for pin in h.pin_list:
    #print pin.name, pin.type
 #   print h[pin.name].name
-
+cmds = ['sel_1', 'sel_3', 'jog_10', 'run_1', 'run_0', 'rth_1', 'rth_0', ]
  #ser.write(''.join(str).encode('utf-8'))
  #ser.write('\n')
- #serial expects a byte-array and not a string
-if debug == 0:
-   if ser.in_waiting:
-      b = ser.read_until() #blocks until '\n' received or timeout
-      parse_cmd(b.Decode('utf-8'))
-      
+ 
+for cmd in cmds:
+   updatePin(cmd)
+   for evKey in event2PinDict:
+      p = event2PinDict[evKey]
+      print 'halpin: ' + p.name + ' data: ' + str(p.val)
+   

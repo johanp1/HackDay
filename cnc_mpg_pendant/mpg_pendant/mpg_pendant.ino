@@ -29,7 +29,7 @@ void loop() {
   byte i;
   C_Event e;
 
-  for (i = 0; i<2; i++)
+  for (i = 0; i<3; i++)
   {
     buttons[i].scan();
   }
