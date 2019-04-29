@@ -152,12 +152,12 @@ if debug == '0':
    ser.flush()
 
    while 1:
-      if ser.in_waiting:
+      while ser.in_waiting:
          b = ser.read_until() #blocks until '\n' received or timeout
          #print b
          updatePin(b.decode('utf-8'))
       
-      time.sleep(0.01)  
+      time.sleep(0.05)  
       
 ### test... ###################################
 for evKey in event2PinDict:
