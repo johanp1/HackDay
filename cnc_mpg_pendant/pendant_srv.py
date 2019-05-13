@@ -1,18 +1,28 @@
+"""usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
+in_file  -  input xml-file describing what knobs and/or button are on the pendant
+-c <name>                # name of component in HAL. 'mpg' default
+-d/--debug= <level>      # debug level
+-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default
+-h                       # Help test
+"""
+
 #! /usr/bin/python
 
 ### https://docs.python.org/2/library/xml.etree.elementtree.html
 
-import re
+import time
 import getopt
 import sys
 import serial
 import subprocess
 import xml.etree.ElementTree as ET
 
-class CMD:
-   def __init__(self, name, val):
-      self.name = name
-      self.val = val
+class Pin:
+   """ Representation of a Pin and it's data"""
+   def __init__(self, name, val, type):
+      self.name = name  # HAL pin name
+      self.val = val    # current value of pin, e.g. 1 - on, 0 - off
+      self.type = type  # HAL type
       
 class hal_pin:
    """stub sub class to hal-class"""
@@ -43,38 +53,37 @@ class hal:
    
    
 ### parse_line() #############################################
-def parse_cmd(str):
+def updatePin(str):
+   """parses incomming cmd and update Pin data value accordingly
+   input: command string, formated as: '<event>_<number>\n' 
+   output: nothing.
+   """
+   cmd = str.split('_')
+   if len(cmd) == 2:
+      val = cmd[1] 
+      ev = cmd[0]
   
-  words = str.split('_')
-  send_cmd = []             #temp list to store commands to send
-  
-#  for word in words:       #go through each word in splitted line
-#    for cmd in cmds:       #compare word to each supported command
-#      if word[0] == cmd.function_code:   #is the word any of the supported commands in cmds
-#         tmp_word = cmd.callback(word)  #call command-specific handler, i.e parse command
-#         if tmp_word != '':
-#            send_cmd.append(tmp_word) #add command to send-message, send_cmd is a list of strings
-#
-#  return ''.join(send_cmd) #join will append the list of strings to one string
-  
+      event2PinDict[ev].val = int(val)
+      print ev + ' ' + val
   
 def usage():
    print 'usage pendant_srv.py -c name <path/>in_file.xml'
- 
+  
 ### start of main script #############################################
 
-xml_file = ''
-name = ''
-debug = 1
-port = '/dev/ttyS2'
+xml_file = ''  # input xml-file describing what knobs and/or button are on the pendant
+name = ''      # name of component in HAL
+debug = 1      # debug level
+port = '/dev/ttyS2' #default serial port to use
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "hcp:", ["input=", "port="])
+  opts, args = getopt.getopt(sys.argv[1:], "hpd:c:", ["input=", "port=", "debug="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
   sys.exit(2)
 
+### parse input command line
 for o, a in opts:
   if o == "-h":
     usage()
@@ -85,6 +94,8 @@ for o, a in opts:
     xml_file = a
   elif o in ("-p", "--port"):
     port = a
+  elif o in ("-d", "--debug"):
+   debug = a
   else:
     print o
     assert False, "unhandled option"
@@ -97,12 +108,14 @@ if xml_file == '':
       xml_file = sys.argv[-1]
    
 if name == '':
-   name = 'mpg'
-   
+   name = 'mpg' # default name
+
 print 'xml: ' + xml_file   
 print 'port: ' + port
 print 'name: ' + name
-# open serial port
+print 'debug: ' + str(debug)
+
+### open serial port
 # list available ports with 'python -m serial.tools.list_ports'
 ser = serial.Serial()
 ser.port = port
@@ -116,7 +129,7 @@ ser.xonxoff = False       # disable software flow control
 #ser.writeTimeout = 2     # timeout for write
 ser.timeout = 1           # 1 sec timeout
 
-if debug == 0:
+if debug == '0':
    try:
       ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
    except serial.SerialException as e:
@@ -126,30 +139,55 @@ if debug == 0:
       subprocess.call("python -m serial.tools.list_ports", shell=True) 
       sys.exit(1)
 
-
-h = hal()
-h.component(name)
+### parse input xml file
+event2PinDict = {} # dictionary. data-key is the event name sent from Pendant, data-element object containing HAL-pin-name, type and current value
+h = hal()          # get handler to HAL
+h.component(name)  # instanciate the component
 
 tree = ET.parse(xml_file)
 root = tree.getroot()
       
+# iterate the xml to find the knobs/buttons on the pendant, their event names, type and HAL-pin-name
 for halpin in root.iter('halpin'):
    type = halpin.find('type')
    event = halpin.find('event')
    
+   # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
    if type is not None and event is not None:
       #print 'l'+halpin.text + 'r', type.text, event.text
-      h.newpin(halpin.text, type.text, hal.HAL_OUT)
+      h.newpin(halpin.text, type.text, hal.HAL_OUT)                    # create the user space HAL-pin
+      event2PinDict[event.text] = Pin(halpin.text.strip('"'), 0, type) # dictionary to map between event and hal_pin in h
+ 
 
-for pin in h.pin_list:
-   #print pin.name, pin.type
-   print h[pin.name].name
+### serial expects a byte-array and not a string
+if debug == '0':
+   
+   ser.flush()
 
- #ser.write(''.join(str).encode('utf-8'))
- #ser.write('\n')
- #serial expects a byte-array and not a string
-if debug == 0:
-   if ser.in_waiting:
-      b = ser.read_until() #blocks until '\n' received or timeout
-      parse_cmd(b.Decode('utf-8'))
+   while 1:
+      while ser.in_waiting:
+         b = ser.read_until() #blocks until '\n' received or timeout
+         #print b
+         updatePin(b.decode('utf-8'))
       
+      time.sleep(0.05)  
+      
+### test... ###################################
+for evKey in event2PinDict:
+   p = event2PinDict[evKey]
+   print 'event: ' + evKey + ' halpin: ' + p.name
+#   print h[p.name].name
+   
+#for pin in h.pin_list:
+   #print pin.name, pin.type
+#   print h[pin.name].name
+cmds = ['sel_1', 'sel_3', 'jog_10', 'run_1', 'run_0', 'rth_1', 'rth_0', ]
+#ser.write(''.join(str).encode('utf-8'))
+#ser.write('\n')
+ 
+for cmd in cmds:
+   updatePin(cmd)
+   for evKey in event2PinDict:
+      p = event2PinDict[evKey]
+      print 'halpin: ' + p.name + ' data: ' + str(p.val)
+#################################################   
