@@ -67,7 +67,13 @@ def updatePin(str):
       print ev + ' ' + val
   
 def usage():
-   print 'usage pendant_srv.py -c name <path/>in_file.xml'
+   print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml" +
+         "in_file  -  input xml-file describing what knobs and/or button are on the pendant" +
+         "-c <name>                # name of component in HAL. 'mpg' default" +
+         "-d/--debug= <level>      # debug level" +
+         "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default " +
+         "-h                       # Help test"
+
   
 ### start of main script #############################################
 
