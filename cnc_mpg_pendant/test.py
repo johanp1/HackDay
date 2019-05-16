@@ -1,5 +1,6 @@
 #!/usr/bin/python
-import hal, time
+import hal
+import time
 import serial
 
 def updatePin(str):
@@ -7,15 +8,22 @@ def updatePin(str):
    input: command string, formated as: '<event>_<number>\n' 
    output: nothing.
    """
+   val = 0
    cmd = str.split('_')
    if len(cmd) == 2:
-      val = cmd[1] 
-      ev = cmd[0]
+      if is_number(cmd[1]):
+         val = int(cmd[1]) 
       
-   return cmd[1]
+   return val
 
+def is_number(s):
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
 
-h = hal.component("passthrough")
+h = hal.component("test")
 
 h.newpin("in", hal.HAL_FLOAT, hal.HAL_IN)
 h.newpin("out", hal.HAL_FLOAT, hal.HAL_OUT)
@@ -37,29 +45,20 @@ ser.xonxoff = False       # disable software flow control
 #ser.writeTimeout = 2     # timeout for write
 ser.timeout = 1           # 1 sec timeout
 
+try:
+   ser.open()
+except serial.SerialException as e:
+   raise SystemExit
 
-#try:
-#   ser.open()
-#except serial.SerialException as e:
-#   raise SystemExit
-
+out_val = 0
 try:
    while 1:
-   time.sleep(1)
-   h[’out’] = h[’in’]
+      while ser.in_waiting:
+            b = ser.read_until() #blocks until '\n' received or timeout
+            out_val = updatePin(b.decode('utf-8'))
+            #print b
+      h['out'] = out_val
+      time.sleep(1)
+ 
 except KeyboardInterrupt:
    raise SystemExit
-   
-   
-#try:
-#   while 1:
-   
-#      while ser.in_waiting:
-#            b = ser.read_until() #blocks until '\n' received or timeout
-#            out_val = updatePin(b.decode('utf-8'))
-            
-#   h[’out’] = out_val
-#   time.sleep(1)
- 
-#except KeyboardInterrupt:
-#   raise SystemExit
