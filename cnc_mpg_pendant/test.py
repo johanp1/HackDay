@@ -2,6 +2,7 @@
 import hal
 import time
 import serial
+import getopt
 
 def updatePin(str):
    """parses incomming cmd and update Pin data value accordingly
@@ -23,7 +24,43 @@ def is_number(s):
     except ValueError:
         return False
 
-h = hal.component("test")
+
+try:
+  opts, args = getopt.getopt(sys.argv[1:], "hp:d:c:", ["input=", "port=", "debug="])
+except getopt.GetoptError as err:
+  # print help information and exit:
+  print(err) # will print something like "option -a not recognized"
+  sys.exit(2)
+
+### parse input command line
+for o, a in opts:
+  if o == "-h":
+    usage()
+    sys.exit()
+  if o == "-c":
+    name = a
+  elif o == "--input":
+    xml_file = a
+  elif o in ("-p", "--port"):
+    port = a
+  elif o in ("-d", "--debug"):
+   debug = a
+  else:
+    print o
+    assert False, "unhandled option"
+   
+if xml_file == '':
+   if len(sys.argv) < 2:
+      usage()
+      sys.exit(2)
+   else:
+      xml_file = sys.argv[-1]
+   
+if name == '':
+   name = 'test' # default name
+
+
+h = hal.component(name)
 
 h.newpin("in", hal.HAL_FLOAT, hal.HAL_IN)
 h.newpin("out", hal.HAL_FLOAT, hal.HAL_OUT)
@@ -48,6 +85,7 @@ ser.timeout = 1           # 1 sec timeout
 try:
    ser.open()
 except serial.SerialException as e:
+   print 'could not open srial port ' + ser.port 
    raise SystemExit
 
 out_val = 0
@@ -58,7 +96,7 @@ try:
             out_val = updatePin(b.decode('utf-8'))
             #print b
       h['out'] = out_val
-      time.sleep(1)
+      time.sleep(0.1)
  
 except KeyboardInterrupt:
    raise SystemExit

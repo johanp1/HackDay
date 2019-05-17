@@ -83,7 +83,7 @@ debug = 1      # debug level
 port = '/dev/ttyS2' #default serial port to use
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "hpd:c:", ["input=", "port=", "debug="])
+  opts, args = getopt.getopt(sys.argv[1:], "hp:d:c:", ["input=", "port=", "debug="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"

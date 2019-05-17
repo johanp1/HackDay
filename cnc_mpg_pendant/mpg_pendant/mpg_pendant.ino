@@ -36,7 +36,7 @@ void loop() {
 
   selector.scan();
 
-  if(buffer.pop(e))
+  while(buffer.pop(e))
   {
     sender.sendEvent(e);
   }
