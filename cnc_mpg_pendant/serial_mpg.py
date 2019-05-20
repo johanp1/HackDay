@@ -1,9 +1,9 @@
-"""usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
+"""usage serial_mpg.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
 in_file  -  input xml-file describing what knobs and/or button are on the pendant
--c <name>                # name of component in HAL. 'mpg' default
--d/--debug= <level>      # debug level
--p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default
--h                       # Help test
+-c <name>                # name of component in HAL. 'my-mpg' default
+-d/--debug= <level>      # debug level, default 0
+-p/--port= <serial port> # serial port to use. '/dev/ttyACM0' default
+-h                       # Help 
 """
 
 #! /usr/bin/python
@@ -23,9 +23,8 @@ class Pin:
    def __init__(self, name, val, type):
       self.name = name  # HAL pin name
       self.val = val    # current value of pin, e.g. 1 - on, 0 - off
-      self.type = type  # HAL type
+      self.type = type  # type (string read from xml)
 
-### parse_line() #############################################
 def updatePin(str):
    """parses incomming cmd and update Pin data value accordingly
    input: command string, formated as: '<event>_<number>\n' 
@@ -38,9 +37,28 @@ def updatePin(str):
   
       event2PinDict[ev].val = int(val)
       #print ev + ' ' + val
-  
+
+def getHALType(str):
+   """ helper function to convert type read from xml to HAL-type """
+   retVal = ''
+   
+   if str == 'bit':
+      retVal = hal.HAL_BIT
+	
+   if str == 'float':
+      retVal = hal.HAL_FLOAT
+
+   if str == 's32':
+      retVal = hal.HAL_S32
+
+   if str == 'u32':
+      retVal = hal.HAL_U32
+
+   return retVal
+
 def usage():
-   print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n" + "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n" + "-c <name>                # name of component in HAL. 'mpg' default\n" + "-d/--debug= <level>      # debug level\n" + "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n " + "-h                       # Help test\n"
+   """ print command lie options """
+   print "usage serial_mpg.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n" + "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n" + "-c <name>                # name of component in HAL. 'mpg' default\n" + "-d/--debug= <level>      # debug level\n" + "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n " + "-h                       # Help test\n"
 
   
 ### start of main script #############################################
@@ -81,9 +99,6 @@ if xml_file == '':
    else:
       xml_file = sys.argv[-1]
    
-if name == '':
-   name = 'mpg' # default name
-
 print 'xml: ' + xml_file   
 print 'port: ' + port
 print 'name: ' + name
@@ -128,12 +143,14 @@ for halpin in root.iter('halpin'):
    
    # create the LinuxCNC HAL pin and create mapping dictionary binding incomming events with data and the HAL pins
    if type is not None and event is not None:
-      #print 'l'+halpin.text + 'r', type.text, event.text
+      HALpin_name = halpin.text.strip('"')
+      HALpin_type = getHALType(type.text)
+      
       print 'creating HAL pin ' + halpin.text.strip('"') + ' of type ' + type.text
-      h.newpin(halpin.text.strip('"'), hal.HAL_FLOAT, hal.HAL_OUT)  # create the user space HAL-pin
-      event2PinDict[event.text] = Pin(halpin.text.strip('"'), 0, type) # dictionary to map between event and hal_pin in h
+      h.newpin(HALpin_name, HALpin_type, hal.HAL_OUT)  # create the user space HAL-pin
+      event2PinDict[event.text] = Pin(HALpin_name, 0, type.text) # dictionary to map between event and hal_pin in h
 
-# ready signal to HAL, component and it's pins are created 
+# ready signal to HAL, component and it's pins are ready created 
 h.ready()
 
 # main loop

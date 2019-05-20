@@ -1,0 +1,8 @@
+loadusr -Wn my-mpg python serial_mpg.py -c my-mpg mpg.xml
+
+net mpg-jog-counts      axis.0.jog-counts          <= my-mpg.jog-counts
+
+setp axis.0.jog-enable 1
+setp axis.0.jog-scale 1
+
+#setp axis.0.jog-vel-mode 1
