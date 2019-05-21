@@ -51,6 +51,13 @@ class hal:
          if pin.name == name:
             return pin
    
+def is_number(s):
+   """  helper function to evaluate if input is an integer or not """
+   try:
+      int(s)
+      return True
+   except ValueError:
+      return False
    
 ### parse_line() #############################################
 def updatePin(str):
@@ -62,17 +69,17 @@ def updatePin(str):
    if len(cmd) == 2:
       val = cmd[1] 
       ev = cmd[0]
-  
-      event2PinDict[ev].val = int(val)
-      print ev + ' ' + val
+      if ev in event2PinDict and is_number(val):
+         event2PinDict[ev].val = int(val)
+         print ev + ' ' + val
   
 def usage():
-   print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml" +
-         "in_file  -  input xml-file describing what knobs and/or button are on the pendant" +
-         "-c <name>                # name of component in HAL. 'mpg' default" +
-         "-d/--debug= <level>      # debug level" +
-         "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default " +
-         "-h                       # Help test"
+   print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n"\
+         "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
+         "-c <name>                # name of component in HAL. 'mpg' default\n"\
+         "-d/--debug= <level>      # debug level\n" \
+         "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
+         "-h                       # Help test";
 
   
 ### start of main script #############################################
