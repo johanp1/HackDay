@@ -1,22 +1,22 @@
 loadusr -Wn my-mpg python serial_mpg.py -c my-mpg mpg.xml
-loadrt and2
-loadrt conv_float_s32
-#loadrt dmux4
+#loadrt and2
+#loadrt conv_float_s32
+loadrt dmux4
 
 #addf and2.0 servo-thread
 #addf conv-float-s32.0 servo-thread
-#addf dmux4.0 servo-thread
+addf dmux4.0 servo-thread
 
 net mpg-jog-counts      axis.0.jog-counts          <= my-mpg.jog-counts
 net mpg-jog-counts      axis.1.jog-counts
 net mpg-jog-counts      axis.2.jog-counts
 
-setp axis.0.jog-scale 1
-setp axis.0.jog-enable 1
+setp                    dmux4.0.in 1
+net jog-sel             my-mpg.selector             dmux4.0.sel 
+net jog-enable-x        dmux4.0.out-0               axis.0.jog-enable
+net jog-enable-y        dmux4.0.out-1               axis.1.jog-enable
+net jog-enable-z        dmux4.0.out-2               axis.2.jog-enable
 
-#setp                    dmux4.0.in 1
-#net jog-sel             my-mpg.selector             dmux4.0.sel
- 
-#net jog-enable-x        dmux4.0.out.0               axis.0.jog-enable
-#net jog-enable-y        dmux4.0.out.1               axis.1.jog-enable
-#net jog-enable-z        dmux4.0.out.2               axis.2.jog-enable
+setp axis.0.jog-scale 1
+setp axis.1.jog-scale 1
+setp axis.2.jog-scale 1
