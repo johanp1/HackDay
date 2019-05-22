@@ -1,0 +1,13 @@
+component dmux4 "dmux4";
+pin sel unsigned  sel;
+pin in bit in;
+pin out bit out-# [4];
+
+function _;
+license "GPL"; // indicates GPL v2 or later
+;;
+
+out(0) = in & (sel == 0);
+out(1) = in & (sel == 1);
+out(2) = in & (sel == 2);
+out(3) = in & (sel == 3);
