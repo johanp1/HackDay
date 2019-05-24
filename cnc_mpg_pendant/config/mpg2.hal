@@ -18,34 +18,36 @@ net mpg-jog-counts      axis.2.jog-counts
 
 # axis selector connects to x, y, z axis enable
 setp                    dmux4.0.in 1
-net jog-sel             my-mpg.selector             dmux4.0.sel 
+net jog-sel             my-mpg.axis-selector        dmux4.0.sel 
 net jog-enable-x        dmux4.0.out-0               axis.0.jog-enable
 net jog-enable-y        dmux4.0.out-1               axis.1.jog-enable
 net jog-enable-z        dmux4.0.out-2               axis.2.jog-enable
 
-# scale selector connects to x, y, z axis jog sclae and jog velocity mode
+setp axis.0.jog-scale 1
+setp axis.1.jog-scale 1
+setp axis.2.jog-scale 1
 
+# scale selector connects to x, y, z axis jog sclae and jog velocity mode
 #setp mux4u32sel.0.in0 0.01
 #setp mux4u32sel.0.in1 0.1
 #setp mux4u32sel.0.in2 1
 #net  scale-sel         my-mpg.scale-selector    => mux4u32sel.0.sel  
+#net muxed-scale        mux4u32sel.0.out         => axis.0.jog-scale
+#net muxed-scale        axis.1.jog-scale
+#net muxed-scale        axis.2.jog-scale
 
 #setp comp
-#net  scale-sel         my-mpg.scale-selector    => conv_u32_float.0.in
+#net  scale-sel         conv_u32_float.0.in
 #net  scale-sel-f       conv_u32_float.0.out     => comp.0.in1
 #setp comp.0.in0 3
 #setp comp.0.hyst 0.2
-#net vel-mode-sel        comp.0.equal             => axis.0.jog-vel-mode
-
-#setp axis.0.jog-scale 1
-#setp axis.1.jog-scale 1
-#setp axis.2.jog-scale 1
+#net vel-mode-sel        comp.0.equal            => axis.0.jog-vel-mode
 
 # connect the buttons
-net rth-buton           halui.mdi-command-00       <= my-mpg.rth-btn 
+#net rth-buton           halui.mdi-command-00       <= my-mpg.rth-btn 
 
-net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
-net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
-net remote-program-run  halui.program.run          <= and2.0.out
+#net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
+#net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
+#net remote-program-run  halui.program.run          <= and2.0.out
 
-net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
+#net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
