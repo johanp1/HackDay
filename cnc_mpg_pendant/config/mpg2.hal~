@@ -1,0 +1,36 @@
+loadusr -Wn my-mpg  -c my-mpg mpg.xml
+loadrt and2
+loadrt conv_float_s32
+
+addf and2.0 servo-thread
+addf conv-float-s32.0 servo-thread
+
+net mpg-jog-counts-f    my-mpg.jog-counts           => conv-float-s32.0.in 
+net mpg-jog-counts      axis.0.jog-counts          <= conv-float-s32.0.out
+net mpg-jog-counts      axis.1.jog-counts
+net mpg-jog-counts      axis.2.jog-counts
+
+net mpg-jog-counts-f    my-mpg.number-jog-count
+
+net jog-scale           my-mpg.jog-scale-f          => axis.0.jog-scale
+net jog-scale           axis.1.jog-scale
+net jog-scale           axis.2.jog-scale
+
+net vel-mode            my-mpg.jog-vel-mode         => axis.0.jog-vel-mode 
+net vel-mode            axis.1.jog-vel-mode 
+net vel-mode            axis.2.jog-vel-mode 
+
+net jog-active-x        my-mpg.jog-x-active         => axis.0.wheel-jog-active 
+net jog-active-y        my-mpg.jog-y-active         => axis.1.wheel-jog-active 
+net jog-active-z        my-mpg.jog-z-active         => axis.2.wheel-jog-active 
+
+net rth-buton           halui.mdi-command-00       <= my-mpg.rth-btn 
+net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
+net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
+net remote-program-run  halui.program.run          <= and2.0.out
+
+net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
+
+net jog-enable-x        my-mpg.selector.X           axis.0.jog-enable
+net jog-enable-y        my-mpg.selector.Y           axis.1.jog-enable
+net jog-enable-z        my-mpg.selector.Z           axis.2.jog-enable

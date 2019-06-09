@@ -34,10 +34,9 @@ def updatePin(str):
    if len(cmd) == 2:
       val = cmd[1] 
       ev = cmd[0]
-      
-      if ev in event2PinDict and is_number(val):
-         event2PinDict[ev].val = int(val)
-         #print ev + ' ' + val
+  
+      event2PinDict[ev].val = int(val)
+      #print ev + ' ' + val
 
 def getHALType(str):
    """ helper function to convert type read from xml to HAL-type """
@@ -56,14 +55,6 @@ def getHALType(str):
       retVal = hal.HAL_U32
 
    return retVal
-
-def is_number(s):
-   """  helper function to evaluate if input is an integer or not """
-   try:
-        int(s)
-        return True
-    except ValueError:
-        return False
 
 def usage():
    """ print command lie options """

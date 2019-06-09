@@ -1,36 +1,52 @@
-loadusr -Wn my-mpg pyvcp -c my-mpg mpg.xml
+loadusr -Wn my-mpg python serial_mpg.py --port=/dev/ttyUSB0 -c my-mpg mpg.xml
 loadrt and2
-loadrt conv_float_s32
+loadrt dmux4
+loadrt conv_u32_float
+loadrt mux4u32sel
+#loadrt comp
 
 addf and2.0 servo-thread
-addf conv-float-s32.0 servo-thread
+addf dmux4.0 servo-thread
+addf conv-u32-float.0 servo-thread
+addf mux4u32sel.0 servo-thread
+#addf comp.0 servo-thread
 
-net mpg-jog-counts-f    my-mpg.jog-counts           => conv-float-s32.0.in 
-net mpg-jog-counts      axis.0.jog-counts          <= conv-float-s32.0.out
+# jog wheel connects to x, y, z axis
+net mpg-jog-counts      axis.0.jog-counts          <= my-mpg.jog-counts
 net mpg-jog-counts      axis.1.jog-counts
 net mpg-jog-counts      axis.2.jog-counts
 
-net mpg-jog-counts-f    my-mpg.number-jog-count
+# axis selector connects to x, y, z axis enable
+setp                    dmux4.0.in 1
+net jog-sel             my-mpg.axis-selector        dmux4.0.sel 
+net jog-enable-x        dmux4.0.out-2               axis.0.jog-enable
+net jog-enable-y        dmux4.0.out-1               axis.1.jog-enable
+net jog-enable-z        dmux4.0.out-0               axis.2.jog-enable
 
-net jog-scale           my-mpg.jog-scale-f          => axis.0.jog-scale
-net jog-scale           axis.1.jog-scale
-net jog-scale           axis.2.jog-scale
+# scale selector connects to x, y, z axis jog sclae and jog velocity mode
+setp mux4u32sel.0.in0 1 
+setp mux4u32sel.0.in1 1 
+setp mux4u32sel.0.in2 0.1
+setp mux4u32sel.0.in3 0.01
+net  scale-sel          my-mpg.scale-selector    => mux4u32sel.0.sel  
+net muxed-scale         mux4u32sel.0.out         => axis.0.jog-scale
+net muxed-scale         axis.1.jog-scale
+net muxed-scale         axis.2.jog-scale
 
-net vel-mode            my-mpg.jog-vel-mode         => axis.0.jog-vel-mode 
-net vel-mode            axis.1.jog-vel-mode 
-net vel-mode            axis.2.jog-vel-mode 
+#set comp_sel, loaded in simulated_home.ini
+net  scale-sel          conv-u32-float.0.in 
+net  scale-sel-f        conv-u32-float.0.out     => comp_sel.in1
+setp comp_sel.in0       0
+setp comp_sel.hyst      0.2
+net  vel-mode-sel       comp_sel.equal          => axis.0.jog-vel-mode
+net  vel-mode-sel       axis.1.jog-vel-mode
+net  vel-mode-sel       axis.2.jog-vel-mode
 
-net jog-active-x        my-mpg.jog-x-active         => axis.0.wheel-jog-active 
-net jog-active-y        my-mpg.jog-y-active         => axis.1.wheel-jog-active 
-net jog-active-z        my-mpg.jog-z-active         => axis.2.wheel-jog-active 
+# connect the buttons
+#net rth-button          halui.mdi-command-00       <= my-mpg.rth-btn 
 
-net rth-buton           halui.mdi-command-00       <= my-mpg.rth-btn 
-net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
-net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
-net remote-program-run  halui.program.run          <= and2.0.out
+#net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
+#net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
+#net remote-program-run  halui.program.run          <= and2.0.out
 
-net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
-
-net jog-enable-x        my-mpg.selector.X           axis.0.jog-enable
-net jog-enable-y        my-mpg.selector.Y           axis.1.jog-enable
-net jog-enable-z        my-mpg.selector.Z           axis.2.jog-enable
+#net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
