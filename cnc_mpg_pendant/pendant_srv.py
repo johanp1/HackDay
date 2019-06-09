@@ -16,6 +16,7 @@ import sys
 import serial
 import subprocess
 import xml.etree.ElementTree as ET
+import hal
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -23,33 +24,6 @@ class Pin:
       self.name = name  # HAL pin name
       self.val = val    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # HAL type
-      
-class hal_pin:
-   """stub sub class to hal-class"""
-   
-   def __init__(self, name, type):
-      self.name = name
-      self.type = type
-
-class hal:
-   """stub class linuxCNC hal-api"""
-   HAL_BIT = 'HAL_BIT'
-   HAL_S32 = 'HAL_S32'
-   HAL_U32 = 'HAL_U32'
-   HAL_OUT = 'HAL_OUT'
-   
-   pin_list = []
-   ready_flag = 0;
-   def component(self, name):
-      self.name = name
-   def newpin(self, pin_name, pin_type, dir):
-      self.pin_list.append(hal_pin(pin_name.strip('"'), pin_type))
-   def ready():
-      ready = 1
-   def __getitem__(self, name):
-      for pin in self.pin_list:
-         if pin.name == name:
-            return pin
    
 def is_number(s):
    """  helper function to evaluate if input is an integer or not """
@@ -154,8 +128,7 @@ if debug == '0':
 
 ### parse input xml file
 event2PinDict = {} # dictionary. data-key is the event name sent from Pendant, data-element object containing HAL-pin-name, type and current value
-h = hal()          # get handler to HAL
-h.component(name)  # instanciate the component
+h = hal.component(name)  # instanciate the component
 
 tree = ET.parse(xml_file)
 root = tree.getroot()
@@ -171,6 +144,7 @@ for halpin in root.iter('halpin'):
       h.newpin(halpin.text, type.text, hal.HAL_OUT)                    # create the user space HAL-pin
       event2PinDict[event.text] = Pin(halpin.text.strip('"'), 0, type) # dictionary to map between event and hal_pin in h
  
+h.ready()
 
 ### serial expects a byte-array and not a string
 if debug == '0':

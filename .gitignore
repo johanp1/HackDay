@@ -29,3 +29,6 @@ out.txt
 
 #input files
 *.ngc
+
+#Python
+*.pyc
