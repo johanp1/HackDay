@@ -13,10 +13,10 @@ in_file  -  input xml-file describing what knobs and/or button are on the pendan
 import time
 import getopt
 import sys
-import serial
 import subprocess
 import xml.etree.ElementTree as ET
 import hal
+import comms
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -25,7 +25,7 @@ class Pin:
       self.val = val    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # HAL type
    
-def is_number(s):
+def _is_number(s):
    """  helper function to evaluate if input is an integer or not """
    try:
       int(s)
@@ -34,24 +34,20 @@ def is_number(s):
       return False
    
 ### parse_line() #############################################
-def updatePin(str):
+def updatePin(e):
    """parses incomming cmd and update Pin data value accordingly
    input: command string, formated as: '<event>_<number>\n' 
    output: nothing.
    """
-   cmd = str.split('_')
-   if len(cmd) == 2:
-      val = cmd[1] 
-      ev = cmd[0]
-      if ev in event2PinDict and is_number(val):
-         event2PinDict[ev].val = int(val)
-         print ev + ' ' + val
+
+   if e.ev in event2PinDict and _is_number(e.val):
+         event2PinDict[e.ev].val = int(e.val)
+         print e.ev + ' ' + e.val
   
 def usage():
    print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n"\
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
-         "-d/--debug= <level>      # debug level\n" \
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
          "-h                       # Help test";
 
@@ -60,11 +56,10 @@ def usage():
 
 xml_file = ''  # input xml-file describing what knobs and/or button are on the pendant
 name = ''      # name of component in HAL
-debug = 1      # debug level
 port = '/dev/ttyS2' #default serial port to use
 
 try:
-  opts, args = getopt.getopt(sys.argv[1:], "hp:d:c:", ["input=", "port=", "debug="])
+  opts, args = getopt.getopt(sys.argv[1:], "hp:d:c:", ["input=", "port="])
 except getopt.GetoptError as err:
   # print help information and exit:
   print(err) # will print something like "option -a not recognized"
@@ -81,8 +76,6 @@ for o, a in opts:
     xml_file = a
   elif o in ("-p", "--port"):
     port = a
-  elif o in ("-d", "--debug"):
-   debug = a
   else:
     print o
     assert False, "unhandled option"
@@ -100,31 +93,8 @@ if name == '':
 print 'xml: ' + xml_file   
 print 'port: ' + port
 print 'name: ' + name
-print 'debug: ' + str(debug)
 
-### open serial port
-# list available ports with 'python -m serial.tools.list_ports'
-ser = serial.Serial()
-ser.port = port
-ser.baudrate = 9600
-ser.parity = 'N'
-ser.bytesize = 8
-ser.stopbits = 1
-ser.xonxoff = False       # disable software flow control
-#ser.rtscts = False       # disable hardware (RTS/CTS) flow control
-#ser.dsrdtr = False       # disable hardware (DSR/DTR) flow control
-#ser.writeTimeout = 2     # timeout for write
-ser.timeout = 1           # 1 sec timeout
-
-if debug == '0':
-   try:
-      ser.open() #ser = serial.Serial(port = 'COM3', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=3)
-   except serial.SerialException as e:
-      sys.stderr.write('{} {}\n'.format(ser.name, e))
-      #sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
-      subprocess.call("echo available ports:", shell=True) 
-      subprocess.call("python -m serial.tools.list_ports", shell=True) 
-      sys.exit(1)
+serialmpg = comms.instrument(port)
 
 ### parse input xml file
 event2PinDict = {} # dictionary. data-key is the event name sent from Pendant, data-element object containing HAL-pin-name, type and current value
@@ -147,34 +117,14 @@ for halpin in root.iter('halpin'):
 h.ready()
 
 ### serial expects a byte-array and not a string
-if debug == '0':
    
-   ser.flush()
-
-   while 1:
-      while ser.in_waiting:
-         b = ser.read_until() #blocks until '\n' received or timeout
-         #print b
-         updatePin(b.decode('utf-8'))
+while 1:
       
-      time.sleep(0.05)  
-      
-### test... ###################################
-for evKey in event2PinDict:
-   p = event2PinDict[evKey]
-   print 'event: ' + evKey + ' halpin: ' + p.name
-#   print h[p.name].name
+   events = serialmpg.readEvents() #blocks until '\n' received or timeout
    
-#for pin in h.pin_list:
-   #print pin.name, pin.type
-#   print h[pin.name].name
-cmds = ['sel_1', 'sel_3', 'jog_10', 'run_1', 'run_0', 'rth_1', 'rth_0', ]
-#ser.write(''.join(str).encode('utf-8'))
-#ser.write('\n')
- 
-for cmd in cmds:
-   updatePin(cmd)
-   for evKey in event2PinDict:
-      p = event2PinDict[evKey]
-      print 'halpin: ' + p.name + ' data: ' + str(p.val)
-#################################################   
+   #handle new events
+   if len(events) != 0: 
+      for e in events:
+         updatePin(e)
+     
+   time.sleep(0.05)  
