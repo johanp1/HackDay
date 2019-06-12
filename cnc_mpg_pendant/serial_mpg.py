@@ -34,11 +34,20 @@ def updatePin(str):
    if len(cmd) == 2:
       val = cmd[1] 
       ev = cmd[0]
-  
-      event2PinDict[ev].val = int(val)
+      
+      if _is_number(val):
+         event2PinDict[ev].val = int(val)
       #print ev + ' ' + val
 
-def getHALType(str):
+def _is_number(s):
+   """  helper function to evaluate if input is an integer or not """
+   try:
+      int(s)
+      return True
+   except ValueError:
+      return False
+
+def _getHALType(str):
    """ helper function to convert type read from xml to HAL-type """
    retVal = ''
    
@@ -144,7 +153,7 @@ for halpin in root.iter('halpin'):
    # create the LinuxCNC HAL pin and create mapping dictionary binding incomming events with data and the HAL pins
    if type is not None and event is not None:
       HALpin_name = halpin.text.strip('"')
-      HALpin_type = getHALType(type.text)
+      HALpin_type = _getHALType(type.text)
       
       print 'creating HAL pin ' + halpin.text.strip('"') + ' of type ' + type.text
       h.newpin(HALpin_name, HALpin_type, hal.HAL_OUT)  # create the user space HAL-pin

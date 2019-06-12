@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+# list available ports with 'python -m serial.tools.list_ports'
 import serial
 
 
@@ -24,11 +24,10 @@ CLOSE_PORT_AFTER_EACH_CALL = False
 """Default value for port closure setting."""
 
 
-### open serial port
-# list available ports with 'python -m serial.tools.list_ports'
+
 
 class event:
-
+   """'container for events. keeps two strings <event> and <value>"""
    def __init__(self, event, value):
       self.ev = event
       self.val = value
@@ -48,14 +47,14 @@ class instrument:
       self.serial.stopbits = STOPBITS
       self.serial.xonxoff = False       # disable software flow control
       self.serial.timeout = TIMEOUT
+      self.portOpened = False
       
       try:
          self.serial.open()
          self.portOpened = True
       except serial.SerialException as e:
-         self.portOpened = False
          sys.stderr.write('{} {}\n'.format(ser.name, e))
-         #sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
+         sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
          subprocess.call("echo available ports:", shell=True) 
          subprocess.call("python -m serial.tools.list_ports", shell=True) 
          
@@ -64,14 +63,13 @@ class instrument:
 
    def readEvents(self):
       """reads serial port. creates an array of events
-      input: command string, formated as: '<event>_<number>\n' 
-      output: nothing.
+      output: array of events: 
       """
       ret = []
       while self.dataReady():
          ev_str = self._read().split('_')
 
-         if len(ev_str) == 2:
+         if len(ev_str) == 2 and self._is_number(ev_str[1]):
             ret.append(event(ev_str[0], ev_str[1]))
 
       return ret     
@@ -82,6 +80,12 @@ class instrument:
       if self.portOpened == True:
          b = self.serial.read_until() #blocks until '\n' received or timeout
          
-      return b.decode('utf-8')
+      return b.decode('utf-8')        #convert byte array to string
       
-   
+   def _is_number(self, s):
+      """  helper function to evaluate if input text represents an integer or not """
+      try:
+         int(s)
+         return True
+      except ValueError:
+         return False
