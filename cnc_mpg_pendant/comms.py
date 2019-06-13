@@ -38,7 +38,7 @@ class event:
 class instrument:
    """rs232 port"""
 
-   def __init__(self, port):
+   def __init__(self, port, event_handler):
       self.serial = serial.Serial()
       self.serial.port = port
       self.serial.baudrate = BAUDRATE
@@ -48,6 +48,7 @@ class instrument:
       self.serial.xonxoff = False       # disable software flow control
       self.serial.timeout = TIMEOUT
       self.portOpened = False
+      self.ev_hdlr = event_handler
       
       try:
          self.serial.open()
@@ -65,14 +66,11 @@ class instrument:
       """reads serial port. creates an array of events
       output: array of events: 
       """
-      ret = []
       while self.dataReady():
          ev_str = self._read().split('_')
 
          if len(ev_str) == 2 and self._is_number(ev_str[1]):
-            ret.append(event(ev_str[0], ev_str[1]))
-
-      return ret     
+            self.ev_hdlr(event(ev_str[0], ev_str[1]))
       
    def _read(self):
       """ returns string read from serial port """

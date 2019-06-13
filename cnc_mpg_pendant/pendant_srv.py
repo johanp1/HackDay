@@ -33,10 +33,9 @@ class ComponentWrapper:
       self.evToHALPin[ev_name] = Pin(pin_name, 0, type) # dictionary to map between event and hal_pin in h
    
    def updatePin(self, e):
-      """parses incomming cmd and update Pin data value accordingly
-      input: command string, formated as: '<event>_<number>\n' 
-      output: nothing.
-      """
+      """ updates pin value with new event data
+      input: event object' 
+      output: nothing. """
       if e.ev in self.evToHALPin:
             self.evToHALPin[e.ev].val = int(e.val)
             print e.ev + ' ' + e.val
@@ -93,8 +92,9 @@ def main():
    print 'port: ' + port
    print 'name: ' + name
 
-   serialmpg = comms.instrument(port)
+   
    c = ComponentWrapper()
+   serialmpg = comms.instrument(port, c.updatePin)
    
    ### parse input xml file   
    h = hal.component(name)  # instanciate the component
