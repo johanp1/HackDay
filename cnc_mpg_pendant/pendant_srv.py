@@ -20,26 +20,74 @@ import comms
 
 class Pin:
    """ Representation of a Pin and it's data"""
-   def __init__(self, name, val, type):
-      self.name = name  # HAL pin name
-      self.val = val    # current value of pin, e.g. 1 - on, 0 - off
+   def __init__(self, pin_name, curr_val, type):
+      self.name = pin_name  # HAL pin name
+      self.val = curr_val    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # HAL type
 
 class ComponentWrapper:   
-   def __init__(self):
+   def __init__(self, name):
       self.evToHALPin = {}
+      self.hal = hal.component(name)  # instanciate the HAL-component
+
       
    def addPin(self, ev_name, pin_name, type):
-      self.evToHALPin[ev_name] = Pin(pin_name, 0, type) # dictionary to map between event and hal_pin in h
-   
+      if self._getHALType(type) != '':
+         self.evToHALPin[ev_name] = Pin(pin_name, 0, type) # dictionary to map between event and hal_pin in h
+         self.hal.newpin(pin_name, self._getHALType(type), hal.HAL_OUT)                    # create the user space HAL-pin
+
    def updatePin(self, e):
       """ updates pin value with new event data
       input: event object' 
       output: nothing. """
       if e.ev in self.evToHALPin:
-            self.evToHALPin[e.ev].val = int(e.val)
-            print e.ev + ' ' + e.val
+         self.evToHALPin[e.ev].val = self._typeSaturate(self.evToHALPin[e.ev].type, int(e.val))
+            
+   def setReady(self):
+      self.hal.ready()
+            
+   def updateHAL(self):
+      for key in self.evToHALPin:
+         self.hal[self.evToHALPin[key].name] = self.evToHALPin[key].val
+
+         
+   def _getHALType(self, str):
+      """ helper function to convert type read from xml to HAL-type """
+      retVal = ''
    
+      if str == 'bit':
+         retVal = hal.HAL_BIT
+	
+      if str == 'float':
+         retVal = hal.HAL_FLOAT
+
+      if str == 's32':
+         retVal = hal.HAL_S32
+
+      if str == 'u32':
+         retVal = hal.HAL_U32
+         
+      return retVal
+
+   def _typeSaturate(self, type, val):
+      """ helper function to convert type read from xml to HAL-type """
+      retVal = 0
+   
+      if type == 'bit':
+         if val >= 1:
+            retVal = 1
+	
+      if type == 'float':
+         retVal = val
+
+      if type == 's32':
+         retVal = val
+
+      if type == 'u32':
+         retVal = val
+               
+      return retVal
+      
 ### parse_line() #############################################
   
 def usage():
@@ -97,8 +145,6 @@ def main():
    serialmpg = comms.instrument(port, c.updatePin)
    
    ### parse input xml file   
-   h = hal.component(name)  # instanciate the component
-
    tree = ET.parse(xml_file)
    root = tree.getroot()
          
@@ -110,21 +156,16 @@ def main():
       # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
       if type is not None and event is not None:
          #print 'l'+halpin.text + 'r', type.text, event.text
-         h.newpin(halpin.text, type.text, hal.HAL_OUT)                    # create the user space HAL-pin
          c.addPin(event.text, halpin.text.strip('"'), type)
 
-   h.ready()
+   c.setReady()
 
    ### serial expects a byte-array and not a string
    while 1:
          
-      events = serialmpg.readEvents() #blocks until '\n' received or timeout
+      serialmpg.readEvents() #blocks until '\n' received or timeout
+      c.updateHAL()
       
-      #handle new events
-      if len(events) != 0: 
-         for e in events:
-            c.updatePin(e)
-        
       time.sleep(0.05)  
       
 if __name__ == '__main__':
