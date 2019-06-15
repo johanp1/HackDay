@@ -3,7 +3,7 @@ loadrt and2
 loadrt dmux4
 loadrt conv_u32_float
 loadrt mux4u32sel
-#loadrt comp
+#loadrt comp #loaded in simulated_home.hal
 
 addf and2.0 servo-thread
 addf dmux4.0 servo-thread
@@ -38,15 +38,18 @@ net  scale-sel          conv-u32-float.0.in
 net  scale-sel-f        conv-u32-float.0.out     => comp_sel.in1
 setp comp_sel.in0       0
 setp comp_sel.hyst      0.2
-net  vel-mode-sel       comp_sel.equal          => axis.0.jog-vel-mode
+net  vel-mode-sel       comp_sel.equal           => axis.0.jog-vel-mode
 net  vel-mode-sel       axis.1.jog-vel-mode
 net  vel-mode-sel       axis.2.jog-vel-mode
 
-# connect the buttons
-#net rth-button          halui.mdi-command-00       <= my-mpg.rth-btn 
+### connect the buttons
+# connect Return To Home button
+net rth-button           halui.mdi-command-00     <= my-mpg.rth-btn
 
-#net program-start-btn   halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
-#net program-run-ok      and2.0.in1                 <= halui.mode.is-auto
-#net remote-program-run  halui.program.run          <= and2.0.out
+# connect Run button
+net run-button          halui.mode.auto and2.0.in0 <= my-mpg.prog-run-btn
+net program-run-ok      and2.0.in1               <= halui.mode.is-auto
+net remote-program-run  halui.program.run        <= and2.0.out
 
-#net estop-btn           halui.estop.activate       <= my-mpg.estop-btn
+# connect E-Stop button
+net estop-button       halui.estop.activate     <= my-mpg.estop-btn

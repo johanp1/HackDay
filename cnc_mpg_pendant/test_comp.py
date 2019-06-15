@@ -1,17 +1,17 @@
 #! /usr/bin/python
 import unittest
-import pendant_srv
+import serial_mpg
 import comms  
 
 class TestComp(unittest.TestCase):
 
    def setUp(self):
-      self.c = pendant_srv.ComponentWrapper('hal_comp')
+      self.c = serial_mpg.ComponentWrapper('hal_comp')
       self.c.addPin('apa', 'apa_pin', 'u32')
       self.c.addPin('bepa', 'bepa_pin', 's32')
       
    def test_init(self):
-      self.local_c = pendant_srv.ComponentWrapper('local_hal_comp')
+      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp')
       
       self.assertTrue(self.local_c.hal.name == 'local_hal_comp')
       self.assertTrue(len(self.local_c.evToHALPin) == 0)
@@ -22,13 +22,13 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal.ready_flag)
       
    def test_addPinWrongPin(self):
-      self.local_c = pendant_srv.ComponentWrapper('local_hal_comp')
+      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp')
       self.local_c.addPin('local_ev', 'local_pin', 'x32')
       
       self.assertTrue(len(self.local_c.evToHALPin) == 0)   
       
    def test_addOnePin(self):
-      self.local_c = pendant_srv.ComponentWrapper('local_hal_comp')
+      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp')
       self.local_c.addPin('local_ev', 'local_pin', 'u32')
       
       self.assertTrue(len(self.local_c.evToHALPin) == 1)
@@ -36,8 +36,6 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.evToHALPin['local_ev'].val == 0)
       self.assertTrue(self.local_c.evToHALPin['local_ev'].type == 'u32')
       self.assertTrue(self.local_c.hal['local_pin'].val == 0)
-      print self.local_c.hal['local_pin'].type
-      print self.local_c.hal['local_pin'].name
       self.assertTrue(self.local_c.hal['local_pin'].type == 'HAL_U32')
          
    def test_noEvents(self):
@@ -63,7 +61,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal['bepa_pin'].val == 321)
    
    def test_updateBitTypePin(self):
-      self.local_c = pendant_srv.ComponentWrapper('local_hal_comp')
+      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp')
       self.local_c.addPin('local_ev', 'local_pin', 'bit')
       
       self.assertTrue(len(self.local_c.evToHALPin) == 1)

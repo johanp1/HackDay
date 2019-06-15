@@ -9,12 +9,12 @@
       <halpin>"scale-selector"<event>sels</event><type>u32</type></halpin>
    </radiobutton>   
    <button> 
-      <halpin>"rth-btn"<event>rth</event><type>u32</type></halpin> 
+      <halpin>"rth-btn"<event>rth</event><type>bit</type></halpin> 
    </button>
    <button> 
-      <halpin>"prog-run-btn"<event>run</event><type>u32</type></halpin>
+      <halpin>"prog-run-btn"<event>run</event><type>bit</type></halpin>
    </button>
    <button> 
-      <halpin>"estop-btn"<event>est</event><type>u32</type></halpin>
+      <halpin>"estop-btn"<event>est</event><type>bit</type></halpin>
    </button>
 </mpg>
