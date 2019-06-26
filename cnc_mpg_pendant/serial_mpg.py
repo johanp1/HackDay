@@ -24,11 +24,19 @@ class Pin:
       self.val = val    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # type (string read from xml)
 
+   def __repr__(self):
+      return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
+   
 class ComponentWrapper:   
    def __init__(self, name):
       self.evToHALPin = {}            # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
 
+   def __repr__(self):
+      tmp_str = ''
+      for k in self.evToHALPin:
+         tmp_str += 'event: ' + k + '\t' + str(self.evToHALPin[k]) + '\n'
+      return tmp_str
       
    def addPin(self, ev_name, pin_name, type):
       if self._getHALType(type) != '':
@@ -155,6 +163,7 @@ def main():
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
    
+   print c
 
    # main loop
    try:
