@@ -5,10 +5,14 @@ BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)/apps
 TARGET   := program
-INCLUDE  := -I../
 SRC      :=              \
               main.cpp   \
            ../buffer.cpp \
+
+INC_DIRS := . ..
+INC_FLAGS := $(addprefix -I,$(INC_DIRS))
+
+CPPFLAGS := $(INC_FLAGS) -MMD -MP
 
 OBJECTS := $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 
@@ -16,11 +20,11 @@ all: build $(APP_DIR)/$(TARGET)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
-		$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 $(APP_DIR)/$(TARGET): $(OBJECTS)
 	@mkdir -p $(@D) 
-		$(CXX) $(CXXFLAGS) $(INCLUDE) $(LDFLAGS) -o $(APP_DIR)/$(TARGET) $(OBJECTS)
+		$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $(APP_DIR)/$(TARGET) $(OBJECTS)
 
 .PHONY: all build clean debug release
 

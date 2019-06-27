@@ -1,7 +1,6 @@
 #ifndef __C_BUFFER_H__
 #define __C_BUFFER_H__
 
-#include <Arduino.h>
 #include "event.h"
 #include "event_listner.h"
 
