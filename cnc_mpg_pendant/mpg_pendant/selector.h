@@ -1,4 +1,4 @@
- #ifndef __C_SELECTOR_H__
+#ifndef __C_SELECTOR_H__
 #define __C_SELECTOR_H__
 
 #include <Arduino.h>
@@ -12,12 +12,12 @@ class C_Selector : public C_EventGenerator {
    C_Selector(const String& argName, const int argPin, const long argDebounceDelay);
   
    void scan(void);
-   byte volt2state(int volt);
+   byte volt2state(unsigned int volt);
    private:
  
    int pin;
-   int state; // debounced state
-   int prevState; // previuos read state
+   byte state; // debounced state
+   byte prevState; // previuos read state
    unsigned long debounceTime;
    unsigned long time;
 };

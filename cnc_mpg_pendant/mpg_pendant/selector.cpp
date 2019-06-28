@@ -2,7 +2,7 @@
 
 #define LIMIT 20u
 #define NUM_STATES 4
-const int stateVals[NUM_STATES] = {255, 340, 512, 1024}; //analog voltage read from HW
+const unsigned int stateVals[NUM_STATES] = {255u, 340u, 512u, 1024u}; //analog voltage read from HW
 
 //   public:
 
@@ -17,7 +17,7 @@ C_Selector::C_Selector(const String& argName, const int argPin, const long argDe
 // returns debounced selector state
 void C_Selector::scan(void)
 {
-   int currState = volt2state(analogRead(pin)); // read pin
+   byte currState = volt2state(analogRead(pin)); // read pin
          /*Serial.print(prevState);
          Serial.print(" ");
          Serial.println(currState);*/
@@ -39,7 +39,7 @@ void C_Selector::scan(void)
    prevState = currState;
 }
 
-byte C_Selector::volt2state(int volt)
+byte C_Selector::volt2state(unsigned int volt)
 {
    byte i;
    byte retVal;

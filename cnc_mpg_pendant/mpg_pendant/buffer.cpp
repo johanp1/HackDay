@@ -5,8 +5,7 @@
 
 // constructor 
 C_Buffer::C_Buffer() 
-{
-   byte i;      
+{      
    pushIdx = 0;
    popIdx = 0;
 }

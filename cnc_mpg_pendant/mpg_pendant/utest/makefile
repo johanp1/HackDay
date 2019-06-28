@@ -1,5 +1,5 @@
 CXX      := -c++
-CXXFLAGS := -pedantic-errors -Wall -Wextra -Werror
+CXXFLAGS := -Wall -g
 LDFLAGS  := -L/usr/lib -lstdc++ -lm
 BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects
@@ -7,7 +7,14 @@ APP_DIR  := $(BUILD)/apps
 TARGET   := program
 SRC      :=              \
               main.cpp   \
+		   arduino_stubs.cpp \
            ../buffer.cpp \
+		../button.cpp \
+		../encoder.cpp \
+		../event.cpp \
+		../event_generator.cpp \
+		../selector.cpp \
+		../sender.cpp \
 
 INC_DIRS := . ..
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
@@ -41,3 +48,5 @@ release: all
 clean:
 	-@rm -rvf $(OBJ_DIR)/*
 	-@rm -rvf $(APP_DIR)/*
+	-@rm -rvf $(BUILD)/*.o
+	-@rm -rvf $(BUILD)/*.d

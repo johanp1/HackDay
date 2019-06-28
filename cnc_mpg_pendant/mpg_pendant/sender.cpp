@@ -1,4 +1,5 @@
 #include "sender.h"
+
 //  public:
 void C_Sender::handleEvent(C_Event& e)
 {
@@ -14,6 +15,6 @@ void C_Sender::sendEvent(C_Event& e)
    Serial.print(", data: ");
    Serial.println(data);*/
    Serial.print(e.getSource());
-   Serial.print("_");
+   Serial.print('_');
    Serial.println(e.getData());
 }
