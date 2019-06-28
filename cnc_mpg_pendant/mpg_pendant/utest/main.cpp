@@ -1,4 +1,12 @@
 #include "buffer.h"
+#include "button.h"
+#include "encoder.h"
+#include "sender.h"
+#include "event_listner.h"
+#include "selector.h"
+
+#define NBR_OF_BUTTONS 3
+#define NBR_OF_SELECTORS 2
 
 int main(void)
 {

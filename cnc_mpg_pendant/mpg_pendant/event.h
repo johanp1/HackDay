@@ -1,6 +1,8 @@
 #ifndef __C_EVENT_H__
 #define __C_EVENT_H__
 
+#include <Arduino.h>
+
 class C_Event {
    
    public:

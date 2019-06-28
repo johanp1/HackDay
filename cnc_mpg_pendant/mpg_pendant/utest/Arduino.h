@@ -8,6 +8,9 @@
 
 #define INPUT 0
 
+#define A2 0
+#define A3 1
+
 using namespace std;
 
 typedef string String;  
