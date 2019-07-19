@@ -1,5 +1,5 @@
 #include "buffer.h"
-#include <arduino.h>
+#include <Arduino.h>
 
 //  public:
 

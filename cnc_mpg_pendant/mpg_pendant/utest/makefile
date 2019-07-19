@@ -1,52 +1,37 @@
-CXX      := -c++
-CXXFLAGS := -Wall -g
-LDFLAGS  := -L/usr/lib -lstdc++ -lm
-BUILD    := ./build
-OBJ_DIR  := $(BUILD)/objects
-APP_DIR  := $(BUILD)/apps
-TARGET   := program
-SRC      :=              \
-              main.cpp   \
-		   arduino_stubs.cpp \
-           ../buffer.cpp \
-		../button.cpp \
-		../encoder.cpp \
-		../event.cpp \
-		../event_generator.cpp \
-		../selector.cpp \
-		../sender.cpp \
+#---------
+#
+# CppUTest Examples Makefile
+#
+#----------
 
-INC_DIRS := . ..
-INC_FLAGS := $(addprefix -I,$(INC_DIRS))
+#Set this to @ to keep the makefile quiet
+ifndef SILENCE
+	SILENCE = @
+endif
 
-CPPFLAGS := $(INC_FLAGS) -MMD -MP
+#--- Inputs ----#
+COMPONENT_NAME = pendantTests
+CPPUTEST_HOME = /usr/local/cpputest-3.7dev
 
-OBJECTS := $(SRC:%.cpp=$(OBJ_DIR)/%.o)
+CPPUTEST_USE_EXTENSIONS = Y
+CPPUTEST_PEDANTIC_ERRORS = N
+CPP_PLATFORM = Gcc
 
-all: build $(APP_DIR)/$(TARGET)
+# This line is overriding the default new macros.  This is helpful
+# when using std library includes like <list> and other containers
+# so that memory leak detection does not conflict with stl.
+#CPPUTEST_MEMLEAK_DETECTOR_NEW_MACRO_FILE = -include ApplicationLib/ExamplesNewOverrides.h
+SRC_DIRS = \
+	..
 
-$(OBJ_DIR)/%.o: %.cpp
-	@mkdir -p $(@D)
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
+TEST_SRC_DIRS = \
+	.
 
-$(APP_DIR)/$(TARGET): $(OBJECTS)
-	@mkdir -p $(@D) 
-		$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $(APP_DIR)/$(TARGET) $(OBJECTS)
+INCLUDE_DIRS =\
+  .\
+  ..\
+  $(CPPUTEST_HOME)/include/CppUTest\
 
-.PHONY: all build clean debug release
+include $(CPPUTEST_HOME)/build/MakefileWorker.mk
 
-build:
-	@mkdir -p $(APP_DIR)
-	@mkdir -p $(OBJ_DIR)
 
-debug: CXXFLAGS += -DDEBUG -g
-debug: all
-
-release: CXXFLAGS += -O2
-release: all
-
-clean:
-	-@rm -rvf $(OBJ_DIR)/*
-	-@rm -rvf $(APP_DIR)/*
-	-@rm -rvf $(BUILD)/*.o
-	-@rm -rvf $(BUILD)/*.d

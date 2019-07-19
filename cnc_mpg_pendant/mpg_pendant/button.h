@@ -9,15 +9,15 @@ class C_Button : public C_EventGenerator {
    public:
 
     // constructor 
-   C_Button(const String& argName, const int argPin, const long argDebounceDelay);
+   C_Button(const String& argName, const int argPin, const unsigned long argDebounceDelay);
   
    void scan(void);
 
    private:
  
    int pin;
-   int state; // debounced buttons tate
-   int prevState; // previuos read button state
+   unsigned int state; // debounced buttons tate
+   unsigned int prevState; // previuos read button state
    unsigned long debounceTime;
    unsigned long time;
 };

@@ -9,13 +9,13 @@ class C_Selector : public C_EventGenerator {
    public:
 
     // constructor 
-   C_Selector(const String& argName, const int argPin, const long argDebounceDelay);
+   C_Selector(const String& argName, const unsigned int argPin, const unsigned long argDebounceDelay);
   
    void scan(void);
    byte volt2state(unsigned int volt);
    private:
  
-   int pin;
+   unsigned int pin;
    byte state; // debounced state
    byte prevState; // previuos read state
    unsigned long debounceTime;

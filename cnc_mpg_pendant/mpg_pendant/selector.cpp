@@ -7,9 +7,11 @@ const unsigned int stateVals[NUM_STATES] = {255u, 340u, 512u, 1024u}; //analog v
 //   public:
 
 // constructor 
-C_Selector::C_Selector(const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
+C_Selector::C_Selector(const String& argName,
+		       const unsigned int argPin,
+		       const unsigned long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
 {
-   prevState = stateVals[0];
+   prevState = 0;
    time = 0;
 }
 
@@ -17,7 +19,7 @@ C_Selector::C_Selector(const String& argName, const int argPin, const long argDe
 // returns debounced selector state
 void C_Selector::scan(void)
 {
-   byte currState = volt2state(analogRead(pin)); // read pin
+  byte currState = volt2state((unsigned int)analogRead((int)pin)); // read pin
          /*Serial.print(prevState);
          Serial.print(" ");
          Serial.println(currState);*/

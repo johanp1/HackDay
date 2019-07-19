@@ -1,7 +1,7 @@
  #ifndef __C_SENDER_H__
 #define __C_SENDER_H__
 #include "event_listner.h"
-#include "arduino.h"
+#include "Arduino.h"
 
 class C_Sender : public C_EventListner {
  

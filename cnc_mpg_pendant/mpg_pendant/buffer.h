@@ -1,3 +1,4 @@
+
 #ifndef __C_BUFFER_H__
 #define __C_BUFFER_H__
 
@@ -26,4 +27,3 @@ private:
 };
 
 #endif // __BUFFER_H__
-

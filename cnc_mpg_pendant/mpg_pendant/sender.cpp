@@ -16,5 +16,5 @@ void C_Sender::sendEvent(C_Event& e)
    Serial.println(data);*/
    Serial.print(e.getSource());
    Serial.print('_');
-   Serial.println(e.getData());
+   Serial.println((int)e.getData());
 }

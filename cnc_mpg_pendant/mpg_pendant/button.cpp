@@ -3,7 +3,7 @@
 //   public:
 
 // constructor 
-C_Button::C_Button(const String& argName, const int argPin, const long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
+C_Button::C_Button(const String& argName, const int argPin, const unsigned long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
 {
    prevState = LOW;
    time = 0;
@@ -14,7 +14,7 @@ C_Button::C_Button(const String& argName, const int argPin, const long argDeboun
 // returns debounced button state
 void C_Button::scan(void)
 {
-   int currState = digitalRead(pin); // read pin
+   unsigned int currState = (unsigned int)digitalRead(pin); // read pin
 
    if (currState != prevState)
    {
