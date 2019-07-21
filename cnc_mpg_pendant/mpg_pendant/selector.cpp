@@ -11,8 +11,9 @@ C_Selector::C_Selector(const String& argName,
 		       const unsigned int argPin,
 		       const unsigned long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
 {
-   prevState = 0;
-   time = 0;
+  state = 0;
+  prevState = state;
+  time = 0;
 }
 
 
@@ -20,31 +21,33 @@ C_Selector::C_Selector(const String& argName,
 void C_Selector::scan(void)
 {
   byte currState = volt2state((unsigned int)analogRead((int)pin)); // read pin
-         /*Serial.print(prevState);
-         Serial.print(" ");
-         Serial.println(currState);*/
-   if (currState != prevState)
-   {
-      // reset the debouncing timer
-      time = millis();
-   }
-
-   if ((millis() - time) > debounceTime) {
-      // take the new reading since debounce timer elapsed
-      if (currState != state) 
-      {
-         state = currState;
-         generateEvent(state);
-      }
-   }
+  if (currState != prevState)
+  {
+    // reset the debouncing timer
+    time = millis();
+  }
+  
+  if ((millis() - time) > debounceTime) {
+  // take the new reading since debounce timer elapsed
+    if (currState != state) 
+    {
+      state = currState;
+      generateEvent(state);
+    }
+  }
       
-   prevState = currState;
+  prevState = currState;
+}
+
+byte C_Selector::getState()
+{
+  return state;
 }
 
 byte C_Selector::volt2state(unsigned int volt)
 {
    byte i;
-   byte retVal;
+   byte retVal = 0;
    bool found = 0;   
    
    while((i < NUM_STATES) && !found)

@@ -5,9 +5,10 @@
 // constructor 
 C_Button::C_Button(const String& argName, const int argPin, const unsigned long argDebounceDelay) : C_EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
 {
-   prevState = LOW;
-   time = 0;
-   pinMode(pin, INPUT);
+  state = LOW;
+  prevState = state;
+  time = 0;
+  pinMode(pin, INPUT);
 }
 
 
@@ -35,4 +36,7 @@ void C_Button::scan(void)
    prevState = currState;
 }
 
-
+unsigned int C_Button::getState()
+{
+  return state;
+}

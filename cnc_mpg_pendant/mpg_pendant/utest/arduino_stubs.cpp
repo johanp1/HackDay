@@ -28,14 +28,12 @@ void digitalWrite(int pin, int w)
 
 int analogRead(int pin)
 {
-  int l_pin = pin;
-  l_pin = 0;
-  return l_pin;  return 0;
+  return ArduinoStub.analogRead(pin);
 }
 
 unsigned long millis(void)
 {
-  return 0;
+  return (unsigned long)ArduinoStub.getTime();
 }
 
 void C_Serial_stub::print(string& str)
@@ -99,6 +97,16 @@ int C_Arduino_stub::digitalRead(int pin)
   return digitalReads[pin];
 }
 
+void C_Arduino_stub::setAnalogRead(int pin, int data)
+{
+  analogReads[pin] = data;
+}
+
+int C_Arduino_stub::analogRead(int pin)
+{
+  return analogReads[pin];
+}
+
 void C_Arduino_stub::reset()
 {
   for(int i = 0; i < 9; i++)
@@ -107,4 +115,15 @@ void C_Arduino_stub::reset()
     digitalWrites[i] = LOW;
     digitalReads[i] = LOW;
   }
+  time = 0;
+}
+
+void C_Arduino_stub::incTime(unsigned int t)
+{
+  time += t;
+}
+
+unsigned C_Arduino_stub::getTime()
+{
+  return time;
 }

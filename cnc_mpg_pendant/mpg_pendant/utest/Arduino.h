@@ -39,12 +39,18 @@ class C_Arduino_stub
   int getDigitalWrite(int pin);
   void setDigitalRead(int pin, int data);
   int digitalRead(int pin);
+  void setAnalogRead(int pin, int val);
+  int analogRead(int pin);
   void reset();
+  void incTime(unsigned int t);
+  unsigned int getTime();
   
  private:
   int pinModes[9];
   int digitalWrites[9];
   int digitalReads[9];
+  int analogReads[4];
+  unsigned int time;
 };
 
 void noInterrupts(void);
