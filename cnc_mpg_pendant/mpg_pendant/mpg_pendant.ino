@@ -57,4 +57,3 @@ void encoderISR(void)
   encoder.update();
 }
 
-

@@ -53,3 +53,13 @@ bool C_Buffer::isEmpty()
    return popIdx == pushIdx;
 }
 
+void C_Buffer::flush()
+{
+  popIdx = 0;
+  pushIdx = 0;
+}
+
+byte C_Buffer::capacity()
+{
+  return sizeof(buffer)/sizeof(C_Event);
+}

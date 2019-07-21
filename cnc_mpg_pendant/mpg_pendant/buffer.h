@@ -18,6 +18,8 @@ public:
    void push(const C_Event& e); 
    bool pop(C_Event& e);
    bool isEmpty();
+   void flush();
+   byte capacity();
    
 private:
   

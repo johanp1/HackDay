@@ -36,4 +36,10 @@ out.txt
 #Python
 *.pyc
 
+#emacs saves
 *~
+\#*
+
+#test-bench builds
+[Ll]ib
+*_tests

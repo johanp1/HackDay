@@ -17,4 +17,3 @@ class C_EventGenerator {
 };
 
 #endif // __EVENT_GENERATOR_H__
-

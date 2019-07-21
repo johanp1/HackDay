@@ -11,6 +11,8 @@ C_RotaryEncoder::C_RotaryEncoder( const String& argName, int argClkPin, int argD
    // and turn on pull-up resistors
    digitalWrite(clkPin, HIGH);
    digitalWrite(dtPin, HIGH);
+
+   position = 0;
 }
 
 // call this from your interrupt function
@@ -31,11 +33,4 @@ void C_RotaryEncoder::update(void)
 unsigned int C_RotaryEncoder::getPosition ()
 {
    return position;
-}
-
-// set the position value
-
-void C_RotaryEncoder::setPosition ( unsigned int p)
-{
-   position = p;
 }
