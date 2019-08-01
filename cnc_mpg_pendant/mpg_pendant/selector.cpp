@@ -46,7 +46,7 @@ byte C_Selector::getState()
 
 byte C_Selector::volt2state(unsigned int volt)
 {
-   byte i;
+   byte i = 0;
    byte retVal = 0;
    bool found = 0;   
    

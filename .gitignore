@@ -19,6 +19,9 @@ Thumbs.db
 obj/
 [Rr]elease*/
 _ReSharper*/
+.klocwork
+.vs
+[Dd]ebug
 
 #General build files
 *.obj
