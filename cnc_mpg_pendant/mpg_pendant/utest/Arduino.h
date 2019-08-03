@@ -9,6 +9,8 @@
 #define INPUT 0
 #define OUTPUT 1
 
+#define CHANGE 0
+
 #define A2 0
 #define A3 1
 
@@ -24,35 +26,60 @@ class C_Serial_stub
    void print(int val);
    void println(string& str);
    void println(int val);
-   
-   private:
-   string send_str;
+   void println(char* str);
+   void begin(int val);
+   void setTimeout(int val);
 };
 
 class C_Arduino_stub
 {
- public:
-  C_Arduino_stub();
-  void setMode(int pin, int dir);
-  int getMode(int pin);
-  void digitalWrite(int pin, int dir);
-  int getDigitalWrite(int pin);
-  void setDigitalRead(int pin, int data);
-  int digitalRead(int pin);
-  void setAnalogRead(int pin, int val);
-  int analogRead(int pin);
-  void reset();
-  void incTime(unsigned int t);
-  unsigned int getTime();
+   public:
+   C_Arduino_stub();
+
+   void Setup();
+   void Loop();
+
+   void setMode(int pin, int dir);
+   int getMode(int pin);
+
+   void digitalWrite(int pin, int dir);
+   int getDigitalWrite(int pin);
+
+   void setDigitalRead(int pin, int data);
+   int digitalRead(int pin);
+
+   void setAnalogRead(int pin, int val);
+   int analogRead(int pin);
   
- private:
-  int pinModes[9];
-  int digitalWrites[9];
-  int digitalReads[9];
-  int analogReads[4];
-  unsigned int time;
+   void incTime(unsigned int t);
+   unsigned int getTime();
+
+   void writeSerialBuffer(string& str);
+   string& getSerialBuffer();
+   void clearSerialBuffer();
+
+   void setInterruptPin(byte pin);
+   void setISR(void(*cbf)(void));
+   void invokeInterrupt(unsigned int val);
+
+   void reset();
+
+   private:
+   int pinModes[9];
+   int digitalWrites[9];
+   int digitalReads[9];
+   int analogReads[4];
+   string serialBuffer;
+   unsigned int time;
+   void(*isr)(void);
+   byte interruptPin;
 };
 
+void setup();
+void loop();
+void delay(int val);
+byte digitalPinToInterrupt(byte b);
+void attachInterrupt(byte pin, void(*cbf)(void), byte mode);
 void noInterrupts(void);
 void interrupts(void);
 void pinMode(int pin, int dir);

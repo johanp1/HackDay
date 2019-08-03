@@ -36,6 +36,26 @@ TEST_GROUP(SelectorTestGroup)
   C_Selector* s;
   eventListnerSpy evSpy;
   
+  void gotoState(byte state)
+  {
+	  byte oldState = s->getState();
+	  unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
+	  unsigned int volt = volt2state[state];
+
+	  ArduinoStub.setAnalogRead(PIN, volt);
+
+	  s->scan();
+	  ArduinoStub.incTime(101); //longer than debounce delay
+	  s->scan();
+  }
+
+  void checkEvent(unsigned int evData, string& evSource)
+  {
+	  CHECK(evSpy.newData);
+	  LONGS_EQUAL(evData, evSpy.eventData);
+	  CHECK(evSpy.eventSource.compare(evSource) == 0);
+  }
+
   void setup()
   {
     ArduinoStub.reset();
@@ -67,75 +87,71 @@ TEST(SelectorTestGroup, SteadyState)
 
   s->scan();
   LONGS_EQUAL(0, s->getState());
+  CHECK(!evSpy.newData);
 }
 
-/*
-TEST(SelectorTestGroup, ButtonNotPressed)
+TEST(SelectorTestGroup, checkNoTransitionShortTime)
 {
-  ArduinoStub.setDigitalRead(PIN, LOW);
-  
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-  CHECK(!evSpy.newData);
-  
-  ArduinoStub.incTime(51); //longer than debounce delay
-  
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-  CHECK(!evSpy.newData);
+	ArduinoStub.setAnalogRead(PIN, 340);
+
+	s->scan();
+	LONGS_EQUAL(0, s->getState());
+
+	ArduinoStub.incTime(99); //shorter than debounce delay
+
+	s->scan();
+	LONGS_EQUAL(0, s->getState());
 }
 
-TEST(SelectorTestGroup, PressButtonLong)
+TEST(SelectorTestGroup, stateTransitions)
 {
-  ArduinoStub.setDigitalRead(PIN, HIGH);
+	gotoState(0);
+	LONGS_EQUAL(0, s->getState());
+	CHECK(!evSpy.newData);  //no new event since 0 is the init state
 
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-  CHECK(!evSpy.newData);
-  
-  ArduinoStub.incTime(51); //longer than debounce delay
-  
-  b->scan();
-  LONGS_EQUAL(HIGH, b->getState());
-  CHECK(evSpy.newData);
-  LONGS_EQUAL(1, evSpy.eventData);
-  CHECK(evSpy.eventSource.compare("test") == 0);
+	gotoState(1);
+	LONGS_EQUAL(1, s->getState());
+	checkEvent(1, (string)"test");
+
+	gotoState(2);
+	LONGS_EQUAL(2, s->getState());
+	checkEvent(2, (string)"test");
+
+	gotoState(3);
+	LONGS_EQUAL(3, s->getState());
+	checkEvent(3, (string)"test");
+
+	gotoState(0);
+	LONGS_EQUAL(0, s->getState());
+	checkEvent(0, (string)"test");
 }
 
-TEST(SelectorTestGroup, PressButtonShort)
+TEST(SelectorTestGroup, undefVolt)
 {
-  ArduinoStub.setDigitalRead(PIN, HIGH);
+	ArduinoStub.setAnalogRead(PIN, 1000);
 
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-  CHECK(!evSpy.newData);
-    
-  ArduinoStub.incTime(49); //shorter than debounce delay
-  
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-  CHECK(!evSpy.newData);
+	s->scan();
+	ArduinoStub.incTime(101); //longer than debounce delay
+	s->scan();
+
+	LONGS_EQUAL(0, s->getState());
+	CHECK(!evSpy.newData);
+
+	ArduinoStub.setAnalogRead(PIN, 535);
+
+	s->scan();
+	ArduinoStub.incTime(101); //longer than debounce delay
+	s->scan();
+
+	LONGS_EQUAL(0, s->getState());
+	CHECK(!evSpy.newData);
+
+	ArduinoStub.setAnalogRead(PIN, 100);
+
+	s->scan();
+	ArduinoStub.incTime(101); //longer than debounce delay
+	s->scan();
+
+	LONGS_EQUAL(0, s->getState());
+	CHECK(!evSpy.newData);
 }
-
-TEST(SelectorTestGroup, ReleaseButton)
-{
-  ArduinoStub.setDigitalRead(PIN, HIGH);
-
-  b->scan();
-
-  ArduinoStub.incTime(51); //longer than debounce delay
-
-  b->scan();
-  LONGS_EQUAL(HIGH, b->getState());
-
-  ArduinoStub.setDigitalRead(PIN, LOW);
-
-  b->scan();
-  LONGS_EQUAL(HIGH, b->getState());
-  
-  ArduinoStub.incTime(51); //longer than debounce delay
-
-  b->scan();
-  LONGS_EQUAL(LOW, b->getState());
-}
-*/

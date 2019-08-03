@@ -24,7 +24,7 @@ void C_Button::scan(void)
       time = millis();
    }
 
-   if ((millis() - time) > debounceTime) {
+   if ((millis() - time) >= debounceTime) {
       // take the new reading since debounce timer elapsed
       if (currState != state) 
       {

@@ -15,8 +15,8 @@ public:
    C_Buffer();
 
    void handleEvent(C_Event& e);
-   void push(const C_Event& e); 
-   bool pop(C_Event& e);
+   void put(const C_Event& e); 
+   bool get(C_Event& e);
    bool isEmpty();
    void flush();
    byte capacity();

@@ -12,10 +12,10 @@ C_Buffer::C_Buffer()
 
 void C_Buffer::handleEvent(C_Event& e)
 {
-   push((const C_Event&)e);
+   put((const C_Event&)e);
 }
 
-void C_Buffer::push(const C_Event& e) 
+void C_Buffer::put(const C_Event& e) 
 {
    noInterrupts();    // dissable INT interrupts while sending
 
@@ -30,7 +30,7 @@ void C_Buffer::push(const C_Event& e)
    interrupts();       // restore interrupts
 }
 
-bool C_Buffer::pop(C_Event& e)
+bool C_Buffer::get(C_Event& e)
 {
    bool bufferEmpty = isEmpty();
       

@@ -4,11 +4,9 @@
    
 void C_EventGenerator::generateEvent(unsigned int data)
 {
-   C_Event e(name, data);
-
    if (handler_p != 0)
    {
-      handler_p->handleEvent(e);
+      handler_p->handleEvent(C_Event(name, data));
    }
 }
 

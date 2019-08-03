@@ -20,7 +20,7 @@ TEST_GROUP(BufferTestGroup)
     
     for (int i = 0; i < nbr; i++)
     {
-      buffer.push(C_Event(s, (unsigned int)(seed+i)));
+      buffer.put(C_Event(s, (unsigned int)(seed+i)));
     }
   }
 };
@@ -32,14 +32,14 @@ TEST(BufferTestGroup, EmptyAfterCreation)
 
 TEST(BufferTestGroup, NotEmpty)
 {
-  buffer.push(C_Event());
+  buffer.put(C_Event());
   CHECK(!buffer.isEmpty());
 }
 
-TEST(BufferTestGroup, PopEmpty)
+TEST(BufferTestGroup, GetEmpty)
 {
   C_Event e;
-  CHECK(!buffer.pop(e));
+  CHECK(!buffer.get(e));
 }
 
 
@@ -47,9 +47,9 @@ TEST(BufferTestGroup, NotEmptyThenEmpty)
 {
   C_Event e;
   
-  buffer.push(C_Event());
+  buffer.put(C_Event());
   CHECK(!buffer.isEmpty());
-  CHECK(buffer.pop(e));
+  CHECK(buffer.get(e));
   CHECK(buffer.isEmpty());
 }
 
@@ -59,8 +59,8 @@ TEST(BufferTestGroup, GetPutOneValue)
   C_Event e;
   string str = "hej";
   
-  buffer.push(C_Event(str, 1));
-  CHECK(buffer.pop(e));
+  buffer.put(C_Event(str, 1));
+  CHECK(buffer.get(e));
   LONGS_EQUAL(1, e.getData());
   CHECK(str.compare(e.getSource()) == 0);
 }
@@ -72,34 +72,45 @@ TEST(BufferTestGroup, GetPutAFew)
   string str2 = "2";
   string str3 = "3";
   
-  buffer.push(C_Event(str1, 1));
-  buffer.push(C_Event(str2, 2));
-  buffer.push(C_Event(str3, 3));
+  buffer.put(C_Event(str1, 1));
+  buffer.put(C_Event(str2, 2));
+  buffer.put(C_Event(str3, 3));
 
-  CHECK(buffer.pop(e));
+  CHECK(buffer.get(e));
   LONGS_EQUAL(1, e.getData());
   CHECK(str1.compare(e.getSource()) == 0);
 
-  CHECK(buffer.pop(e));
+  CHECK(buffer.get(e));
   LONGS_EQUAL(2, e.getData());
   CHECK(str2.compare(e.getSource()) == 0);
 
-  CHECK(buffer.pop(e));
+  CHECK(buffer.get(e));
   LONGS_EQUAL(3, e.getData());
   CHECK(str3.compare(e.getSource()) == 0);
 }
 
-TEST(BufferTestGroup, pushFull)
+TEST(BufferTestGroup, PutFull)
 {
   C_Event e;
   string str = "hej";
   
   fillBuffer(0, buffer.capacity());
 
-  buffer.push(C_Event(str, 100));
-  CHECK(buffer.pop(e));
+  buffer.put(C_Event(str, 100));
+  CHECK(buffer.get(e));
   LONGS_EQUAL(100, e.getData());
   CHECK(str.compare(e.getSource()) == 0);
   CHECK(buffer.isEmpty()); // this is a consequence of not keeping track of
   //when the buffer is full
+}
+
+TEST(BufferTestGroup, HandleEvent)
+{
+	C_Event e;
+	string str = "apa";
+
+	buffer.handleEvent(C_Event(str, 99));
+	CHECK(buffer.get(e));
+	LONGS_EQUAL(99, e.getData());
+	CHECK(e.getSource().compare(str) == 0);
 }

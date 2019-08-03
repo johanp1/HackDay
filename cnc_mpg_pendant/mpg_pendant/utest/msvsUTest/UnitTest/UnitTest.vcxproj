@@ -121,21 +121,25 @@
     <ClCompile Include="..\..\..\encoder.cpp" />
     <ClCompile Include="..\..\..\event.cpp" />
     <ClCompile Include="..\..\..\event_generator.cpp" />
+    <ClCompile Include="..\..\..\mpg_pendant.cpp" />
     <ClCompile Include="..\..\..\selector.cpp" />
     <ClCompile Include="..\..\..\sender.cpp" />
     <ClCompile Include="..\..\all_tests.cpp" />
+    <ClCompile Include="..\..\app_tests.cpp" />
     <ClCompile Include="..\..\arduino_stubs.cpp" />
     <ClCompile Include="..\..\buffer_tests.cpp" />
     <ClCompile Include="..\..\button_tests.cpp" />
     <ClCompile Include="..\..\encoder_tests.cpp" />
     <ClCompile Include="..\..\eventgenerator_tests.cpp" />
     <ClCompile Include="..\..\selector_tests.cpp" />
+    <ClCompile Include="..\..\sender_tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\buffer.h" />
     <ClInclude Include="..\..\..\button.h" />
     <ClInclude Include="..\..\..\encoder.h" />
     <ClInclude Include="..\..\..\event.h" />
+    <ClInclude Include="..\..\..\event_generator.h" />
     <ClInclude Include="..\..\..\event_listner.h" />
     <ClInclude Include="..\..\..\selector.h" />
     <ClInclude Include="..\..\..\sender.h" />
