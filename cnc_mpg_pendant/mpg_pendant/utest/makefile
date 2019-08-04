@@ -15,7 +15,7 @@ CPPUTEST_HOME = /usr/local/cpputest-3.7dev
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPPUTEST_PEDANTIC_ERRORS = N
-CPP_PLATFORM = Gcc
+CPP_PLATFORM = Gcc -std=c++11
 
 # This line is overriding the default new macros.  This is helpful
 # when using std library includes like <list> and other containers

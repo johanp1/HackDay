@@ -106,11 +106,12 @@ TEST(BufferTestGroup, PutFull)
 
 TEST(BufferTestGroup, HandleEvent)
 {
-	C_Event e;
-	string str = "apa";
+  string str = "apa";
+  C_Event e;
+  C_Event sendEvent = C_Event(str, 99);
 
-	buffer.handleEvent(C_Event(str, 99));
-	CHECK(buffer.get(e));
-	LONGS_EQUAL(99, e.getData());
-	CHECK(e.getSource().compare(str) == 0);
+  buffer.handleEvent(sendEvent);
+  CHECK(buffer.get(e));
+  LONGS_EQUAL(99, e.getData());
+  CHECK(e.getSource().compare(str) == 0);
 }

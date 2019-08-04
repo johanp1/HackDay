@@ -58,7 +58,7 @@ byte C_Buffer::capacity()
 
 byte C_Buffer::next(byte index)
 {
-   byte outdex = index + 1;
+  byte outdex = (byte)(index + 1);
 
    if (outdex > capacity() - 1)
    {

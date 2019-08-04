@@ -77,7 +77,7 @@ class C_Arduino_stub
 
 void setup();
 void loop();
-void delay(int val);
+void delay(unsigned int val);
 byte digitalPinToInterrupt(byte b);
 void attachInterrupt(byte pin, void(*cbf)(void), byte mode);
 void noInterrupts(void);

@@ -17,12 +17,14 @@ C_Sender sender;
 C_Buffer buffer;
 
 void setup() {
+   string hello_world = string("hej");
+  
    Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
    Serial.setTimeout(500);
 
    attachInterrupt(digitalPinToInterrupt(2), encoderISR, CHANGE);
 
-   Serial.println("hej");
+   Serial.println(hello_world);
 
    buttons[0].addEventListner(&sender);
    buttons[1].addEventListner(&sender);

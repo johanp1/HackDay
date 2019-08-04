@@ -1,7 +1,24 @@
 #include "Arduino.h"
+#include <sstream>
+#include <iostream>   // std::cout
+#include <string>     // std::string, std::to_string
 
 C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
+
+
+std::string tostring(int value)
+{
+      //create an output string stream
+  std::ostringstream os ;
+  
+  //throw the value into the string stream
+  os << value;
+  
+  //convert the string stream into a string and return
+  return os.str() ;
+}
+
 
 void noInterrupts(void)
 {
@@ -11,7 +28,7 @@ void interrupts(void)
 {
 }
 
-void delay(int val)
+void delay(unsigned int val)
 {
    ArduinoStub.incTime(val);
 }
@@ -61,7 +78,8 @@ void C_Serial_stub::print(string& str)
 
 void C_Serial_stub::print(int val)
 {
-   ArduinoStub.writeSerialBuffer(to_string(val));
+  string str = tostring(val);
+   ArduinoStub.writeSerialBuffer(str);
 }
 
 void C_Serial_stub::println(string& str)
@@ -71,7 +89,8 @@ void C_Serial_stub::println(string& str)
 
 void C_Serial_stub::println(int val)
 {
-   ArduinoStub.writeSerialBuffer(to_string(val).append("\n"));
+   string str = tostring(val).append("\n");
+   ArduinoStub.writeSerialBuffer(str);
 }
 
 void C_Serial_stub::println(char *str)
@@ -205,7 +224,7 @@ void C_Arduino_stub::setISR(void(*cbf)(void))
 
 void C_Arduino_stub::invokeInterrupt(unsigned int val)
 {
-   setDigitalRead(interruptPin, val);
+  setDigitalRead(interruptPin, (int) val);
 
    if (isr != NULL)
    {
