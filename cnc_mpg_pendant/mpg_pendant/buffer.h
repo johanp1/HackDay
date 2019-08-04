@@ -24,8 +24,10 @@ public:
 private:
   
    C_Event buffer[BUFFER_SIZE];
-   byte popIdx;
-   byte pushIdx;
+   byte getIdx;
+   byte putIdx;
+
+   byte next(byte idx);
 };
 
 #endif // __BUFFER_H__

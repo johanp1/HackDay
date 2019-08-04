@@ -4,9 +4,10 @@
    
 void C_EventGenerator::generateEvent(unsigned int data)
 {
+   C_Event e = C_Event(name, data);
    if (handler_p != 0)
    {
-      handler_p->handleEvent(C_Event(name, data));
+      handler_p->handleEvent(e);
    }
 }
 

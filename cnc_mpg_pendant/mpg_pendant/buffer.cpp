@@ -6,8 +6,8 @@
 // constructor 
 C_Buffer::C_Buffer() 
 {      
-   pushIdx = 0;
-   popIdx = 0;
+   putIdx = 0;
+   getIdx = 0;
 }
 
 void C_Buffer::handleEvent(C_Event& e)
@@ -19,47 +19,51 @@ void C_Buffer::put(const C_Event& e)
 {
    noInterrupts();    // dissable INT interrupts while sending
 
-   buffer[pushIdx] = e;
+   buffer[putIdx] = e;
 
-   pushIdx++;
-   if(pushIdx > BUFFER_SIZE-1)
-   {
-      pushIdx = 0;
-   }
+   putIdx = next(putIdx);
        
    interrupts();       // restore interrupts
 }
 
 bool C_Buffer::get(C_Event& e)
 {
-   bool bufferEmpty = isEmpty();
+   bool notEmpty = !isEmpty();
       
-   if(!bufferEmpty)
+   if(notEmpty)
    {
-      e = buffer[popIdx];
+      e = buffer[getIdx];
 
-      popIdx++;
-      if(popIdx > BUFFER_SIZE-1)
-      {
-         popIdx = 0;
-      }
+      getIdx = next(getIdx);
    }
 
-   return !bufferEmpty;
+   return notEmpty;
 }
    
 bool C_Buffer::isEmpty()
 {
-   return popIdx == pushIdx;
+   return getIdx == putIdx;
 }
 
 void C_Buffer::flush()
 {
-  popIdx = 0;
-  pushIdx = 0;
+  getIdx = 0;
+  putIdx = 0;
 }
 
 byte C_Buffer::capacity()
 {
   return sizeof(buffer)/sizeof(C_Event);
+}
+
+byte C_Buffer::next(byte index)
+{
+   byte outdex = index + 1;
+
+   if (outdex > capacity() - 1)
+   {
+      outdex = 0;
+   }
+
+   return outdex;
 }
