@@ -94,60 +94,89 @@ class ComponentWrapper:
          retVal = val
                
       return retVal      
+
+
+class OptParser:
+   def __init__(self, argv):
+      self.xml_file = ''   # input xml-file describing what knobs and/or button are on the pendant
+      self.name = 'my-mpg'       # default name of component in HAL
+      self.port = '/dev/ttyUSB0' # default serial port to use
+
+      print argv
       
-def usage():
-   """ print command lie options """
-   print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n"\
+      self._getOptions(argv)
+      
+   def __repr__(self):
+      return 'xml_file: ' + self.xml_file + '\tname: ' + self.name + '\tport: ' + self.port
+      
+   def _getOptions(self, argv):
+      try:
+         opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
+      except getopt.GetoptError as err:
+         # print help information and exit:
+         print(err) # will print something like "option -a not recognized"
+         sys.exit(2)
+
+      ### parse input command line
+      for o, a in opts:
+         if o == "-h":
+            self._usage()
+            sys.exit()
+         if o == "-c":
+            self.name = a
+         elif o == "--input":
+            self.xml_file = a
+         elif o in ("-p", "--port"):
+            self.port = a
+         else:
+            print o
+            assert False, "unhandled option"
+      
+      if self.xml_file == '':
+         if len(sys.argv) < 2:
+            self._usage()
+            sys.exit(2)
+         else:
+            self.xml_file = argv[-1]
+               
+   def getName(self):
+      return self.name
+
+   def getPort(self):
+      return self.port
+
+   def getXmlFile(self):
+      return self.xml_file
+   
+   def _usage(self):
+      """ print command line options """
+      print "usage pendant_srv.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml\n"\
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
          "-h                       # Help test";
 
-  
+class XmlParser:
+   def __init__(self, f):
+      self._parseFile(f)
+
+   def getParsedData(self):
+      pass
+   
+   def _parseFile(self, f):
+      pass
+
 ### start of main script #############################################
 def main():
-   xml_file = ''         # input xml-file describing what knobs and/or button are on the pendant
-   name = 'my-mpg'       # default name of component in HAL
-   port = '/dev/ttyUSB0' # default serial port to use
+   optParser = OptParser(sys.argv[1:])
+   print optParser
 
-   try:
-     opts, args = getopt.getopt(sys.argv[1:], "hp:c:", ["input=", "port="])
-   except getopt.GetoptError as err:
-     # print help information and exit:
-     print(err) # will print something like "option -a not recognized"
-     sys.exit(2)
+   c = ComponentWrapper(optParser.getName())
+   serialmpg = comms.instrument(optParser.getPort(), c.updatePin)
 
-   ### parse input command line
-   for o, a in opts:
-     if o == "-h":
-       usage()
-       sys.exit()
-     if o == "-c":
-       name = a
-     elif o == "--input":
-       xml_file = a
-     elif o in ("-p", "--port"):
-       port = a
-     else:
-       print o
-       assert False, "unhandled option"
-      
-   if xml_file == '':
-      if len(sys.argv) < 2:
-         usage()
-         sys.exit(2)
-      else:
-         xml_file = sys.argv[-1]
-      
-   print 'xml: ' + xml_file   
-   print 'port: ' + port
-   print 'name: ' + name
-
-   c = ComponentWrapper(name)
-   serialmpg = comms.instrument(port, c.updatePin)
-      
-   ### parse input xml file
-   tree = ET.parse(xml_file)
+   xmlParser = XmlParser(optParser.getXmlFile())
+   
+   tree = ET.parse(optParser.getXmlFile())
    root = tree.getroot()
          
    # iterate the xml to find the knobs/buttons on the pendant, their event names, type and HAL-pin-name
@@ -165,7 +194,6 @@ def main():
    
    print c
 
-   # main loop
    try:
       while 1:
          serialmpg.readEvents() #blocks until '\n' received or timeout

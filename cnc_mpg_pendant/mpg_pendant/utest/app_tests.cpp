@@ -1,7 +1,6 @@
 #include "TestHarness.h"
 #include "Arduino.h"
 #include <string>
-#include <iostream>
 #include "encoder.h"
 #include "mpg_pendant.h"
 
@@ -176,7 +175,6 @@ TEST(ApplicationTestGroup, FillUpBuffer)
       ArduinoStub.invokeInterrupt(HIGH);
 
    ArduinoStub.Loop();
-//   cout << Serial.getData();
    CHECK(Serial.getData().compare(expected) == 0);
    Serial.clear();
 }

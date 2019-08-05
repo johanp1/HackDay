@@ -1,7 +1,6 @@
 #include "button.h"
 #include "encoder.h"
 #include "sender.h"
-//#include "event_listner.h"
 #include "buffer.h"
 #include "selector.h"
 #include "mpg_pendant.h"
@@ -65,4 +64,3 @@ static void encoderISR(void)
 {
    encoder.update();
 }
-

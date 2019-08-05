@@ -1,15 +1,14 @@
 #include "Arduino.h"
 #include <sstream>
-//#include <iostream>   // std::cout
-#include <string>     // std::string, std::to_string
+#include <string>     // std::string
 
 C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
 
 
-std::string tostring(int value)
+std::string to_string(int value)
 {
-      //create an output string stream
+  //create an output string stream
   std::ostringstream os ;
   
   //throw the value into the string stream
@@ -88,16 +87,11 @@ void C_Serial_stub::clear()
 void C_Serial_stub::print(string& str)
 {
    serialData.append(str);
-
-/*   cout << "capcity " << serialData.capacity() << "\n";
-   cout << "length " << serialData.length() << "\n";
-   cout << "max_size " << serialData.max_size() << "\n";
-   cout << "serialData " << serialData << "\n";*/
 }
 
 void C_Serial_stub::print(int val)
 {
-   string str = tostring(val);
+   string str = to_string(val);
 
    serialData.append(str);
 }
@@ -107,16 +101,11 @@ void C_Serial_stub::println(string& s)
    string str = s.append("\n");
 
    serialData.append(str);
-
-/*   cout << "capcity " << serialData.capacity() << "\n";
-   cout << "length " << serialData.length() << "\n";
-   cout << "max_size " << serialData.max_size() << "\n";
-   cout << "serialData " << serialData << "\n";*/
 }
 
 void C_Serial_stub::println(int val)
 {
-   string str = tostring(val).append("\n");
+   string str = to_string(val).append("\n");
 
    serialData.append(str);
 }

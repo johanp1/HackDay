@@ -130,30 +130,30 @@ TEST(SelectorTestGroup, stateTransitions)
 
 TEST(SelectorTestGroup, undefVolt)
 {
-	ArduinoStub.setAnalogRead(PIN, 1000);
-
-	s->scan();
-	ArduinoStub.incTime(101); //longer than debounce delay
-	s->scan();
-
-	LONGS_EQUAL(0, s->getState());
-	CHECK(!evSpy.newData);
-
-	ArduinoStub.setAnalogRead(PIN, 535);
-
-	s->scan();
-	ArduinoStub.incTime(101); //longer than debounce delay
-	s->scan();
-
-	LONGS_EQUAL(0, s->getState());
-	CHECK(!evSpy.newData);
-
-	ArduinoStub.setAnalogRead(PIN, 100);
-
-	s->scan();
-	ArduinoStub.incTime(101); //longer than debounce delay
-	s->scan();
-
-	LONGS_EQUAL(0, s->getState());
-	CHECK(!evSpy.newData);
+  ArduinoStub.setAnalogRead(PIN, 1000);
+  
+  s->scan();
+  ArduinoStub.incTime(101); //longer than debounce delay
+  s->scan();
+  
+  LONGS_EQUAL(0, s->getState());
+  CHECK(!evSpy.newData);
+  
+  ArduinoStub.setAnalogRead(PIN, 535);
+  
+  s->scan();
+  ArduinoStub.incTime(101); //longer than debounce delay
+  s->scan();
+  
+  LONGS_EQUAL(0, s->getState());
+  CHECK(!evSpy.newData);
+  
+  ArduinoStub.setAnalogRead(PIN, 100);
+  
+  s->scan();
+  ArduinoStub.incTime(101); //longer than debounce delay
+  s->scan();
+  
+  LONGS_EQUAL(0, s->getState());
+  CHECK(!evSpy.newData);
 }
