@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include <sstream>
-#include <iostream>   // std::cout
+//#include <iostream>   // std::cout
 #include <string>     // std::string, std::to_string
 
 C_Serial_stub Serial;
@@ -71,32 +71,66 @@ unsigned long millis(void)
   return (unsigned long)ArduinoStub.getTime();
 }
 
+C_Serial_stub::C_Serial_stub()
+{
+   // patch for allocating a larger string at startup. 
+   // default seems to be an empty string with 15 chars allocated.
+   // when appending the string and the size exceeds 15 it will automaticaly expand the string but will end up with a memory leak 
+   serialData = string(100, '0');   
+   clear();
+}
+
+void C_Serial_stub::clear()
+{
+   serialData.clear();
+}
+
 void C_Serial_stub::print(string& str)
 {
-   ArduinoStub.writeSerialBuffer(str);
+   serialData.append(str);
+
+/*   cout << "capcity " << serialData.capacity() << "\n";
+   cout << "length " << serialData.length() << "\n";
+   cout << "max_size " << serialData.max_size() << "\n";
+   cout << "serialData " << serialData << "\n";*/
 }
 
 void C_Serial_stub::print(int val)
 {
-  string str = tostring(val);
-   ArduinoStub.writeSerialBuffer(str);
+   string str = tostring(val);
+
+   serialData.append(str);
 }
 
-void C_Serial_stub::println(string& str)
+void C_Serial_stub::println(string& s)
 {
-   ArduinoStub.writeSerialBuffer(str.append("\n"));
+   string str = s.append("\n");
+
+   serialData.append(str);
+
+/*   cout << "capcity " << serialData.capacity() << "\n";
+   cout << "length " << serialData.length() << "\n";
+   cout << "max_size " << serialData.max_size() << "\n";
+   cout << "serialData " << serialData << "\n";*/
 }
 
 void C_Serial_stub::println(int val)
 {
    string str = tostring(val).append("\n");
-   ArduinoStub.writeSerialBuffer(str);
+
+   serialData.append(str);
 }
 
-void C_Serial_stub::println(char *str)
+void C_Serial_stub::println(char *s)
 {
-   string s = string(str);
-   ArduinoStub.writeSerialBuffer(s.append("\n"));
+   string str = string(s).append("\n");
+
+   serialData.append(str);
+}
+
+const string& C_Serial_stub::getData()
+{
+   return serialData;
 }
 
 void C_Serial_stub::begin(int val)
@@ -164,21 +198,6 @@ int C_Arduino_stub::analogRead(int pin)
   return analogReads[pin];
 }
 
-void C_Arduino_stub::writeSerialBuffer(string& str)
-{
-   serialBuffer.append(str);
-}
-
-string& C_Arduino_stub::getSerialBuffer()
-{
-   return serialBuffer;
-}
-
-void C_Arduino_stub::clearSerialBuffer()
-{
-   serialBuffer = "";
-}
-
 void C_Arduino_stub::reset()
 {
   int i;
@@ -198,8 +217,6 @@ void C_Arduino_stub::reset()
   time = 0;
 
   isr = NULL;
-  
-  clearSerialBuffer();
 }
 
 void C_Arduino_stub::incTime(unsigned int t)

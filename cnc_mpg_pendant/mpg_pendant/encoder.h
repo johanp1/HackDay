@@ -52,6 +52,7 @@ class C_RotaryEncoder : public C_EventGenerator{
     void update();
     
     unsigned int getPosition();
+    void clearPosition();
 
   private:
 

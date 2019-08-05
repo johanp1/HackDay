@@ -34,3 +34,8 @@ unsigned int C_RotaryEncoder::getPosition ()
 {
    return position;
 }
+
+void C_RotaryEncoder::clearPosition()
+{
+   position = 0;
+}

@@ -21,7 +21,9 @@ typedef unsigned char byte;
 
 class C_Serial_stub
 {
-   public:
+public:
+   C_Serial_stub();
+
    void print(string& str);
    void print(int val);
    void println(string& str);
@@ -29,6 +31,11 @@ class C_Serial_stub
    void println(char* str);
    void begin(int val);
    void setTimeout(int val);
+   void clear();
+   const string& getData();
+
+private:
+   string serialData;
 };
 
 class C_Arduino_stub
@@ -54,10 +61,6 @@ class C_Arduino_stub
    void incTime(unsigned int t);
    unsigned int getTime();
 
-   void writeSerialBuffer(string& str);
-   string& getSerialBuffer();
-   void clearSerialBuffer();
-
    void setInterruptPin(byte pin);
    void setISR(void(*cbf)(void));
    void invokeInterrupt(unsigned int val);
@@ -68,9 +71,11 @@ class C_Arduino_stub
    int pinModes[9];
    int digitalWrites[9];
    int digitalReads[9];
+
    int analogReads[4];
-   string serialBuffer;
+
    unsigned int time;
+
    void(*isr)(void);
    byte interruptPin;
 };

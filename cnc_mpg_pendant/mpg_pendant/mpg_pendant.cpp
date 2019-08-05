@@ -32,6 +32,7 @@ void setup() {
    selectors[0].addEventListner(&sender);
    selectors[1].addEventListner(&sender);
    encoder.addEventListner(&buffer);
+   encoder.clearPosition();
 }
 
 void loop() {  
