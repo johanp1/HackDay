@@ -141,6 +141,7 @@
     <ClInclude Include="..\..\..\event.h" />
     <ClInclude Include="..\..\..\event_generator.h" />
     <ClInclude Include="..\..\..\event_listner.h" />
+    <ClInclude Include="..\..\..\mpg_pendant.h" />
     <ClInclude Include="..\..\..\selector.h" />
     <ClInclude Include="..\..\..\sender.h" />
     <ClInclude Include="..\..\all_tests.h" />

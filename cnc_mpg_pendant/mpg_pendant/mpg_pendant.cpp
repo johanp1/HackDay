@@ -1,18 +1,21 @@
 #include "button.h"
 #include "encoder.h"
 #include "sender.h"
-#include "event_listner.h"
+//#include "event_listner.h"
 #include "buffer.h"
 #include "selector.h"
-
-#define NBR_OF_BUTTONS 3
-#define NBR_OF_SELECTORS 2
+#include "mpg_pendant.h"
 
 static void encoderISR(void);
 
-C_Button buttons[NBR_OF_BUTTONS] = { C_Button("rth", 3, 50), C_Button("run", 6, 50), C_Button("est", 8, 50)} ;
-C_RotaryEncoder encoder("jog", 2, 7);
-C_Selector selectors[NBR_OF_SELECTORS] = {C_Selector("sela", A3, 100), C_Selector("sels", A2, 100)};
+C_Button buttons[NBR_OF_BUTTONS] = { C_Button("rth", RTH_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY), 
+                                    C_Button("run", RUN_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY), 
+                                    C_Button("est", EST_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY)} ;
+
+C_RotaryEncoder encoder("jog", ENCODER_CLK_PIN, ENCODER_DT_PIN);
+
+C_Selector selectors[NBR_OF_SELECTORS] = {C_Selector("sela", AXIS_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY),
+                                          C_Selector("sels", SCALE_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY)};
 C_Sender sender;
 C_Buffer buffer;
 
@@ -22,7 +25,7 @@ void setup() {
    Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
    Serial.setTimeout(500);
 
-   attachInterrupt(digitalPinToInterrupt(2), encoderISR, CHANGE);
+   attachInterrupt(digitalPinToInterrupt(ENCODER_CLK_PIN), encoderISR, CHANGE);
 
    Serial.println(hello_world);
 
@@ -55,7 +58,7 @@ void loop() {
       sender.sendEvent(e);
    }
 
-   delay(10); // waits 10ms
+   delay(LOOP_DELAY_TIME); // waits 10ms
 }
 
 static void encoderISR(void)

@@ -1,0 +1,17 @@
+#define NBR_OF_BUTTONS   3
+#define NBR_OF_SELECTORS 2
+
+#define BUTTON_DEBOUNCE_DELAY   50
+#define SELECTOR_DEBOUNCE_DELAY 100
+
+#define RTH_BUTTON_PIN 3
+#define RUN_BUTTON_PIN 6
+#define EST_BUTTON_PIN 8
+
+#define AXIS_SELECTOR_PIN  A3
+#define SCALE_SELECTOR_PIN A2
+
+#define ENCODER_CLK_PIN 2
+#define ENCODER_DT_PIN  7
+
+#define LOOP_DELAY_TIME 10 //milli sec
