@@ -19,9 +19,9 @@ import hal
 
 class Pin:
    """ Representation of a Pin and it's data"""
-   def __init__(self, name, val, type):
+   def __init__(self, name, type):
       self.name = name  # HAL pin name
-      self.val = val    # current value of pin, e.g. 1 - on, 0 - off
+      self.val = 0    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # type (string read from xml)
 
    def __repr__(self):
@@ -40,7 +40,7 @@ class ComponentWrapper:
       
    def addPin(self, ev_name, pin_name, type):
       if self._getHALType(type) != '':
-         self.evToHALPin[ev_name] = Pin(pin_name, 0, type) # dictionary to map between event and HAL-pin
+         self.evToHALPin[ev_name] = Pin(pin_name, type) # dictionary to map between event and HAL-pin
          self.hal.newpin(pin_name, self._getHALType(type), hal.HAL_OUT)  # create the user space HAL-pin
 
    def updatePin(self, e):
@@ -158,23 +158,42 @@ class OptParser:
 
 class XmlParser:
    def __init__(self, f):
+      self.tree = []
+      self.dataDict = {}
+      
       self._parseFile(f)
-
+      
    def getParsedData(self):
-      pass
+      #self.data = ['jog-counts', 'jog', 's32']
+      print self.dataDict
+      return self.dataDict
    
    def _parseFile(self, f):
-      pass
-
+      self.tree = ET.parse(f)
+      root = self.tree.getroot()
+            
+      for halpin in root.iter('halpin'):
+         type = halpin.find('type')
+         event = halpin.find('event')
+      
+         # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
+         if type is not None and event is not None:
+            print event.text + ' ' + halpin.text.strip('"') + ' ' + type.text
+            self.dataDict[event.text] = halpin.text.strip('"')
+      
+      
 ### start of main script #############################################
 def main():
    optParser = OptParser(sys.argv[1:])
+   componentName = optParser.getName()
+   portName = optParser.getPort()
+   xmlFile = optParser.getXmlfile()
    print optParser
+   
+   c = ComponentWrapper(componentName)
+   serialMpg = comms.instrument(portName, c.updatePin)
 
-   c = ComponentWrapper(optParser.getName())
-   serialmpg = comms.instrument(optParser.getPort(), c.updatePin)
-
-   xmlParser = XmlParser(optParser.getXmlFile())
+   xmlParser = XmlParser(xmlFile)
    
    tree = ET.parse(optParser.getXmlFile())
    root = tree.getroot()
@@ -196,7 +215,7 @@ def main():
 
    try:
       while 1:
-         serialmpg.readEvents() #blocks until '\n' received or timeout
+         serialMpg.readEvents() #blocks until '\n' received or timeout
          c.updateHAL()
             
          time.sleep(0.05)
