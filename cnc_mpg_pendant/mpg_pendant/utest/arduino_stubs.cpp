@@ -6,7 +6,7 @@ C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
 
 
-std::string to_string(int value)
+std::string to__string(int value)
 {
   //create an output string stream
   std::ostringstream os ;
@@ -91,7 +91,7 @@ void C_Serial_stub::print(string& str)
 
 void C_Serial_stub::print(int val)
 {
-   string str = to_string(val);
+   string str = to__string(val);
 
    serialData.append(str);
 }
@@ -105,7 +105,7 @@ void C_Serial_stub::println(string& s)
 
 void C_Serial_stub::println(int val)
 {
-   string str = to_string(val).append("\n");
+   string str = to__string(val).append("\n");
 
    serialData.append(str);
 }

@@ -89,6 +89,15 @@ TEST(BufferTestGroup, GetPutAFew)
   CHECK(str3.compare(e.getSource()) == 0);
 }
 
+TEST(BufferTestGroup, Full)
+{
+   C_Event e;
+   string str = "hej";
+
+   fillBuffer(0, buffer.capacity());
+   CHECK(buffer.isFull());
+}
+
 TEST(BufferTestGroup, PutFull)
 {
   C_Event e;
@@ -98,10 +107,8 @@ TEST(BufferTestGroup, PutFull)
 
   buffer.put(C_Event(str, 100));
   CHECK(buffer.get(e));
-  LONGS_EQUAL(100, e.getData());
-  CHECK(str.compare(e.getSource()) == 0);
-  CHECK(buffer.isEmpty()); // this is a consequence of not keeping track of
-  //when the buffer is full
+  LONGS_EQUAL(0, e.getData());
+  CHECK(e.getSource().compare("") == 0);
 }
 
 TEST(BufferTestGroup, HandleEvent)

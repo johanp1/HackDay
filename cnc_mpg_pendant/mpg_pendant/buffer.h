@@ -18,6 +18,7 @@ public:
    void put(const C_Event& e); 
    bool get(C_Event& e);
    bool isEmpty();
+   bool isFull();
    void flush();
    byte capacity();
    
@@ -26,8 +27,8 @@ private:
    C_Event buffer[BUFFER_SIZE];
    byte getIdx;
    byte putIdx;
-
    byte next(byte idx);
+   byte numberOfData;
 };
 
 #endif // __BUFFER_H__
