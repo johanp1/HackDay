@@ -20,7 +20,7 @@ void setup() {
    Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
    Serial.setTimeout(500);
 
-   attachInterrupt(digitalPinToInterrupt(2), encoderISR, CHANGE);
+   attachInterrupt(digitalPinToInterrupt(2), encoderISR, RISING);
 
    Serial.println("hej");
 

@@ -1,5 +1,5 @@
 #include "sender.h"
-#include <string>
+//#include <string>
 
 //  public:
 void C_Sender::handleEvent(C_Event& e)
@@ -9,7 +9,7 @@ void C_Sender::handleEvent(C_Event& e)
 
 void C_Sender::sendEvent(C_Event& e)
 {
-   string glue = "_";
+   String glue = "_";
 
    Serial.print(e.getSource());
    Serial.print(glue);

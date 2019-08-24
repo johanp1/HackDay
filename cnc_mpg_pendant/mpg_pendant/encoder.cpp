@@ -18,14 +18,7 @@ C_RotaryEncoder::C_RotaryEncoder( const String& argName, int argClkPin, int argD
 // call this from your interrupt function
 void C_RotaryEncoder::update(void) 
 {
-   if (digitalRead(clkPin))
-   {
-      digitalRead(dtPin) ? position++ : position--;
-   }
-   else 
-   {
-      digitalRead(dtPin) ? position-- : position++;
-   }
+   digitalRead(dtPin) ? position++ : position--;
    generateEvent(position);
 }
 
