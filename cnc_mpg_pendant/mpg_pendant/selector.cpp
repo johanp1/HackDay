@@ -1,6 +1,6 @@
 #include "selector.h"
 
-#define LIMIT 20u
+#define LIMIT 60u
 #define NUM_STATES 4
 const unsigned int stateVals[NUM_STATES] = {255u, 340u, 512u, 1024u}; //analog voltage read from HW
 
@@ -60,6 +60,6 @@ byte C_Selector::volt2state(unsigned int volt)
       
       i++;
    }
-   
+
    return retVal;
 }
