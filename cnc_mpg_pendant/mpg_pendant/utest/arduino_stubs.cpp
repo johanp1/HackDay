@@ -137,16 +137,6 @@ C_Arduino_stub::C_Arduino_stub()
   reset();
 }
 
-void C_Arduino_stub::Setup()
-{
-   setup();
-}
-
-void C_Arduino_stub::Loop()
-{
-   loop();
-}
-
 void C_Arduino_stub::setMode(int pin, int dir)
 {
   pinModes[pin] = dir;

@@ -50,19 +50,3 @@ TEST(EncoderTestGroup, MoveOneStepClkPosFlankCCW)
   e->update();
   LONGS_EQUAL(-1, e->getPosition());
 }
-
-TEST(EncoderTestGroup, MoveOneStepClkNegFlankCW)
-{
-  ArduinoStub.setDigitalRead(CLK_PIN, LOW);
-  ArduinoStub.setDigitalRead(DT_PIN, LOW);
-  e->update();
-  LONGS_EQUAL(1, e->getPosition());
-}
-
-TEST(EncoderTestGroup, MoveOneStepClkNegFlankCCW)
-{
-  ArduinoStub.setDigitalRead(CLK_PIN, LOW);
-  ArduinoStub.setDigitalRead(DT_PIN, HIGH);
-  e->update();
-  LONGS_EQUAL(-1, e->getPosition());
-}

@@ -121,11 +121,9 @@
     <ClCompile Include="..\..\..\encoder.cpp" />
     <ClCompile Include="..\..\..\event.cpp" />
     <ClCompile Include="..\..\..\event_generator.cpp" />
-    <ClCompile Include="..\..\..\mpg_pendant.cpp" />
     <ClCompile Include="..\..\..\selector.cpp" />
     <ClCompile Include="..\..\..\sender.cpp" />
     <ClCompile Include="..\..\all_tests.cpp" />
-    <ClCompile Include="..\..\app_tests.cpp" />
     <ClCompile Include="..\..\arduino_stubs.cpp" />
     <ClCompile Include="..\..\buffer_tests.cpp" />
     <ClCompile Include="..\..\button_tests.cpp" />

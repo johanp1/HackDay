@@ -10,6 +10,7 @@
 #define OUTPUT 1
 
 #define CHANGE 0
+#define RISING 1
 
 #define A2 0
 #define A3 1
@@ -42,9 +43,6 @@ class C_Arduino_stub
 {
    public:
    C_Arduino_stub();
-
-   void Setup();
-   void Loop();
 
    void setMode(int pin, int dir);
    int getMode(int pin);
