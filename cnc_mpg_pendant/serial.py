@@ -1,5 +1,8 @@
 #! /usr/bin/python
 
+class SerialException(Exception):
+   pass
+
 class Serial:
 
    def __init__(self):
@@ -14,7 +17,8 @@ class Serial:
       self.nbr_msgs = 0
       
    def open(self):
-      pass
+      if self.port == 'fail':
+         raise SerialException
 
    def flush(self):
       pass

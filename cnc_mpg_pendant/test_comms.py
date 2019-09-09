@@ -2,7 +2,6 @@
 import unittest
 import comms
    
-
 class TestComms(unittest.TestCase):
    def _eventHandler(self, ev):
       self.e.append(ev)
@@ -63,6 +62,18 @@ class TestComms(unittest.TestCase):
       self.assertTrue(self.e[0].val == '11')
       self.assertTrue(self.e[1].ev == 'apa')
       self.assertTrue(self.e[1].val == '10')
+
+   def test_faildOpenPort(self):
+      self.s = comms.instrument('fail', self._eventHandler)
+      self.assertFalse(self.s.dataReady())
+      
+   def test_readFailedPort(self):
+      self.s = comms.instrument('fail', self._eventHandler)
+      self.s.serial.stub_set_read(['jog_10'])
+      
+      self.s.readEvents()
+      
+      self.assertTrue(len(self.e) == 0)  
       
 if __name__ == '__main__':
    unittest.main()

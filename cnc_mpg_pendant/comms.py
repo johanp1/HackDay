@@ -54,14 +54,14 @@ class instrument:
          self.serial.open()
          self.portOpened = True
       except serial.SerialException as e:
-         sys.stderr.write('{} {}\n'.format(ser.name, e))
-         sys.stderr.write('Could not open serial port {}: {}\n'.format(ser.name, e))
-         subprocess.call("echo available ports:", shell=True) 
-         subprocess.call("python -m serial.tools.list_ports", shell=True) 
-         
-   def dataReady(self):
-      return self.serial.in_waiting     
+         pass #print 'failed to open port: ' + port
 
+   def dataReady(self):
+      if self.portOpened:
+         return self.serial.in_waiting     
+      else:
+         return False
+         
    def readEvents(self):
       """reads serial port. creates an array of events
       output: array of events: 
