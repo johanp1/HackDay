@@ -23,7 +23,7 @@ void C_RotaryEncoder::update(void)
 }
 
 // returns current position
-unsigned int C_RotaryEncoder::getPosition ()
+int C_RotaryEncoder::getPosition ()
 {
    return position;
 }
