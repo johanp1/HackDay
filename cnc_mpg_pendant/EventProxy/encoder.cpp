@@ -19,7 +19,7 @@ C_RotaryEncoder::C_RotaryEncoder( const String& argName, int argClkPin, int argD
 void C_RotaryEncoder::update(void) 
 {
    digitalRead(dtPin) ? position++ : position--;
-   generateEvent(position);
+   generateEvent((unsigned int)position);
 }
 
 // returns current position
