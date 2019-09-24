@@ -3,22 +3,28 @@ loadusr -Wn my-switch-proxy python serial_mpg.py --port=/dev/ttyUSB0 -c my-switc
 ### connect the switches
 
 # connect x-min-limit switch
-#net xmin-limit-switch       halui.estop.activate     <= my-switch-proxy.xmin-switch
+net min-home-x <= my-switch-proxy.xmin-switch
+net min-home-x => axis.0.home-sw-in
+net min-home-x => axis.0.neg-lim-sw-in
 
 # connect x-max-limit switch
-#net xmax-limit-switch       halui.estop.activate     <= my-switch-proxy.xmax-switch
+net max-x axis.0.pos-lim-sw-in <= my-switch-proxy.xmax-switch
 
 # connect y-min-limit switch
-#net ymin-limit-switch       halui.estop.activate     <= my-switch-proxy.ymin-switch
+net min-home-y <= my-switch-proxy.ymin-switch
+net min-home-y => axis.1.home-sw-in
+net min-home-y => axis.1.neg-lim-sw-in
 
 # connect y-max-limit switch
-#net ymax-limit-switch       halui.estop.activate     <= my-switch-proxy.ymax-switch
+net max-y axis.1.pos-lim-sw-in <= my-switch-proxy.ymax-switch
 
 # connect z-min-limit switch
-#net zmin-limit-switch       halui.estop.activate     <= my-switch-proxy.zmin-switch
+net min-home-z <= my-switch-proxy.zmin-switch
+net min-home-z => axis.2.home-sw-in
+net min-home-z => axis.2.pos-lim-sw-in
 
-# connect x-max-limit switch
-#net zmax-limit-switch       halui.estop.activate     <= my-switch-proxy.zmax-switch
+# connect -max-limit switch
+net max-home-z axis.2.neg-lim-sw-in <= my-switch-proxy.zmax-switch    
 
 # connect E-Stop button
 net proxy-estop-button       halui.estop.activate     <= my-switch-proxy.estop-btn
