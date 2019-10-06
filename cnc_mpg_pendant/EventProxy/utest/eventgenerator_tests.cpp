@@ -9,18 +9,20 @@ TEST_GROUP(EventGeneratorTestGroup)
   public:
     void enventListnerSpy()
     {
-      eventData = 0;
-      eventSource = "";
+      //      eventData = 0;
+      serializedEvent = "";
     };
     
     void handleEvent(C_Event& e)
     {
-      eventData = e.getData();
-      eventSource = e.getSource();
+      //eventData = e.getData();
+      //eventSource = e.getSource();
+      serializedEvent = e.serialize();
     };
     
-    unsigned int eventData;
-    string eventSource;
+    //    unsigned int eventData;
+    //string eventSource;
+    string serializedEvent;
   };
   
   C_EventGenerator* eg;
@@ -42,14 +44,13 @@ TEST_GROUP(EventGeneratorTestGroup)
 
 TEST(EventGeneratorTestGroup, CheckWhenNoEvent)
 {
-  LONGS_EQUAL(0, evSpy.eventData);
+  CHECK(evSpy.serializedEvent.compare("") == 0);
 }
 
 
 TEST(EventGeneratorTestGroup, GenerateEvent)
 {
   eg->generateEvent(100);
-  LONGS_EQUAL(100, evSpy.eventData);
-  CHECK(evSpy.eventSource.compare("test") == 0);
+  CHECK(evSpy.serializedEvent.compare("test_100") == 0);
 }
 

@@ -16,7 +16,7 @@ TEST_GROUP(BufferTestGroup)
 
   void fillBuffer(int seed, int nbr)
   {
-    string s = "";
+    string s = "test";
     
     for (int i = 0; i < nbr; i++)
     {
@@ -58,42 +58,41 @@ TEST(BufferTestGroup, GetPutOneValue)
 {
   C_Event e;
   string str = "hej";
+  string expected;
   
   buffer.put(C_Event(str, 1));
   CHECK(buffer.get(e));
-  LONGS_EQUAL(1, e.getData());
-  CHECK(str.compare(e.getSource()) == 0);
+  expected = str.append("_1");
+  CHECK(expected.compare(e.serialize()) == 0);
 }
 
 TEST(BufferTestGroup, GetPutAFew)
 {
   C_Event e;
-  string str1 = "1";
-  string str2 = "2";
-  string str3 = "3";
+  string expected;
+  string str1 = "apa";
+  string str2 = "bepa";
+  string str3 = "test";
   
   buffer.put(C_Event(str1, 1));
   buffer.put(C_Event(str2, 2));
   buffer.put(C_Event(str3, 3));
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(1, e.getData());
-  CHECK(str1.compare(e.getSource()) == 0);
+  expected = str1.append("_1");
+  CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(2, e.getData());
-  CHECK(str2.compare(e.getSource()) == 0);
+  expected = str2.append("_2");
+  CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(3, e.getData());
-  CHECK(str3.compare(e.getSource()) == 0);
+  expected = str3.append("_3");
+  CHECK(expected.compare(e.serialize()) == 0);
 }
 
 TEST(BufferTestGroup, Full)
 {
-   C_Event e;
-   string str = "hej";
-
    fillBuffer(0, buffer.capacity());
    CHECK(buffer.isFull());
 }
@@ -107,8 +106,7 @@ TEST(BufferTestGroup, PutFull)
 
   buffer.put(C_Event(str, 100));
   CHECK(buffer.get(e));
-  LONGS_EQUAL(0, e.getData());
-  CHECK(e.getSource().compare("") == 0);
+  CHECK(e.serialize().compare("test_0") == 0);
 }
 
 TEST(BufferTestGroup, HandleEvent)
@@ -119,6 +117,5 @@ TEST(BufferTestGroup, HandleEvent)
 
   buffer.handleEvent(sendEvent);
   CHECK(buffer.get(e));
-  LONGS_EQUAL(99, e.getData());
-  CHECK(e.getSource().compare(str) == 0);
+  CHECK(e.serialize().compare("apa_99") == 0);
 }

@@ -7,8 +7,7 @@ class C_Sender : public C_EventListner {
  
   public:
     void handleEvent(C_Event& e);
-    void sendEvent(C_Event& e);
-   
+    void send(String& str);
 };
 
 #endif // __C_SENDER_H__
