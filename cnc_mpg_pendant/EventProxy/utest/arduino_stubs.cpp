@@ -1,23 +1,8 @@
 #include "Arduino.h"
 #include <sstream>
-#include <string>     // std::string
 
 C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
-
-
-std::string to__string(int value)
-{
-  //create an output string stream
-  std::ostringstream os ;
-  
-  //throw the value into the string stream
-  os << value;
-  
-  //convert the string stream into a string and return
-  return os.str() ;
-}
-
 
 void noInterrupts(void)
 {
@@ -91,7 +76,7 @@ void C_Serial_stub::print(string& str)
 
 void C_Serial_stub::print(int val)
 {
-   string str = to__string(val);
+   string str = to_string(val);
 
    serialData.append(str);
 }
@@ -105,7 +90,7 @@ void C_Serial_stub::println(string& s)
 
 void C_Serial_stub::println(int val)
 {
-   string str = to__string(val).append("\n");
+   string str = to_string(val).append("\n");
 
    serialData.append(str);
 }
@@ -226,4 +211,16 @@ void C_Arduino_stub::invokeInterrupt(unsigned int val)
    {
       isr();
    }
+}
+
+std::string to_string(int value)
+{
+  //create an output string stream
+  std::ostringstream os ;
+  
+  //throw the value into the string stream
+  os << value;
+  
+  //convert the string stream into a string and return
+  return os.str() ;
 }

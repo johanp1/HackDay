@@ -10,6 +10,7 @@ class C_EventGenerator {
    
    void generateEvent(unsigned int data);
    void addEventListner(C_EventListner* h);
+   String& getName();   
    
    private:
    C_EventListner* handler_p;

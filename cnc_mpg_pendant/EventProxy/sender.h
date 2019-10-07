@@ -1,5 +1,6 @@
- #ifndef __C_SENDER_H__
+#ifndef __C_SENDER_H__
 #define __C_SENDER_H__
+
 #include "event_listner.h"
 #include "Arduino.h"
 

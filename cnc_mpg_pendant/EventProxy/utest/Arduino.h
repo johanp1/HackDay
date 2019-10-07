@@ -17,6 +17,8 @@
 
 using namespace std;
 
+std::string to_string(int value);
+
 typedef string String;  
 typedef unsigned char byte;
 
