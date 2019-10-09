@@ -1,5 +1,4 @@
 #include "sender.h"
-#include <string>
 
 //  public:
 void C_Sender::handleEvent(C_Event& e)

@@ -8,8 +8,10 @@ String C_Event::serialize(void)
 {
   String retStr = String(source);
   
-  retStr.append("_");
-  retStr.append(to_string((int)data));
+  retStr.concat("_");
+  retStr.concat(data);
+
   return retStr;
 }
+
 

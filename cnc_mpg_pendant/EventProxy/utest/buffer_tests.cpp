@@ -16,7 +16,7 @@ TEST_GROUP(BufferTestGroup)
 
   void fillBuffer(int seed, int nbr)
   {
-    string s = "test";
+    String s = String("test");
     
     for (int i = 0; i < nbr; i++)
     {
@@ -57,37 +57,37 @@ TEST(BufferTestGroup, NotEmptyThenEmpty)
 TEST(BufferTestGroup, GetPutOneValue)
 {
   C_Event e;
-  string str = "hej";
-  string expected;
+  String str = String("hej");
+  String expected;
   
   buffer.put(C_Event(str, 1));
   CHECK(buffer.get(e));
-  expected = str.append("_1");
+  expected = String("hej_1");
   CHECK(expected.compare(e.serialize()) == 0);
 }
 
 TEST(BufferTestGroup, GetPutAFew)
 {
   C_Event e;
-  string expected;
-  string str1 = "apa";
-  string str2 = "bepa";
-  string str3 = "test";
+  String expected;
+  String str1 = String("apa");
+  String str2 = String("bepa");
+  String str3 = String("test");
   
   buffer.put(C_Event(str1, 1));
   buffer.put(C_Event(str2, 2));
   buffer.put(C_Event(str3, 3));
 
   CHECK(buffer.get(e));
-  expected = str1.append("_1");
+  expected = String("apa_1");
   CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  expected = str2.append("_2");
+  expected = String("bepa_2");
   CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  expected = str3.append("_3");
+  expected = String("test_3");
   CHECK(expected.compare(e.serialize()) == 0);
 }
 
@@ -100,7 +100,7 @@ TEST(BufferTestGroup, Full)
 TEST(BufferTestGroup, PutFull)
 {
   C_Event e;
-  string str = "hej";
+  String str = String("hej");
   
   fillBuffer(0, buffer.capacity());
 
@@ -111,7 +111,7 @@ TEST(BufferTestGroup, PutFull)
 
 TEST(BufferTestGroup, HandleEvent)
 {
-  string str = "apa";
+  String str = String("apa");
   C_Event e;
   C_Event sendEvent = C_Event(str, 99);
 

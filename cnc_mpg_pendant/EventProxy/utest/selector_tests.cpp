@@ -21,7 +21,7 @@ TEST_GROUP(SelectorTestGroup)
 
     void reset()
     {
-      serializedEvent = "";
+      serializedEvent = String("");
       newData = false;
     }
     
@@ -109,22 +109,22 @@ TEST(SelectorTestGroup, stateTransitions)
   
   gotoState(1);
   LONGS_EQUAL(1, s->getState());
-  expected = string("test_1");
+  expected = "test_1";
   checkEvent(expected);
 
   gotoState(2);
   LONGS_EQUAL(2, s->getState());
-  expected = string("test_2");
+  expected = "test_2";
   checkEvent(expected);
   
   gotoState(3);
   LONGS_EQUAL(3, s->getState());
-  expected = string("test_3");
+  expected = "test_3";
   checkEvent(expected);
   
   gotoState(0);
   LONGS_EQUAL(0, s->getState());
-  expected = string("test_0");
+  expected = "test_0";
   checkEvent(expected);
 }
 

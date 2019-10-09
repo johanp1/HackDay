@@ -17,7 +17,7 @@ TEST_GROUP(SenderTestGroup)
 
 TEST(SenderTestGroup, SendEvent)
 {
-   string sendStr = string("bepa_123");
+   String sendStr = String("bepa_123");
    string expected = string("bepa_123\n");
    
    s.send(sendStr);
@@ -26,7 +26,7 @@ TEST(SenderTestGroup, SendEvent)
 
 TEST(SenderTestGroup, handleEvent)
 {
-  string evSource = string("apa");
+  String evSource = String("apa");
    string expected = string("apa_321\n");
    C_Event e = C_Event(evSource, 321);
    

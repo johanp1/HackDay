@@ -25,7 +25,7 @@ TEST_GROUP(ButtonTestGroup)
       newData = false;
     }
     
-    string serializedEvent;
+    String serializedEvent;
     bool newData;
   };
 

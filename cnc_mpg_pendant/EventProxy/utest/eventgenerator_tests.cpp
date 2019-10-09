@@ -9,7 +9,7 @@ TEST_GROUP(EventGeneratorTestGroup)
   public:
     void enventListnerSpy()
     {
-      serializedEvent = "";
+      serializedEvent = String("");
     };
     
     void handleEvent(C_Event& e)
@@ -17,7 +17,7 @@ TEST_GROUP(EventGeneratorTestGroup)
       serializedEvent = e.serialize();
     };
    
-    string serializedEvent;
+    String serializedEvent;
   };
   
   C_EventGenerator* eg;
@@ -41,11 +41,8 @@ TEST(EventGeneratorTestGroup, CheckWhenNoEvent)
   CHECK(evSpy.serializedEvent.compare("") == 0);
 }
 
-
 TEST(EventGeneratorTestGroup, GenerateEvent)
 {
   eg->generateEvent(100);
   CHECK(evSpy.serializedEvent.compare("test_100") == 0);
 }
-
-
