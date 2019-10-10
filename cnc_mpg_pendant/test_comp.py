@@ -97,5 +97,15 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal['apa_pin'].val == 0)
       self.assertTrue(self.c.hal['bepa_pin'].val == 0)
    
+   def test_addPinAfterInit(self):
+      print self.c
+      self.c.addPin("hb", "heart-beat", "u32")
+      print self.c
+      self.assertTrue(self.c.evToHALPin['hb'].name == 'heart-beat')
+      self.assertTrue(self.c.evToHALPin['hb'].val == 0)
+      self.assertTrue(self.c.evToHALPin['hb'].type == 'u32')
+      self.assertTrue(self.c.hal['heart-beat'].val == 0)
+      self.assertTrue(self.c.hal['heart-beat'].type == 'HAL_U32')
+      
 if __name__ == '__main__':
    unittest.main()

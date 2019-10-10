@@ -37,7 +37,7 @@ void loop() {
 
    byte i;
    C_Event e;
-
+ String s;
    for (i = 0; i<NBR_OF_BUTTONS; i++)
    {
       buttons[i].scan();
@@ -50,7 +50,8 @@ void loop() {
   
    while(buffer.get(e))
    {
-      sender.sendEvent(e);
+      s  = e.serialize();
+      sender.send(s);
    }
 
    delay(10); // waits 10ms
@@ -60,4 +61,3 @@ static void encoderISR(void)
 {
    encoder.update();
 }
-

@@ -41,6 +41,10 @@ class ComponentWrapper:
          tmp_str += 'event: ' + k + '\t' + str(self.evToHALPin[k]) + '\n'
       return tmp_str
 
+   def addPin(self, event, name, type):
+      self.evToHALPin[event] = Pin(name, type) 
+      self._addHALPin(name, type)
+
    def updatePin(self, e):
       """ updates pin value with new event data
       input: event object' 
@@ -208,6 +212,7 @@ def main():
    xmlParser = XmlParser(xmlFile)
       
    c = ComponentWrapper(componentName, xmlParser.getParsedData())
+   c.addPin("hb", "heart-beat", "u32")
    print c
    
    serialMpg = comms.instrument(portName, c.updatePin)
