@@ -28,7 +28,7 @@ class Pin:
       return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
    
 class ComponentWrapper:   
-   def __init__(self, name, pinDict):
+   def __init__(self, name, pinDict = {}):
       self.evToHALPin = pinDict       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
 
@@ -60,7 +60,6 @@ class ComponentWrapper:
          self.hal[self.evToHALPin[key].name] = self.evToHALPin[key].val
 
    def _addHALPin(self, pin_name, type):
-      #self.evToHALPin[ev_name] = Pin(pin_name, type) # dictionary to map between event and HAL-pin
       self.hal.newpin(pin_name, self._getHALType(type), hal.HAL_OUT)  # create the user space HAL-pin
 
    def _typeSaturate(self, type, val):
@@ -97,7 +96,6 @@ class ComponentWrapper:
 
       if str == 'u32':
          retVal = hal.HAL_U32
-         
       return retVal 
 
 class OptParser:
@@ -188,8 +186,8 @@ class XmlParser:
          # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
          if type is not None and event is not None:
             if self._checkSupportedHALType(type.text) == True:
-               self.pinDict[event.text] = Pin(halpin.text.strip('"'), type.text) 
-      
+               self.pinDict[event.text] = Pin(halpin.text.strip('"'), type.text)
+
    def _checkSupportedHALType(self, str):
       """ helper function to check if type is supported """
       retVal = False
@@ -198,7 +196,14 @@ class XmlParser:
          retVal = True
          
       return retVal 
-      
+
+class EventHandler:
+   def __init__(self):
+      pass
+
+   def handleEvent(self, e):
+      pass
+
 ### start of main script #############################################
 def main():
    pinDict = {}
@@ -211,8 +216,12 @@ def main():
       
    xmlParser = XmlParser(xmlFile)
       
-   c = ComponentWrapper(componentName, xmlParser.getParsedData())
-   c.addPin("hb", "heart-beat", "u32")
+   c = ComponentWrapper(componentName)
+   # add the pins from parsed xml
+   parsedXmlDict = xmlParser.getParsedData()
+   for key in parsedXmlDict:
+      c.addPin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
+
    print c
    
    serialMpg = comms.instrument(portName, c.updatePin)
