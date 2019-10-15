@@ -1,8 +1,10 @@
 #! /usr/bin/python
-HAL_BIT = 'HAL_BIT'
-HAL_S32 = 'HAL_S32'
-HAL_U32 = 'HAL_U32'
-HAL_OUT = 'HAL_OUT'
+HAL_BIT   = 'HAL_BIT'
+HAL_S32   = 'HAL_S32'
+HAL_U32   = 'HAL_U32'
+HAL_FLOAT = 'HAL_FLOAT'
+HAL_OUT   = 'HAL_OUT'
+
 
 class hal_pin:
    """stub sub class to component class"""   

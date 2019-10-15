@@ -113,7 +113,7 @@ class OptParser:
       
    def _getOptions(self, argv):
       try:
-         opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
+         opts = getopt.getopt(argv, "hp:c:", ["input=", "port="])
       except getopt.GetoptError as err:
          # print help information and exit:
          print(err) # will print something like "option -a not recognized"
@@ -156,7 +156,7 @@ class OptParser:
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
-         "-h                       # Help test";
+         "-h                       # Help test"
 
 class XmlParser:
    def __init__(self, f):
@@ -197,17 +197,22 @@ class XmlParser:
          
       return retVal 
 
-class EventHandler:
+class EventBroker:
    def __init__(self):
-      pass
+      self.eventDict = {}
+ 
+   def attachHandler(self, evName, handler):
+      self.eventDict[evName] = handler
 
    def handleEvent(self, e):
-      pass
+      if e.ev in self.eventDict:
+         self.eventDict[e.ev](e)
+
+def watchDogHandler():
+   pass
 
 ### start of main script #############################################
 def main():
-   pinDict = {}
-   
    optParser = OptParser(sys.argv[1:])
    componentName = optParser.getName()
    portName = optParser.getPort()
@@ -216,16 +221,21 @@ def main():
       
    xmlParser = XmlParser(xmlFile)
       
-   c = ComponentWrapper(componentName)
-   # add the pins from parsed xml
+   c = ComponentWrapper(componentName) #HAL adaptor
+   eventBroker = EventBroker() #maps incomming events to the correct handler
+   serialMpg = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
+
+   print c
+
+   # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.getParsedData()
    for key in parsedXmlDict:
       c.addPin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-
-   print c
+      eventBroker.attachHandler(key, c.updatePin)
    
-   serialMpg = comms.instrument(portName, c.updatePin)
-   
+   #add handler for heart-beat/watch-dog signal
+   eventBroker.attachHandler('hb', watchDogHandler)
+  
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
    

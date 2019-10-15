@@ -4,7 +4,7 @@ import serial_mpg
 #import comms  
 import subprocess
 
-class TestComp(unittest.TestCase):
+class TestXml(unittest.TestCase):
    def createTestFile(self):
       """creates a test xml-file with an empty root"""
       self.f = open('test.xml','w')
