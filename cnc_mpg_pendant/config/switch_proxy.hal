@@ -1,4 +1,4 @@
-loadusr -Wn my-switch-proxy python serial_mpg.py --port=/dev/ttyUSB0 -c my-switch-proxy switch_proxy.xml
+loadusr -Wn my-switch-proxy python serial_mpg.py --port=/dev/ttyACM0 -c my-switch-proxy switch_proxy.xml
 
 ### connect the switches
 
@@ -18,13 +18,11 @@ net min-home-y => axis.1.neg-lim-sw-in
 # connect y-max-limit switch
 net max-y axis.1.pos-lim-sw-in <= my-switch-proxy.ymax-switch
 
-# connect z-min-limit switch
-net min-home-z <= my-switch-proxy.zmin-switch
-net min-home-z => axis.2.home-sw-in
-net min-home-z => axis.2.pos-lim-sw-in
+# connect z-max-limit switch
+net max-home-z <= my-switch-proxy.zmax-switch
+net max-home-z => axis.2.home-sw-in
+net max-home-z => axis.2.pos-lim-sw-in
 
 # connect -max-limit switch
-net max-home-z axis.2.neg-lim-sw-in <= my-switch-proxy.zmax-switch    
+net min-z axis.2.neg-lim-sw-in <= my-switch-proxy.zmin-switch    
 
-# connect E-Stop button
-net proxy-estop-button       halui.estop.activate     <= my-switch-proxy.estop-btn

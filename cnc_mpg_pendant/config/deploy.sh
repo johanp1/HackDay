@@ -10,4 +10,4 @@ cp mpg.hal ~/linuxcnc/configs/test/.
 
 #cp axis_mm.ini ~/linuxcnc/configs/sim.axis/.
 cp switch_proxy.hal ~/linuxcnc/configs/test/.
-cp switch_proxy.ini ~/linuxcnc/configs/test/.
+cp switch_proxy.xml ~/linuxcnc/configs/test/.
