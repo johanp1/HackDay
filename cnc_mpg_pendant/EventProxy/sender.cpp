@@ -1,17 +1,14 @@
 #include "sender.h"
-//#include <string>
 
 //  public:
 void C_Sender::handleEvent(C_Event& e)
 {
-   sendEvent(e);
+  String s = e.serialize();
+  send(s);
 }
 
-void C_Sender::sendEvent(C_Event& e)
+void C_Sender::send(String& str)
 {
-   String glue = "_";
-
-   Serial.print(e.getSource());
-   Serial.print(glue);
-   Serial.println((int)e.getData());
+   Serial.println(str);
 }
+

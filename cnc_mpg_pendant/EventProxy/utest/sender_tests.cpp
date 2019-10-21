@@ -1,6 +1,6 @@
 #include "TestHarness.h"
 #include "sender.h"
-
+#include "Arduino.h"
 TEST_GROUP(SenderTestGroup)
 {
    C_Sender s;
@@ -17,19 +17,18 @@ TEST_GROUP(SenderTestGroup)
 
 TEST(SenderTestGroup, SendEvent)
 {
-   string evName = string("bepa");
+   String sendStr = String("bepa_123");
    string expected = string("bepa_123\n");
-   C_Event e = C_Event(evName, 123);
    
-   s.sendEvent(e);
+   s.send(sendStr);
    CHECK(Serial.getData().compare(expected) == 0);
 }
 
-TEST(SenderTestGroup, HandleEvent)
+TEST(SenderTestGroup, handleEvent)
 {
-   string evName = string("apa");
+  String evSource = String("apa");
    string expected = string("apa_321\n");
-   C_Event e = C_Event(evName, 321);
+   C_Event e = C_Event(evSource, 321);
    
    s.handleEvent(e);
    CHECK(Serial.getData().compare(expected) == 0);

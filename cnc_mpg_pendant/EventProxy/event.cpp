@@ -4,13 +4,14 @@
 C_Event::C_Event() : source(""), data(0) {}
 C_Event::C_Event(String& str, unsigned int argData) : source(str), data(argData) {}
     
-String& C_Event::getSource(void)
+String C_Event::serialize(void)
 {
-   return source;
+  String retStr = String(source);
+  
+  retStr.concat("_");
+  retStr.concat(data);
+
+  return retStr;
 }
 
-unsigned int C_Event::getData(void)
-{
-   return data;
-}
- 
+

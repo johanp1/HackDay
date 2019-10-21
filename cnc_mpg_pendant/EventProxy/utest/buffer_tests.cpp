@@ -16,7 +16,7 @@ TEST_GROUP(BufferTestGroup)
 
   void fillBuffer(int seed, int nbr)
   {
-    string s = "";
+    String s = String("test");
     
     for (int i = 0; i < nbr; i++)
     {
@@ -57,43 +57,42 @@ TEST(BufferTestGroup, NotEmptyThenEmpty)
 TEST(BufferTestGroup, GetPutOneValue)
 {
   C_Event e;
-  string str = "hej";
+  String str = String("hej");
+  String expected;
   
   buffer.put(C_Event(str, 1));
   CHECK(buffer.get(e));
-  LONGS_EQUAL(1, e.getData());
-  CHECK(str.compare(e.getSource()) == 0);
+  expected = String("hej_1");
+  CHECK(expected.compare(e.serialize()) == 0);
 }
 
 TEST(BufferTestGroup, GetPutAFew)
 {
   C_Event e;
-  string str1 = "1";
-  string str2 = "2";
-  string str3 = "3";
+  String expected;
+  String str1 = String("apa");
+  String str2 = String("bepa");
+  String str3 = String("test");
   
   buffer.put(C_Event(str1, 1));
   buffer.put(C_Event(str2, 2));
   buffer.put(C_Event(str3, 3));
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(1, e.getData());
-  CHECK(str1.compare(e.getSource()) == 0);
+  expected = String("apa_1");
+  CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(2, e.getData());
-  CHECK(str2.compare(e.getSource()) == 0);
+  expected = String("bepa_2");
+  CHECK(expected.compare(e.serialize()) == 0);
 
   CHECK(buffer.get(e));
-  LONGS_EQUAL(3, e.getData());
-  CHECK(str3.compare(e.getSource()) == 0);
+  expected = String("test_3");
+  CHECK(expected.compare(e.serialize()) == 0);
 }
 
 TEST(BufferTestGroup, Full)
 {
-   C_Event e;
-   string str = "hej";
-
    fillBuffer(0, buffer.capacity());
    CHECK(buffer.isFull());
 }
@@ -101,24 +100,22 @@ TEST(BufferTestGroup, Full)
 TEST(BufferTestGroup, PutFull)
 {
   C_Event e;
-  string str = "hej";
+  String str = String("hej");
   
   fillBuffer(0, buffer.capacity());
 
   buffer.put(C_Event(str, 100));
   CHECK(buffer.get(e));
-  LONGS_EQUAL(0, e.getData());
-  CHECK(e.getSource().compare("") == 0);
+  CHECK(e.serialize().compare("test_0") == 0);
 }
 
 TEST(BufferTestGroup, HandleEvent)
 {
-  string str = "apa";
+  String str = String("apa");
   C_Event e;
   C_Event sendEvent = C_Event(str, 99);
 
   buffer.handleEvent(sendEvent);
   CHECK(buffer.get(e));
-  LONGS_EQUAL(99, e.getData());
-  CHECK(e.getSource().compare(str) == 0);
+  CHECK(e.serialize().compare("apa_99") == 0);
 }

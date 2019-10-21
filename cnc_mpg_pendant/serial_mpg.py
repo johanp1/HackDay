@@ -28,7 +28,7 @@ class Pin:
       return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
    
 class ComponentWrapper:   
-   def __init__(self, name, pinDict):
+   def __init__(self, name, pinDict = {}):
       self.evToHALPin = pinDict       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
 
@@ -40,6 +40,10 @@ class ComponentWrapper:
       for k in self.evToHALPin:
          tmp_str += 'event: ' + k + '\t' + str(self.evToHALPin[k]) + '\n'
       return tmp_str
+
+   def addPin(self, event, name, type):
+      self.evToHALPin[event] = Pin(name, type) 
+      self._addHALPin(name, type)
 
    def updatePin(self, e):
       """ updates pin value with new event data
@@ -56,7 +60,6 @@ class ComponentWrapper:
          self.hal[self.evToHALPin[key].name] = self.evToHALPin[key].val
 
    def _addHALPin(self, pin_name, type):
-      #self.evToHALPin[ev_name] = Pin(pin_name, type) # dictionary to map between event and HAL-pin
       self.hal.newpin(pin_name, self._getHALType(type), hal.HAL_OUT)  # create the user space HAL-pin
 
    def _typeSaturate(self, type, val):
@@ -93,7 +96,6 @@ class ComponentWrapper:
 
       if str == 'u32':
          retVal = hal.HAL_U32
-         
       return retVal 
 
 class OptParser:
@@ -111,7 +113,7 @@ class OptParser:
       
    def _getOptions(self, argv):
       try:
-         opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
+         opts = getopt.getopt(argv, "hp:c:", ["input=", "port="])
       except getopt.GetoptError as err:
          # print help information and exit:
          print(err) # will print something like "option -a not recognized"
@@ -154,7 +156,7 @@ class OptParser:
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
-         "-h                       # Help test";
+         "-h                       # Help test"
 
 class XmlParser:
    def __init__(self, f):
@@ -184,8 +186,8 @@ class XmlParser:
          # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
          if type is not None and event is not None:
             if self._checkSupportedHALType(type.text) == True:
-               self.pinDict[event.text] = Pin(halpin.text.strip('"'), type.text) 
-      
+               self.pinDict[event.text] = Pin(halpin.text.strip('"'), type.text)
+
    def _checkSupportedHALType(self, str):
       """ helper function to check if type is supported """
       retVal = False
@@ -194,11 +196,23 @@ class XmlParser:
          retVal = True
          
       return retVal 
-      
+
+class EventBroker:
+   def __init__(self):
+      self.eventDict = {}
+ 
+   def attachHandler(self, evName, handler):
+      self.eventDict[evName] = handler
+
+   def handleEvent(self, e):
+      if e.ev in self.eventDict:
+         self.eventDict[e.ev](e)
+
+def watchDogHandler():
+   pass
+
 ### start of main script #############################################
 def main():
-   pinDict = {}
-   
    optParser = OptParser(sys.argv[1:])
    componentName = optParser.getName()
    portName = optParser.getPort()
@@ -207,11 +221,21 @@ def main():
       
    xmlParser = XmlParser(xmlFile)
       
-   c = ComponentWrapper(componentName, xmlParser.getParsedData())
+   c = ComponentWrapper(componentName) #HAL adaptor
+   eventBroker = EventBroker() #maps incomming events to the correct handler
+   serialMpg = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
+
    print c
+
+   # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
+   parsedXmlDict = xmlParser.getParsedData()
+   for key in parsedXmlDict:
+      c.addPin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
+      eventBroker.attachHandler(key, c.updatePin)
    
-   serialMpg = comms.instrument(portName, c.updatePin)
-   
+   #add handler for heart-beat/watch-dog signal
+   eventBroker.attachHandler('hb', watchDogHandler)
+  
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
    

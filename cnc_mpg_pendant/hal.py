@@ -1,8 +1,10 @@
 #! /usr/bin/python
-HAL_BIT = 'HAL_BIT'
-HAL_S32 = 'HAL_S32'
-HAL_U32 = 'HAL_U32'
-HAL_OUT = 'HAL_OUT'
+HAL_BIT   = 'HAL_BIT'
+HAL_S32   = 'HAL_S32'
+HAL_U32   = 'HAL_U32'
+HAL_FLOAT = 'HAL_FLOAT'
+HAL_OUT   = 'HAL_OUT'
+
 
 class hal_pin:
    """stub sub class to component class"""   
@@ -12,14 +14,14 @@ class hal_pin:
       self.val = 0
       
    def __repr__(self):
-      return 'HAL pin name: ' + self.name + ' val: ' + str(self.val)
+      return 'HAL pin name: ' + self.name + ' val: ' + str(self.val) + ' type: ' + self.type
       
 class component:
    """stub class linuxCNC hal-api"""
    
    def __init__(self, name):
       self.pin_list = []
-      self.ready_flag = 0;
+      self.ready_flag = 0
       self.name = name
       
    def newpin(self, pin_name, pin_type, dir):

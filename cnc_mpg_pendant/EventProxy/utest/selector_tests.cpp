@@ -15,20 +15,17 @@ TEST_GROUP(SelectorTestGroup)
     
     void handleEvent(C_Event& e)
     {
-      eventData = e.getData();
-      eventSource = e.getSource();
+      serializedEvent = e.serialize();
       newData = true;
     };
 
     void reset()
     {
-      eventData = 0;
-      eventSource = "";
+      serializedEvent = String("");
       newData = false;
     }
     
-    unsigned int eventData;
-    string eventSource;
+    String serializedEvent;
     bool newData;
   };
 
@@ -39,21 +36,20 @@ TEST_GROUP(SelectorTestGroup)
   void gotoState(byte state)
   {
     //byte oldState = s->getState();
-	  unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
-	  unsigned int volt = volt2state[state];
-
-	  ArduinoStub.setAnalogRead(PIN, (int)volt);
-
-	  s->scan();
-	  ArduinoStub.incTime(101); //longer than debounce delay
-	  s->scan();
+    unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
+    unsigned int volt = volt2state[state];
+    
+    ArduinoStub.setAnalogRead(PIN, (int)volt);
+    
+    s->scan();
+    ArduinoStub.incTime(101); //longer than debounce delay
+    s->scan();
   }
   
-  void checkEvent(unsigned int evData, string& evSource)
+  void checkEvent(string& expected)
   {
-	  CHECK(evSpy.newData);
-	  LONGS_EQUAL(evData, evSpy.eventData);
-	  CHECK(evSpy.eventSource.compare(evSource) == 0);
+    CHECK(evSpy.newData);
+    CHECK(evSpy.serializedEvent.compare(expected) == 0);
   }
 
   void setup()
@@ -105,7 +101,7 @@ TEST(SelectorTestGroup, checkNoTransitionShortTime)
 
 TEST(SelectorTestGroup, stateTransitions)
 {
-  string str = string("test");
+  string expected;
   
   gotoState(0);
   LONGS_EQUAL(0, s->getState());
@@ -113,19 +109,23 @@ TEST(SelectorTestGroup, stateTransitions)
   
   gotoState(1);
   LONGS_EQUAL(1, s->getState());
-  checkEvent(1, str);
+  expected = "test_1";
+  checkEvent(expected);
 
   gotoState(2);
   LONGS_EQUAL(2, s->getState());
-  checkEvent(2, str);
+  expected = "test_2";
+  checkEvent(expected);
   
   gotoState(3);
   LONGS_EQUAL(3, s->getState());
-  checkEvent(3, str);
+  expected = "test_3";
+  checkEvent(expected);
   
   gotoState(0);
   LONGS_EQUAL(0, s->getState());
-  checkEvent(0, str);
+  expected = "test_0";
+  checkEvent(expected);
 }
 
 TEST(SelectorTestGroup, undefVolt)

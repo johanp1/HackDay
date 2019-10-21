@@ -17,17 +17,38 @@
 
 using namespace std;
 
-typedef string String;  
+//typedef string String;  
 typedef unsigned char byte;
+
+class String
+{
+public:
+   String(void);
+   String(string& _s);
+   String(const char* _c);
+   String(int _i);
+
+   void concat(string& _s);
+   void concat(const char* _c);
+   void concat(int _i);
+
+   bool compare(string& _s);
+   bool compare(String& _s);
+   bool compare(String _s);
+   bool compare(const char* _c);
+   bool compare(void);
+
+   string s;
+};
 
 class C_Serial_stub
 {
 public:
    C_Serial_stub();
 
-   void print(string& str);
+   void print(String& str);
    void print(int val);
-   void println(string& str);
+   void println(String& str);
    void println(int val);
    void println(char* str);
    void begin(int val);

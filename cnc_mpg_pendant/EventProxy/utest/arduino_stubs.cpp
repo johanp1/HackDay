@@ -1,12 +1,10 @@
 #include "Arduino.h"
 #include <sstream>
-#include <string>     // std::string
 
 C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
 
-
-std::string to__string(int value)
+std::string to__string(int& value)
 {
   //create an output string stream
   std::ostringstream os ;
@@ -18,6 +16,65 @@ std::string to__string(int value)
   return os.str() ;
 }
 
+String::String(void)
+{
+  s = string("");
+}
+
+String::String(string& _s)
+{
+  s = string(_s);
+}
+
+String::String(const char* _c) 
+{
+  s = string(_c);
+}
+
+String::String(int _i) 
+{
+  s = string(to__string(_i));
+}
+
+void String::concat(string& _s)
+{
+  s.append(_s);
+}
+
+void String::concat(const char* _c)
+{
+  s.append(_c);
+}
+
+void String::concat(int _i)
+{
+  s.append(to__string(_i));
+}
+
+bool String::compare(string& _s)
+{
+  return s.compare(_s);
+}
+
+bool String::compare(String& _s)
+{
+  return s.compare(_s.s);
+}
+
+bool String::compare(String _s)
+{
+  return s.compare(_s.s);
+}
+
+bool String::compare(const char* _c)
+{
+  return s.compare(_c);
+}
+
+bool String::compare(void)
+{
+  return s.compare("");
+}
 
 void noInterrupts(void)
 {
@@ -84,9 +141,9 @@ void C_Serial_stub::clear()
    serialData.clear();
 }
 
-void C_Serial_stub::print(string& str)
+void C_Serial_stub::print(String& str)
 {
-   serialData.append(str);
+   serialData.append(str.s);
 }
 
 void C_Serial_stub::print(int val)
@@ -96,9 +153,9 @@ void C_Serial_stub::print(int val)
    serialData.append(str);
 }
 
-void C_Serial_stub::println(string& s)
+void C_Serial_stub::println(String& s)
 {
-   string str = s.append("\n");
+   string str = s.s.append("\n");
 
    serialData.append(str);
 }
@@ -227,3 +284,5 @@ void C_Arduino_stub::invokeInterrupt(unsigned int val)
       isr();
    }
 }
+
+

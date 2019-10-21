@@ -2,8 +2,6 @@
 # list available ports with 'python -m serial.tools.list_ports'
 import serial
 
-
-
 ## Default values ##
 BAUDRATE = 9600
 """Default value for the baudrate in Baud (int)."""
@@ -24,9 +22,7 @@ CLOSE_PORT_AFTER_EACH_CALL = False
 """Default value for port closure setting."""
 
 
-
-
-class event:
+class Event:
    """'container for events. keeps two strings <event> and <value>"""
    def __init__(self, event, value):
       self.ev = event
@@ -50,11 +46,19 @@ class instrument:
       self.portOpened = False
       self.ev_hdlr = event_handler
       
+      self.open()
+
+   def open(self):
       try:
          self.serial.open()
          self.portOpened = True
-      except serial.SerialException as e:
-         pass #print 'failed to open port: ' + port
+      except serial.SerialException:
+         self.portOpened = False
+
+   def close(self):
+      if self.portOpened == True:
+         self.serial.close()
+         self.portOpened = False
 
    def dataReady(self):
       if self.portOpened:
@@ -70,7 +74,7 @@ class instrument:
          ev_str = self._read().split('_')
 
          if len(ev_str) == 2 and self._is_number(ev_str[1]):
-            self.ev_hdlr(event(ev_str[0], ev_str[1]))
+            self.ev_hdlr(Event(ev_str[0], ev_str[1]))
       
    def _read(self):
       """ returns string read from serial port """

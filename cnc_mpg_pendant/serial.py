@@ -20,6 +20,9 @@ class Serial:
       if self.port == 'fail':
          raise SerialException
 
+   def close(self):
+      pass
+
    def flush(self):
       pass
       

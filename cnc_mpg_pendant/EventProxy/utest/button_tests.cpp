@@ -15,20 +15,17 @@ TEST_GROUP(ButtonTestGroup)
     
     void handleEvent(C_Event& e)
     {
-      eventData = e.getData();
-      eventSource = e.getSource();
       newData = true;
+      serializedEvent = e.serialize();
     };
 
     void reset()
     {
-      eventData = 0;
-      eventSource = "";
+      serializedEvent = "";
       newData = false;
     }
     
-    unsigned int eventData;
-    string eventSource;
+    String serializedEvent;
     bool newData;
   };
 
@@ -84,8 +81,7 @@ TEST(ButtonTestGroup, PressButtonLong)
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
   CHECK(evSpy.newData);
-  LONGS_EQUAL(1, evSpy.eventData);
-  CHECK(evSpy.eventSource.compare("test") == 0);
+  CHECK(evSpy.serializedEvent.compare("test_1") == 0);
 }
 
 TEST(ButtonTestGroup, PressButtonShort)

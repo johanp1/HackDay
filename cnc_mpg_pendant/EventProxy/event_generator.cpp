@@ -15,3 +15,8 @@ void C_EventGenerator::addEventListner(C_EventListner* h)
 {
    handler_p = h;
 }
+
+String& C_EventGenerator::getName()
+{
+  return name;
+}
