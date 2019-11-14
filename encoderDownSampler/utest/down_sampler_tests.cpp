@@ -1,121 +1,92 @@
 #include "TestHarness.h"
-#include "buffer.h"
+#include "down_sampler.h"
 
-TEST_GROUP(BufferTestGroup)
-{
-  C_Buffer buffer;
-  
+TEST_GROUP(DownSamplerTestGroup)
+{  
   void setup()
   {  
   }
   
   void teardown()
   {
-    buffer.flush();
   }
 
-  void fillBuffer(int seed, int nbr)
-  {
-    String s = String("test");
-    
-    for (int i = 0; i < nbr; i++)
-    {
-      buffer.put(C_Event(s, (unsigned int)(seed+i)));
-    }
-  }
 };
 
-TEST(BufferTestGroup, EmptyAfterCreation)
+TEST(DownSamplerTestGroup, testUpdateNoPulse)
 {
-  CHECK(buffer.isEmpty());
-}
-
-TEST(BufferTestGroup, NotEmpty)
-{
-  buffer.put(C_Event());
-  CHECK(!buffer.isEmpty());
-}
-
-TEST(BufferTestGroup, GetEmpty)
-{
-  C_Event e;
-  CHECK(!buffer.get(e));
-}
-
-
-TEST(BufferTestGroup, NotEmptyThenEmpty)
-{
-  C_Event e;
+  int currState;
+  DownSampler downSampler(2);
   
-  buffer.put(C_Event());
-  CHECK(!buffer.isEmpty());
-  CHECK(buffer.get(e));
-  CHECK(buffer.isEmpty());
+  currState = downSampler.update(0);
+  CHECK(currState == 0);
 }
 
-
-TEST(BufferTestGroup, GetPutOneValue)
+TEST(DownSamplerTestGroup, testDownSampleRatio2)
 {
-  C_Event e;
-  String str = String("hej");
-  String expected;
+  int currState;
+  DownSampler downSampler(2);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 1);
   
-  buffer.put(C_Event(str, 1));
-  CHECK(buffer.get(e));
-  expected = String("hej_1");
-  CHECK(expected.compare(e.serialize()) == 0);
 }
 
-TEST(BufferTestGroup, GetPutAFew)
+TEST(DownSamplerTestGroup, testDownSampleRatio5)
 {
-  C_Event e;
-  String expected;
-  String str1 = String("apa");
-  String str2 = String("bepa");
-  String str3 = String("test");
+  int currState;
+  DownSampler downSampler(5);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 1);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(0);
+  CHECK(currState == 0);
+
+  currState = downSampler.update(1);
+  CHECK(currState == 0);
   
-  buffer.put(C_Event(str1, 1));
-  buffer.put(C_Event(str2, 2));
-  buffer.put(C_Event(str3, 3));
-
-  CHECK(buffer.get(e));
-  expected = String("apa_1");
-  CHECK(expected.compare(e.serialize()) == 0);
-
-  CHECK(buffer.get(e));
-  expected = String("bepa_2");
-  CHECK(expected.compare(e.serialize()) == 0);
-
-  CHECK(buffer.get(e));
-  expected = String("test_3");
-  CHECK(expected.compare(e.serialize()) == 0);
 }
 
-TEST(BufferTestGroup, Full)
-{
-   fillBuffer(0, buffer.capacity());
-   CHECK(buffer.isFull());
-}
-
-TEST(BufferTestGroup, PutFull)
-{
-  C_Event e;
-  String str = String("hej");
-  
-  fillBuffer(0, buffer.capacity());
-
-  buffer.put(C_Event(str, 100));
-  CHECK(buffer.get(e));
-  CHECK(e.serialize().compare("test_0") == 0);
-}
-
-TEST(BufferTestGroup, HandleEvent)
-{
-  String str = String("apa");
-  C_Event e;
-  C_Event sendEvent = C_Event(str, 99);
-
-  buffer.handleEvent(sendEvent);
-  CHECK(buffer.get(e));
-  CHECK(e.serialize().compare("apa_99") == 0);
-}
