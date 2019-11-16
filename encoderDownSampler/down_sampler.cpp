@@ -32,7 +32,7 @@ int StateContainer::getStepsInState()
 
 DownSampler::DownSampler(int downSampleRatio) : state(downSampleRatio)
 {
-  stepCount = 0;
+  stepCount = state.getStepsInState()-1; // first pulse will generate state transition
   prev = 0;
 };
 	
