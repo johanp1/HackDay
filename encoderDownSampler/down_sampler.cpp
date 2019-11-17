@@ -1,54 +1,72 @@
 #include "down_sampler.h"
 #include <iostream>
 
-//the STEPS_PER_STATE needs to be an integer
-//#define DOWN_SAMPLING_RATIO 4  // we have 500 steps/rev, down sampled with 4 gives output of 125 steps/rev
-//#define STEPS_PER_STATE DOWN_SAMPLING_RATIO/2
-
-StateContainer::StateContainer(int downSampleRatio) : nbrOfStates(2)
+DownSampler::DownSampler(int downSampleRatio)
 {
-  currState = 0;
-
-  // if downSampleRatio nod even number, let state 0 last one sample more 
-  stepsInState[1] = downSampleRatio/2;
-  stepsInState[0] = downSampleRatio - stepsInState[1];
-}
-   
-int StateContainer::getCurrState()
-{
-  return currState;
-}
-
-void StateContainer::next()
-{
-  currState = (currState == 0 ? 1 : 0);
-}
-
-int StateContainer::getStepsInState()
-{
-  return stepsInState[currState];
-}
-
-
-DownSampler::DownSampler(int downSampleRatio) : state(downSampleRatio)
-{
-  stepCount = state.getStepsInState()-1; // first pulse will generate state transition
   prev = 0;
-};
-	
+
+  state = new Off(downSampleRatio);
+  stepCount = state->getStepsInState()-1; // first pulse will generate state transition
+}
+
+DownSampler::~DownSampler()
+{
+  delete state;
+}
+
 int DownSampler::update(int v)
 {
   if ((prev == 0) && (v == 1)) {
     stepCount++;
   }
-  
-  if (stepCount >= state.getStepsInState()) {
-    state.next();
 
+  if (stepCount >= state->getStepsInState()) {
+    state = state->next();
+    
     stepCount = 0;
   }
 
   prev = v;
   
-  return state.getCurrState();
+  return state->getOutput();
+}
+
+Off::Off(int ratio) : State(ratio) {
+  stepsInState = ratio - ratio/2;
+};
+
+State* Off::next() {
+  State *ret = new On(downSamplingRatio);
+  delete this;
+  return ret;
+}
+
+int Off::getStepsInState()
+{
+  return stepsInState;
+}
+
+int Off::getOutput()
+{
+  return LOW;
+}
+
+On::On(int ratio) : State(ratio) {
+  stepsInState = ratio/2;
+};
+
+State* On::next() {
+  State *ret = new Off(downSamplingRatio);
+  delete this;
+  return ret;
+}
+
+int On::getStepsInState()
+{
+  return stepsInState;
+}
+
+int On::getOutput()
+{
+  return HIGH;
 }

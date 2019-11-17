@@ -22,7 +22,7 @@ TEST(DownSamplerTestGroup, testUpdateNoPulse)
   CHECK(currState == 0);
 }
 
-TEST(DownSamplerTestGroup, testUpdateNoPulse)
+TEST(DownSamplerTestGroup, testManySamples)
 {
   int currState;
   DownSampler downSampler(2);
@@ -108,6 +108,5 @@ TEST(DownSamplerTestGroup, testDownSampleRatio5)
 
   currState = downSampler.update(1);
   CHECK(currState == 1);
-  
 }
 
