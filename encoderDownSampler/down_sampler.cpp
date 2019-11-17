@@ -1,5 +1,5 @@
 #include "down_sampler.h"
-#include <iostream>
+
 
 DownSampler::DownSampler(int downSampleRatio)
 {
