@@ -5,7 +5,7 @@ DownSampler::DownSampler(int downSampleRatio)
 {
   prev = 0;
 
-  state = new Off(downSampleRatio);
+  state = new Off(this, downSampleRatio);
   stepCount = state->getStepsInState()-1; // first pulse will generate state transition
 }
 
@@ -16,27 +16,37 @@ DownSampler::~DownSampler()
 
 int DownSampler::update(int v)
 {
-  if ((prev == 0) && (v == 1)) {
+  if ((prev == 0) && (v == 1)) 
+  {
     stepCount++;
   }
 
-  if (stepCount >= state->getStepsInState()) {
-    state = state->next();
+  if (stepCount >= state->getStepsInState()) 
+  {
+    state = state->next(this);
     
     stepCount = 0;
   }
 
   prev = v;
   
-  return state->getOutput();
+  return output; 
 }
 
-Off::Off(int ratio) : State(ratio) {
+void DownSampler::setOutput(int v)
+{
+  output = v;
+}
+
+Off::Off(DownSampler* d, int ratio) : State(ratio) 
+{
   stepsInState = ratio - ratio/2;
+    d->setOutput(LOW);
 };
 
-State* Off::next() {
-  State *ret = new On(downSamplingRatio);
+State* Off::next(DownSampler* d) 
+{
+  State *ret = new On(d, downSamplingRatio);
   delete this;
   return ret;
 }
@@ -46,17 +56,15 @@ int Off::getStepsInState()
   return stepsInState;
 }
 
-int Off::getOutput()
+On::On(DownSampler* d, int ratio) : State(ratio) 
 {
-  return LOW;
-}
-
-On::On(int ratio) : State(ratio) {
   stepsInState = ratio/2;
+  d->setOutput(HIGH);
 };
 
-State* On::next() {
-  State *ret = new Off(downSamplingRatio);
+State* On::next(DownSampler* d) 
+{
+  State *ret = new Off(d, downSamplingRatio);
   delete this;
   return ret;
 }
@@ -64,9 +72,4 @@ State* On::next() {
 int On::getStepsInState()
 {
   return stepsInState;
-}
-
-int On::getOutput()
-{
-  return HIGH;
 }

@@ -1,4 +1,4 @@
- #ifndef __C_DOWN_SAMPLER_H__
+#ifndef __C_DOWN_SAMPLER_H__
 #define __C_DOWN_SAMPLER_H__
 
 #include "Arduino.h"
@@ -9,33 +9,32 @@ class DownSampler
   DownSampler(int downSampleRatio);
   ~DownSampler();
   int update(int v);
-  void next();
-  
+  void setOutput(int v);
+
  private:
   int stepCount;
   int prev;
   class State *state;
+  int output;
 };
 
 class State {
  
  public:
- State(int ratio) : downSamplingRatio(ratio){};
+  State(int ratio) : downSamplingRatio(ratio){};
   virtual ~State() {};
-  virtual State* next() = 0;
+  virtual State* next(DownSampler* d) = 0;
   virtual int getStepsInState() = 0;
-  virtual int getOutput() = 0;
 
   int downSamplingRatio;
 };
 
 class Off: public State {
  public:
-  Off(int ratio);
+  Off(DownSampler* d, int ratio);
   
-  State* next();
+  State* next(DownSampler* d);
   int getStepsInState();
-  int getOutput();
 
  private:
   int stepsInState;
@@ -43,11 +42,10 @@ class Off: public State {
 
 class On: public State {
  public:
-  On(int ratio);
+  On(DownSampler* d, int ratio);
 
-  State* next();
+  State* next(DownSampler* d);
   int getStepsInState();
-  int getOutput();
   
  private:
   int stepsInState;
