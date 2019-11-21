@@ -6,13 +6,13 @@
 class PulseStretcher
 {
     public:
-    PulseStretcher(int msDuration);
+    PulseStretcher(int usDuration);
     int update(int v);
 
     private:
     int prev;
     int stretchDuration;
-    int stretchStartTime;
+    unsigned long stretchStartTime;
     int output;
     bool stretching;
 };

@@ -9,6 +9,7 @@ TEST_GROUP(PulseStretcherTestGroup)
   
   void teardown()
   {
+    ArduinoStub.reset();
   }
 
 };
@@ -22,7 +23,7 @@ TEST(PulseStretcherTestGroup, testUpdateNoPulse)
   CHECK(output == 0);
 }
 
-TEST(PulseStretcherTestGroup, testStretchSimple)
+TEST(PulseStretcherTestGroup, testStartStretching)
 {
   int output;
   PulseStretcher pulseStretcher(2);
@@ -34,11 +35,33 @@ TEST(PulseStretcherTestGroup, testStretchSimple)
   CHECK(output == 1);
 }
 
-TEST(PulseStretcherTestGroup, testStretch)
+TEST(PulseStretcherTestGroup, testStopStretch)
+{
+  int output;
+  PulseStretcher pulseStretcher(800);
+  
+  output = pulseStretcher.update(1);
+  CHECK(output == 1);
+
+  output = pulseStretcher.update(0);
+  CHECK(output == 1);
+
+  ArduinoStub.incTime(799);
+  output = pulseStretcher.update(0);
+  CHECK(output == 1);
+
+  ArduinoStub.incTime(1);
+  output = pulseStretcher.update(0);
+  CHECK(output == 0);
+}
+
+TEST(PulseStretcherTestGroup, testTimeOverflow)
 {
   int output;
   PulseStretcher pulseStretcher(2);
   
+  ArduinoStub.incTime(0xffffffffffffffff-1);
+
   output = pulseStretcher.update(1);
   CHECK(output == 1);
 

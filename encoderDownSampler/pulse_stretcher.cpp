@@ -1,5 +1,4 @@
 #include "pulse_stretcher.h"
-#include <iostream>
 
 PulseStretcher::PulseStretcher(int msDuration) : stretchDuration (msDuration)
 {
@@ -14,17 +13,29 @@ int PulseStretcher::update(int v)
     if ((prev == 1) && (v == 0))
     {
         stretching = true;
-        cout << "start stretching\n";
+        stretchStartTime = micros();
     }
 
     output = v;
     if (stretching)
     {
-        output = HIGH;
-        cout << "stretching\n";
+        int timePassed;
+
+        timePassed = (int)(micros() - stretchStartTime); // will handle overflow too
+
+        if (timePassed >= stretchDuration)
+        {
+            stretching = false;
+            output = LOW;
+        }
+        else
+        {
+            output = HIGH;
+        }
+        
     }
 
     prev = v;
-    cout << "output: " << output << "\n";
+
     return output;
 }

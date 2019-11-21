@@ -124,6 +124,11 @@ int analogRead(int pin)
 
 unsigned long millis(void)
 {
+  return (unsigned long)ArduinoStub.getTime()/1000;  //convert us to ms
+}
+
+unsigned long micros(void)
+{
   return (unsigned long)ArduinoStub.getTime();
 }
 
@@ -255,12 +260,17 @@ void C_Arduino_stub::reset()
   isr = NULL;
 }
 
-void C_Arduino_stub::incTime(unsigned int t)
+void C_Arduino_stub::incTime(unsigned long t)
 {
   time += t;
 }
 
-unsigned C_Arduino_stub::getTime()
+void C_Arduino_stub::incTimeMs(unsigned long t)
+{
+  time += 1000*t;
+}
+
+unsigned long C_Arduino_stub::getTime()
 {
   return time;
 }

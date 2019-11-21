@@ -17,7 +17,6 @@
 
 using namespace std;
 
-//typedef string String;  
 typedef unsigned char byte;
 
 class String
@@ -77,8 +76,9 @@ class C_Arduino_stub
    void setAnalogRead(int pin, int val);
    int analogRead(int pin);
   
-   void incTime(unsigned int t);
-   unsigned int getTime();
+   void incTimeMs(unsigned long t);
+   void incTime(unsigned long t);
+   unsigned long getTime();
 
    void setInterruptPin(byte pin);
    void setISR(void(*cbf)(void));
@@ -93,7 +93,7 @@ class C_Arduino_stub
 
    int analogReads[4];
 
-   unsigned int time;
+   unsigned long time;
 
    void(*isr)(void);
    byte interruptPin;
@@ -111,6 +111,7 @@ int digitalRead(int pin);
 void digitalWrite(int pin, int w);
 int analogRead(int pin);
 unsigned long millis(void);
+unsigned long micros(void);
 
 extern C_Serial_stub Serial;
 extern C_Arduino_stub ArduinoStub;
