@@ -11,8 +11,8 @@
 const int phaseInPin = 3;
 const int phaseOutPin = 4;
 
-const int indexInPin = 4;
-const int indexOutPin = 5;
+const int indexInPin = 5;
+const int indexOutPin = 6;
 
 DownSampler downSampler(DOWN_SAMPLING_RATIO);
 PulseStretcher pulseStretcher(STRETCH_TIME_US);
@@ -21,7 +21,11 @@ void setup() {
   pinMode(phaseInPin, INPUT);
   pinMode(phaseOutPin, OUTPUT);
   
+  pinMode(indexInPin, INPUT);
+  pinMode(indexOutPin, OUTPUT);
+  
   digitalWrite(phaseOutPin, LOW);
+  digitalWrite(indexOutPin, LOW);
 }
 
 void loop() {
