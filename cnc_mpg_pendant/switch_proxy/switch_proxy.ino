@@ -2,13 +2,13 @@
 #include <sender.h>
 #include "switch_proxy.h"
 
-C_Button buttons[NBR_OF_SWITCHES] = {C_Button("xmin", XMIN_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY),
-									                   C_Button("xmax", XMAX_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY),
-                                     C_Button("ymin", YMIN_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY),
-									                   C_Button("ymax", YMAX_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY),
-                                     C_Button("zmin", ZMIN_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY),
-                                     C_Button("zmax", ZMAX_SWITCH_PIN, BUTTON_DEBOUNCE_DELAY)};
+C_Button buttons[NBR_OF_SWITCHES] = {C_Button("head", HEAD_ALARM_PIN, BUTTON_DEBOUNCE_DELAY),
+									                   C_Button("pos1", TOOL_POS1_PIN, BUTTON_DEBOUNCE_DELAY),
+                                     C_Button("posn", TOOL_IN_POS_PIN, BUTTON_DEBOUNCE_DELAY),
+									                   C_Button("lube", LUBE_PRESS_OK_PIN, BUTTON_DEBOUNCE_DELAY),
+                                     C_Button("estop", ESTOP_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY)};
 C_Sender sender;
+unsigned long lastScanTime;
 
 void setup() {
    Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
@@ -21,18 +21,23 @@ void setup() {
    buttons[2].addEventListner(&sender);
    buttons[3].addEventListner(&sender);
    buttons[4].addEventListner(&sender);
-   buttons[5].addEventListner(&sender);
+
+   lastScanTime = 0;
 }
 
 void loop() {  
 
    byte i;
    C_Event e;
+   unsigned long currTime = millis();
 
-   for (i = 0; i<NBR_OF_SWITCHES; i++)
+   if(currTime - lastScanTime > BUTTON_DEBOUNCE_DELAY)
    {
-      buttons[i].scan();
-   }
+      for (i = 0; i<NBR_OF_SWITCHES; i++)
+      {
+        buttons[i].scan();
+      }
 
-   delay(BUTTON_DEBOUNCE_DELAY);
+      lastScanTime = currTime;
+   }
 }
