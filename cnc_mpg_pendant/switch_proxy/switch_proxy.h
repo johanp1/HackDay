@@ -1,11 +1,13 @@
-#define NBR_OF_SWITCHES 6
+#define NBR_OF_SWITCHES 5
 #define BUTTON_DEBOUNCE_DELAY 50
 
-#define XMIN_SWITCH_PIN 2
-#define XMAX_SWITCH_PIN 3
-#define YMIN_SWITCH_PIN 4
-#define YMAX_SWITCH_PIN 5
-#define ZMIN_SWITCH_PIN 6
-#define ZMAX_SWITCH_PIN 7
+//#define MM_PER_REV 5
+//#define X_TRAVEL_PIN 8
+//#define Y_TRAVEL_PIN 9
+//#define Z_TRAVEL_PIN 10
 
-#define ESTOP_BUTTON_PIN 7
+#define HEAD_ALARM_PIN 8
+#define TOOL_POS1_PIN 9
+#define TOOL_IN_POS_PIN 10
+#define LUBE_PRESS_OK_PIN 11
+#define ESTOP_BUTTON_PIN 12

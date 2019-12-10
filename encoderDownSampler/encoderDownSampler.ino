@@ -8,29 +8,44 @@
 #define STRETCH_TIME_US 800    // 800 microseconds stretch
 
 // defines pins
-const int phaseInPin = 3;
-const int phaseOutPin = 4;
+const int phaseAInPin = 2;
+const int phaseAOutPin = 3;
 
-const int indexInPin = 4;
-const int indexOutPin = 5;
+const int phaseBInPin = 4;
+const int phaseBOutPin = 5;
 
-DownSampler downSampler(DOWN_SAMPLING_RATIO);
+const int indexInPin = 6;
+const int indexOutPin = 7;
+
+DownSampler downSamplerA(DOWN_SAMPLING_RATIO);
+DownSampler downSamplerB(DOWN_SAMPLING_RATIO);
 PulseStretcher pulseStretcher(STRETCH_TIME_US);
 
 void setup() {
-  pinMode(phaseInPin, INPUT);
-  pinMode(phaseOutPin, OUTPUT);
+  pinMode(phaseAInPin, INPUT);
+  pinMode(phaseAOutPin, OUTPUT);
+
+  pinMode(phaseBInPin, INPUT);
+  pinMode(phaseBOutPin, OUTPUT);
+    
+  pinMode(indexInPin, INPUT);
+  pinMode(indexOutPin, OUTPUT);
   
-  digitalWrite(phaseOutPin, LOW);
+  digitalWrite(phaseAOutPin, LOW);
+  digitalWrite(phaseBOutPin, LOW);
+  digitalWrite(indexOutPin, LOW);
 }
 
 void loop() {
-  int rawPhase = digitalRead(phaseInPin);
-  int downSampledPhase = downSampler.update(rawPhase);
+  int rawPhaseA = digitalRead(phaseAInPin);
+  int rawPhaseB = digitalRead(phaseBInPin);
+  int downSampledPhaseA = downSamplerA.update(rawPhaseA);
+  int downSampledPhaseB = downSamplerB.update(rawPhaseB);
 
   int rawIndex = digitalRead(indexInPin);
   int stretchedIndex = pulseStretcher.update(rawIndex);
 
-  digitalWrite(phaseOutPin, downSampledPhase);
+  digitalWrite(phaseAOutPin, downSampledPhaseA);
+  digitalWrite(phaseBOutPin, downSampledPhaseB);
   digitalWrite(indexOutPin, stretchedIndex);
 }
