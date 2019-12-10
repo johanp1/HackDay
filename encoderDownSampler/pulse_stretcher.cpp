@@ -1,6 +1,6 @@
 #include "pulse_stretcher.h"
 
-PulseStretcher::PulseStretcher(int msDuration) : stretchDuration (msDuration)
+PulseStretcher::PulseStretcher(int usDuration) : stretchDuration (usDuration)
 {
     prev = 0;
     output = 0;

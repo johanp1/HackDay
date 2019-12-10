@@ -19,7 +19,7 @@ CPP_PLATFORM = Gcc -std=c++11
 
 #CXXFLAGS = -L../lib
 #LIBS = simpleMotion.a -lpthread
-LDFLAGS = -L../lib -lsimpleMotion.a
+LDFLAGS = -L../lib -llibsimplemotionv2.a
 
 # This line is overriding the default new macros.  This is helpful
 # when using std library includes like <list> and other containers
