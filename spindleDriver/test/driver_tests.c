@@ -1,24 +1,15 @@
-#include "TestHarness.h"
+#include "TestHarness_c.h"
 #include "simplemotion.h"
 
 #define TRUE 1
 #define FALSE 0
 
-TEST_GROUP(DriverTestGroup)
-{
-   //smbus bus;
 
-   class serialStub
-   {
-      public:
-      serialStub()
-      {
-         hasBeenCalled = FALSE;
-         baudRate = 0;
-         busHandle = 123;
-      };
+      char hasBeenCalled = FALSE;
+      int baudRate = 90;
+      int busHandle = 123;
 
-      void* openCallback(const char *port_device_name, smint32 baudrate_bps, smbool *success)
+      smBusdevicePointer openCallback(const char *port_device_name, smint32 baudrate_bps, smbool *success)
       {
          if(port_device_name[0] == 'C')
          {
@@ -29,7 +20,7 @@ TEST_GROUP(DriverTestGroup)
          *success = TRUE;
       
          return &busHandle;
-      };
+      }
 
       smint32 readCallback(smBusdevicePointer busdevicePointer, unsigned char *buf, smint32 size)
       {
@@ -56,10 +47,10 @@ TEST_GROUP(DriverTestGroup)
             dummy = 2;
          if (size == 0)
             dummy = 3;
-      if (dummy == 0) {}
+         if (dummy == 0) {}
          
          return 0;
-      };
+      }
 
       void closeCallback(smBusdevicePointer busdevicePointer)
       {
@@ -67,8 +58,8 @@ TEST_GROUP(DriverTestGroup)
          
          if (busdevicePointer == 0)
             dummy = 1;
-      if (dummy == 0) {}
-      };
+         if (dummy == 0) {}
+      }
 
       smbool purgeCallback(smBusdevicePointer busdevicePointer, BusDeviceMiscOperationType operation)
       {
@@ -76,40 +67,33 @@ TEST_GROUP(DriverTestGroup)
          
          if (busdevicePointer == 0)
             dummy = 1;
-      if (operation == MiscOperationFlushTX)
-         dummy = 2;
-      else
-         dummy = 3;
-      
-      if (dummy == 0) {}
-      
-      return smtrue;
-      };
+         if (operation == MiscOperationFlushTX)
+            dummy = 2;
+         else
+            dummy = 3;
+         
+         if (dummy == 0) {}
+         
+         return smtrue;
+      }
    
-      bool hasBeenCalled;
-      int baudRate;
-      int busHandle;
-   };
-  
-   serialStub serial;
 
-   void setup()
-   {  
-      //serial = new serialStub();
-      
-   }
-  
-   void teardown()
-   {
-      //delete serial;
-   }
-};
-
-TEST(DriverTestGroup, openBus)
+TEST_GROUP_C_SETUP(DriverTestGroup)
 {
-   smbus bus;
-   //bus = smOpenBusWithCallbacks("COM1", openCallback, closeCallback, readCallback, writeCallback , purgeCallback);
-   bus = smOpenBusWithCallbacks("COM1", serial.openCallback, 0, 0, 0 , 0);
+}
+  
+TEST_GROUP_C_TEARDOWN(DriverTestGroup)
+{
+}
 
-  CHECK(serial.hasBeenCalled);
+TEST_C(DriverTestGroup, openBus)
+{
+   //BusdeviceOpen openBusCallback = &(serial.openCallback);
+
+   smbus bus = smOpenBusWithCallbacks("COM1", openCallback, 0, 0, 0 , 0);
+   //smbus bus = smOpenBusWithCallbacks("COM1", openCallback, closeCallback, readCallback, writeCallback , purgeCallback);
+
+   if (bus == 0) {}
+
+  CHECK_C(hasBeenCalled);
 }

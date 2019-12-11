@@ -88,7 +88,7 @@ LIB SM_STATUS smCloseBus( const smbus bushandle );
 
 /** Return SM lib version number in hexadecimal format.
 Ie V 2.5.1 would be 0x020501 and 1.2.33 0x010233 */
-LIB smuint32 smGetVersion();
+//LIB smuint32 smGetVersion();
 
 
 /** Set stream where debug output is written. By default nothing is written.
@@ -154,7 +154,7 @@ LIB SM_STATUS smFastUpdateCycleWithStructs( smbus handle, smuint8 nodeAddress, F
 LIB SM_STATUS smFastUpdateCycle( smbus handle, smuint8 nodeAddress, smuint16 write1, smuint16 write2, smuint16 *read1, smuint16 *read2);
 
 /** Return number of bus devices found. details of each device may be consequently fetched by smGetBusDeviceDetails() */
-LIB smint smGetNumberOfDetectedBuses();
+//LIB smint smGetNumberOfDetectedBuses();
 
 /** Fetch information of detected bus nodes at certain index. Example:
 
