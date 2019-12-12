@@ -12,10 +12,11 @@ endif
 #--- Inputs ----#
 COMPONENT_NAME = spindleDriverTests
 CPPUTEST_HOME = /usr/local/cpputest-3.7dev
-SIMPLEMOTION_HOME = /home/johan/git_clones/SimpleMotionV2
+SIMPLEMOTION_HOME = /cygdrive/c/git_clones/SimpleMotionV2
 
 CPPUTEST_USE_EXTENSIONS = Y
 CPPUTEST_PEDANTIC_ERRORS = N
+CPPUTEST_WARNINGFLAGS = -Wall -Wextra -Werror
 CPP_PLATFORM = Gcc -std=c++11
 
 #CXXFLAGS = -L../lib

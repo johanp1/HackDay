@@ -9,6 +9,8 @@ TEST_GROUP_C_WRAPPER(DriverTestGroup)
 };
 
 TEST_C_WRAPPER(DriverTestGroup, openBus);
+TEST_C_WRAPPER(DriverTestGroup, openCloseBus);
+TEST_C_WRAPPER(DriverTestGroup, sendMsg)
 
 int main(int ac, char** av)
 {
