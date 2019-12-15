@@ -149,7 +149,9 @@ TEST_C(DriverTestGroup, sendMsg)
    smbus bus = smOpenBusWithCallbacks("COM1", openCallback, closeCallback, readCallback, writeCallback, purgeCallback);
 
 //SM_STATUS smRead1Parameter( const smbus handle, const smaddr nodeAddress, const smint16 paramId1, smint32 *paramVal1 );
-   status = smRead1Parameter( bus, 254, 1,  &paramVal1);
+   status = smRead1Parameter( bus, SMP_NODE_ADDRSS, SMP_INPUT_REFERENCE_MODE,  &paramVal1);
+
+printf("paramVal1: %d\n", paramVal1);
 
    CHECK_C(status == SM_OK);
 }
