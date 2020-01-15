@@ -4,6 +4,7 @@ import sys
 import getopt
 import xml.etree.ElementTree as ET
 import hal
+import time
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -41,7 +42,7 @@ class ComponentWrapper:
       self.pinDict[pin_name].val = self.hal[pin_name]
       return self.pinDict[pin_name].val
 
-   def updateHALOut(self):
+   def updateHAL(self):
       for key in self.pinDict:
          if self.pinDict[key].dir == 'out':
             self.hal[key] = self.pinDict[key].val
@@ -78,18 +79,47 @@ class ComponentWrapper:
       
       return retVal
 
+class parameterContainer:
+   def __init__(self, xml_file):
+      self.paramDict = {}
+      self.xmlFile = xml_file
+
+      self.tree = ET.parse(xml_file)
+      self._parse()
+
+   def _parse(self):
+      root = self.tree.getroot()
+      for param in root.iter('parameter'):
+         print param.attrib['name'], param.attrib['value'] 
+         self.paramDict[param.attrib['name']] = int(param.attrib['value'])
+
+   def getParam(self, name):
+      if name in self.paramDict:
+         return self.paramDict[name]
+      else:
+         return None 
+
+   def write(self):
+      self.tree.write(self.xmlFile)
+
+   def writeParam(self, parName, value):
+      if parName in self.paramDict:
+         self.paramDict[parName] = value
+
+      self._writeToTree(parName, value)
+
+   def _writeToTree(self, parName, value):   
+      """update parameter in xml-tree"""
+      root = self.tree.getroot()
+      
+      for param in root.iter('parameter'):
+           if param.attrib['name'] == parName:
+               param.attrib['value'] = str(value)
+               break
+
 
 def usage():
     print 'usage luber.py --input=<in-file> --debug=[01]'
-
-def update(tree, parName, value):
-    """update parameter in xml-tree"""
-    root = tree.getroot()
-
-    for param in root.iter('parameter'):
-        if param.attrib['name'] == parName:
-            param.attrib['value'] = str(value)
-            break
 
 def main():
    paramDict = {}
@@ -116,28 +146,32 @@ def main():
             print o
             assert False, "unhandled option"
 
-   tree = ET.parse(xmlFile)
-   root = tree.getroot()
-
-   for param in root.iter('parameter'):
-      print param.attrib['name'], param.attrib['value'] 
-      paramDict[param.attrib['name']] = int(param.attrib['value'])
+   p = parameterContainer(xmlFile)
 
    c = ComponentWrapper(name) #HAL adaptor
+   c.addPin('total-distance', 'u32', 'in')
+   c.addPin('lube', 'bit', 'out')
+   print c
 
-   update(tree, 'totalDistance', paramDict['totalDistance']+1)
+   #update(tree, 'totalDistance', paramDict['totalDistance']+1)
 
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
    
+   val = p.getParam('totalDistance')
+   print val
+
+   val = val + 1
+   p.writeParam('totalDistance', val)
+   
    try:
       while 1:
-         c.updateHALOut()
+         c.updateHAL()
             
          time.sleep(0.05)
 
    except KeyboardInterrupt:
-      tree.write(xmlFile)
+      p.write()
       raise SystemExit
 
 
