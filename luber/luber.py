@@ -99,7 +99,7 @@ class parameterContainer:
       else:
          return None 
 
-   def write(self):
+   def writeToFile(self):
       self.tree.write(self.xmlFile)
 
    def writeParam(self, parName, value):
@@ -149,29 +149,42 @@ def main():
    p = parameterContainer(xmlFile)
 
    c = ComponentWrapper(name) #HAL adaptor
-   c.addPin('total-distance', 'u32', 'in')
+   c.addPin('x-vel-cmd', 'u32', 'in')
+   c.addPin('y-vel-cmd', 'u32', 'in')
+   c.addPin('z-vel-cmd', 'u32', 'in')
    c.addPin('lube', 'bit', 'out')
    print c
-
-   #update(tree, 'totalDistance', paramDict['totalDistance']+1)
 
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
    
-   val = p.getParam('totalDistance')
-   print val
-
-   val = val + 1
-   p.writeParam('totalDistance', val)
+   totalDistance = p.getParam('totalDistance')
+   distanceThreshold = p.getParam('distanceThreshold')
    
+   prevTime = time.time()
+
    try:
       while 1:
+         currentTime =  time.time()
+         timeDelta = currentTime - prevTime
+         print timeDelta
+         totalDistance += abs(c.readPin('x-vel-cmd')) * timeDelta
+         totalDistance += abs(c.readPin('y-vel-cmd')) * timeDelta
+         totalDistance += abs(c.readPin('z-vel-cmd')) * timeDelta
+
+         if totalDistance >= distanceThreshold:
+            print 'runLubeCycle()'
+            totalDistance = 0
+
          c.updateHAL()
-            
-         time.sleep(0.05)
+
+         prevTime = currentTime
+
+         time.sleep(0.1)
 
    except KeyboardInterrupt:
-      p.write()
+      p.writeParam('totalDistance', int(totalDistance))
+      p.writeToFile()
       raise SystemExit
 
 

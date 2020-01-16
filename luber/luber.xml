@@ -1,4 +1,4 @@
 <luber>
-	<parameter name="totalDistance" value="6" />
+	<parameter name="totalDistance" value="0" />
 	<parameter name="distanceThreshold" value="10" />
 </luber>
