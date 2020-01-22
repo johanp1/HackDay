@@ -82,16 +82,16 @@ class ComponentWrapper:
 class parameterContainer:
    def __init__(self, xml_file):
       self.paramDict = {}
-      self.xmlFile = xml_file
+      self._xmlFile = xml_file
 
-      self.tree = ET.parse(xml_file)
+      self.tree = ET.parse(self._xmlFile)
       self._parse()
 
    def _parse(self):
       root = self.tree.getroot()
       for param in root.iter('parameter'):
-         print param.attrib['name'], param.attrib['value'] 
-         self.paramDict[param.attrib['name']] = int(param.attrib['value'])
+         #print param.attrib['name'], param.attrib['value'] 
+         self.paramDict[param.attrib['name']] = float(param.attrib['value'])
 
    def getParam(self, name):
       if name in self.paramDict:
@@ -99,14 +99,18 @@ class parameterContainer:
       else:
          return None 
 
+   def getParams(self):
+      return self.paramDict
+
    def writeToFile(self):
-      self.tree.write(self.xmlFile)
+      for parName in self.paramDict:
+         self._writeToTree(parName, self.paramDict[parName])
+
+      self.tree.write(self._xmlFile)
 
    def writeParam(self, parName, value):
       if parName in self.paramDict:
          self.paramDict[parName] = value
-
-      self._writeToTree(parName, value)
 
    def _writeToTree(self, parName, value):   
       """update parameter in xml-tree"""
@@ -167,7 +171,7 @@ def main():
       while 1:
          currentTime =  time.time()
          timeDelta = currentTime - prevTime
-         print timeDelta
+         #print timeDelta
          totalDistance += abs(c.readPin('x-vel-cmd')) * timeDelta
          totalDistance += abs(c.readPin('y-vel-cmd')) * timeDelta
          totalDistance += abs(c.readPin('z-vel-cmd')) * timeDelta
@@ -176,6 +180,8 @@ def main():
             print 'runLubeCycle()'
             totalDistance = 0
 
+         p.writeParam('totalDistance', int(totalDistance))
+
          c.updateHAL()
 
          prevTime = currentTime
@@ -183,10 +189,36 @@ def main():
          time.sleep(0.1)
 
    except KeyboardInterrupt:
-      p.writeParam('totalDistance', int(totalDistance))
+      
       p.writeToFile()
       raise SystemExit
 
+class LubeControl:
+   def __init__(self, lube_cycle_time, lube_on_time, nbr_of_pulses_per_cycle, accumulated_distance, distance_threshold, init_time):
+      self.lubeCycleTime = lube_cycle_time
+      self.lubeOnTime = lube_on_time
+      self.pulsesPerCycle = nbr_of_pulses_per_cycle
+      self.totalDistance = accumulated_distance
+      self.distanceThreshold = distance_threshold
+      self.state = 'OFF'
+      self.prevTime = init_time
+
+   def calcDistFromVel(self, dxdt, dydt, dzdt, timeStamp):
+      timeDelta = timeStamp - self.prevTime
+
+      self.totalDistance += abs(dxdt) * timeDelta
+      self.totalDistance += abs(dydt) * timeDelta
+      self.totalDistance += abs(dzdt) * timeDelta
+
+      self.prevTime = timeStamp
+
+   def runStateMachine(self):
+      if self.totalDistance >= self.distanceThreshold:
+         self.state = 'ON'
+         self.totalDistance = 0
+
+      if self.state == 'ON':
+         pass
 
 if __name__ == '__main__':
    main()
