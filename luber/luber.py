@@ -4,7 +4,7 @@ import sys
 import getopt
 import xml.etree.ElementTree as ET
 import hal
-import time
+import my_time as time
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -165,23 +165,10 @@ def main():
    totalDistance = p.getParam('totalDistance')
    distanceThreshold = p.getParam('distanceThreshold')
    
-   prevTime = time.time()
+   prevTime = time.getEhocTime()
 
    try:
       while 1:
-         currentTime =  time.time()
-         timeDelta = currentTime - prevTime
-         #print timeDelta
-         totalDistance += abs(c.readPin('x-vel-cmd')) * timeDelta
-         totalDistance += abs(c.readPin('y-vel-cmd')) * timeDelta
-         totalDistance += abs(c.readPin('z-vel-cmd')) * timeDelta
-
-         if totalDistance >= distanceThreshold:
-            print 'runLubeCycle()'
-            totalDistance = 0
-
-         p.writeParam('totalDistance', int(totalDistance))
-
          c.updateHAL()
 
          prevTime = currentTime
@@ -189,36 +176,40 @@ def main():
          time.sleep(0.1)
 
    except KeyboardInterrupt:
-      
+      p.writeParam('totalDistance', totalDistance)
       p.writeToFile()
       raise SystemExit
 
 class LubeControl:
-   def __init__(self, lube_cycle_time, lube_on_time, nbr_of_pulses_per_cycle, accumulated_distance, distance_threshold, init_time):
-      self.lubeCycleTime = lube_cycle_time
-      self.lubeOnTime = lube_on_time
-      self.pulsesPerCycle = nbr_of_pulses_per_cycle
-      self.totalDistance = accumulated_distance
-      self.distanceThreshold = distance_threshold
-      self.state = 'OFF'
-      self.prevTime = init_time
+   def __init__(self, lube_cycle_time, lube_on_time, nbr_of_pulses_per_cycle, accumulated_distance, distance_threshold):
+      self.lubeCycleTime = lube_cycle_time            # [sec]
+      self.lubeOnTime = lube_on_time                  # [sec]
+      self.pulsesPerCycle = nbr_of_pulses_per_cycle   
+      self.totalDistance = accumulated_distance       # [mm]
+      self.distanceThreshold = distance_threshold     # [mm]
 
-   def calcDistFromVel(self, dxdt, dydt, dzdt, timeStamp):
-      timeDelta = timeStamp - self.prevTime
+      self.state = 'OFF'
+      self.prevTime = time.getEhocTime()
+
+   def calcDistFromVel(self, dxdt, dydt, dzdt):
+      currentTime = time.getEhocTime()
+      timeDelta = currentTime - self.prevTime
 
       self.totalDistance += abs(dxdt) * timeDelta
       self.totalDistance += abs(dydt) * timeDelta
       self.totalDistance += abs(dzdt) * timeDelta
 
-      self.prevTime = timeStamp
+      self.prevTime = currentTime
 
    def runStateMachine(self):
       if self.totalDistance >= self.distanceThreshold:
          self.state = 'ON'
+         self.timeout = self.lubeCycleTime + time.getEhocTime()
          self.totalDistance = 0
 
       if self.state == 'ON':
-         pass
+         if time.getEhocTime() > self.timeout:
+            self.state = 'OFF'
 
 if __name__ == '__main__':
    main()
