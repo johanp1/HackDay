@@ -122,12 +122,54 @@ class parameterContainer:
                break
 
 
+class LubeControl:
+   def __init__(self, lube_on_time, accumulated_distance, distance_threshold):
+      self.lubeOnTime = lube_on_time                  # [sec]
+      self.totalDistance = accumulated_distance       # [mm]
+      self.distanceThreshold = distance_threshold     # [mm]
+
+      self.state = 'OFF'
+      self.lubeLevelOkOut = True
+      self._lubeLevelOkIn = True
+      self.prevTime = time.getEhocTime()
+
+   def calcDistFromVel(self, dxdt, dydt, dzdt):
+      currentTime = time.getEhocTime()
+      timeDelta = currentTime - self.prevTime
+
+      self.totalDistance += abs(dxdt) * timeDelta
+      self.totalDistance += abs(dydt) * timeDelta
+      self.totalDistance += abs(dzdt) * timeDelta
+
+      self.prevTime = currentTime
+
+   def runStateMachine(self):
+      currentTime = time.getEhocTime()
+      if self.totalDistance >= self.distanceThreshold:
+         self.state = 'ON'
+         self.timeout = self.lubeOnTime + currentTime
+         self.totalDistance = 0
+
+      if self.state == 'ON':
+         if currentTime > self.timeout:
+            #check lube pressure sensor
+            self.lubeLevelOkOut = self._lubeLevelOkIn
+
+            self.state = 'OFF'
+               
+
+   def setLubeLevelOK(self, levelOk):
+      self._lubeLevelOkIn = levelOk
+
+   def reset(self):
+      self.totalDistance = 0
+      self.state = 'OFF'
+      self.lubeLevelOkOut = True
+
 def usage():
     print 'usage luber.py --input=<in-file> --debug=[01]'
 
 def main():
-   paramDict = {}
-   debug = 0
    xmlFile = 'luber.xml'
    name = 'my-luber'       # default name of component in HAL
 
@@ -156,7 +198,10 @@ def main():
    c.addPin('x-vel-cmd', 'u32', 'in')
    c.addPin('y-vel-cmd', 'u32', 'in')
    c.addPin('z-vel-cmd', 'u32', 'in')
-   c.addPin('lube', 'bit', 'out')
+   c.addPin('lube-level-in', 'bit', 'in')
+   c.addPin('reset', 'bit', 'in')
+   c.addPin('lube-cmd', 'bit', 'out')
+   c.addPin('lube-level-out', 'bit', 'out')
    print c
 
    # ready signal to HAL, component and it's pins are ready created
@@ -164,14 +209,19 @@ def main():
    
    totalDistance = p.getParam('totalDistance')
    distanceThreshold = p.getParam('distanceThreshold')
-   
-   prevTime = time.getEhocTime()
+   lubeOnTime = p.getParam('lubePulseTime')
+
+   lubeCtrl = LubeControl(lubeOnTime, totalDistance, distanceThreshold)
 
    try:
       while 1:
-         c.updateHAL()
+         lubeCtrl.setLubeLevelOK(c.readPin('lube-level-in'))
+         lubeCtrl.calcDistFromVel(c.readPin('x-vel-cmd'), c.readPin('y-vel-cmd'), c.readPin('z-vel-cmd'))
+         lubeCtrl.runStateMachine()
 
-         prevTime = currentTime
+         c.setPin('lube-cmd', lubeCtrl.state == 'ON')
+         c.setPin('lube-level-out', lubeCtrl.lubeLevelOkOut)
+         c.updateHAL()
 
          time.sleep(0.1)
 
@@ -179,37 +229,6 @@ def main():
       p.writeParam('totalDistance', totalDistance)
       p.writeToFile()
       raise SystemExit
-
-class LubeControl:
-   def __init__(self, lube_cycle_time, lube_on_time, nbr_of_pulses_per_cycle, accumulated_distance, distance_threshold):
-      self.lubeCycleTime = lube_cycle_time            # [sec]
-      self.lubeOnTime = lube_on_time                  # [sec]
-      self.pulsesPerCycle = nbr_of_pulses_per_cycle   
-      self.totalDistance = accumulated_distance       # [mm]
-      self.distanceThreshold = distance_threshold     # [mm]
-
-      self.state = 'OFF'
-      self.prevTime = time.getEhocTime()
-
-   def calcDistFromVel(self, dxdt, dydt, dzdt):
-      currentTime = time.getEhocTime()
-      timeDelta = currentTime - self.prevTime
-
-      self.totalDistance += abs(dxdt) * timeDelta
-      self.totalDistance += abs(dydt) * timeDelta
-      self.totalDistance += abs(dzdt) * timeDelta
-
-      self.prevTime = currentTime
-
-   def runStateMachine(self):
-      if self.totalDistance >= self.distanceThreshold:
-         self.state = 'ON'
-         self.timeout = self.lubeCycleTime + time.getEhocTime()
-         self.totalDistance = 0
-
-      if self.state == 'ON':
-         if time.getEhocTime() > self.timeout:
-            self.state = 'OFF'
 
 if __name__ == '__main__':
    main()
