@@ -118,7 +118,7 @@ class parameterContainer:
       
       for param in root.iter('parameter'):
            if param.attrib['name'] == parName:
-               param.attrib['value'] = str(value)
+               param.attrib['value'] = str(round(value, 2))
                break
 
 
@@ -174,7 +174,7 @@ def main():
    name = 'my-luber'       # default name of component in HAL
 
    try:
-        opts, args = getopt.getopt(sys.argv[1:], "h", ["input=", "debug="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:", ["input=", "debug="])
    except getopt.GetoptError as err:
       # print help information and exit:
       print(err) # will print something like "option -a not recognized"
@@ -184,6 +184,8 @@ def main():
          if o == "-h":
             usage()
             sys.exit()
+         elif o == "-c":
+            name = a
          elif o == "--input":
             xmlFile = a
          elif o == "--debug":
@@ -192,16 +194,24 @@ def main():
             print o
             assert False, "unhandled option"
 
+         if self.xml_file == '':
+            if len(sys.argv) < 2:
+               self._usage()
+               sys.exit(2)
+            else:
+               self.xml_file = argv[-1]
+            
    p = parameterContainer(xmlFile)
 
    c = ComponentWrapper(name) #HAL adaptor
-   c.addPin('x-vel-cmd', 'u32', 'in')
-   c.addPin('y-vel-cmd', 'u32', 'in')
-   c.addPin('z-vel-cmd', 'u32', 'in')
+   c.addPin('x-vel-cmd', 'float', 'in')
+   c.addPin('y-vel-cmd', 'float', 'in')
+   c.addPin('z-vel-cmd', 'float', 'in')
    c.addPin('lube-level-in', 'bit', 'in')
    c.addPin('reset', 'bit', 'in')
    c.addPin('lube-cmd', 'bit', 'out')
    c.addPin('lube-level-out', 'bit', 'out')
+   c.addPin('accumulated-distance', 'float', 'out')
    print c
 
    # ready signal to HAL, component and it's pins are ready created
@@ -215,18 +225,22 @@ def main():
 
    try:
       while 1:
+         if c.readPin('reset') == 1:
+            lubeCtrl.reset()
+
          lubeCtrl.setLubeLevelOK(c.readPin('lube-level-in'))
          lubeCtrl.calcDistFromVel(c.readPin('x-vel-cmd'), c.readPin('y-vel-cmd'), c.readPin('z-vel-cmd'))
          lubeCtrl.runStateMachine()
 
          c.setPin('lube-cmd', lubeCtrl.state == 'ON')
          c.setPin('lube-level-out', lubeCtrl.lubeLevelOkOut)
+         c.setPin('accumulated-distance', lubeCtrl.totalDistance)
          c.updateHAL()
 
          time.sleep(0.1)
 
    except KeyboardInterrupt:
-      p.writeParam('totalDistance', totalDistance)
+      p.writeParam('totalDistance', lubeCtrl.totalDistance)
       p.writeToFile()
       raise SystemExit
 

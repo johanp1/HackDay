@@ -1,0 +1,10 @@
+loadusr -Wn my-luber python luber.py -c my-luber luber.xml
+
+net x-vel-cmd axis.0.joint-vel-cmd => my-luber.x-vel-cmd
+net y-vel-cmd axis.1.joint-vel-cmd => my-luber.y-vel-cmd
+net z-vel-cmd axis.2.joint-vel-cmd => my-luber.z-vel-cmd
+
+setp my-luber.lube-level-in 1
+net iocontrol.0.lube-level <= my-luber.lube-level-out
+
+net luber-reset my-luber.reset
