@@ -166,51 +166,54 @@ class LubeControl:
       self.state = 'OFF'
       self.lubeLevelOkOut = True
 
-def usage():
-    print 'usage luber.py --input=<in-file> --debug=[01]'
+def _usage():
+   """ print command line options """
+   print "usage pendant_srv.py -h -c<name> <path/>in_file.xml\n"\
+      "in_file         # input xml-file describing what knobs and/or button are on the pendant\n"\
+      "-c <name>       # name of component in HAL. 'mpg' default\n"\
+      "-h              # Help test"
 
 def main():
    xmlFile = 'luber.xml'
+   #xmlFile = ''
    name = 'my-luber'       # default name of component in HAL
 
    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hc:", ["input=", "debug="])
+        opts, args = getopt.getopt(sys.argv[1:], "hc:", ["input="])
    except getopt.GetoptError as err:
       # print help information and exit:
       print(err) # will print something like "option -a not recognized"
       sys.exit(2)
 
-      for o, a in opts:
-         if o == "-h":
-            usage()
-            sys.exit()
-         elif o == "-c":
-            name = a
-         elif o == "--input":
-            xmlFile = a
-         elif o == "--debug":
-            debug = a
-         else:
-            print o
-            assert False, "unhandled option"
+   for o, a in opts:
+      if o == "-h":
+         _usage()
+         sys.exit()
+      elif o == "-c":
+         name = a
+      elif o == "--input":
+         xmlFile = a
+      else:
+         print o
+         assert False, "unhandled option"
 
-         if self.xml_file == '':
-            if len(sys.argv) < 2:
-               self._usage()
-               sys.exit(2)
-            else:
-               self.xml_file = argv[-1]
+   if xmlFile == '':
+      if len(sys.argv) < 2:
+         _usage()
+         sys.exit(2)
+      else:
+         xmlFile = sys.argv[-1]
             
    p = parameterContainer(xmlFile)
 
    c = ComponentWrapper(name) #HAL adaptor
-   c.addPin('x-vel-cmd', 'float', 'in')
-   c.addPin('y-vel-cmd', 'float', 'in')
-   c.addPin('z-vel-cmd', 'float', 'in')
-   c.addPin('lube-level-in', 'bit', 'in')
+   c.addPin('x-vel', 'float', 'in')
+   c.addPin('y-vel', 'float', 'in')
+   c.addPin('z-vel', 'float', 'in')
+   c.addPin('lube-level-ok', 'bit', 'in')
    c.addPin('reset', 'bit', 'in')
    c.addPin('lube-cmd', 'bit', 'out')
-   c.addPin('lube-level-out', 'bit', 'out')
+   c.addPin('lube-level-alarm', 'bit', 'out')
    c.addPin('accumulated-distance', 'float', 'out')
    print c
 
@@ -228,12 +231,12 @@ def main():
          if c.readPin('reset') == 1:
             lubeCtrl.reset()
 
-         lubeCtrl.setLubeLevelOK(c.readPin('lube-level-in'))
-         lubeCtrl.calcDistFromVel(c.readPin('x-vel-cmd'), c.readPin('y-vel-cmd'), c.readPin('z-vel-cmd'))
+         lubeCtrl.setLubeLevelOK(c.readPin('lube-level-ok'))
+         lubeCtrl.calcDistFromVel(c.readPin('x-vel'), c.readPin('y-vel'), c.readPin('z-vel'))
          lubeCtrl.runStateMachine()
 
          c.setPin('lube-cmd', lubeCtrl.state == 'ON')
-         c.setPin('lube-level-out', lubeCtrl.lubeLevelOkOut)
+         c.setPin('lube-level-alarm', lubeCtrl.lubeLevelOkOut)
          c.setPin('accumulated-distance', lubeCtrl.totalDistance)
          c.updateHAL()
 
