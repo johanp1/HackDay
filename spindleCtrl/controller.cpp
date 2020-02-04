@@ -6,13 +6,15 @@ Controller::Controller(int period) : speedCtrl(period)
 {
    refSpeed = 0;
    PIDParameters p(2, // K, 
-                                   1, // Ti
-                                   1, // Td 
-                                   1, // N 
+                                   100, // Ti
+                                   100, // Td 
+                                   10, // N 
                                    1, // Tr
                                    1); // beta
+  
    speedCtrl.setPar(p);
-   refSpeed = period;
+
+   refSpeed = 0;
    currSpeed = 0;
 }
 
@@ -29,12 +31,13 @@ void Controller::setSpeed(int s)
 int Controller::run(void)
 {
    return speedCtrl.step(currSpeed, refSpeed);
-}   
+}
 
 PIDController::PIDController(int period)
 {
-   PIDParameters p;
-   PIDController(period, p);
+  h=period;
+  min = 0;
+  max = 2000;
 }  
 
 PIDController::PIDController(int period, PIDParameters &p)
@@ -67,50 +70,48 @@ int PIDController::step(int y, int yRef)
 
 int PIDController::saturate(int in)
 {
-   int out = in;
-/*   cout << "in: " << in << "\n";
-   if (out <= min)
-   {
-  		out = min;
-      cout << "out <= min\n";
-   }
-  	if (out >= max)
-   {
-  		out = max;
-      cout << "out >= max\n";
-   }*/
-cout << "saturate: " << "in: " << in << " out: " << out << "\n";
-  	return out;
+  int out = in;
+
+  if (out <= min){
+    out = min;
+    cout << "out <= min\n";
+  }
+  if (out >= max){
+    out = max;
+    cout << "out >= max\n";
+  }
+
+  return out;
 }   
 
 int PIDController::calcOutput(int y, int yRef)
 {
+  cout << "\ncalculate output:\n";
    int u; //output from actuator
    int e = yRef - y;
 
    if (par.Td != 0)
    {  // only update D if Td not zero
-		D = (par.Td*D)/(par.Td+par.N*h) - (par.K*par.Td*par.N)/(par.Td + par.N*h)*(y - yPrev);
-      cout << "D: " << D << "\n";
-  	}
+     D = (par.Td*D)/(par.Td+par.N*h) - (par.K*par.Td*par.N)/(par.Td + par.N*h)*(y - yPrev);
+   }
+   
    v = par.K*(par.beta*yRef-y) + I + D;
    u = saturate(v);
-
-   cout << "v: " << v << " u: " << u << "\n";
-
-   cout << "I: " << I << "\n";
+   cout << "P: " << par.K*(par.beta*yRef-y) << ", ";
+   cout << "I: " << I << ", ";
+   cout << "D: " << D << ", ";
    I = I + (par.K*h*e)/par.Ti + (h*(u-v))/par.Tr;
+   cout << "h: " << h << ", ";
+   cout << "e: " << e << ", ";
    cout << "par.K: " << par.K << "\n";
-   cout << "h: " << h << "\n";
-   cout << "e: " << e << "\n";
-   cout << "par.K: " << par.K << "\n";
-   cout << "(par.K*h*e)" << (par.K*h*e) << "\n";
-   cout << "(par.K*h*e)/par.Ti: " << (par.K*h*e)/par.Ti << "\n";
-   cout << " (h*(u-v))/par.Tr: " <<  (h*(u-v))/par.Tr << "\n";
-   cout << "updated I: " << I << "\n";
-  	yPrev = y;
+   cout << "\t(par.K*h*e)=" << (par.K*h*e) << "\n";
+   cout << "\t(par.K*h*e)/par.Ti=: " << (par.K*h*e)/par.Ti << "\n";
+   cout << "\t(h*(u-v))/par.Tr= " <<  (h*(u-v))/par.Tr << "\n";
+   cout << "updated I: " << I << "\n\n";
+   cout << "v: " << v << " u: " << u << "\n";
+   yPrev = y;
    
-  	return  u;
+   return  u;
 }
 
 PIDParameters::PIDParameters()
@@ -126,8 +127,6 @@ PIDParameters::PIDParameters(int _K, int _Ti, int _Td, int pN, int _Tr, int _bet
    N = pN;
    Tr = _Tr;
    beta = _beta;
-
-   cout << "par constr:" << "K: " << K << ", Ti: " << Ti << ", Td: " <<  Td << ", N: " << N << ", Tr: " << Tr << ", beta: " << beta << "\n";
 }
 
 void PIDParameters::setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
@@ -138,8 +137,6 @@ void PIDParameters::setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
    N = pN;
    Tr = _Tr;
    beta = _beta;
-
-   cout << "setPar1:" << "K: " << K << ", Ti: " << Ti << ", Td: " <<  Td << ", N: " << N << ", Tr: " << Tr << ", beta: " << beta << "\n";
 }
 
 void PIDParameters::setPar(PIDParameters &p)
@@ -151,5 +148,5 @@ void PIDParameters::setPar(PIDParameters &p)
    Tr = p.Tr;
    beta = p.beta;
 
-   cout << "setPar2:" << "K: " << K << ", Ti: " << Ti << ", Td: " <<  Td << ", N: " << N << ", Tr: " << Tr << ", beta: " << beta << "\n";
+   //cout << "setPar2:" << "K: " << K << ", Ti: " << Ti << ", Td: " <<  Td << ", N: " << N << ", Tr: " << Tr << ", beta: " << beta << "\n";
 }

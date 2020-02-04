@@ -10,7 +10,7 @@ class PIDParameters
    PIDParameters(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta);
    void setPar(PIDParameters &p);
    void setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta);
-   
+
    int K; 
    int Ti;
    int Td;

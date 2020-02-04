@@ -9,7 +9,9 @@ TEST_GROUP(ControllerTestGroup)
 
   void setup()
   {
+    cout<<"1;";
      c = new Controller(100);
+     cout<<"*1;\n";
   }
   
   void teardown()
@@ -31,13 +33,21 @@ TEST(ControllerTestGroup, testSetpoint)
 {
    int u;
    int i;
-
-   c->setSpeedRef(1);
+   
+   c->setSpeedRef(10);
    
    for (i = 0; i < 2; i++)
    {
       u = c->run();
-      cout << "u: " << u << "\n";
    }
+
+   c->setSpeed(10);
+   
+   for (i = 0; i < 2; i++)
+   {
+      u = c->run();
+   }
+
+   cout << "final u: " << u;
    //LONGS_EQUAL(0, u);
 }
