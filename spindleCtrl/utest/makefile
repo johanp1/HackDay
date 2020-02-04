@@ -10,7 +10,7 @@ ifndef SILENCE
 endif
 
 #--- Inputs ----#
-COMPONENT_NAME = downSampler
+COMPONENT_NAME = spindle_ctrl
 CPPUTEST_HOME = /usr/local/cpputest-3.7dev
 
 CPPUTEST_USE_EXTENSIONS = Y
