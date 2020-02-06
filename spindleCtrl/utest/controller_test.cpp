@@ -9,9 +9,7 @@ TEST_GROUP(ControllerTestGroup)
 
   void setup()
   {
-    cout<<"1;";
      c = new Controller(100);
-     cout<<"*1;\n";
   }
   
   void teardown()
@@ -20,7 +18,7 @@ TEST_GROUP(ControllerTestGroup)
   }
 
 };
-/*
+
 TEST(ControllerTestGroup, testInit)
 {
    int u;
@@ -28,7 +26,7 @@ TEST(ControllerTestGroup, testInit)
     cout << "u: " << u << "\n";
    LONGS_EQUAL(0, u);
 }
-*/
+
 TEST(ControllerTestGroup, testSetpoint)
 {
    int u;
@@ -48,6 +46,6 @@ TEST(ControllerTestGroup, testSetpoint)
       u = c->run();
    }
 
-   cout << "final u: " << u;
+   cout << "final u: " << u << "\n";
    //LONGS_EQUAL(0, u);
 }

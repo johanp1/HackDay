@@ -6,10 +6,10 @@ Controller::Controller(int period) : speedCtrl(period)
 {
    refSpeed = 0;
    PIDParameters p(2, // K, 
-                                   100, // Ti
+                                   1000, // Ti, rule of thumb h/Ti = 0.1-0.3 
                                    100, // Td 
                                    10, // N 
-                                   1, // Tr
+                                   300, // Tr, rule of thumb Tr = sqrt(Ti*Td)
                                    1); // beta
   
    speedCtrl.setPar(p);
@@ -35,27 +35,34 @@ int Controller::run(void)
 
 PIDController::PIDController(int period)
 {
-  h=period;
-  min = 0;
-  max = 2000;
-}  
+   PIDParameters p;
 
-PIDController::PIDController(int period, PIDParameters &p)
-{
-   PIDController(period, p, 0, 2000);
+   setPar(p);
+
+   h=period;
+   min = 0;
+   max = 2000;
+   v = 0;
+   D = 0;
+   I = 0;
+   yPrev = 0;
+
+   cout << "PIDController constr: " << "period: " << h << " min: " << min << " max: " << max << "\n";
 }  
 
 PIDController::PIDController(int period, PIDParameters &p, int _min, int _max)
 {
-   h = period;
    setPar(p);
+   
+   h = period;
    min = _min;
    max = _max;
    v = 0;
    D = 0;
    I = 0;
    yPrev = 0;
-   cout << "PIDController constr: " << "period: " << h << " min: " << min << " max: " << max << "\n";
+
+   cout << "PIDController constr2: " << "period: " << h << " min: " << min << " max: " << max << "\n";
 }
 
 void PIDController::setPar(PIDParameters &p)
@@ -86,13 +93,19 @@ int PIDController::saturate(int in)
 
 int PIDController::calcOutput(int y, int yRef)
 {
-  cout << "\ncalculate output:\n";
+   cout << "\ncalculate output:\n";
    int u; //output from actuator
    int e = yRef - y;
 
    if (par.Td != 0)
    {  // only update D if Td not zero
-     D = (par.Td*D)/(par.Td+par.N*h) - (par.K*par.Td*par.N)/(par.Td + par.N*h)*(y - yPrev);
+      cout << "\t(par.Td*D)=" << (par.Td*D) << "\n";
+      cout << "\t(par.Td+par.N*h)=" << (par.Td+par.N*h) << "\n";
+      cout << "\t(par.K*par.Td*par.N)=" << (par.K*par.Td*par.N) << "\n";
+      cout << "\t(y - yPrev)=" << (y - yPrev) << "\n";
+      cout << "\t(par.Td + par.N*h)=" << (par.Td + par.N*h) << "\n";
+      D = (par.Td*D)/(par.Td+par.N*h) - ((par.K*par.Td*par.N)*(y - yPrev))/(par.Td + par.N*h);
+      cout << "\tupdated D: " << D << "\n";
    }
    
    v = par.K*(par.beta*yRef-y) + I + D;
@@ -100,12 +113,11 @@ int PIDController::calcOutput(int y, int yRef)
    cout << "P: " << par.K*(par.beta*yRef-y) << ", ";
    cout << "I: " << I << ", ";
    cout << "D: " << D << ", ";
+   cout << "min: " << min << " max: " << max << "\n";
    I = I + (par.K*h*e)/par.Ti + (h*(u-v))/par.Tr;
    cout << "h: " << h << ", ";
-   cout << "e: " << e << ", ";
-   cout << "par.K: " << par.K << "\n";
+   cout << "e: " << e << "\n";
    cout << "\t(par.K*h*e)=" << (par.K*h*e) << "\n";
-   cout << "\t(par.K*h*e)/par.Ti=: " << (par.K*h*e)/par.Ti << "\n";
    cout << "\t(h*(u-v))/par.Tr= " <<  (h*(u-v))/par.Tr << "\n";
    cout << "updated I: " << I << "\n\n";
    cout << "v: " << v << " u: " << u << "\n";

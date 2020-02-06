@@ -23,7 +23,6 @@ class PIDController
 {
    public:
    PIDController(int period); // [ms]
-   PIDController(int period, PIDParameters &p);
    PIDController(int period, PIDParameters &p, int _min, int _max);
    void setPar(PIDParameters &p);
    int step(int y, int yRef); // y [rps], yRef [rps]
