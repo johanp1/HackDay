@@ -42,7 +42,7 @@ TEST_GROUP(SelectorTestGroup)
     ArduinoStub.setAnalogRead(PIN, (int)volt);
     
     s->scan();
-    ArduinoStub.incTime(101); //longer than debounce delay
+    ArduinoStub.incTimeMs(101); //longer than debounce delay
     s->scan();
   }
   
@@ -93,7 +93,7 @@ TEST(SelectorTestGroup, checkNoTransitionShortTime)
 	s->scan();
 	LONGS_EQUAL(0, s->getState());
 
-	ArduinoStub.incTime(99); //shorter than debounce delay
+	ArduinoStub.incTimeMs(99); //shorter than debounce delay
 
 	s->scan();
 	LONGS_EQUAL(0, s->getState());
@@ -133,7 +133,7 @@ TEST(SelectorTestGroup, undefVolt)
   ArduinoStub.setAnalogRead(PIN, 1100);
   
   s->scan();
-  ArduinoStub.incTime(101); //longer than debounce delay
+  ArduinoStub.incTimeMs(101); //longer than debounce delay
   s->scan();
   
   LONGS_EQUAL(0, s->getState());
@@ -142,7 +142,7 @@ TEST(SelectorTestGroup, undefVolt)
   ArduinoStub.setAnalogRead(PIN, 580);
   
   s->scan();
-  ArduinoStub.incTime(101); //longer than debounce delay
+  ArduinoStub.incTimeMs(101); //longer than debounce delay
   s->scan();
   
   LONGS_EQUAL(0, s->getState());
@@ -151,7 +151,7 @@ TEST(SelectorTestGroup, undefVolt)
   ArduinoStub.setAnalogRead(PIN, 100);
   
   s->scan();
-  ArduinoStub.incTime(101); //longer than debounce delay
+  ArduinoStub.incTimeMs(101); //longer than debounce delay
   s->scan();
   
   LONGS_EQUAL(0, s->getState());

@@ -50,7 +50,6 @@ class C_RotaryEncoder : public C_EventGenerator{
 
     // call this from your interrupt function
     void update();
-    
     int getPosition();
     void clearPosition();
 

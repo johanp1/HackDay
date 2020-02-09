@@ -61,7 +61,7 @@ TEST(ButtonTestGroup, ButtonNotPressed)
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
   
-  ArduinoStub.incTime(51); //longer than debounce delay
+  ArduinoStub.incTimeMs(51); //longer than debounce delay
   
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
@@ -76,7 +76,7 @@ TEST(ButtonTestGroup, PressButtonLong)
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
   
-  ArduinoStub.incTime(51); //longer than debounce delay
+  ArduinoStub.incTimeMs(51); //longer than debounce delay
   
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
@@ -92,7 +92,7 @@ TEST(ButtonTestGroup, PressButtonShort)
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
     
-  ArduinoStub.incTime(49); //shorter than debounce delay
+  ArduinoStub.incTimeMs(49); //shorter than debounce delay
   
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
@@ -105,7 +105,7 @@ TEST(ButtonTestGroup, ReleaseButton)
 
   b->scan();
 
-  ArduinoStub.incTime(51); //longer than debounce delay
+  ArduinoStub.incTimeMs(51); //longer than debounce delay
 
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
@@ -115,7 +115,7 @@ TEST(ButtonTestGroup, ReleaseButton)
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
   
-  ArduinoStub.incTime(51); //longer than debounce delay
+  ArduinoStub.incTimeMs(51); //longer than debounce delay
 
   b->scan();
   LONGS_EQUAL(LOW, b->getState());

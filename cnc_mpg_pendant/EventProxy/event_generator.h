@@ -8,6 +8,8 @@ class C_EventGenerator {
    public:
    C_EventGenerator(const String& argName) : name(argName) {handler_p = 0;};
    
+   void scan(void);
+
    void generateEvent(unsigned int data);
    void addEventListner(C_EventListner* h);
    String& getName();   

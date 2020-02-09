@@ -20,3 +20,7 @@ String& C_EventGenerator::getName()
 {
   return name;
 }
+
+void C_EventGenerator::scan(void)
+{
+}

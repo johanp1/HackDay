@@ -22,16 +22,18 @@ CPP_PLATFORM = Gcc -std=c++11
 # so that memory leak detection does not conflict with stl.
 #CPPUTEST_MEMLEAK_DETECTOR_NEW_MACRO_FILE = -include ApplicationLib/ExamplesNewOverrides.h
 SRC_DIRS = \
-	..
-
+	..\
+	../../../arduinoMock
 TEST_SRC_DIRS = \
 	.
 
 INCLUDE_DIRS =\
   .\
   ..\
+  ../../../arduinoMock\
   $(CPPUTEST_HOME)/include/CppUTest\
-
+  
+  
 include $(CPPUTEST_HOME)/build/MakefileWorker.mk
 
 
