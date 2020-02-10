@@ -11,7 +11,6 @@ C_Button::C_Button(const String& argName, const int argPin, const unsigned long 
   pinMode(pin, INPUT);
 }
 
-
 // returns debounced button state
 void C_Button::scan(void)
 {

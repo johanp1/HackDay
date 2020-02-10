@@ -32,3 +32,7 @@ void C_RotaryEncoder::clearPosition()
 {
    position = 0;
 }
+
+void C_RotaryEncoder::scan(void)
+{
+}

@@ -8,7 +8,7 @@ class C_Button : public C_EventGenerator {
  
  public:
    C_Button(const String& argName, const int argPin, const unsigned long argDebounceDelay);
-  
+
    void scan(void);
    unsigned int getState();
    

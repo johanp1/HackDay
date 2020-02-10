@@ -50,13 +50,13 @@ void loop() {
    byte i;
    C_Event e;
    String s;
- /*  
+ 
    for (i = 0; i<NBR_OF_EVENT_GENERATORS; i++)
    {
       evGenList[i]->scan();
    }
-*/
-   for (i = 0; i<NBR_OF_BUTTONS; i++)
+
+/*   for (i = 0; i<NBR_OF_BUTTONS; i++)
    {
       buttons[i].scan();
    }
@@ -65,7 +65,7 @@ void loop() {
    {
       selectors[i].scan();
    }
-  
+  */
    while(buffer.get(e))
    {
       s  = e.serialize();

@@ -47,11 +47,13 @@ class C_RotaryEncoder : public C_EventGenerator{
     // constructor : sets pins as inputs and turns on pullup resistors
 
     C_RotaryEncoder( const String& argName, int argClkPin, int argDtPin);
-
+	~C_RotaryEncoder() {};
+	
     // call this from your interrupt function
     void update();
     int getPosition();
     void clearPosition();
+	void scan(void);
 
   private:
 

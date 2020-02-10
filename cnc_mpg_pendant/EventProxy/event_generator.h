@@ -7,8 +7,9 @@ class C_EventGenerator {
  
    public:
    C_EventGenerator(const String& argName) : name(argName) {handler_p = 0;};
+   virtual ~C_EventGenerator() {};
    
-   void scan(void);
+   virtual void scan(void) = 0;
 
    void generateEvent(unsigned int data);
    void addEventListner(C_EventListner* h);
