@@ -4,7 +4,7 @@
 #include "event_listner.h"
 #include "Arduino.h"
 
-class C_Sender : public C_EventListner {
+class Sender : public EventListner {
  
   public:
     void handleEvent(C_Event& e);

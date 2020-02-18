@@ -3,20 +3,20 @@
 
 #include "event_listner.h"
 
-class C_EventGenerator {
+class EventGenerator {
  
    public:
-   C_EventGenerator(const String& argName) : name(argName) {handler_p = 0;};
-   virtual ~C_EventGenerator() {};
+   EventGenerator(const String& argName) : name(argName) {handler_p = 0;};
+   virtual ~EventGenerator() {};
    
    virtual void scan(void) = 0;
 
    void generateEvent(unsigned int data);
-   void addEventListner(C_EventListner* h);
+   void addEventListner(EventListner* h);
    String& getName();   
    
    private:
-   C_EventListner* handler_p;
+   EventListner* handler_p;
    String name;
 };
 

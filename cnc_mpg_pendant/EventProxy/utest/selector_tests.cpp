@@ -6,7 +6,7 @@
 
 TEST_GROUP(SelectorTestGroup)
 {
-  class eventListnerSpy : public C_EventListner{
+  class EventListnerSpy : public EventListner{
   public:
     void enventListnerSpy()
     {
@@ -30,8 +30,8 @@ TEST_GROUP(SelectorTestGroup)
   };
 
   
-  C_Selector* s;
-  eventListnerSpy evSpy;
+  Selector* s;
+  EventListnerSpy evSpy;
   
   void gotoState(byte state)
   {
@@ -56,7 +56,7 @@ TEST_GROUP(SelectorTestGroup)
   {
     ArduinoStub.reset();
     evSpy.reset();
-    s = new C_Selector("test", PIN, 100);
+    s = new Selector("test", PIN, 100);
     s->addEventListner(&evSpy);
   }
   

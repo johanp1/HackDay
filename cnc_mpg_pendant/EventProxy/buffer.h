@@ -7,12 +7,12 @@
 
 #define BUFFER_SIZE 20
 
-class C_Buffer : public C_EventListner {
+class Buffer : public EventListner {
  
 public:
 
    // constructor 
-   C_Buffer();
+   Buffer();
 
    void handleEvent(C_Event& e);
    void put(const C_Event& e); 

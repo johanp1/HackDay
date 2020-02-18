@@ -3,7 +3,7 @@
 //  public:
 
 // constructor : sets pins as inputs and turns on pullup resistors
-C_RotaryEncoder::C_RotaryEncoder( const String& argName, int argClkPin, int argDtPin) : C_EventGenerator(argName), clkPin ( argClkPin), dtPin( argDtPin ) 
+RotaryEncoder::RotaryEncoder( const String& argName, int argClkPin, int argDtPin) : EventGenerator(argName), clkPin ( argClkPin), dtPin( argDtPin ) 
 {
    // set pin a and b to be input
    pinMode(clkPin, INPUT);
@@ -16,23 +16,23 @@ C_RotaryEncoder::C_RotaryEncoder( const String& argName, int argClkPin, int argD
 }
 
 // call this from your interrupt function
-void C_RotaryEncoder::update(void) 
+void RotaryEncoder::update(void) 
 {
    digitalRead(dtPin) ? position++ : position--;
    generateEvent((unsigned int)position);
 }
 
 // returns current position
-int C_RotaryEncoder::getPosition ()
+int RotaryEncoder::getPosition ()
 {
    return position;
 }
 
-void C_RotaryEncoder::clearPosition()
+void RotaryEncoder::clearPosition()
 {
    position = 0;
 }
 
-void C_RotaryEncoder::scan(void)
+void RotaryEncoder::scan(void)
 {
 }

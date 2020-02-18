@@ -7,12 +7,12 @@
 
 TEST_GROUP(EncoderTestGroup)
 {
-  C_RotaryEncoder* e;
+  RotaryEncoder* e;
   
   void setup()
   {
     ArduinoStub.reset();
-    e = new C_RotaryEncoder("enc", CLK_PIN, DT_PIN);
+    e = new RotaryEncoder("enc", CLK_PIN, DT_PIN);
   }
   
   void teardown()

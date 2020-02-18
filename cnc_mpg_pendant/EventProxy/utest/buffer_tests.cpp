@@ -3,7 +3,7 @@
 
 TEST_GROUP(BufferTestGroup)
 {
-  C_Buffer buffer;
+  Buffer buffer;
   
   void setup()
   {  

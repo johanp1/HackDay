@@ -4,19 +4,19 @@
 //  public:
 
 // constructor 
-C_Buffer::C_Buffer() 
+Buffer::Buffer() 
 {      
    putIdx = 0;
    getIdx = 0;
    numberOfData = 0;
 }
 
-void C_Buffer::handleEvent(C_Event& e)
+void Buffer::handleEvent(C_Event& e)
 {
    put((const C_Event&)e);
 }
 
-void C_Buffer::put(const C_Event& e) 
+void Buffer::put(const C_Event& e) 
 {
    noInterrupts();    // dissable INT interrupts while sending
 
@@ -30,7 +30,7 @@ void C_Buffer::put(const C_Event& e)
    interrupts();       // restore interrupts
 }
 
-bool C_Buffer::get(C_Event& e)
+bool Buffer::get(C_Event& e)
 {
    bool notEmpty = !isEmpty();
       
@@ -44,28 +44,28 @@ bool C_Buffer::get(C_Event& e)
    return notEmpty;
 }
    
-bool C_Buffer::isEmpty()
+bool Buffer::isEmpty()
 {
    return numberOfData == 0;
 }
 
-bool C_Buffer::isFull()
+bool Buffer::isFull()
 {
    return capacity() == numberOfData;
 }
 
-void C_Buffer::flush()
+void Buffer::flush()
 {
   getIdx = 0;
   putIdx = 0;
 }
 
-byte C_Buffer::capacity()
+byte Buffer::capacity()
 {
   return sizeof(buffer)/sizeof(C_Event);
 }
 
-byte C_Buffer::next(byte idx)
+byte Buffer::next(byte idx)
 {
    byte outdex = (unsigned char)(idx + 1);
   

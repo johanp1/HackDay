@@ -4,11 +4,11 @@
 #include <Arduino.h>
 #include "event_generator.h"
 
-class C_Selector : public C_EventGenerator {
+class Selector : public EventGenerator {
  
  public:
     // constructor 
-   C_Selector(const String& argName, const unsigned int argPin, const unsigned long argDebounceDelay);
+   Selector(const String& argName, const unsigned int argPin, const unsigned long argDebounceDelay);
   
    void scan(void);
    byte getState();

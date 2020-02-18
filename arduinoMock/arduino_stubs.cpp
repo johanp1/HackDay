@@ -4,6 +4,16 @@
 C_Serial_stub Serial;
 C_Arduino_stub ArduinoStub;
 
+byte TCCR1A = 0;  // Timer/Counter1 Control Register A
+byte TCCR1B = 0;  // Timer/Counter1 Control Register B
+int  TCNT1 = 0;   // Timer/Counter1
+
+byte TIMSK2 = 0;  // enable overflow interrupt
+byte TCCR2A = 0;  // Timer/Counter2 Control Register A
+byte TCCR2B = 0;  // Timer/Counter2 Control Register A
+byte OCR2A  = 0;  // compare match every 10th milli-sec @20MHz
+byte TCNT2  = 0;  // clear timer2
+
 std::string to__string(int& value)
 {
   //create an output string stream

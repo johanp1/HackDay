@@ -56,16 +56,6 @@ void loop() {
       evGenList[i]->scan();
    }
 
-/*   for (i = 0; i<NBR_OF_BUTTONS; i++)
-   {
-      buttons[i].scan();
-   }
-  
-   for (i = 0; i<NBR_OF_SELECTORS; i++)
-   {
-      selectors[i].scan();
-   }
-  */
    while(buffer.get(e))
    {
       s  = e.serialize();

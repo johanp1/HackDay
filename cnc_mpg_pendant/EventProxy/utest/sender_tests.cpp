@@ -3,7 +3,7 @@
 #include "Arduino.h"
 TEST_GROUP(SenderTestGroup)
 {
-   C_Sender s;
+   Sender s;
   
    void setup()
    {  

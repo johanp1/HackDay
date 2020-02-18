@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "event_generator.h"
 
-class C_RotaryEncoder : public C_EventGenerator{
+class RotaryEncoder : public EventGenerator{
     /*
       wraps encoder setup and update functions in a class
 
@@ -46,8 +46,8 @@ class C_RotaryEncoder : public C_EventGenerator{
 
     // constructor : sets pins as inputs and turns on pullup resistors
 
-    C_RotaryEncoder( const String& argName, int argClkPin, int argDtPin);
-	~C_RotaryEncoder() {};
+    RotaryEncoder( const String& argName, int argClkPin, int argDtPin);
+	~RotaryEncoder() {};
 	
     // call this from your interrupt function
     void update();

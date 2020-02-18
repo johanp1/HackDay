@@ -2,7 +2,7 @@
 #define __C_EVENT_LISTNER_H__
 #include "event.h"
 
-class C_EventListner {
+class EventListner {
  
    public:
    virtual void handleEvent(C_Event& e) = 0;

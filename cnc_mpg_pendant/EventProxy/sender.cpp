@@ -1,13 +1,13 @@
 #include "sender.h"
 
 //  public:
-void C_Sender::handleEvent(C_Event& e)
+void Sender::handleEvent(C_Event& e)
 {
   String s = e.serialize();
   send(s);
 }
 
-void C_Sender::send(String& str)
+void Sender::send(String& str)
 {
    Serial.println(str);
 }

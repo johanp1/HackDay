@@ -2,7 +2,7 @@
 
 //   public:
    
-void C_EventGenerator::generateEvent(unsigned int data)
+void EventGenerator::generateEvent(unsigned int data)
 {
    C_Event e = C_Event(name, data);
    if (handler_p != 0)
@@ -11,12 +11,12 @@ void C_EventGenerator::generateEvent(unsigned int data)
    }
 }
 
-void C_EventGenerator::addEventListner(C_EventListner* h)
+void EventGenerator::addEventListner(EventListner* h)
 {
    handler_p = h;
 }
 
-String& C_EventGenerator::getName()
+String& EventGenerator::getName()
 {
   return name;
 }

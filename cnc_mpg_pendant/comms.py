@@ -3,7 +3,7 @@
 import serial
 
 ## Default values ##
-BAUDRATE = 9600
+BAUDRATE = 38400
 """Default value for the baudrate in Baud (int)."""
 
 PARITY   = 'N' #serial.PARITY_NONE

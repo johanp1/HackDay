@@ -6,7 +6,7 @@
 
 TEST_GROUP(ButtonTestGroup)
 {
-  class eventListnerSpy : public C_EventListner{
+  class EventListnerSpy : public EventListner{
   public:
     void enventListnerSpy()
     {
@@ -30,13 +30,13 @@ TEST_GROUP(ButtonTestGroup)
   };
 
   
-  C_Button* b;
-  eventListnerSpy evSpy;
+  Button* b;
+  EventListnerSpy evSpy;
   
   void setup()
   {
     ArduinoStub.reset();
-    b = new C_Button("test", PIN, 50);
+    b = new Button("test", PIN, 50);
     b->addEventListner(&evSpy);
   }
   
