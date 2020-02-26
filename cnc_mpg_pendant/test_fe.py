@@ -6,7 +6,7 @@ import comms
 class TestComp(unittest.TestCase):
       
    def setUp(self):
-      self.fake = fake_encoder.FakeEncoder()
+      self.fake = fake_encoder.FakeEncoder(500)
       self.halFacade = fake_encoder.HalFacade('fake-encoder', self.fake.clear)
          
    def test_init(self):

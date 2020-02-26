@@ -103,8 +103,6 @@ class OptParser:
       self.xml_file = ''   # input xml-file describing what knobs and/or button are on the pendant
       self.name = 'my-mpg'       # default name of component in HAL
       self.port = '/dev/ttyUSB0' # default serial port to use
-
-      print argv
       
       self._getOptions(argv)
       
@@ -113,7 +111,7 @@ class OptParser:
       
    def _getOptions(self, argv):
       try:
-         opts = getopt.getopt(argv, "hp:c:", ["input=", "port="])
+         opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
       except getopt.GetoptError as err:
          # print help information and exit:
          print(err) # will print something like "option -a not recognized"
@@ -131,7 +129,7 @@ class OptParser:
          elif o in ("-p", "--port"):
             self.port = a
          else:
-            print o
+            print o, a
             assert False, "unhandled option"
       
       if self.xml_file == '':

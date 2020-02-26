@@ -7,11 +7,11 @@ import getopt
 import time
 
 class FakeEncoder:
-   def __init__(self):
+   def __init__(self, scale):
       self.position = 0 #scaled value from count
       self.velocity = 0 #units per sec, i.e. rps
       self.count = 0    #number of pulses received
-      self.scale = 500
+      self.scale = scale
         
    def clear(self):
       self.position = 0
@@ -44,7 +44,7 @@ class HalFacade:
 
 class OptParser:
    def __init__(self, argv):
-      self.name = 'my-fake-encoder'  # default name of component in HAL
+      self.name = 'my-encoder'  # default name of component in HAL
       self.port = '/dev/ttyUSB1'     # default serial port to use
       
       self._getOptions(argv)
@@ -55,7 +55,7 @@ class OptParser:
    def _getOptions(self, argv):
       if argv != []:
          try:
-            opts = getopt.getopt(argv, "hp:c:", ["port="])
+            opts, args = getopt.getopt(argv, "hp:c:", ["port="])
          except getopt.GetoptError as err:
             # print help information and exit:
             print(err) # will print something like "option -a not recognized"
@@ -71,7 +71,7 @@ class OptParser:
             elif o in ("-p", "--port"):
                self.port = a
             else:
-               print o
+               print o, a
                assert False, "unhandled option"
          
                
@@ -94,14 +94,9 @@ def main():
    portName = optParser.getPort()
    print optParser
 
-   fake = FakeEncoder()
+   fake = FakeEncoder(500)
    speedCounter = comms.instrument(portName, fake.handleEvent) #serial adaptor
    h = HalFacade(componentName, fake.clear)
-
-   #h.newpin("velocity", hal.HAL_FLOAT, hal.HAL_OUT)
-   #h.newpin("position", hal.HAL_FLOAT, hal.HAL_OUT)
-   #h.newpin("index-enable", hal.HAL_BIT, hal.HAL_IO)
-   #h.ready()
     
    try:
       while 1:
@@ -109,7 +104,7 @@ def main():
             
          h.update(fake.velocity, fake.position)
             
-         time.sleep(0.1)
+         time.sleep(0.05)
 
    except KeyboardInterrupt:
       raise SystemExit
