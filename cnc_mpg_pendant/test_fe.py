@@ -6,14 +6,13 @@ import comms
 class TestComp(unittest.TestCase):
       
    def setUp(self):
-      self.fake = fake_encoder.FakeEncoder(500)
+      self.fake = fake_encoder.FakeEncoder(0.05)
       self.halFacade = fake_encoder.HalFacade('fake-encoder', self.fake.clear)
          
    def test_init(self):
       self.assertTrue(self.fake.position == 0)
       self.assertTrue(self.fake.velocity == 0)   
-      self.assertTrue(self.fake.count == 0)
-      self.assertTrue(self.fake.scale == 500)
+      self.assertTrue(self.fake.dT == 0.05)
 
       self.assertTrue(self.halFacade.h.name == 'fake-encoder')
       
@@ -29,46 +28,94 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.halFacade.h.ready_flag == 1)
 
    def test_handleEvent(self):
-      self.fake.handleEvent(comms.Event('rpm', '12'))
+      rpm = 1000.0
+      self.fake.handleEvent(comms.Event('rpm', str(int(rpm))))
 
-      self.assertTrue(self.fake.position == 12/500)
-      self.assertTrue(self.fake.velocity == 12/60)   
-      self.assertTrue(self.fake.count == 12)
+      expectedVel = round(float(rpm/60.0), 3)
+      encoderVel = round(self.fake.velocity, 3)
+      
+      expectedPos = round(rpm/60.0*0.05, 3)
+      encoderPos = round(self.fake.position, 3)
+      
+      self.assertTrue(encoderPos == expectedPos)
+      self.assertTrue(encoderVel == expectedVel)   
 
       self.halFacade.update(self.fake.velocity, self.fake.position)
-      self.assertTrue(self.halFacade.h['velocity'] == 12/60)
-      self.assertTrue(self.halFacade.h['position'] == 12/500)
+      halPos = round(self.halFacade.h['position'], 3)
+      halVel = round(self.halFacade.h['velocity'], 3)
+      self.assertTrue(halVel == expectedVel)
+      self.assertTrue(halPos == expectedPos)
+
+   def test_handleMultipleEvents(self):
+      rps = 60.0
+      self.fake.handleEvent(comms.Event('rpm', str(int(rps*60))))
+      expectedVel = round(float(60.0), 3)
+      encoderVel = round(self.fake.velocity, 3)
+      expectedPos = round(rps*0.05, 3)
+      encoderPos = round(self.fake.position, 3)
+      
+      self.assertTrue(encoderPos == expectedPos)
+      self.assertTrue(encoderVel == expectedVel)   
+
+      self.halFacade.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.halFacade.h['position'], 3)
+      halVel = round(self.halFacade.h['velocity'], 3)
+      self.assertTrue(halVel == expectedVel)
+      self.assertTrue(halPos == expectedPos)   
+
+      self.fake.handleEvent(comms.Event('rpm', str(int(60*rps))))
+      expectedVel = round(float(60.0), 3)
+      encoderVel = round(self.fake.velocity, 3)
+      expectedPos = expectedPos + round(rps*0.05, 3)
+      encoderPos = round(self.fake.position, 3)
+
+      self.assertTrue(encoderPos == expectedPos)
+      self.assertTrue(encoderVel == expectedVel)   
+
+      self.halFacade.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.halFacade.h['position'], 3)
+      halVel = round(self.halFacade.h['velocity'], 3)
+      self.assertTrue(halVel == expectedVel)
+      self.assertTrue(halPos == expectedPos)   
 
    def test_wrongEvent(self):
       self.fake.handleEvent(comms.Event('apa', '1000'))
 
       self.assertTrue(self.fake.position == 0)
       self.assertTrue(self.fake.velocity == 0)   
-      self.assertTrue(self.fake.count == 0)
+      #self.assertTrue(self.fake.count == 0)
 
    def test_clear(self):
-      self.fake.handleEvent(comms.Event('rpm', '120'))
+      self.fake.handleEvent(comms.Event('rpm', '2000'))
       self.fake.clear()
 
       self.assertTrue(self.fake.position == 0)  
-      self.assertTrue(self.fake.count == 0)
+      #self.assertTrue(self.fake.count == 0)
 
    def test_setIndexEnable(self):
-      self.fake.handleEvent(comms.Event('rpm', '500'))
+      rps = 600.0
+      self.fake.handleEvent(comms.Event('rpm', str(int(rps*60))))
 
-      self.assertTrue(self.fake.position == 1)
-      self.assertTrue(self.fake.velocity == 500/60)   
-      self.assertTrue(self.fake.count == 500)
-
+      expectedVel = round(rps, 3)
+      encoderVel = round(self.fake.velocity, 3)
+      
+      expectedPos = round(rps*0.05, 3)
+      encoderPos = round(self.fake.position, 3)
+      
+      self.assertTrue(encoderPos == expectedPos)
+      self.assertTrue(encoderVel == expectedVel)   
+      
       self.halFacade.update(self.fake.velocity, self.fake.position)
-      self.assertTrue(self.halFacade.h['velocity'] == 500/60)
-      self.assertTrue(self.halFacade.h['position'] == 1)
+      halPos = round(self.halFacade.h['position'], 3)
+      halVel = round(self.halFacade.h['velocity'], 3)
+      self.assertTrue(halVel == expectedVel)
+      self.assertTrue(halPos == expectedPos)
 
       self.halFacade.h['index-enable'] = 1
       self.halFacade.update(self.fake.velocity, self.fake.position)
 
       self.assertTrue(self.fake.position == 0)  
-      self.assertTrue(self.fake.count == 0)
+      #self.assertTrue(self.fake.count == 0)
       self.assertTrue(self.halFacade.h['position'] == 0)
       self.assertTrue(self.halFacade.h['index-enable'] == 0)
 
