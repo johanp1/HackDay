@@ -7,18 +7,19 @@ import getopt
 import time
 
 class FakeEncoder:
-   def __init__(self, dT):
-      self.position = 0 #scaled value from count
-      self.velocity = 0 #units per sec, i.e. rps
-      self.dT = dT      #delta time between samples
+   def __init__(self, dT, scale):
+      self.position = 0  # scaled value from count
+      self.velocity = 0  # units per sec, i.e. rps
+      self.dT = dT       # delta time between samples
+      self.scale = scale # nbr of pulses / rev
         
    def clear(self):
       self.position = 0
         
    def handleEvent(self, event):
-      if (event.ev == 'rpm'):
-         self.velocity = float(event.val)/60.0 #rpm to rps
-         self.position += self.velocity * self.dT
+      if (event.ev == 'pos'):
+         self.velocity = float(event.val)/(self.scale*self.dT) #pos per 0.05s to rps
+         self.position += float(event.val)/self.scale
        
 class HalFacade:
    def __init__(self, name, clear_cb):
@@ -91,7 +92,7 @@ def main():
    portName = optParser.getPort()
    print optParser
 
-   fake = FakeEncoder(0.05)
+   fake = FakeEncoder(0.05, 500)
    speedCounter = comms.instrument(portName, fake.handleEvent) #serial adaptor
    h = HalFacade(componentName, fake.clear)
     
