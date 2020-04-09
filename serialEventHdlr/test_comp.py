@@ -1,29 +1,29 @@
 #! /usr/bin/python
 import unittest
-import serial_mpg
+import serialEventHandler as eh
 import comms  
 
 class TestComp(unittest.TestCase):
 
    def setUp(self):
       pinDict = {}
-      pinDict['apa'] = serial_mpg.Pin('apa_pin', 'u32')
-      pinDict['bepa'] = serial_mpg.Pin('bepa_pin', 's32')
-      self.c = serial_mpg.ComponentWrapper('hal_comp', pinDict)
+      pinDict['apa'] = eh.Pin('apa_pin', 'u32')
+      pinDict['bepa'] = eh.Pin('bepa_pin', 's32')
+      self.c = eh.ComponentWrapper('hal_comp', pinDict)
       
    def test_init(self):
-      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp', {})
+      self.local_c = eh.ComponentWrapper('local_hal_comp', {})
       
       self.assertTrue(self.local_c.hal.name == 'local_hal_comp')
       self.assertTrue(len(self.local_c.evToHALPin) == 0)
     
    def test_setReady(self):
-      self.assertFalse(self.c.hal.ready_flag)
+      self.assertFalse(self.c.hal.readyFlag)
       self.c.setReady()
-      self.assertTrue(self.c.hal.ready_flag)
+      self.assertTrue(self.c.hal.readyFlag)
       
    def test_addOnePin(self):
-      self.local_c = serial_mpg.ComponentWrapper('local_hal_comp')
+      self.local_c = eh.ComponentWrapper('local_hal_comp')
       
       self.local_c.addPin('local_ev', 'local_pin', 'u32')
 
@@ -48,8 +48,8 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal['apa_pin'] == 0)
       self.assertTrue(self.c.hal['bepa_pin'] == 0)
       
-      self.c.updatePin(comms.Event('apa', '12'))
-      self.c.updatePin(comms.Event('bepa', '321'))
+      self.c.updatePin(comms.Message('apa', '12'))
+      self.c.updatePin(comms.Message('bepa', '321'))
       
       self.c.updateHAL()
 
@@ -64,15 +64,15 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal['bit_pin'] == 0)
       self.assertTrue(self.c.hal.pinDict['bit_pin'].type == 'HAL_BIT')
       
-      self.c.updatePin(comms.Event('bit_ev', '123'))
+      self.c.updatePin(comms.Message('bit_ev', '123'))
       
       self.c.updateHAL()
 
       self.assertTrue(self.c.hal['bit_pin'] == 1)
    
    def test_maintainPinValue(self):
-      self.c.updatePin(comms.Event('apa', '21'))
-      self.c.updatePin(comms.Event('bepa', '123'))
+      self.c.updatePin(comms.Message('apa', '21'))
+      self.c.updatePin(comms.Message('bepa', '123'))
       
       self.c.updateHAL()
 
@@ -85,7 +85,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal['bepa_pin'] == 123)
    
    def test_updateWrongEvent(self):
-      self.c.updatePin(comms.Event('test', '666'))
+      self.c.updatePin(comms.Message('test', '666'))
       
       self.c.updateHAL()
       

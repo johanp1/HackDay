@@ -1,4 +1,4 @@
-"""usage serial_mpg.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
+"""usage serialEventHanlder.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
 in_file  -  input xml-file describing what knobs and/or button are on the pendant
 -c <name>                # name of component in HAL. 'my-mpg' default
 -d/--debug= <level>      # debug level, default 0
@@ -49,8 +49,8 @@ class ComponentWrapper:
       """ updates pin value with new event data
       input: event object' 
       output: nothing. """
-      if e.ev in self.evToHALPin:
-         self.evToHALPin[e.ev].val = self._typeSaturate(self.evToHALPin[e.ev].type, int(e.val))
+      if e.msg in self.evToHALPin:
+         self.evToHALPin[e.msg].val = self._typeSaturate(self.evToHALPin[e.msg].type, int(e.val))
             
    def setReady(self):
       self.hal.ready()
@@ -150,7 +150,7 @@ class OptParser:
    
    def _usage(self):
       """ print command line options """
-      print "usage serial_mpg.py -h -c <name> -d/--debug=<level> -p/--port= <serial port> <path/>in_file.xml\n"\
+      print "usage serialEventHandler.py -h -c <name> -d/--debug=<level> -p/--port= <serial port> <path/>in_file.xml\n"\
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
@@ -203,8 +203,8 @@ class EventBroker:
       self.eventDict[evName] = handler
 
    def handleEvent(self, e):
-      if e.ev in self.eventDict:
-         self.eventDict[e.ev](e)
+      if e.msg in self.eventDict:
+         self.eventDict[e.msg](e)
 
 def watchDogHandler():
    pass
@@ -221,7 +221,7 @@ def main():
       
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialMpg = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
+   serialEventGenerator = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
 
    print c
 
@@ -239,7 +239,7 @@ def main():
    
    try:
       while 1:
-         serialMpg.readEvents() #blocks until '\n' received or timeout
+         serialEventGenerator.readMessages() #blocks until '\n' received or timeout
          c.updateHAL()
             
          time.sleep(0.05)

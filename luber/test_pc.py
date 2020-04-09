@@ -3,6 +3,7 @@ import unittest
 import luber  
 import subprocess
 import filecmp
+import xml.etree.ElementTree as ET
 
 class TestXml(unittest.TestCase):
    def createTestFile(self):
@@ -12,15 +13,6 @@ class TestXml(unittest.TestCase):
       self.f.write("<luber>\n"\
                     "</luber>")
       self.f.close()
-
-   def createRefFile(self):
-      """creates a test xml-file with an empty root"""
-      self.refFile = 'ref.xml'
-      self.f = open(self.refFile,'w')
-      self.f.write("<luber>\n"\
-                    "</luber>")
-      self.f.close()
-
 
    def addTestPar(self, fileName, parName, value):
       f = open(fileName, 'r')
@@ -89,10 +81,6 @@ class TestXml(unittest.TestCase):
       self.assertTrue(data == 1.0)
 
    def test_writeToFile(self):
-      self.f = self.createRefFile()
-      self.addTestPar(self.refFile, 'par1', '100.4')
-      self.addTestPar(self.refFile, 'par2', '200.4')
-
       self.addTestPar(self.testFile, 'par1', '1.0')
       self.addTestPar(self.testFile, 'par2', '200.4')
 
@@ -100,17 +88,15 @@ class TestXml(unittest.TestCase):
       x.writeParam('par1', 100.4)
       x.writeToFile()
 
-      self.assertTrue(filecmp.cmp(self.testFile, self.refFile))
-      callString = "rm " + self.refFile 
-      subprocess.call(callString, shell=True) 
-      
-   """  
-   test empty file
-   test empty root
-   test one line
-   test wrong type
-   test with mpg.xml
+      tree = ET.parse(self.testFile)
+      root = tree.getroot()
+      for param in root.iter('parameter'):
+         if param.attrib['name'] == 'par1':
+            self.assertTrue(param.attrib['value'] == '100.4')
 
-   """
+         if param.attrib['name'] == 'par2':
+            self.assertTrue(param.attrib['value'] == '200.4')
+
+
 if __name__ == '__main__':
    unittest.main()

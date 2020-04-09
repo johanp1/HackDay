@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import unittest
-import serial_mpg
+import serialEventHandler as eh
 #import comms  
 import subprocess
 
@@ -35,21 +35,21 @@ class TestXml(unittest.TestCase):
       subprocess.call("rm test.xml", shell=True) 
 
    def test_empty(self):
-      x = serial_mpg.XmlParser('test.xml')
+      x = eh.XmlParser('test.xml')
       data = x.getParsedData()
       self.assertTrue(len(data) == 0)
 
    def test_unsupportedPinType(self):
       self.addTestPin('jog_pin', 'jog', 'x32')
       
-      x = serial_mpg.XmlParser('test.xml')
+      x = eh.XmlParser('test.xml')
       data = x.getParsedData()
       self.assertTrue(len(data) == 0)
 
    def test_onePin(self):
       self.addTestPin('jog_pin', 'jog', 'u32')
       
-      x = serial_mpg.XmlParser('test.xml')
+      x = eh.XmlParser('test.xml')
       data = x.getParsedData()
       self.assertTrue(len(data) == 1)
       self.assertTrue(data['jog'].name == 'jog_pin')
@@ -59,7 +59,7 @@ class TestXml(unittest.TestCase):
       self.addTestPin('jog_pin', 'jog', 'u32')
       self.addTestPin('rth_pin', 'rth', 'bit')
       
-      x = serial_mpg.XmlParser('test.xml')
+      x = eh.XmlParser('test.xml')
       data = x.getParsedData()
       self.assertTrue(len(data) == 2)
       self.assertTrue(data['jog'].name == 'jog_pin')

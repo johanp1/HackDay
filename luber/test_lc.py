@@ -1,8 +1,6 @@
 #! /usr/bin/python
 import unittest
 import luber  
-import subprocess
-import filecmp
 import my_time
 
 class TestComp(unittest.TestCase):
@@ -15,7 +13,7 @@ class TestComp(unittest.TestCase):
    def setUp(self):
       my_time.getEhocTime = self.timeMock
       self._time = 0
-      self.lubeCtrl = luber.LubeControl(3, 0, 3)
+      self.lubeCtrl = luber.LubeControl(3, 0, 3, 1)
       self.incMockTime(0.1)
 
    def test_init(self):
@@ -44,6 +42,7 @@ class TestComp(unittest.TestCase):
       self.lubeCtrl.runStateMachine()
       expected = round(self.lubeCtrl.totalDistance, 1)
       self.assertTrue(expected == 2.9)
+      self.assertTrue(self.lubeCtrl.numberOfLubings == 1)
 
       self.incMockTime(0.1)
 
@@ -52,6 +51,7 @@ class TestComp(unittest.TestCase):
       expected = round(self.lubeCtrl.totalDistance, 1)
       self.assertTrue(self.lubeCtrl.state == 'ON')
       self.assertTrue(expected == 0)
+      self.assertTrue(self.lubeCtrl.numberOfLubings == 2)
 
    def test_on_to_off(self):
       self.lubeCtrl.calcDistFromVel(10, 10, 11)
@@ -88,7 +88,7 @@ class TestComp(unittest.TestCase):
 
       self.assertTrue(self.lubeCtrl.state == 'OFF')
       self.assertTrue(self.lubeCtrl.totalDistance == 0)
-      
+      self.assertTrue(self.lubeCtrl.numberOfLubings == 2) # don't reset
 
 if __name__ == '__main__':
    unittest.main()

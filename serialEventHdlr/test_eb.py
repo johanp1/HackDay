@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import unittest
-import serial_mpg
+import serialEventHandler as eh
 import comms  
 
 class EventHandlerSpy:
@@ -17,19 +17,19 @@ class EventHandlerSpy:
 class TestEventBroker(unittest.TestCase):
     
     def setUp(self):
-        self.eb = serial_mpg.EventBroker()
+        self.eb = eh.EventBroker()
         self.eh1 = EventHandlerSpy()
         self.eh2 = EventHandlerSpy()
       
     def test_noHandlerAttached(self):
-        self.eb.handleEvent(comms.Event('foo', 'bar'))
+        self.eb.handleEvent(comms.Message('foo', 'bar'))
         self.assertFalse(self.eh1.hasBeenCalled)
         self.assertFalse(self.eh2.hasBeenCalled)
 
     def test_oneHandlerAttached(self):
         self.eb.attachHandler('apa', self.eh1.eventHandler)
 
-        self.eb.handleEvent(comms.Event('apa', '100'))
+        self.eb.handleEvent(comms.Message('apa', '100'))
         self.assertTrue(self.eh1.hasBeenCalled)
         self.assertFalse(self.eh2.hasBeenCalled)
 
@@ -37,7 +37,7 @@ class TestEventBroker(unittest.TestCase):
         self.eb.attachHandler('apa', self.eh1.eventHandler)
         self.eb.attachHandler('bepa', self.eh2.eventHandler)
 
-        self.eb.handleEvent(comms.Event('bepa', '99'))
+        self.eb.handleEvent(comms.Message('bepa', '99'))
         
         self.assertFalse(self.eh1.hasBeenCalled)
         self.assertTrue(self.eh2.hasBeenCalled)
@@ -46,7 +46,7 @@ class TestEventBroker(unittest.TestCase):
         self.eb.attachHandler('apa', self.eh1.eventHandler)
         self.eb.attachHandler('bepa', self.eh2.eventHandler)
 
-        self.eb.handleEvent(comms.Event('foo', '11'))
+        self.eb.handleEvent(comms.Message('foo', '11'))
         
         self.assertFalse(self.eh1.hasBeenCalled)
         self.assertFalse(self.eh2.hasBeenCalled)   

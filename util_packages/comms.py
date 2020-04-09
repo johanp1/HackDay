@@ -22,19 +22,19 @@ CLOSE_PORT_AFTER_EACH_CALL = False
 """Default value for port closure setting."""
 
 
-class Event:
-   """'container for events. keeps two strings <event> and <value>"""
-   def __init__(self, event, value):
-      self.ev = event
+class Message:
+   """'container for messages. keeps two strings <message> and <value>"""
+   def __init__(self, message, value):
+      self.msg = message
       self.val = value
       
    def __repr__(self):
-      return 'ev: ' + self.ev + ' val: ' + self.val
+      return 'msg: ' + self.msg + ' val: ' + self.val
 
 class instrument:
    """rs232 port"""
 
-   def __init__(self, port, event_handler):
+   def __init__(self, port, msg_handler):
       self.serial = serial.Serial()
       self.serial.port = port
       self.serial.baudrate = BAUDRATE
@@ -44,7 +44,7 @@ class instrument:
       self.serial.xonxoff = False       # disable software flow control
       self.serial.timeout = TIMEOUT
       self.portOpened = False
-      self.ev_hdlr = event_handler
+      self.msg_hdlr = msg_handler
       
       self.open()
 
@@ -66,16 +66,23 @@ class instrument:
       else:
          return False
          
-   def readEvents(self):
+   def readMessages(self):
       """reads serial port. creates an array of events
       output: array of events: 
       """
       while self.dataReady():
-         ev_str = self._read().split('_')
+         msg_str = self._read().split('_')
 
-         if len(ev_str) == 2 and self._is_number(ev_str[1]):
-            self.ev_hdlr(Event(ev_str[0], ev_str[1]))
-      
+         if len(msg_str) == 2 and self._is_number(msg_str[1]):
+            self.msg_hdlr(Message(msg_str[0], msg_str[1]))
+
+   def writeMessage(self, m):
+      self._write(m.msg + '_' + m.val + '\n')
+
+   def _write(self, str):
+      #serial expects a byte-array and not a string
+      self.serial.write(''.join(str).encode('utf-8'))
+     
    def _read(self):
       """ returns string read from serial port """
       b = ''

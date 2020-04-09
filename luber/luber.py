@@ -123,10 +123,11 @@ class parameterContainer:
 
 
 class LubeControl:
-   def __init__(self, lube_on_time, accumulated_distance, distance_threshold):
+   def __init__(self, lube_on_time, accumulated_distance, distance_threshold, number_of_lubings):
       self.lubeOnTime = lube_on_time                  # [sec]
       self.totalDistance = accumulated_distance       # [mm]
       self.distanceThreshold = distance_threshold     # [mm]
+      self.numberOfLubings = number_of_lubings
 
       self.state = 'OFF'
       self.lubeLevelOkOut = True
@@ -149,6 +150,7 @@ class LubeControl:
          self.state = 'ON'
          self.timeout = self.lubeOnTime + currentTime
          self.totalDistance = 0
+         self.numberOfLubings += 1
 
       if self.state == 'ON':
          if currentTime > self.timeout:
@@ -168,9 +170,9 @@ class LubeControl:
 
 def _usage():
    """ print command line options """
-   print "usage pendant_srv.py -h -c<name> <path/>in_file.xml\n"\
+   print "usage luber.py -h -c<name> <path/>in_file.xml\n"\
       "in_file         # input xml-file describing what knobs and/or button are on the pendant\n"\
-      "-c <name>       # name of component in HAL. 'mpg' default\n"\
+      "-c <name>       # name of component in HAL. 'my-luber' default\n"\
       "-h              # Help test"
 
 def main():
@@ -223,8 +225,9 @@ def main():
    totalDistance = p.getParam('totalDistance')
    distanceThreshold = p.getParam('distanceThreshold')
    lubeOnTime = p.getParam('lubePulseTime')
+   nbrOfLubings = p.getParam('numberOfLubings')
 
-   lubeCtrl = LubeControl(lubeOnTime, totalDistance, distanceThreshold)
+   lubeCtrl = LubeControl(lubeOnTime, totalDistance, distanceThreshold, nbrOfLubings)
 
    try:
       while 1:
@@ -244,6 +247,7 @@ def main():
 
    except KeyboardInterrupt:
       p.writeParam('totalDistance', lubeCtrl.totalDistance)
+      p.writeParam('numberOfLubings', lubeCtrl.numberOfLubings)
       p.writeToFile()
       raise SystemExit
 

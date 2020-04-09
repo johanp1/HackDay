@@ -18,9 +18,9 @@ class TestComp(unittest.TestCase):
       self.assertTrue(len(self.local_c.pinDict) == 0)
     
    def test_setReady(self):
-      self.assertFalse(self.c.hal.ready_flag)
+      self.assertFalse(self.c.hal.readyFlag)
       self.c.setReady()
-      self.assertTrue(self.c.hal.ready_flag)
+      self.assertTrue(self.c.hal.readyFlag)
       
    def test_addOutPin(self):
       self.local_c = luber.ComponentWrapper('local_hal_comp')
@@ -31,8 +31,8 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.pinDict['local_pin'].val == 0)
  
       self.assertTrue(self.local_c.hal['local_pin'] == 0)
-      self.assertTrue(self.local_c.hal.pin_list[0].type == 'HAL_BIT')
-      self.assertTrue(self.local_c.hal.pin_list[0].dir == 'HAL_OUT')   
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_BIT')
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_OUT')   
 
    def test_addInPin(self):
       self.local_c = luber.ComponentWrapper('local_hal_comp')
@@ -43,8 +43,8 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.pinDict['local_pin'].val == 0)
 
       self.assertTrue(self.local_c.hal['local_pin'] == 0)
-      self.assertTrue(self.local_c.hal.pin_list[0].type == 'HAL_U32')
-      self.assertTrue(self.local_c.hal.pin_list[0].dir == 'HAL_IN')   
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_U32')
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_IN')   
 
    def test_updateOutPin(self):
       self.c.setPin('out_pin', 123)

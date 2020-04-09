@@ -5,8 +5,9 @@ HAL_U32   = 'HAL_U32'
 HAL_FLOAT = 'HAL_FLOAT'
 HAL_OUT   = 'HAL_OUT'
 HAL_IO   = 'HAL_IO'
+HAL_IN    = 'HAL_IN'
 
-class hal_pin:
+class HalPin:
    """stub sub class to component class"""   
    def __init__(self, name, type, dir):
       self.name = name
@@ -22,15 +23,15 @@ class component:
    
    def __init__(self, name):
       self.pinDict = {}
-      self.ready_flag = 0
+      self.readyFlag = 0
       self.name = name
       
-   def newpin(self, pin_name, pin_type, dir):
-      pinName = pin_name.strip('"')
-      self.pinDict[pinName] = hal_pin(pinName, pin_type, dir)
+   def newpin(self, _pinName, _pinType, _pinDir):
+      pinName = _pinName.strip('"')
+      self.pinDict[pinName] = HalPin(pinName, _pinType, _pinDir)
 
    def ready(self):
-      self.ready_flag = 1
+      self.readyFlag = 1
 
    def __getitem__(self, name):
       if name in self.pinDict:

@@ -5,6 +5,7 @@ HAL_U32   = 'HAL_U32'
 HAL_FLOAT = 'HAL_FLOAT'
 HAL_OUT   = 'HAL_OUT'
 HAL_IN    = 'HAL_IN'
+HAL_IO    = 'HAL_IO'
 
 class hal_pin:
    """stub sub class to component class"""   

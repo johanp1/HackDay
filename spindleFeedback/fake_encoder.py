@@ -17,8 +17,8 @@ class FakeEncoder:
       self.position = 0
         
    def handleEvent(self, event):
-      if (event.ev == 'pos'):
-         self.velocity = float(event.val)/(self.scale*self.dT) #pos per 0.05s to rps
+      if (event.msg == 'pos'):
+         self.velocity = float(event.val)/(self.scale*self.dT) #pos per dT to rps
          self.position += float(event.val)/self.scale
        
 class HalFacade:
@@ -98,7 +98,7 @@ def main():
     
    try:
       while 1:
-         speedCounter.readEvents() #blocks until '\n' received or timeout
+         speedCounter.readMessages() #blocks until '\n' received or timeout
             
          h.update(fake.velocity, fake.position)
             

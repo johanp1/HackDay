@@ -15,7 +15,8 @@ class Serial:
       self.in_waiting = False
       self.msgs = ['']
       self.nbr_msgs = 0
-      
+      self.writeBuf = ''
+
    def open(self):
       if self.port == 'fail':
          raise SerialException
@@ -36,6 +37,9 @@ class Serial:
             self.in_waiting = False
          
          return retStr
+
+   def write(self, b):
+      self.writeBuf += (b.decode('utf-8'))
 
    def stub_set_read(self, array_of_strings):
       self.nbr_msgs = len(array_of_strings)

@@ -26,11 +26,11 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.halFacade.h['index-enable'] == 0)
       self.assertTrue(self.halFacade.h.pinDict['index-enable'].type == 'HAL_BIT')
       self.assertTrue(self.halFacade.h.pinDict['index-enable'].dir == 'HAL_IO')
-      self.assertTrue(self.halFacade.h.ready_flag == 1)
+      self.assertTrue(self.halFacade.h.readyFlag == 1)
 
    def test_handleEvent(self):
       pos = 100.0 # => vel = pos/dt/scale = pos/(dt*scale) => 100/25 = 4
-      self.fake.handleEvent(comms.Event('pos', str(int(pos))))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
 
       expectedVel = round(float(pos/25), 3)
       encoderVel = round(self.fake.velocity, 3)
@@ -49,7 +49,7 @@ class TestComp(unittest.TestCase):
 
    def test_handleMultipleEvents(self):
       pos = 60.0 #actual encoder pulses in 0.05s interval 
-      self.fake.handleEvent(comms.Event('pos', str(int(pos))))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
       expectedVel = round(float(60.0/25), 3)
       encoderVel = round(self.fake.velocity, 3)
       expectedPos = round(pos/500, 3)
@@ -64,7 +64,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)   
 
-      self.fake.handleEvent(comms.Event('pos', str(int(pos))))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
       expectedVel = round(float(60.0/25), 3)
       encoderVel = round(self.fake.velocity, 3)
       expectedPos = expectedPos + round(pos/500, 3)
@@ -80,20 +80,20 @@ class TestComp(unittest.TestCase):
       self.assertTrue(halPos == expectedPos)   
 
    def test_wrongEvent(self):
-      self.fake.handleEvent(comms.Event('apa', '1000'))
+      self.fake.handleEvent(comms.Message('apa', '1000'))
 
       self.assertTrue(self.fake.position == 0)
       self.assertTrue(self.fake.velocity == 0)   
 
    def test_clear(self):
-      self.fake.handleEvent(comms.Event('pos', '2000'))
+      self.fake.handleEvent(comms.Message('pos', '2000'))
       self.fake.clear()
 
       self.assertTrue(self.fake.position == 0)  
 
    def test_setIndexEnable(self):
       pos = 600.0
-      self.fake.handleEvent(comms.Event('pos', str(int(pos))))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
 
       expectedVel = round(pos/25, 3)
       encoderVel = round(self.fake.velocity, 3)
