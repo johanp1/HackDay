@@ -38,7 +38,7 @@ void loop()
   duty = tempCtrl.step(currTemp, refTemp);  // temp in [0.1 degrees]
   
   debug_print(duty);
-  Serial.println(' ');
+  //Serial.println(' ');
   
   analogWrite(pwmPin, duty);
 
