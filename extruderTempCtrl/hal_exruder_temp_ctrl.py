@@ -14,7 +14,7 @@ class Pin:
    def __repr__(self):
       return 'val: ' + str(self.val) + '\ttype: ' + self.type + '\tdir: ' + self.dir
 
-class HalFacade:   
+class HalAdapter:   
    def __init__(self, name):
       self.hal = hal.component(name)  # instanciate the HAL-component
       self.hal.newpin("ref-temp", hal.HAL_U32, hal.HAL_IN)
@@ -39,12 +39,20 @@ class HalFacade:
 class TempControllerFacade:
    def __init__(self, port):
       self.tempController = comms.instrument(port, self.msgHandler) #serial adaptor
-
       self.currTemp = 100
+      self.refTemp = 100
+      self.enable = False
 
    def msgHandler(self, m):
       if (m.msg == 'mv'):
          self.currTemp = int(m.val)
+
+   def setEnable(self, en):
+      self.enable = en
+
+   def setRefTemp(self, refT):
+      if self.enable == True:
+         self.tempController.writeMessage(comms.Message('sp' , str(refT)))
 
 def main():
    name = 'my-extruder'
@@ -76,7 +84,7 @@ def main():
          while 1:
             refTemp = h.readPin('ref-temp')
             if refTemp != prevRefTemp:
-                tempController.writeMessage(comms.Message('sp' , str(refTemp)))
+                
                 prevRefTemp = refTemp
                 
             tempController.readMessages() #update current temp

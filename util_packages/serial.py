@@ -6,6 +6,9 @@ class SerialException(Exception):
 class Serial:
 
    def __init__(self):
+      self.reset()
+
+   def reset(self):
       self.port = 1
       self.baudrate = 9600
       self.parity = 'N'
