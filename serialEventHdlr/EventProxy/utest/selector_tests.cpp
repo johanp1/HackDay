@@ -6,64 +6,64 @@
 
 TEST_GROUP(SelectorTestGroup)
 {
-  class EventListnerSpy : public EventListner{
-  public:
-    void enventListnerSpy()
-    {
-      reset();
-    };
-    
-    void handleEvent(C_Event& e)
-    {
-      serializedEvent = e.serialize();
-      newData = true;
-    };
+   class EventListnerSpy : public EventListner{
+   public:
+      void enventListnerSpy()
+      {
+         reset();
+      };
+      
+      void handleEvent(C_Event& e)
+      {
+         serializedEvent = e.serialize();
+         newData = true;
+      };
 
-    void reset()
-    {
-      serializedEvent = String("");
-      newData = false;
-    }
-    
-    String serializedEvent;
-    bool newData;
-  };
+      void reset()
+      {
+         serializedEvent = String("");
+         newData = false;
+      };
+      
+      String serializedEvent;
+      bool newData;
+   };
 
   
-  Selector* s;
-  EventListnerSpy evSpy;
-  
-  void gotoState(byte state)
-  {
-    //byte oldState = s->getState();
-    unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
-    unsigned int volt = volt2state[state];
-    
-    ArduinoStub.setAnalogRead(PIN, (int)volt);
-    
-    s->scan();
-    ArduinoStub.incTimeMs(101); //longer than debounce delay
-    s->scan();
-  }
-  
-  void checkEvent(string& expected)
-  {
-    CHECK(evSpy.newData);
-    CHECK(evSpy.serializedEvent.compare(expected) == 0);
-  }
+   Selector* s;
+   EventListnerSpy evSpy;
+   
+   void gotoState(byte state)
+   {
+      //byte oldState = s->getState();
+      unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
+      unsigned int volt = volt2state[state];
+      
+      ArduinoStub.setAnalogRead(PIN, (int)volt);
+      
+      s->scan();
+      ArduinoStub.incTimeMs(101); //longer than debounce delay
+      s->scan();
+   }
+   
+   void checkEvent(string& expected)
+   {
+      CHECK(evSpy.newData);
+      CHECK(evSpy.serializedEvent.compare(expected) == 0);
+   }
 
-  void setup()
-  {
-    ArduinoStub.reset();
-    evSpy.reset();
-    s = new Selector("test", PIN, 100);
-    s->addEventListner(&evSpy);
-  }
-  
-  void teardown()
-  {
-    delete s;
-  }
+   void setup()
+   {
+      ArduinoStub.reset();
+      evSpy.reset();
+      s = new Selector("test", PIN, 100);
+      s->addEventListner(&evSpy);
+   }
+   
+   void teardown()
+   {
+      delete s;
+   }
 
 };
 

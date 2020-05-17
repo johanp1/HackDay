@@ -18,23 +18,25 @@ class HalAdapter:
    def __init__(self, name):
       self.hal = hal.component(name)  # instanciate the HAL-component
       self.hal.newpin("ref-temp", hal.HAL_U32, hal.HAL_IN)
-      self.hal.newpin("wait-temp", hal.HAL_U32, hal.HAL_IN)
+      self.hal.newpin("enable", hal.HAL_BIT, hal.HAL_IN)
       self.hal.newpin("curr-temp", hal.HAL_U32, hal.HAL_OUT)
-      self.hal.newpin("temp-ok", hal.HAL_BIT, hal.HAL_OUT)
-          
+      
       self.hal.ready()
  
    def setReady(self): 
       self.hal.ready()
-
-   def readPin(self, pin):
-      return self.hal[pin]
          
-   def updateHAL(self):
-      """ write internal wrapper pin values to LinuxCNC HAL """
-      self.hal['curr-temp'] = self.currTemp
-      self.hal['temp-ok'] = self.tempOk
+   def readHAL_refTemp(self):
+      """read values from LinuxCNC HAL"""
+      return self.hal['ref-temp']
 
+   def readHAL_enable(self):
+      """read values from LinuxCNC HAL"""
+      return self.hal['enable']
+
+   def writeHAL_CurrTemp(self, val):
+      """ write internal wrapper pin values to LinuxCNC HAL """
+      self.hal['curr-temp'] = val
 
 class TempControllerFacade:
    def __init__(self, port):
@@ -52,7 +54,10 @@ class TempControllerFacade:
 
    def setRefTemp(self, refT):
       if self.enable == True:
-         self.tempController.writeMessage(comms.Message('sp' , str(refT)))
+         if self.refTemp != refT:
+            self.tempController.writeMessage(comms.Message('sp' , str(refT)))
+            self.refTemp = refT
+   
 
 def main():
    name = 'my-extruder'
@@ -76,20 +81,22 @@ def main():
          print o
          assert False, "unhandled option"
 
-   h = HalFacade(name)
+   h = HalAdapter(name)
    tc = TempControllerFacade(port)
-   prevRefTemp = h.readPin('ref-temp')
-
+   #tc.setEnable(True)
+   
    try:
          while 1:
-            refTemp = h.readPin('ref-temp')
-            if refTemp != prevRefTemp:
-                
-                prevRefTemp = refTemp
-                
-            tempController.readMessages() #update current temp
-            h.updateHAL()
-            
+            if h.readHAL_enable == True:
+               tc.setEnable(True)
+
+               refTemp = h.readHAL_refTemp()
+               tc.setRefTemp(refTemp)               
+            else:
+               tc.setEnable(False)
+               
+            h.writeHAL_CurrTemp(tc.currTemp)
+
             time.sleep(1)
 
    except KeyboardInterrupt:

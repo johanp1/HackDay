@@ -52,10 +52,14 @@ public:
    string s;
 };
 
-class C_Serial_stub
+class Serial_stub
 {
 public:
-   C_Serial_stub();
+   Serial_stub();
+
+   char available();
+   void putData(String& str);
+   const String& readStringUntil(const char ch);
 
    void print(String& str);
    void print(int val);
@@ -66,15 +70,15 @@ public:
    void setTimeout(int val);
    void clear();
    const string& getData();
-
+   
 private:
    string serialData;
 };
 
-class C_Arduino_stub
+class Arduino_stub
 {
    public:
-   C_Arduino_stub();
+   Arduino_stub();
 
    void setMode(int pin, int dir);
    int getMode(int pin);
@@ -125,8 +129,8 @@ int analogRead(int pin);
 unsigned long millis(void);
 unsigned long micros(void);
 
-extern C_Serial_stub Serial;
-extern C_Arduino_stub ArduinoStub;
+extern Serial_stub Serial;
+extern Arduino_stub ArduinoStub;
 
 extern byte TCCR1A;  // Timer/Counter1 Control Register A
 extern byte TCCR1B;  // Timer/Counter1 Control Register B

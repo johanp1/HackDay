@@ -1,8 +1,8 @@
 #include "Arduino.h"
 #include <sstream>
 
-C_Serial_stub Serial;
-C_Arduino_stub ArduinoStub;
+Serial_stub Serial;
+Arduino_stub ArduinoStub;
 
 byte TCCR1A = 0;  // Timer/Counter1 Control Register A
 byte TCCR1B = 0;  // Timer/Counter1 Control Register B
@@ -142,7 +142,7 @@ unsigned long micros(void)
   return (unsigned long)ArduinoStub.getTime();
 }
 
-C_Serial_stub::C_Serial_stub()
+Serial_stub::Serial_stub()
 {
    // patch for allocating a larger string at startup. 
    // default seems to be an empty string with 15 chars allocated.
@@ -151,105 +151,122 @@ C_Serial_stub::C_Serial_stub()
    clear();
 }
 
-void C_Serial_stub::clear()
+char Serial_stub::available()
 {
-   serialData.clear();
+   return (char)serialData.length();
 }
 
-void C_Serial_stub::print(String& str)
+void Serial_stub::putData(String& str)
 {
    serialData.append(str.s);
 }
 
-void C_Serial_stub::print(int val)
+const String& Serial_stub::readStringUntil(const char ch)
+{
+   if (ch == '!') {}
+
+   return String(serialData);
+}
+
+void Serial_stub::clear()
+{
+   serialData.clear();
+}
+
+void Serial_stub::print(String& str)
+{
+   serialData.append(str.s);
+}
+
+void Serial_stub::print(int val)
 {
    string str = to__string(val);
 
    serialData.append(str);
 }
 
-void C_Serial_stub::println(String& s)
+void Serial_stub::println(String& s)
 {
    string str = s.s.append("\n");
 
    serialData.append(str);
 }
 
-void C_Serial_stub::println(int val)
+void Serial_stub::println(int val)
 {
    string str = to__string(val).append("\n");
 
    serialData.append(str);
 }
 
-void C_Serial_stub::println(char *s)
+void Serial_stub::println(char *s)
 {
    string str = string(s).append("\n");
 
    serialData.append(str);
 }
 
-const string& C_Serial_stub::getData()
+const string& Serial_stub::getData()
 {
    return serialData;
 }
 
-void C_Serial_stub::begin(int val)
+void Serial_stub::begin(int val)
 {
    if(val == 0){}
 }
 
-void C_Serial_stub::setTimeout(int val)
+void Serial_stub::setTimeout(int val)
 {
    if (val == 0) {}
 }
 
-C_Arduino_stub::C_Arduino_stub()
+Arduino_stub::Arduino_stub()
 {
   reset();
 }
 
-void C_Arduino_stub::setMode(int pin, int dir)
+void Arduino_stub::setMode(int pin, int dir)
 {
   pinModes[pin] = dir;
 }
 
-int C_Arduino_stub::getMode(int pin)
+int Arduino_stub::getMode(int pin)
 {
   return pinModes[pin];
 }
 
-void C_Arduino_stub::digitalWrite(int pin, int w)
+void Arduino_stub::digitalWrite(int pin, int w)
 {
   digitalWrites[pin] = w;
 }
 
-int C_Arduino_stub::getDigitalWrite(int pin)
+int Arduino_stub::getDigitalWrite(int pin)
 {
   return digitalWrites[pin];
 }
 
-void C_Arduino_stub::setDigitalRead(int pin, int data)
+void Arduino_stub::setDigitalRead(int pin, int data)
 {
   digitalReads[pin] = data;
 }
 
-int C_Arduino_stub::digitalRead(int pin)
+int Arduino_stub::digitalRead(int pin)
 {
   return digitalReads[pin];
 }
 
-void C_Arduino_stub::setAnalogRead(int pin, int data)
+void Arduino_stub::setAnalogRead(int pin, int data)
 {
   analogReads[pin] = data;
 }
 
-int C_Arduino_stub::analogRead(int pin)
+int Arduino_stub::analogRead(int pin)
 {
   return analogReads[pin];
 }
 
-void C_Arduino_stub::reset()
+void Arduino_stub::reset()
 {
   int i;
 
@@ -270,32 +287,32 @@ void C_Arduino_stub::reset()
   isr = NULL;
 }
 
-void C_Arduino_stub::incTime(unsigned long t)
+void Arduino_stub::incTime(unsigned long t)
 {
   time += t;
 }
 
-void C_Arduino_stub::incTimeMs(unsigned long t)
+void Arduino_stub::incTimeMs(unsigned long t)
 {
   time += 1000*t;
 }
 
-unsigned long C_Arduino_stub::getTime()
+unsigned long Arduino_stub::getTime()
 {
   return time;
 }
 
-void C_Arduino_stub::setInterruptPin(byte pin)
+void Arduino_stub::setInterruptPin(byte pin)
 {
    interruptPin = pin;
 }
 
-void C_Arduino_stub::setISR(void(*cbf)(void))
+void Arduino_stub::setISR(void(*cbf)(void))
 {
    isr = cbf;
 }
 
-void C_Arduino_stub::invokeInterrupt(unsigned int val)
+void Arduino_stub::invokeInterrupt(unsigned int val)
 {
   setDigitalRead(interruptPin, (int) val);
 
