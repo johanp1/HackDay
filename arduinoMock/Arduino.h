@@ -38,16 +38,22 @@ public:
    String(string& _s);
    String(const char* _c);
    String(int _i);
+   String(size_t size, char ch);
+
+   int indexOf(char ch);
 
    void concat(string& _s);
+   void concat(String& _s);
    void concat(const char* _c);
    void concat(int _i);
-
-   bool compare(string& _s);
-   bool compare(String& _s);
-   bool compare(String _s);
-   bool compare(const char* _c);
-   bool compare(void);
+   void concat(const char ch);
+   int compare(string& _s);
+   int compare(String& _s);
+   int compare(String _s);
+   int compare(const char* _c);
+   int compare(void);
+   int compareTo(String& _s);
+   int compareTo(string& _s);
 
    string s;
 };
@@ -58,8 +64,9 @@ public:
    Serial_stub();
 
    char available();
-   void putData(String& str);
-   const String& readStringUntil(const char ch);
+   void setRecData(String& str);
+   const String readStringUntil(const char ch);
+   int read();
 
    void print(String& str);
    void print(int val);
@@ -72,7 +79,8 @@ public:
    const string& getData();
    
 private:
-   string serialData;
+   string sendData;
+   String recData;
 };
 
 class Arduino_stub

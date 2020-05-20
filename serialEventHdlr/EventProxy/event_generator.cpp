@@ -11,6 +11,15 @@ void EventGenerator::generateEvent(unsigned int data)
    }
 }
 
+void EventGenerator::generateEvent(String& s)
+{
+   C_Event e = C_Event(name, s);
+   if (handler_p != 0)
+   {
+      handler_p->handleEvent(e);
+   }
+}
+
 void EventGenerator::addEventListner(EventListner* h)
 {
    handler_p = h;

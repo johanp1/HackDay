@@ -1,6 +1,9 @@
 #include "Arduino.h"
 #include <sstream>
 
+#include <iostream>
+using namespace std;
+
 Serial_stub Serial;
 Arduino_stub ArduinoStub;
 
@@ -46,9 +49,24 @@ String::String(int _i)
   s = string(to__string(_i));
 }
 
+String::String(size_t size, char ch)
+{
+   s = string(size, ch);
+}
+
+int String::indexOf(char ch)
+{
+   return (int)s.find_first_of(ch);
+}
+
 void String::concat(string& _s)
 {
   s.append(_s);
+}
+
+void String::concat(String& _s)
+{
+  s.append(_s.s);
 }
 
 void String::concat(const char* _c)
@@ -56,34 +74,49 @@ void String::concat(const char* _c)
   s.append(_c);
 }
 
+void String::concat(const char ch)
+{
+   s.push_back(ch);
+}
+
 void String::concat(int _i)
 {
   s.append(to__string(_i));
 }
 
-bool String::compare(string& _s)
+int String::compare(string& _s)
 {
   return s.compare(_s);
 }
 
-bool String::compare(String& _s)
+int String::compare(String& _s)
 {
   return s.compare(_s.s);
 }
 
-bool String::compare(String _s)
+int String::compare(String _s)
 {
   return s.compare(_s.s);
 }
 
-bool String::compare(const char* _c)
+int String::compare(const char* _c)
 {
   return s.compare(_c);
 }
 
-bool String::compare(void)
+int String::compare(void)
 {
   return s.compare("");
+}
+
+int String::compareTo(String& _s)
+{
+  return s.compare(_s.s);
+}
+
+int String::compareTo(string& _s)
+{
+  return s.compare(_s);
 }
 
 void noInterrupts(void)
@@ -147,68 +180,89 @@ Serial_stub::Serial_stub()
    // patch for allocating a larger string at startup. 
    // default seems to be an empty string with 15 chars allocated.
    // when appending the string and the size exceeds 15 it will automaticaly expand the string but will end up with a memory leak 
-   serialData = string(100, '0');   
+   sendData = string(100, '0');   
+   recData = String(100, '0');
    clear();
 }
 
 char Serial_stub::available()
 {
-   return (char)serialData.length();
+   return (char)recData.s.length();
 }
 
-void Serial_stub::putData(String& str)
+void Serial_stub::setRecData(String& str)
 {
-   serialData.append(str.s);
+   recData.s.append(str.s);
 }
 
-const String& Serial_stub::readStringUntil(const char ch)
+const String Serial_stub::readStringUntil(const char ch)
 {
-   if (ch == '!') {}
+   int idx = -1;
+   string str;
+   String retString;
 
-   return String(serialData);
+   idx = recData.indexOf(ch);
+
+   str = recData.s.substr(0, (size_t)idx);
+   /*cout << "index " << idx << "\n";
+   cout << "substr " << str << "\n";*/
+
+   retString = String(str);
+   return retString;
+   //return recData;
+}
+
+int Serial_stub::read()
+{
+   int retVal = (int)recData.s[0];
+   //cout << "recData.length " << recData.s.length() << '\n';
+   recData.s = recData.s.erase(0,1);
+   
+   return retVal;
 }
 
 void Serial_stub::clear()
 {
-   serialData.clear();
+   sendData.clear();
+   recData.s.clear();
 }
 
 void Serial_stub::print(String& str)
 {
-   serialData.append(str.s);
+   sendData.append(str.s);
 }
 
 void Serial_stub::print(int val)
 {
    string str = to__string(val);
 
-   serialData.append(str);
+   sendData.append(str);
 }
 
 void Serial_stub::println(String& s)
 {
    string str = s.s.append("\n");
 
-   serialData.append(str);
+   sendData.append(str);
 }
 
 void Serial_stub::println(int val)
 {
    string str = to__string(val).append("\n");
 
-   serialData.append(str);
+   sendData.append(str);
 }
 
 void Serial_stub::println(char *s)
 {
    string str = string(s).append("\n");
 
-   serialData.append(str);
+   sendData.append(str);
 }
 
 const string& Serial_stub::getData()
 {
-   return serialData;
+   return sendData;
 }
 
 void Serial_stub::begin(int val)

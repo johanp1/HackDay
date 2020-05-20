@@ -11,9 +11,10 @@ class Receiver : public EventGenerator {
    Receiver(const String& argName);
   
    void scan(void);
-
+   void serialEvent(void);
    
  private:
+   String recCmd;
 
 };
 

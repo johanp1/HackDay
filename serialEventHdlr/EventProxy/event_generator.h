@@ -12,6 +12,7 @@ class EventGenerator {
    virtual void scan(void) = 0;
 
    void generateEvent(unsigned int data);
+   void generateEvent(String& s);
    void addEventListner(EventListner* h);
    String& getName();   
    

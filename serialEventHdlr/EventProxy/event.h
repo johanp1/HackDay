@@ -8,12 +8,14 @@ class C_Event {
  public:
   C_Event();
   C_Event(String& str, unsigned int argData);
-  
+  C_Event(String& str, String& argData);
+
   String serialize(void);
+  String serializeData(void);
   
  private:
   String source;
-  unsigned int data;
+  String data;
 };
 
 #endif // __C_EVENT_H__
