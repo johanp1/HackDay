@@ -1,5 +1,4 @@
 #include "receiver.h"
-#include <iostream>
 
 // constructor 
 Receiver::Receiver(const String& argName) : EventGenerator(argName)
@@ -9,17 +8,6 @@ Receiver::Receiver(const String& argName) : EventGenerator(argName)
 
 void Receiver::scan(void)
 {
-   String cmd = String();
-   String emptyStr = String("");
-   
-   if(Serial.available() > 0)
-   {
-      cmd = Serial.readStringUntil('\n');
-      if (cmd.compareTo(emptyStr) != 0)
-      {
-         generateEvent(cmd);
-      }
-   }
 }
 
 void Receiver::serialEvent()
@@ -37,7 +25,7 @@ void Receiver::serialEvent()
          {
             generateEvent(recCmd);
          }
-         recCmd = "";   //clear
+         recCmd = "";   //clear, ready for new message
       }
       else
       {

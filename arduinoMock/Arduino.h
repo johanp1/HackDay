@@ -65,7 +65,7 @@ public:
 
    char available();
    void setRecData(String& str);
-   const String readStringUntil(const char ch);
+   //const String readStringUntil(const char ch);
    int read();
 
    void print(String& str);

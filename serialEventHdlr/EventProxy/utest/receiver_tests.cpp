@@ -16,31 +16,48 @@ TEST_GROUP(ReceiverTestGroup)
     
       void handleEvent(C_Event& e)
       {
-         serializedData = e.serializeData();
-         newData++;
-
-         //cout << "serializedData.s " << serializedData.s << endl;
-         //cout << "newData " << newData << endl;
+         serializedData.push_back(e.serializeData());
       };
 
       void reset()
       {
-         serializedData = String("");
-         newData = 0;
+         serializedData.clear();
       };
       
-      String serializedData;
-      int newData;
+      void checkEvent(vector<String>& expectedEvents)
+      {
+         CHECK(expectedEvents.size() == serializedData.size());
+
+         if (!expectedEvents.empty())
+         {
+            vector<String>::const_iterator expectedDataIterator;
+            vector<String>::const_iterator dataIterator;
+
+            for (expectedDataIterator = expectedEvents.begin(), dataIterator = serializedData.begin();
+                 expectedDataIterator != expectedEvents.end();
+                 ++expectedDataIterator, ++dataIterator)
+            {
+               CHECK( (*dataIterator).s.compare( (*expectedDataIterator).s ) == 0);
+            }
+         }
+      }
+
+      void checkEvent(const String& expectedEvent)
+      {
+         CHECK(serializedData.size() ==1);
+         CHECK(serializedData.at(0).compare(expectedEvent) == 0);
+      }
+
+      void checkNoEvent()
+      {
+         CHECK(serializedData.empty());
+      }
+
+      vector<String> serializedData;
    };
 
    Receiver r = Receiver("test");
    EventListnerSpy evSpy;
-  
-   void checkEvent(const String& expected)
-   {
-      CHECK(evSpy.newData > 0);
-      CHECK(evSpy.serializedData.compare(expected) == 0);
-   }
 
    void setup()
    {
@@ -55,29 +72,19 @@ TEST_GROUP(ReceiverTestGroup)
    }
 };
 
-TEST(ReceiverTestGroup, ScanEmptyRecBuf)
+TEST(ReceiverTestGroup, emptyRecBuf)
 {
-   r.scan();
-   CHECK(evSpy.newData == 0);
+   r.serialEvent();
+   evSpy.checkNoEvent();
 }
 
-TEST(ReceiverTestGroup, ScanOneMsgRec)
-{
-   String sendStr = "sp_180\n";
-   const String& expectedStr = String("sp_180");
-   Serial.setRecData(sendStr);
-   r.scan();
-   CHECK(evSpy.newData > 0);
-   checkEvent(expectedStr);
-}
-
-TEST(ReceiverTestGroup, eventhalfMsgRec)
+TEST(ReceiverTestGroup, halfMsgRec)
 {
    String sendStr = "sa_"; //no new-line, event nerver generated
 
    Serial.setRecData(sendStr);
    r.serialEvent();
-   CHECK(evSpy.newData == 0);
+   evSpy.checkNoEvent();
 }
 
 TEST(ReceiverTestGroup, eventOneMsgRec)
@@ -86,8 +93,7 @@ TEST(ReceiverTestGroup, eventOneMsgRec)
    String expectedStr = "sa";
    Serial.setRecData(sendStr);
    r.serialEvent();
-   CHECK(evSpy.newData > 0);
-   checkEvent(expectedStr);
+   evSpy.checkEvent(expectedStr);
 }
 
 TEST(ReceiverTestGroup, eventTwoMsgRec)
@@ -95,18 +101,19 @@ TEST(ReceiverTestGroup, eventTwoMsgRec)
    String sendStr = "apa\nbepa\n";
    String expectedStr1 = "apa";
    const String& expectedStr2 = "bepa";
+   vector<String> expectedEvents;
+   expectedEvents.push_back(expectedStr1);
+   expectedEvents.push_back(expectedStr2);
+
    Serial.setRecData(sendStr);
    r.serialEvent();
-   CHECK(evSpy.newData > 0);
-   
-   //checkEvent(expectedStr1);
-   //cout << "serializedData " << evSpy.serializedData.s << endl;
-   checkEvent(expectedStr2);
+   evSpy.checkEvent(expectedEvents);
 }
 
+/*
 TEST(ReceiverTestGroup, vectorTest)
 {
-/*   vector<String> v;
+   vector<String> v;
    vector<String>::const_iterator iter;
 
    v.push_back("0");
@@ -119,5 +126,4 @@ TEST(ReceiverTestGroup, vectorTest)
    {
       cout << (*iter).s << endl;
    }
-   */
-}
+}*/
