@@ -74,7 +74,7 @@ TEST_GROUP(ReceiverTestGroup)
 
 TEST(ReceiverTestGroup, emptyRecBuf)
 {
-   r.serialEvent();
+   r.scan();
    evSpy.checkNoEvent();
 }
 
@@ -83,7 +83,7 @@ TEST(ReceiverTestGroup, halfMsgRec)
    String sendStr = "sa_"; //no new-line, event nerver generated
 
    Serial.setRecData(sendStr);
-   r.serialEvent();
+   r.scan();
    evSpy.checkNoEvent();
 }
 
@@ -92,7 +92,7 @@ TEST(ReceiverTestGroup, eventOneMsgRec)
    String sendStr = "sa\n";
    String expectedStr = "sa";
    Serial.setRecData(sendStr);
-   r.serialEvent();
+   r.scan();
    evSpy.checkEvent(expectedStr);
 }
 
@@ -106,7 +106,7 @@ TEST(ReceiverTestGroup, eventTwoMsgRec)
    expectedEvents.push_back(expectedStr2);
 
    Serial.setRecData(sendStr);
-   r.serialEvent();
+   r.scan();
    evSpy.checkEvent(expectedEvents);
 }
 

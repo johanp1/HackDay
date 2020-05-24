@@ -8,6 +8,7 @@ Receiver::Receiver(const String& argName) : EventGenerator(argName)
 
 void Receiver::scan(void)
 {
+   serialEvent();
 }
 
 void Receiver::serialEvent()

@@ -194,7 +194,7 @@ void Serial_stub::setRecData(String& str)
 {
    recData.s.append(str.s);
 }
-
+/*
 const String Serial_stub::readStringUntil(const char ch)
 {
    int idx = -1;
@@ -204,14 +204,14 @@ const String Serial_stub::readStringUntil(const char ch)
    idx = recData.indexOf(ch);
 
    str = recData.s.substr(0, (size_t)idx);
-   /*cout << "index " << idx << "\n";
-   cout << "substr " << str << "\n";*/
+   //cout << "index " << idx << "\n";
+   //cout << "substr " << str << "\n";
 
    retString = String(str);
    return retString;
    //return recData;
 }
-
+*/
 int Serial_stub::read()
 {
    int retVal = (int)recData.s[0];

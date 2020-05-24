@@ -6,16 +6,15 @@
 
 class Receiver : public EventGenerator {
  
- public:
-    // constructor 
+   public:
+   // constructor 
    Receiver(const String& argName);
   
    void scan(void);
-   void serialEvent(void);
-   
- private:
-   String recCmd;
 
+   private:
+   void serialEvent(void);
+   String recCmd;
 };
 
 #endif // __C_RECEIVER_H__
