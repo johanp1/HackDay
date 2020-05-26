@@ -59,6 +59,11 @@ int String::indexOf(char ch)
    return (int)s.find_first_of(ch);
 }
 
+int String::indexOf(String& _s)
+{
+   return (int)s.find_first_of(_s.s);
+}
+
 void String::concat(string& _s)
 {
   s.append(_s);
@@ -117,6 +122,17 @@ int String::compareTo(String& _s)
 int String::compareTo(string& _s)
 {
   return s.compare(_s);
+}
+
+int String::length()
+{
+   return (int)s.length();
+}
+
+String String::substring(int from)
+{
+   string str = s.substr(from);
+   return String(str);
 }
 
 void noInterrupts(void)

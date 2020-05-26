@@ -2,13 +2,25 @@
 #define __C_EVENT_PARSER_H__
 
 #include "event_listner.h"
+#include <vector>
 
 class ParserFunctionoid
 {
    public:
-   virtual void executeCmd(void) = 0;
+   virtual void execute(String& _parsedData) = 0;
 };
 
+class CmdFunctionMapper
+{
+   public:
+   CmdFunctionMapper(String& _cmd, ParserFunctionoid& _pf) : cmd(_cmd), pf(_pf) {};
+   void execute(String& _parsedData);
+
+   String cmd;
+
+   private:
+   ParserFunctionoid& pf;
+};
 
 class EventParser : public EventListner
 {
@@ -16,10 +28,12 @@ class EventParser : public EventListner
    EventParser(void);
 
    void handleEvent(C_Event& e);
-   void addAcceptedCmd(String& cmdT, ParserFunctionoid& f);
+   void addAcceptedCmd(String& cmd, ParserFunctionoid& pf);
 
-   String cmdType;
-   int cmdVal;
+   private:
+   void parseEvent(String& data);
+   
+   vector<CmdFunctionMapper> acceptedCmds;
 };
 
 #endif // __C_EVENT_PARSER_H__

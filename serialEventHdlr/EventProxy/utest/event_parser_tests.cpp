@@ -7,45 +7,90 @@ TEST_GROUP(EventParserTestGroup)
    class ParserFunctionoidSpy : public ParserFunctionoid
    {
       public:
-      void executeCmd(void) {hasBeenCalled = true;};
-      void clear() {hasBeenCalled = false;};
+      void execute(String& _parsedData)
+      {
+         hasBeenCalled = true;
+         parsedData.s = _parsedData.s;
+      };
+      void clear()
+      {
+         hasBeenCalled = false;
+         parsedData.s.clear();
+      };
+
       bool hasBeenCalled;
+      String parsedData;
    };
 
    EventParser ep;
-   ParserFunctionoidSpy pfs;
+   ParserFunctionoidSpy pfSpy;
 
    void setup()
    {
+      String eventCmd = String("apa");
+      ep.addAcceptedCmd(eventCmd, pfSpy);
    }
   
    void teardown()
    {
+      pfSpy.clear();
    }
 };
 
 TEST(EventParserTestGroup, handleValidEvent)
 {
-   String eventCmdType = String("apa");
-   String eventData = String("apa_123");
-   String name = String("name");
+   String eventData = String("apa123");
+   String name = String("dummy");
    C_Event e = C_Event(name, eventData);
    
-   ep.addAcceptedCmd(eventCmdType, pfs);
+   CHECK(!pfSpy.hasBeenCalled);
+
    ep.handleEvent(e);
-   cout << "ep.cmdType" << ep.cmdType.s<<endl;
-   CHECK(ep.cmdType.compare("apa") == 0 );
-   CHECK(ep.cmdVal == 123 );
+   
+   CHECK(pfSpy.parsedData.compare("123") == 0 );
+   CHECK(pfSpy.hasBeenCalled);
 }
-/*
+
 TEST(EventParserTestGroup, handleValidEvent2)
 {
-   String eventData = String("bepa_456");
-   String name = String("name");
+   String eventCmdType = String("bepa");
+   String eventData = String("bepa456");
+   String name = String("dummy");
+   C_Event e = C_Event(name, eventData);
+
+   CHECK(!pfSpy.hasBeenCalled);
+
+   ep.addAcceptedCmd(eventCmdType, pfSpy);
+
+   ep.handleEvent(e);
+
+   CHECK(pfSpy.parsedData.compare("456") == 0 );
+   CHECK(pfSpy.hasBeenCalled);
+}
+
+TEST(EventParserTestGroup, handleUnvalidEvent)
+{
+   String eventData = String("hej321");
+   String name = String("dummy");
    C_Event e = C_Event(name, eventData);
    
+   CHECK(!pfSpy.hasBeenCalled);
+
    ep.handleEvent(e);
-   CHECK(ep.cmdType.compare("bepa") == 0 );
-   CHECK(ep.cmdVal == 456 );
+
+   CHECK(!pfSpy.hasBeenCalled);
 }
-*/
+
+TEST(EventParserTestGroup, handleValidEventNoData)
+{
+    String eventData = String("apa");
+   String name = String("dummy");
+   C_Event e = C_Event(name, eventData);
+   
+   CHECK(!pfSpy.hasBeenCalled);
+
+   ep.handleEvent(e);
+   
+   CHECK(pfSpy.parsedData.compare("") == 0 );
+   CHECK(pfSpy.hasBeenCalled);
+}
