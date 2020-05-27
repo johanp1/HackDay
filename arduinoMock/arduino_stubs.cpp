@@ -59,9 +59,9 @@ int String::indexOf(char ch)
    return (int)s.find_first_of(ch);
 }
 
-int String::indexOf(String& _s)
+bool String::startsWith(String& _s)
 {
-   return (int)s.find_first_of(_s.s);
+   return s.find(_s.s) == 0;
 }
 
 void String::concat(string& _s)

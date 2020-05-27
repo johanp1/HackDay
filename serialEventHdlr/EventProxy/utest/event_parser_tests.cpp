@@ -94,3 +94,32 @@ TEST(EventParserTestGroup, handleValidEventNoData)
    CHECK(pfSpy.parsedData.compare("") == 0 );
    CHECK(pfSpy.hasBeenCalled);
 }
+
+TEST(EventParserTestGroup, handle2ValidEvent)
+{
+   ParserFunctionoidSpy myPfSpy;
+   String eventData1 = String("apa5");
+   String eventCmd2 = String("bepa");
+   String eventData2 = String("bepaxyz");
+   String name = String("dummy");
+
+   C_Event e1 = C_Event(name, eventData1);
+   C_Event e2 = C_Event(name, eventData2);
+
+   CHECK(!pfSpy.hasBeenCalled);
+   CHECK(!myPfSpy.hasBeenCalled);
+   
+   ep.addAcceptedCmd(eventCmd2, myPfSpy);
+
+   ep.handleEvent(e1);
+
+   CHECK(pfSpy.parsedData.compare("5") == 0 );
+   CHECK(pfSpy.hasBeenCalled);
+   CHECK(!myPfSpy.hasBeenCalled);
+   pfSpy.clear();
+
+   ep.handleEvent(e2);
+   CHECK(myPfSpy.parsedData.compare("xyz") == 0 );
+   CHECK(!pfSpy.hasBeenCalled);
+   CHECK(myPfSpy.hasBeenCalled);
+}

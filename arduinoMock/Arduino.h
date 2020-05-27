@@ -41,7 +41,8 @@ public:
    String(size_t size, char ch);
 
    int indexOf(char ch);
-   int indexOf(String& _s);
+
+   bool startsWith(String& _s);
 
    void concat(string& _s);
    void concat(String& _s);
