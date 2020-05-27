@@ -1,13 +1,14 @@
 #include "event_parser.h"
 #include "Arduino.h"
-#include <iostream>
+
 void CmdFunctionMapper::execute(String& _parsedData)
 {
-   pf.execute(_parsedData);
+   pf->execute(_parsedData);
 }
 
-EventParser::EventParser(void)
+EventParser::EventParser()
 {
+   nbrOfAcceptedCmds = 0;
 }
 
 void EventParser::handleEvent(C_Event& e)
@@ -18,15 +19,17 @@ void EventParser::handleEvent(C_Event& e)
 
 void EventParser::parseEvent(String& unparsedData)
 {
-   if(!acceptedCmds.empty())
+   if(nbrOfAcceptedCmds > 0)
    {
       //fetch command
-      for (int i = 0; i < (int)acceptedCmds.size(); i++)
+      for (int i = 0; i < nbrOfAcceptedCmds; i++)
       {
-         bool startsWithCmd = unparsedData.startsWith(acceptedCmds[i].cmd);
-         if (startsWithCmd) //data starts with a command
+         // does the unparsed data contian(starts with) some sort of command 
+         bool isAccepted = unparsedData.startsWith(acceptedCmds[i].cmd);
+         if (isAccepted) //data starts with a command
          {
             String data = String("");
+            // if the unparsed data contains more than cmd, split out the data-part from the cmd-part
             if (unparsedData.length() >= acceptedCmds[i].cmd.length())
             {
                data = unparsedData.substring(acceptedCmds[i].cmd.length());
@@ -39,5 +42,14 @@ void EventParser::parseEvent(String& unparsedData)
 
 void EventParser::addAcceptedCmd(String& cmd, ParserFunctionoid& pf)
 {
-   acceptedCmds.push_back(CmdFunctionMapper(cmd, pf));
+   if (nbrOfAcceptedCmds < MAX_NBR_OF_ACCEPTED_CMDS)
+   {
+      acceptedCmds[nbrOfAcceptedCmds] = CmdFunctionMapper(cmd, &pf);
+      nbrOfAcceptedCmds++;
+   }   
+}
+
+int EventParser::getNbrOfAcceptedCmds()
+{
+   return nbrOfAcceptedCmds;
 }

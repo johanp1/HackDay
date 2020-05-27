@@ -37,6 +37,12 @@ TEST_GROUP(EventParserTestGroup)
    }
 };
 
+TEST(EventParserTestGroup, init)
+{
+   CHECK(ep.getNbrOfAcceptedCmds() == 1);
+}
+
+
 TEST(EventParserTestGroup, handleValidEvent)
 {
    String eventData = String("apa123");
