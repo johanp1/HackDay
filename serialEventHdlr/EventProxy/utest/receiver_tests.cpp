@@ -44,7 +44,7 @@ TEST_GROUP(ReceiverTestGroup)
 
       void checkEvent(const String& expectedEvent)
       {
-         CHECK(serializedData.size() ==1);
+         CHECK(serializedData.size() == 1);
          CHECK(serializedData.at(0).compare(expectedEvent) == 0);
       }
 

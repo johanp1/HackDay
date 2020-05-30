@@ -31,7 +31,7 @@ class PIDController
    private:
    int saturate(int in);
    int calcOutput(int y, int yRef);
-   void updateState();
+   //void updateState();
    
    class PIDParameters par;
 
