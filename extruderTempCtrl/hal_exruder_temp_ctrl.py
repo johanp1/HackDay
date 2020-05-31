@@ -4,16 +4,6 @@ import sys
 import comms
 import time
 
-class Pin:
-   """ Representation of a Pin and it's data"""
-   def __init__(self, type, dir):
-      self.val = 0    # current value of pin, e.g. 1 - on, 0 - off
-      self.type = type  # type (string read from xml)
-      self.dir = dir
-
-   def __repr__(self):
-      return 'val: ' + str(self.val) + '\ttype: ' + self.type + '\tdir: ' + self.dir
-
 class HalAdapter:   
    def __init__(self, name):
       self.hal = hal.component(name)  # instanciate the HAL-component
@@ -50,8 +40,9 @@ class TempControllerFacade:
          self.currTemp = int(m.val)
 
    def setEnable(self, en):
-      self.enable = en
-      self.tempController.writeMessage(comms.Message('en' , str(en)))
+      if self.enable == False and en == 1:
+         self.enable = True
+         self.tempController.writeMessage(comms.Message('en' , str(en)))
 
    def setRefTemp(self, refT):
       if self.enable == True:
@@ -88,7 +79,7 @@ def main():
    
    try:
          while 1:
-            if h.readHAL_enable == True:
+            if h.readHAL_enable() == True:
                tc.setEnable(True)
 
                refTemp = h.readHAL_refTemp()

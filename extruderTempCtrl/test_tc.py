@@ -23,6 +23,8 @@ class TestComp(unittest.TestCase):
 
    def test_setTemp(self):
       self.tempCtrler.setEnable(True)
+      self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
+      
       self.tempCtrler.setRefTemp(200)
       self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp200\n')
 
