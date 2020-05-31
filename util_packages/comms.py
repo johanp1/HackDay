@@ -77,7 +77,7 @@ class instrument:
             self.msg_hdlr(Message(msg_str[0], msg_str[1]))
 
    def writeMessage(self, m):
-      self._write(m.msg + '_' + m.val + '\n')
+      self._write(m.msg + m.val + '\n')
 
    def _write(self, str):
       #serial expects a byte-array and not a string

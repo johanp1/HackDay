@@ -24,7 +24,7 @@ class TestComp(unittest.TestCase):
    def test_setTemp(self):
       self.tempCtrler.setEnable(True)
       self.tempCtrler.setRefTemp(200)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp_200\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp200\n')
 
    def test_getCurrTemp(self):
       # send a message. i.e call the registered callbak with the "received" message

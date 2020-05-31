@@ -104,6 +104,8 @@ void loop()
   if(enable)
   {
     duty = tempCtrl.step(currTemp, refTemp);  // temp in [0.1 degrees]
+    debug_print(currTemp);
+    debug_print(refTemp);
   }
   
   debug_print(duty);
@@ -140,7 +142,6 @@ int readTemp()
   debug_print(mv);
   
   T = (2792500 - ((long)(389*mv)))/1000;  //[0.1 degrees]
-  debug_print(T);
   
   return T;
 }

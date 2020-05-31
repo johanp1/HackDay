@@ -51,6 +51,7 @@ class TempControllerFacade:
 
    def setEnable(self, en):
       self.enable = en
+      self.tempController.writeMessage(comms.Message('en' , str(en)))
 
    def setRefTemp(self, refT):
       if self.enable == True:
