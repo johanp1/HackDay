@@ -42,7 +42,7 @@ class TempControllerFacade:
    def setEnable(self, en):
       if self.enable == False and en == 1:
          self.enable = True
-         self.tempController.writeMessage(comms.Message('en' , str(en)))
+         self.tempController.writeMessage(comms.Message('en' , '1'))
 
    def setRefTemp(self, refT):
       if self.enable == True:
@@ -79,8 +79,10 @@ def main():
    
    try:
          while 1:
-            if h.readHAL_enable() == True:
-               tc.setEnable(True)
+            tc.tempController.readMessages()
+
+            if h.readHAL_enable() == 1:
+               tc.setEnable(1)
 
                refTemp = h.readHAL_refTemp()
                tc.setRefTemp(refTemp)               
