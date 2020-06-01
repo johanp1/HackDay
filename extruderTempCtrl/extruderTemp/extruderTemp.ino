@@ -84,10 +84,10 @@ void loop()
     duty = tempCtrl.step(currTemp, refTemp);  // temp in [0.1 degrees]
     debug_print(currTemp);
     debug_print(refTemp);
-	debug_print(duty);
+	  debug_print(duty);
 	
-	Serial.print('mv_');
-	Serial.println(currTemp);
+	  Serial.print("mv_");
+	  Serial.println(currTemp);
   } 
   
   analogWrite(pwmPin, duty);
