@@ -13,13 +13,24 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.tempCtrler.refTemp == 100)
       self.assertFalse(self.tempCtrler.enable)
 
-   def test_setTempDisable(self):
+   def test_setTempWhenDisabled(self):
       self.tempCtrler.setRefTemp(200)
       self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == '')
 
    def test_setEnable(self):
       self.tempCtrler.setEnable(True)
-      self.assertTrue(self.tempCtrler.enable)
+      self.assertTrue(self.tempCtrler.enable == True)
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en1\n')
+
+   def test_setDisnable(self):
+      self.tempCtrler.setEnable(True)
+      self.assertTrue(self.tempCtrler.enable == True)
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en1\n')
+      self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
+
+      self.tempCtrler.setEnable(False)
+      self.assertTrue(self.tempCtrler.enable == False)
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en0\n')
 
    def test_setTemp(self):
       self.tempCtrler.setEnable(True)

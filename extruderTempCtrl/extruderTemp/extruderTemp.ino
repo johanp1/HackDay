@@ -12,40 +12,19 @@ int readTemp();
 class SetTempFunctionoid : public ParserFunctionoid
 {
   public:
-  void execute(String& _parsedData) 
-  {
-    Serial.print("setTemp: ");
-    Serial.println(_parsedData);
-    setRefTemp(_parsedData.toInt());
-  };
+  void execute(String& _parsedData) { setRefTemp(_parsedData.toInt()); };
 };
 
 class SetEnableFunctionoid : public ParserFunctionoid
 {
   public:
-  void execute(String& _parsedData) 
-  {
-    int tmp = _parsedData.toInt();
-    
-    Serial.print("setEn: ");
-    Serial.println(_parsedData);
-
-    setEnable(_parsedData.toInt());
-  };
+  void execute(String& _parsedData) { setEnable(_parsedData.toInt()); };
 };
 
 class SetDebugFunctionoid : public ParserFunctionoid
 {
   public:
-  void execute(String& _parsedData) 
-  {
-    int tmp = _parsedData.toInt();
-    
-    Serial.print("setDebug: ");
-    Serial.println(_parsedData);
-
-    setDebug(_parsedData.toInt());
-  };
+  void execute(String& _parsedData) { setDebug(_parsedData.toInt()); };
 };
 
 // defines pins numbers
@@ -99,17 +78,17 @@ void loop()
   int currTemp;
 
   currTemp = readTemp();
-  //updateRefTemp(&refTemp);
 
   if(enable)
   {
     duty = tempCtrl.step(currTemp, refTemp);  // temp in [0.1 degrees]
     debug_print(currTemp);
     debug_print(refTemp);
-  }
-  
-  debug_print(duty);
-  //Serial.println(' ');
+	debug_print(duty);
+	
+	Serial.print('mv_');
+	Serial.println(currTemp);
+  } 
   
   analogWrite(pwmPin, duty);
 
@@ -119,16 +98,19 @@ void loop()
 void setRefTemp(int newRef)
 {
   refTemp = newRef*10; // convert to 0.1 degrees unit
+  debug_print(refTemp);
 }
 
 void setEnable(int en)
 {
   enable = (en > 0 ? true : false);
+  debug_print(enable);
 }
 
 void setDebug(int d)
 {
   debug = (d > 0 ? true : false);
+  debug_print(debug);
 }
 
 int readTemp()
@@ -150,32 +132,3 @@ void serialEvent()
 {
   receiver.scan();
 }
-
-/*
-void updateRefTemp(int* refTemp)
-{
-  char in_len;
-  int tmp;
-  char ser_in[20];  // for incoming serial data
-
-  if (Serial.available() > 0)
-  {
-    // read the incoming byte:
-    in_len = Serial.readBytes(ser_in, 20);
-
-    tmp = parseCmdLn(ser_in, in_len);
-    *refTemp = tmp*10; // convert to 0.1 degrees unit
-    debug_print(tmp);
-  }
-}
-
-int parseCmdLn(char* cmd, byte len)
-{
-  String tmpStr = cmd;
-
-  tmpStr.remove(len);
-  debug_print(tmpStr);
-  
-  return tmpStr.toInt();
-}
-*/

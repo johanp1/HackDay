@@ -40,9 +40,12 @@ class TempControllerFacade:
          self.currTemp = int(m.val)
 
    def setEnable(self, en):
-      if self.enable == False and en == 1:
-         self.enable = True
+      self.enable = en
+
+      if en == True:   
          self.tempController.writeMessage(comms.Message('en' , '1'))
+      else:
+         self.tempController.writeMessage(comms.Message('en' , '0'))
 
    def setRefTemp(self, refT):
       if self.enable == True:
@@ -82,13 +85,15 @@ def main():
             tc.tempController.readMessages()
 
             if h.readHAL_enable() == 1:
-               tc.setEnable(1)
-
-               refTemp = h.readHAL_refTemp()
-               tc.setRefTemp(refTemp)               
+               if tc.enable == False:
+                  tc.setEnable(True)               
             else:
                tc.setEnable(False)
-               
+
+            if tc.enable == True:
+               refTemp = h.readHAL_refTemp()
+               tc.setRefTemp(refTemp)   
+
             h.writeHAL_CurrTemp(tc.currTemp)
 
             time.sleep(1)

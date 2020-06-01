@@ -10,16 +10,16 @@
 
 static void encoderISR(void);
 
-C_Button buttons[NBR_OF_BUTTONS] = {C_Button("rth", RTH_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
-								                    C_Button("run", RUN_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
-									                  C_Button("est", EST_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY)} ;
-C_RotaryEncoder encoder("jog", ENCODER_CLK_PIN, ENCODER_DT_PIN);
-C_Selector selectors[NBR_OF_SELECTORS] = {C_Selector("sela", AXIS_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY), 
-									            	          C_Selector("sels", SCALE_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY)};
-C_Sender sender;
-C_Buffer buffer;
+Button buttons[NBR_OF_BUTTONS] = {Button("rth", RTH_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
+								                  Button("run", RUN_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
+								                  Button("est", EST_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY)} ;
+RotaryEncoder encoder("jog", ENCODER_CLK_PIN, ENCODER_DT_PIN);
+Selector selectors[NBR_OF_SELECTORS] = {Selector("sela", AXIS_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY), 
+									            	        Selector("sels", SCALE_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY)};
+Sender sender;
+Buffer buffer;
 
-C_EventGenerator* evGenList[NBR_OF_EVENT_GENERATORS];
+EventGenerator* evGenList[NBR_OF_EVENT_GENERATORS];
 
 void setup() {
    Serial.begin(38400);  // opens serial port, sets data rate to 9600 bps
