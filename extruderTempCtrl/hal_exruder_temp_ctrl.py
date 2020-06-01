@@ -10,6 +10,7 @@ class HalAdapter:
       self.hal.newpin("ref-temp", hal.HAL_U32, hal.HAL_IN)
       self.hal.newpin("enable", hal.HAL_BIT, hal.HAL_IN)
       self.hal.newpin("curr-temp", hal.HAL_U32, hal.HAL_OUT)
+      self.hal.newpin("ref-temp-out", hal.HAL_U32, hal.HAL_OUT)
       
       self.hal.ready()
  
@@ -24,9 +25,13 @@ class HalAdapter:
       """read values from LinuxCNC HAL"""
       return self.hal['enable']
 
-   def writeHAL_CurrTemp(self, val):
+   def writeHAL_currTemp(self, val):
       """ write internal wrapper pin values to LinuxCNC HAL """
       self.hal['curr-temp'] = val
+      
+   def writeHAL_refTemp(self, val):
+      """ write internal wrapper pin values to LinuxCNC HAL """
+      self.hal['ref-temp-out'] = val
 
 class TempControllerFacade:
    def __init__(self, port):
@@ -94,7 +99,8 @@ def main():
                refTemp = h.readHAL_refTemp()
                tc.setRefTemp(refTemp)   
 
-            h.writeHAL_CurrTemp(tc.currTemp)
+            h.writeHAL_currTemp(tc.currTemp)
+            h.writeHAL_refTemp(tc.refTemp);
 
             time.sleep(1)
 

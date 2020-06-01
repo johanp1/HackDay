@@ -57,7 +57,7 @@ void setup() {
   debug = 0;
   enable = false;
   
-  Serial.begin(9600);  // opens serial port, sets data rate to 9600 bps
+  Serial.begin(38400);  // opens serial port, sets data rate to 9600 bps
   Serial.setTimeout(500);
   // Sets the two pins as Outputs
 
