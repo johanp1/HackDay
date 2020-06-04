@@ -82,9 +82,12 @@ class TestComms(unittest.TestCase):
       
    def test_writeMessage(self):
       self.s.writeMessage(comms.Message('apa', '123'))
-      print self.s.serial.writeBuf
-      self.assertTrue(self.s.serial.writeBuf == 'apa_123\n')
+      self.assertTrue(self.s.serial.writeBuf == 'apa123\n')
 
+   def test_writeMessagePortClosed(self):
+      self.s.close()
+      self.s.writeMessage(comms.Message('apa', '123'))
+      self.assertTrue(self.s.serial.writeBuf == '')
 
 if __name__ == '__main__':
    unittest.main()

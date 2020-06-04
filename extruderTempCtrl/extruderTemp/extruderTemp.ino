@@ -87,7 +87,7 @@ void loop()
 	  debug_print(duty);
 	
 	  Serial.print("mv_");
-	  Serial.println(currTemp);
+	  Serial.println((int)(currTemp)/10); // convert from 0.1 degrees unit
   } 
   
   analogWrite(pwmPin, duty);

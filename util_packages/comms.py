@@ -80,8 +80,9 @@ class instrument:
       self._write(m.msg + m.val + '\n')
 
    def _write(self, str):
-      #serial expects a byte-array and not a string
-      self.serial.write(''.join(str).encode('utf-8'))
+      if self.portOpened == True:
+         #serial expects a byte-array and not a string
+         self.serial.write(''.join(str).encode('utf-8'))
      
    def _read(self):
       """ returns string read from serial port """

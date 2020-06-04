@@ -100,7 +100,7 @@ def main():
                tc.setRefTemp(refTemp)   
 
             h.writeHAL_currTemp(tc.currTemp)
-            h.writeHAL_refTemp(tc.refTemp);
+            h.writeHAL_refTemp(tc.refTemp)
 
             time.sleep(1)
 
