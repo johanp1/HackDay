@@ -4,7 +4,7 @@ import sys
 import getopt
 import xml.etree.ElementTree as ET
 import hal
-import my_time as time
+import time
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -132,10 +132,10 @@ class LubeControl:
       self.state = 'OFF'
       self.lubeLevelOkOut = True
       self._lubeLevelOkIn = True
-      self.prevTime = time.getEhocTime()
+      self.prevTime = time.time()
 
    def calcDistFromVel(self, dxdt, dydt, dzdt):
-      currentTime = time.getEhocTime()
+      currentTime = time.time()
       timeDelta = currentTime - self.prevTime
 
       self.totalDistance += abs(dxdt) * timeDelta
@@ -145,7 +145,7 @@ class LubeControl:
       self.prevTime = currentTime
 
    def runStateMachine(self):
-      currentTime = time.getEhocTime()
+      currentTime = time.time()
       if self.totalDistance >= self.distanceThreshold:
          self.state = 'ON'
          self.timeout = self.lubeOnTime + currentTime

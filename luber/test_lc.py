@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import unittest
 import luber  
-import my_time
+import time
 
 class TestComp(unittest.TestCase):
    def timeMock(self):
@@ -11,10 +11,15 @@ class TestComp(unittest.TestCase):
       self._time += t
 
    def setUp(self):
-      my_time.getEhocTime = self.timeMock
+      self.savedTimeMethod = time.time # save time-methos to be restored in restore...
+      time.time = self.timeMock        #override time
       self._time = 0
       self.lubeCtrl = luber.LubeControl(3, 0, 3, 1)
       self.incMockTime(0.1)
+      
+   def tearDown(self):
+      # Restore the time.time function
+      time.time = self.savedTimeMethod
 
    def test_init(self):
       self.assertTrue(self.lubeCtrl.totalDistance == 0)
