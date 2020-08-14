@@ -1,15 +1,35 @@
+#include "receiver.h"
+#include "event_parser.h"
+#include <avr/wdt.h>
+
+class HeartbeatFunctionoid : public ParserFunctionoid
+{
+  public:
+  void execute() { wdt_reset(); };
+};
 
 boolean send = false;
 byte cnt = 0;
 unsigned int currSpeed;
   
+Receiver receiver(String("rec"));
+EventParser ep;
+HeartbeatFunctionoid heartbeatFunct;
+  
 void setup() {
+  String heartbeatCmd = String("hb");
+   
   cli();
   timer1Init();
   timer2Init();
   sei();
   
+  //  wdInit();
+  wdt_enable(WDTO_2S);
+  
   pinMode(5, INPUT);
+
+  ep.addAcceptedCmd(heartbeatCmd, heartbeatFunct);
 
   Serial.begin(38400);  // opens serial port
   Serial.setTimeout(500);
@@ -17,18 +37,17 @@ void setup() {
 }
 
 void loop() {
-/*  Serial.print("TCNT1: ");
-  Serial.println((TCNT1*6)/5); // TCNT1 contains #counts_per_100ms => TCNT1*10*60/500 RPM
-  
-  TCNT1=0;
-  dely(100); // waits 1000ms*/
-  
   if(send)
   {
     Serial.print("pos_");
     Serial.println(currSpeed);
     send=0;
   }
+}
+
+void serialEvent()
+{
+  receiver.scan();
 }
 
 void timer1Init( void )
@@ -46,6 +65,17 @@ void timer2Init( void )
   OCR2A = 77;                              // compare match every 5th milli-sec @20MHz
   TCNT2   = 0;                              // clear timer2
 }
+
+/*
+void wdInit(void)
+{
+   wdr();
+   // Start timed equence
+   WDTCSR |= (1<<WDCE) | (1<<WDE);
+   // Set new prescaler(time-out) value = 256K cycles (~2 s)
+   WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP1) | (1<<WDP0);
+}
+*/
 
 ISR( TIMER2_COMPA_vect  )
 { 

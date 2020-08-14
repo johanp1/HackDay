@@ -5,6 +5,10 @@ void CmdFunctionMapper::execute(String& _parsedData)
 {
    pf->execute(_parsedData);
 }
+void CmdFunctionMapper::execute()
+{
+   pf->execute();
+}
 
 EventParser::EventParser()
 {
@@ -28,13 +32,17 @@ void EventParser::parseEvent(String& unparsedData)
          bool isAccepted = unparsedData.startsWith(acceptedCmds[i].cmd);
          if (isAccepted) //data starts with a command
          {
-            String data = String("");
             // if the unparsed data contains more than cmd, split out the data-part from the cmd-part
-            if (unparsedData.length() >= acceptedCmds[i].cmd.length())
+            if (unparsedData.length() > acceptedCmds[i].cmd.length())
             {
+               String data = String("");
                data = unparsedData.substring(acceptedCmds[i].cmd.length());
+               acceptedCmds[i].execute(data);
             }
-            acceptedCmds[i].execute(data);
+            else
+            {
+               acceptedCmds[i].execute();
+            }
          }
       }
    }

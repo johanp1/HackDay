@@ -39,5 +39,13 @@ class TestWatchDog(unittest.TestCase):
       self.incMockTime(1)
       self.assertTrue(self.wd.check())
 
+   def test_inMargin(self):
+      # check within timeout/margin
+      self.incMockTime(10)
+      self.assertTrue(self.wd.insideMargin())
+
+      # check when timeout/margin expired
+      self.incMockTime(1)
+      self.assertFalse(self.wd.insideMargin())
 if __name__ == '__main__':
    unittest.main()

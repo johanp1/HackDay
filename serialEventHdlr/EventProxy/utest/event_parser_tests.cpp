@@ -12,13 +12,20 @@ TEST_GROUP(EventParserTestGroup)
          hasBeenCalled = true;
          parsedData.s = _parsedData.s;
       };
+      void execute()
+      {
+         hasBeenCalledNoData = true;
+      };
+      
       void clear()
       {
          hasBeenCalled = false;
+         hasBeenCalledNoData = false;
          parsedData.s.clear();
       };
 
       bool hasBeenCalled;
+      bool hasBeenCalledNoData;
       String parsedData;
    };
 
@@ -41,7 +48,6 @@ TEST(EventParserTestGroup, init)
 {
    CHECK(ep.getNbrOfAcceptedCmds() == 1);
 }
-
 
 TEST(EventParserTestGroup, handleValidEvent)
 {
@@ -94,11 +100,11 @@ TEST(EventParserTestGroup, handleValidEventNoData)
    C_Event e = C_Event(name, eventData);
    
    CHECK(!pfSpy.hasBeenCalled);
+   CHECK(!pfSpy.hasBeenCalledNoData);
 
    ep.handleEvent(e);
    
-   CHECK(pfSpy.parsedData.compare("") == 0 );
-   CHECK(pfSpy.hasBeenCalled);
+   CHECK(pfSpy.hasBeenCalledNoData);
 }
 
 TEST(EventParserTestGroup, handle2ValidEvent)

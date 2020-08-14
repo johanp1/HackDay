@@ -8,7 +8,8 @@
 class ParserFunctionoid
 {
    public:
-   virtual void execute(String& _parsedData) = 0;
+   virtual void execute(String& _parsedData) {_parsedData=_parsedData;};
+   virtual void execute() {};
 };
 
 class CmdFunctionMapper
@@ -17,7 +18,8 @@ class CmdFunctionMapper
    CmdFunctionMapper() {pf = NULL;};
    CmdFunctionMapper(String& _cmd, ParserFunctionoid* _pf) : cmd(_cmd), pf(_pf) {};
    void execute(String& _parsedData);
-
+   void execute();
+   
    String cmd;
 
    private:

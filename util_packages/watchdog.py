@@ -17,6 +17,13 @@ class WatchDog():
          return True
       else:
          return False
+         
+   def insideMargin(self):
+      if time.time() - self.tickTime <= self.timeout:
+         return True
+      else:
+         self.tickTime = time.time() #reset tick time
+         return False
 
 
 class WatchDogDaeomn(threading.Thread):
@@ -40,10 +47,13 @@ class WatchDogDaeomn(threading.Thread):
          self.i = self.i + 1
          time.sleep(self.periodicity)
 
-         if self.wd.check():
+         if not self.wd.insideMargin():
             self.reset()
+         #if self.wd.check():
+         #   self.reset()
 
    def reset(self):
+      """to be overriden by client"""
       pass
 
 def main():
@@ -57,8 +67,6 @@ def main():
          i = i+1
 
          #wdd.ping()
-
-
 
    except KeyboardInterrupt:
       raise SystemExit
