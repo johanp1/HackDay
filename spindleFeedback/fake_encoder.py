@@ -101,7 +101,8 @@ def main():
          speedCounter.readMessages() #blocks until '\n' received or timeout
             
          h.update(fake.velocity, fake.position)
-            
+         
+         speedCounter.writeMessage('hb') # write heartbeat to ping speedcounter's watchdag
          time.sleep(0.05)
 
    except KeyboardInterrupt:
