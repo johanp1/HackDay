@@ -24,7 +24,7 @@ CLOSE_PORT_AFTER_EACH_CALL = False
 
 class Message:
    """'container for messages. keeps two strings <message> and <value>"""
-   def __init__(self, message, value):
+   def __init__(self, message, value = ''):
       self.msg = message
       self.val = value
       
@@ -56,9 +56,8 @@ class instrument:
          self.portOpened = False
 
    def close(self):
-      if self.portOpened == True:
-         self.serial.close()
-         self.portOpened = False
+      self.serial.close()
+      self.portOpened = False
 
    def dataReady(self):
       if self.portOpened:

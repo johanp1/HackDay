@@ -7,26 +7,26 @@ class TestComp(unittest.TestCase):
       
    def setUp(self):
       self.fake = fake_encoder.FakeEncoder(0.05, 500)
-      self.halFacade = fake_encoder.HalFacade('fake-encoder', self.fake.clear)
+      self.HalAdapter = fake_encoder.HalAdapter('fake-encoder', self.fake.clear)
          
    def test_init(self):
       self.assertTrue(self.fake.position == 0)
       self.assertTrue(self.fake.velocity == 0)   
       self.assertTrue(self.fake.dT == 0.05)
       self.assertTrue(self.fake.scale == 500)
-
-      self.assertTrue(self.halFacade.h.name == 'fake-encoder')
       
-      self.assertTrue(self.halFacade.h['velocity'] == 0)
-      self.assertTrue(self.halFacade.h.pinDict['velocity'].type == 'HAL_FLOAT')
-      self.assertTrue(self.halFacade.h.pinDict['velocity'].dir == 'HAL_OUT')
-      self.assertTrue(self.halFacade.h['position'] == 0)
-      self.assertTrue(self.halFacade.h.pinDict['position'].type == 'HAL_FLOAT')
-      self.assertTrue(self.halFacade.h.pinDict['position'].dir == 'HAL_OUT')
-      self.assertTrue(self.halFacade.h['index-enable'] == 0)
-      self.assertTrue(self.halFacade.h.pinDict['index-enable'].type == 'HAL_BIT')
-      self.assertTrue(self.halFacade.h.pinDict['index-enable'].dir == 'HAL_IO')
-      self.assertTrue(self.halFacade.h.readyFlag == 1)
+      self.assertTrue(self.HalAdapter.h.name == 'fake-encoder')
+      
+      self.assertTrue(self.HalAdapter.h['velocity'] == 0)
+      self.assertTrue(self.HalAdapter.h.pinDict['velocity'].type == 'HAL_FLOAT')
+      self.assertTrue(self.HalAdapter.h.pinDict['velocity'].dir == 'HAL_OUT')
+      self.assertTrue(self.HalAdapter.h['position'] == 0)
+      self.assertTrue(self.HalAdapter.h.pinDict['position'].type == 'HAL_FLOAT')
+      self.assertTrue(self.HalAdapter.h.pinDict['position'].dir == 'HAL_OUT')
+      self.assertTrue(self.HalAdapter.h['index-enable'] == 0)
+      self.assertTrue(self.HalAdapter.h.pinDict['index-enable'].type == 'HAL_BIT')
+      self.assertTrue(self.HalAdapter.h.pinDict['index-enable'].dir == 'HAL_IO')
+      self.assertTrue(self.HalAdapter.h.readyFlag == 1)
 
    def test_handleEvent(self):
       pos = 100.0 # => vel = pos/dt/scale = pos/(dt*scale) => 100/25 = 4
@@ -41,9 +41,9 @@ class TestComp(unittest.TestCase):
       self.assertTrue(encoderPos == expectedPos)
       self.assertTrue(encoderVel == expectedVel)   
 
-      self.halFacade.update(self.fake.velocity, self.fake.position)
-      halPos = round(self.halFacade.h['position'], 3)
-      halVel = round(self.halFacade.h['velocity'], 3)
+      self.HalAdapter.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.HalAdapter.h['position'], 3)
+      halVel = round(self.HalAdapter.h['velocity'], 3)
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)
 
@@ -58,9 +58,9 @@ class TestComp(unittest.TestCase):
       self.assertTrue(encoderPos == expectedPos)
       self.assertTrue(encoderVel == expectedVel)   
 
-      self.halFacade.update(self.fake.velocity, self.fake.position)
-      halPos = round(self.halFacade.h['position'], 3)
-      halVel = round(self.halFacade.h['velocity'], 3)
+      self.HalAdapter.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.HalAdapter.h['position'], 3)
+      halVel = round(self.HalAdapter.h['velocity'], 3)
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)   
 
@@ -73,9 +73,9 @@ class TestComp(unittest.TestCase):
       self.assertTrue(encoderPos == expectedPos)
       self.assertTrue(encoderVel == expectedVel)   
 
-      self.halFacade.update(self.fake.velocity, self.fake.position)
-      halPos = round(self.halFacade.h['position'], 3)
-      halVel = round(self.halFacade.h['velocity'], 3)
+      self.HalAdapter.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.HalAdapter.h['position'], 3)
+      halVel = round(self.HalAdapter.h['velocity'], 3)
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)   
 
@@ -104,19 +104,19 @@ class TestComp(unittest.TestCase):
       self.assertTrue(encoderPos == expectedPos)
       self.assertTrue(encoderVel == expectedVel)   
       
-      self.halFacade.update(self.fake.velocity, self.fake.position)
-      halPos = round(self.halFacade.h['position'], 3)
-      halVel = round(self.halFacade.h['velocity'], 3)
+      self.HalAdapter.update(self.fake.velocity, self.fake.position)
+      halPos = round(self.HalAdapter.h['position'], 3)
+      halVel = round(self.HalAdapter.h['velocity'], 3)
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)
 
-      self.halFacade.h['index-enable'] = 1
-      self.halFacade.update(self.fake.velocity, self.fake.position)
+      self.HalAdapter.h['index-enable'] = 1
+      self.HalAdapter.update(self.fake.velocity, self.fake.position)
 
       self.assertTrue(self.fake.position == 0)  
       #self.assertTrue(self.fake.count == 0)
-      self.assertTrue(self.halFacade.h['position'] == 0)
-      self.assertTrue(self.halFacade.h['index-enable'] == 0)
+      self.assertTrue(self.HalAdapter.h['position'] == 0)
+      self.assertTrue(self.HalAdapter.h['index-enable'] == 0)
 
 
 if __name__ == '__main__':

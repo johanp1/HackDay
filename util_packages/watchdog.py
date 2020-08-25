@@ -26,16 +26,18 @@ class WatchDog():
          return False
 
 
-class WatchDogDaeomn(threading.Thread):
-   def __init__(self, timeout, periodicity):
+class WatchDogDaemon(threading.Thread):
+   def __init__(self, timeout, periodicity, start = True):
       self.wd = WatchDog(timeout)
       self.periodicity = periodicity
 
       threading.Thread.__init__(self)
       self.daemon = True
-      self.start()
 
-      self.i = 0
+      if start == True:
+         self.start()
+
+      #self.i = 0
 
    def ping(self):
       self.wd.ping()
@@ -43,12 +45,14 @@ class WatchDogDaeomn(threading.Thread):
    def run(self):
       print "Starting "
       while(1):
-         print 'daemon_' + str(self.i)
-         self.i = self.i + 1
+         #print 'daemon_' + str(self.i)
+         #self.i = self.i + 1
+
          time.sleep(self.periodicity)
 
          if not self.wd.insideMargin():
             self.reset()
+
          #if self.wd.check():
          #   self.reset()
 
@@ -58,7 +62,7 @@ class WatchDogDaeomn(threading.Thread):
 
 def main():
    i = 0
-   wdd = WatchDogDaeomn(2, 0.5)
+   wdd = WatchDogDaemon(2, 0.5)
 
    try:
       while 1:

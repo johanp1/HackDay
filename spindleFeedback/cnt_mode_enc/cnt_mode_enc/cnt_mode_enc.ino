@@ -66,7 +66,7 @@ void timer2Init( void )
   TCNT2   = 0;                              // clear timer2
 }
 
-/*
+
 void wdInit(void)
 {
    wdr();
@@ -75,7 +75,7 @@ void wdInit(void)
    // Set new prescaler(time-out) value = 256K cycles (~2 s)
    WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP1) | (1<<WDP0);
 }
-*/
+
 
 ISR( TIMER2_COMPA_vect  )
 { 

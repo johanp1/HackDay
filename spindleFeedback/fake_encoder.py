@@ -5,6 +5,40 @@ import comms
 import hal
 import getopt
 import time
+import watchdog
+
+class FakeEncoderFacade:
+   def __init__(self, portName, dT, scale):
+
+      self.fake = FakeEncoder(0.05, 500)
+      self.speedCounter = comms.instrument(portName, self.handleEvent) #serial adaptor
+      self.wdd = watchdog.WatchDogDaemon(2, 0.5, True)
+      self.wdd.reset = self.reset
+         
+   def reset(self):
+      self.speedCounter.close()
+      print 'closing com-port'
+
+   def handleEvent(self, event):
+      self.fake.handleEvent(event)
+      self.wdd.ping() #ping watchdog
+
+   def update(self):
+      if self.speedCounter.portOpened:
+         self.speedCounter.readMessages() #blocks until '\n' received or timeout
+         self.speedCounter.writeMessage(comms.Message('hb')) # write heartbeat to ping speedcounter's watchdag
+      else:
+         self.speedCounter.open()
+         print 'opening com-port'
+
+   def clear(self):
+      self.fake.clear()
+
+   def getVelocity(self):
+      return self.fake.velocity
+
+   def getPosition(self):
+      return self.fake.position
 
 class FakeEncoder:
    def __init__(self, dT, scale):
@@ -12,16 +46,17 @@ class FakeEncoder:
       self.velocity = 0  # units per sec, i.e. rps
       self.dT = dT       # delta time between samples
       self.scale = scale # nbr of pulses / rev
-        
+
    def clear(self):
       self.position = 0
-        
+      print 'FakeEncoder::clearing position data'
+
    def handleEvent(self, event):
       if (event.msg == 'pos'):
          self.velocity = float(event.val)/(self.scale*self.dT) #pos per dT to rps
          self.position += float(event.val)/self.scale
-       
-class HalFacade:
+
+class HalAdapter:
    def __init__(self, name, clear_cb):
       self.h = hal.component(name) 
       self.clearCallback = clear_cb
@@ -86,23 +121,23 @@ class OptParser:
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
          "-h                       # print this test"
 
+
 def main():
    optParser = OptParser(sys.argv[1:])
    componentName = optParser.getName()
    portName = optParser.getPort()
+
    print optParser
 
-   fake = FakeEncoder(0.05, 500)
-   speedCounter = comms.instrument(portName, fake.handleEvent) #serial adaptor
-   h = HalFacade(componentName, fake.clear)
+   fake = FakeEncoderFacade(portName, 0.05, 500)
+   h = HalAdapter(componentName, fake.clear)
     
    try:
       while 1:
-         speedCounter.readMessages() #blocks until '\n' received or timeout
+         fake.update()
             
-         h.update(fake.velocity, fake.position)
-         
-         speedCounter.writeMessage('hb') # write heartbeat to ping speedcounter's watchdag
+         h.update(fake.getVelocity(), fake.getPosition())
+      
          time.sleep(0.05)
 
    except KeyboardInterrupt:
