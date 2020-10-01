@@ -55,6 +55,14 @@ class TestComms(unittest.TestCase):
       
       self.assertTrue(len(self.m) == 0)
       
+   def test_readOneBadMessage4(self):
+      #data that can not be decoded...
+      self.s.serial.stub_set_read([b'\xf0'])
+
+      self.s.readMessages()
+      
+      self.assertTrue(len(self.m) == 0)
+
    def test_readTwoMessages(self):
       self.s.serial.stub_set_read(['apa_10', 'bepa_11'])
       

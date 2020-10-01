@@ -89,7 +89,7 @@ class instrument:
       if self.portOpened == True:
          b = self.serial.read_until() #blocks until '\n' received or timeout
          
-      return b.decode('utf-8')        #convert byte array to string
+      return b.decode('utf-8', 'ignore')        #convert byte array to string
       
    def _is_number(self, s):
       """  helper function to evaluate if input text represents an integer or not """

@@ -37,24 +37,16 @@ class WatchDogDaemon(threading.Thread):
       if start == True:
          self.start()
 
-      #self.i = 0
-
    def ping(self):
       self.wd.ping()
 
    def run(self):
       print "Starting "
       while(1):
-         #print 'daemon_' + str(self.i)
-         #self.i = self.i + 1
-
          time.sleep(self.periodicity)
 
          if not self.wd.insideMargin():
             self.reset()
-
-         #if self.wd.check():
-         #   self.reset()
 
    def reset(self):
       """to be overriden by client"""

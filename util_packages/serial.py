@@ -33,7 +33,7 @@ class Serial:
    def read_until(self):
       """ send/return the last sting in msgs array """
       if self.nbr_msgs > 0:
-         retStr = self.msgs[self.nbr_msgs-1].encode('utf-8')     
+         retStr = self.msgs[self.nbr_msgs-1] #.encode('utf-8')     
          
          self.nbr_msgs = self.nbr_msgs - 1
          if self.nbr_msgs == 0:
