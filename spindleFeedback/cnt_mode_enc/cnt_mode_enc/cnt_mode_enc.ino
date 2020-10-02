@@ -29,11 +29,12 @@ void setup() {
   
   pinMode(5, INPUT);
 
+  receiver.addEventListner(&ep);
   ep.addAcceptedCmd(heartbeatCmd, heartbeatFunct);
 
   Serial.begin(38400);  // opens serial port
   Serial.setTimeout(500);
-  Serial.println("hej");
+  Serial.println("ArduinoFakeEncoder::setup");
 }
 
 void loop() {
