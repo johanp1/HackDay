@@ -16,6 +16,7 @@ import sys
 import comms
 import xml.etree.ElementTree as ET
 import hal
+import watchdog
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -206,8 +207,8 @@ class EventBroker:
       if e.msg in self.eventDict:
          self.eventDict[e.msg](e)
 
-def watchDogHandler():
-   pass
+def watchDogHandler(e):
+   print 'wdd.ping()' #ping watchdog
 
 ### start of main script #############################################
 def main():
@@ -218,12 +219,13 @@ def main():
    print optParser
       
    xmlParser = XmlParser(xmlFile)
-      
+
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
    serialEventGenerator = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
 
-   print c
+   #wdd = watchdog.WatchDogDaemon(2, 0.5, True)
+   #wdd.reset = reset
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.getParsedData()
@@ -231,6 +233,10 @@ def main():
       c.addPin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
       eventBroker.attachHandler(key, c.updatePin)
    
+   print c
+
+   c.hal.newpin('reset', hal.HAL_BIT, hal.HAL_IN)
+
    #add handler for heart-beat/watch-dog signal
    eventBroker.attachHandler('hb', watchDogHandler)
   
@@ -239,9 +245,17 @@ def main():
    
    try:
       while 1:
+         if serialEventGenerator.portOpened == False:
+            print 'opening port'
+            serialEventGenerator.open()
+
          serialEventGenerator.readMessages() #blocks until '\n' received or timeout
          c.updateHAL()
             
+         if c.hal['reset'] == True:
+            print 'closing port'
+            serialEventGenerator.close()
+         
          time.sleep(0.05)
 
    except KeyboardInterrupt:

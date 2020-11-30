@@ -74,6 +74,11 @@ void String::concat(String& _s)
   s.append(_s.s);
 }
 
+void String::concat(const String& _s)
+{
+  s.append(_s.s);
+}
+
 void String::concat(const char* _c)
 {
   s.append(_c);
@@ -87,6 +92,12 @@ void String::concat(const char ch)
 void String::concat(int _i)
 {
   s.append(to__string(_i));
+}
+
+void String::concat(unsigned int _i)
+{
+int i = (int)_i;
+  s.append(to__string(i));
 }
 
 int String::compare(string& _s)

@@ -7,7 +7,7 @@
 #include "mpg_pendant.h"
 
 #define NBR_OF_EVENT_GENERATORS NBR_OF_BUTTONS+NBR_OF_SELECTORS+1
-
+#define HEARTBEAT_PERIOD 2000 //2000ms
 static void encoderISR(void);
 
 Button buttons[NBR_OF_BUTTONS] = {Button("rth", RTH_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
@@ -21,13 +21,15 @@ Buffer buffer;
 
 EventGenerator* evGenList[NBR_OF_EVENT_GENERATORS];
 
+unsigned long heartbeatTimer = HEARTBEAT_PERIOD;
+
 void setup() {
    Serial.begin(38400);  // opens serial port, sets data rate to 9600 bps
    Serial.setTimeout(500);
 
    attachInterrupt(digitalPinToInterrupt(ENCODER_CLK_PIN), encoderISR, RISING);
 
-   Serial.println("hej");
+   Serial.println("mpgPendant::setup()");
 
    buttons[0].addEventListner(&sender);
    buttons[1].addEventListner(&sender);
@@ -36,7 +38,7 @@ void setup() {
    selectors[1].addEventListner(&sender);
    encoder.addEventListner(&buffer);
 
-   evGenList[0] = &buttons[0];
+   evGenList[0] = &buttons[0]; 
    evGenList[1] = &buttons[1];
    evGenList[2] = &buttons[2];
    evGenList[3] = &selectors[0];
@@ -49,17 +51,24 @@ void loop() {
 
    byte i;
    C_Event e;
-   String s;
- 
+   
    for (i = 0; i<NBR_OF_EVENT_GENERATORS; i++)
    {
       evGenList[i]->scan();
    }
 
    while(buffer.get(e))
+   {  
+      sender.handleEvent(e);
+   }
+
+   //send heart-beat every second
+   if(millis() > heartbeatTimer)
    {
-      s  = e.serialize();
-      sender.send(s);
+      String tmpStr = "hb";
+      C_Event hb_ev = C_Event(tmpStr, 1);
+      sender.handleEvent(hb_ev);
+      heartbeatTimer = millis() + HEARTBEAT_PERIOD;
    }
 
    delay(10); // waits 10ms

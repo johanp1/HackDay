@@ -11,8 +11,16 @@ class EventGenerator {
    
    virtual void scan(void) = 0;
 
-   void generateEvent(unsigned int data);
-   void generateEvent(String& s);
+   template<typename T>
+   void generateEvent(const T& t)
+   {
+      C_Event e = C_Event(name, t);
+      if (handler_p != 0)
+      {
+         handler_p->handleEvent(e);
+      }
+   };
+
    void addEventListner(EventListner* h);
    String& getName();   
    

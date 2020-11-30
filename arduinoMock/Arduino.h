@@ -46,9 +46,11 @@ public:
 
    void concat(string& _s);
    void concat(String& _s);
+   void concat(const String& _s);
    void concat(const char* _c);
-   void concat(int _i);
    void concat(const char ch);
+   void concat(int _i);
+   void concat(unsigned int _i);
    int compare(string& _s);
    int compare(String& _s);
    int compare(String _s);

@@ -6,16 +6,20 @@
 class C_Event {
    
  public:
-  C_Event();
-  C_Event(String& str, unsigned int argData);
-  C_Event(String& str, String& argData);
+   C_Event();
+   
+   template<typename T>
+   C_Event(const String& str, const T&  argData) : source(str)
+   {
+      data.concat(argData);
+   };
 
-  String serialize(void);
-  String serializeData(void);
+   String serialize(void);
+   String serializeData(void);
   
  private:
-  String source;
-  String data;
+   String source;
+   String data;
 };
 
 #endif // __C_EVENT_H__

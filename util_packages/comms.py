@@ -54,6 +54,7 @@ class instrument:
          self.portOpened = True
       except serial.SerialException:
          self.portOpened = False
+         print 'unable to open port...'
 
    def close(self):
       self.serial.close()
