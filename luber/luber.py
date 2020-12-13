@@ -5,6 +5,7 @@ import getopt
 import xml.etree.ElementTree as ET
 import hal
 import time
+from collections import namedtuple
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -16,68 +17,51 @@ class Pin:
    def __repr__(self):
       return 'val: ' + str(self.val) + '\ttype: ' + self.type + '\tdir: ' + self.dir
 
-class ComponentWrapper:   
+class HalAdapter:
    def __init__(self, name):
-      self.hal = hal.component(name)  # instanciate the HAL-component
-      self.pinDict = {}
+      self.h = hal.component(name) 
+      self.h.newpin("velocity", hal.HAL_FLOAT, hal.HAL_OUT)
+      self.h.newpin('x-vel', hal.HAL_FLOAT, hal.HAL_IN)
+      self.h.newpin('y-vel', hal.HAL_FLOAT, hal.HAL_IN)
+      self.h.newpin('z-vel', hal.HAL_FLOAT, hal.HAL_IN)
+      self.h.newpin('lube-level-ok',hal.HAL_BIT, hal.HAL_IN)
+      self.h.newpin('reset', hal.HAL_BIT, hal.HAL_IN)
+      self.h.newpin('lube-cmd', hal.HAL_BIT, hal.HAL_OUT)
+      self.h.newpin('lube-level-alarm', hal.HAL_BIT, hal.HAL_OUT)
+      self.h.newpin('accumulated-distance', hal.HAL_FLOAT, hal.HAL_OUT)
+      self.h.ready()
 
    def __repr__(self):
       tmp_str = ''
-      for k in self.pinDict:
-         tmp_str += 'name: ' + k + '\t' + str(self.pinDict[k].val) + '\n'
       return tmp_str
 
-   def addPin(self, name, type, dir):
-      self.pinDict[name] = Pin(type, dir)
-      self._addHALPin(name, type, dir)
-            
-   def setReady(self): 
-      self.hal.ready()
+   def is_lube_level_ok(self):
+      return self.h['lube-level-ok']
 
-   def setPin(self, pin_name, val):
-      self.pinDict[pin_name].val = val
-      self.hal[pin_name] = self.pinDict[pin_name].val
+   def is_reset(self):
+      return self.h['reset']
 
-   def readPin(self, pin_name):
-      self.pinDict[pin_name].val = self.hal[pin_name]
-      return self.pinDict[pin_name].val
+   def get_velocities(self):
+      velocities = namedtuple("velocities", ["x", "y", "z"])
+      return velocities(
+         self.h['x-vel'],
+         self.h['y-vel'],
+         self.h['z-vel'])
 
-   def updateHAL(self):
-      for key in self.pinDict:
-         if self.pinDict[key].dir == 'out':
-            self.hal[key] = self.pinDict[key].val
+   def set_lube_on(self,  request):
+      if request >= 1:
+         self.h['lube-cmd'] = 1
+      else:
+         self.h['lube-cmd'] = 0
 
-   def _addHALPin(self, pin_name, type, pin_dir):
-      self.hal.newpin(pin_name, self._getHALType(type), self._getHalPinDir(pin_dir))  # create the user space HAL-pin
+   def set_lube_level_alarm(self, level_ok):
+      if level_ok >= 1:
+         self.h['lube-level-alarm'] = 1
+      else:
+         self.h['lube-level-alarm'] = 0
 
-   def _getHALType(self, str):
-      """ helper function to convert type read from xml to HAL-type """
-      retVal = ''
-   
-      if str == 'bit':
-         retVal = hal.HAL_BIT
-	
-      if str == 'float':
-         retVal = hal.HAL_FLOAT
-
-      if str == 's32':
-         retVal = hal.HAL_S32
-
-      if str == 'u32':
-         retVal = hal.HAL_U32
-      return retVal 
-
-   def _getHalPinDir(self, str):
-      """ helper function to convert pin direction to HAL-pin direction type """
-      retVal = ''
-   
-      if str == 'in':
-         retVal = hal.HAL_IN
-	
-      if str == 'out':
-         retVal = hal.HAL_OUT
-      
-      return retVal
+   def set_accumulated_distance(self, d):
+      self.h['accumulated-distance'] = d
 
 class parameterContainer:
    def __init__(self, xml_file):
@@ -124,32 +108,33 @@ class parameterContainer:
 
 class LubeControl:
    def __init__(self, lube_on_time, accumulated_distance, distance_threshold, number_of_lubings):
-      self.lubeOnTime = lube_on_time                  # [sec]
-      self.totalDistance = accumulated_distance       # [mm]
-      self.distanceThreshold = distance_threshold     # [mm]
+      self.lubeOnTime = lube_on_time                   # [sec]
+      self.total_distance = accumulated_distance       # [mm]
+      self.distance_threshold = distance_threshold     # [mm]
       self.numberOfLubings = number_of_lubings
 
       self.state = 'OFF'
       self.lubeLevelOkOut = True
       self._lubeLevelOkIn = True
-      self.prevTime = time.time()
+      self.prev_time = time.time()
 
-   def calcDistFromVel(self, dxdt, dydt, dzdt):
-      currentTime = time.time()
-      timeDelta = currentTime - self.prevTime
+   def calc_dist_from_vel(self, v_x, v_y, v_z):
+      current_time = time.time()
+      time_delta = current_time - self.prev_time
 
-      self.totalDistance += abs(dxdt) * timeDelta
-      self.totalDistance += abs(dydt) * timeDelta
-      self.totalDistance += abs(dzdt) * timeDelta
+      self.total_distance += abs(v_x) * time_delta
+      self.total_distance += abs(v_y) * time_delta
+      self.total_distance += abs(v_z) * time_delta
 
-      self.prevTime = currentTime
+      self.prev_time = current_time
+
 
    def runStateMachine(self):
       currentTime = time.time()
-      if self.totalDistance >= self.distanceThreshold:
+      if self.total_distance >= self.distance_threshold:
          self.state = 'ON'
          self.timeout = self.lubeOnTime + currentTime
-         self.totalDistance = 0
+         self.total_distance = 0
          self.numberOfLubings += 1
 
       if self.state == 'ON':
@@ -164,7 +149,7 @@ class LubeControl:
       self._lubeLevelOkIn = levelOk
 
    def reset(self):
-      self.totalDistance = 0
+      self.total_distance = 0
       self.state = 'OFF'
       self.lubeLevelOkOut = True
 
@@ -208,19 +193,7 @@ def main():
             
    p = parameterContainer(xmlFile)
 
-   c = ComponentWrapper(name) #HAL adaptor
-   c.addPin('x-vel', 'float', 'in')
-   c.addPin('y-vel', 'float', 'in')
-   c.addPin('z-vel', 'float', 'in')
-   c.addPin('lube-level-ok', 'bit', 'in')
-   c.addPin('reset', 'bit', 'in')
-   c.addPin('lube-cmd', 'bit', 'out')
-   c.addPin('lube-level-alarm', 'bit', 'out')
-   c.addPin('accumulated-distance', 'float', 'out')
-   print c
-
-   # ready signal to HAL, component and it's pins are ready created
-   c.setReady()
+   h = HalAdapter(name) 
    
    totalDistance = p.getParam('totalDistance')
    distanceThreshold = p.getParam('distanceThreshold')
@@ -231,22 +204,23 @@ def main():
 
    try:
       while 1:
-         if c.readPin('reset') == 1:
+         if h.is_reset():
             lubeCtrl.reset()
 
-         lubeCtrl.setLubeLevelOK(c.readPin('lube-level-ok'))
-         lubeCtrl.calcDistFromVel(c.readPin('x-vel'), c.readPin('y-vel'), c.readPin('z-vel'))
+         lubeCtrl.setLubeLevelOK(h.is_lube_level_ok())
+         v = h.get_velocities()
+         lubeCtrl.calc_dist_from_vel(v.x, v.y, v.z)
+
          lubeCtrl.runStateMachine()
 
-         c.setPin('lube-cmd', lubeCtrl.state == 'ON')
-         c.setPin('lube-level-alarm', lubeCtrl.lubeLevelOkOut)
-         c.setPin('accumulated-distance', lubeCtrl.totalDistance)
-         c.updateHAL()
+         h.set_lube_on(lubeCtrl.state == 'ON')
+         h.set_lube_level_alarm(lubeCtrl.lubeLevelOkOut)
+         h.set_accumulated_distance(lubeCtrl.total_distance)
 
          time.sleep(0.1)
 
    except KeyboardInterrupt:
-      p.writeParam('totalDistance', lubeCtrl.totalDistance)
+      p.writeParam('totalDistance', lubeCtrl.total_distance)
       p.writeParam('numberOfLubings', lubeCtrl.numberOfLubings)
       p.writeToFile()
       raise SystemExit

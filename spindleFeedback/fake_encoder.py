@@ -19,14 +19,13 @@ class FakeEncoderFacade:
       self.speedCounter.close()
       print 'closing com-port'
 
-   def handleEvent(self, event):
-      self.fake.handleEvent(event)
+   def handleEvent(self, event_name, data):
+      self.fake.handleEvent(event_name, data)
       self.wdd.ping() #ping watchdog
 
    def update(self):
       if self.speedCounter.portOpened:
          self.speedCounter.readMessages() #blocks until '\n' received or timeout
-         self.speedCounter.writeMessage(comms.Message('hb')) # write heartbeat to ping speedcounter's watchdag
       else:
          self.speedCounter.open()
          print 'opening com-port'
@@ -51,10 +50,10 @@ class FakeEncoder:
       self.position = 0
       print 'FakeEncoder::clearing position data'
 
-   def handleEvent(self, event):
-      if (event.msg == 'pos'):
-         self.velocity = float(event.val)/(self.scale*self.dT) #pos per dT to rps
-         self.position += float(event.val)/self.scale
+   def handleEvent(self, event_name, data):
+      if (event_name == 'pos'):
+         self.velocity = float(data)/(self.scale*self.dT) #pos per dT to rps
+         self.position += float(data)/self.scale
 
 class HalAdapter:
    def __init__(self, name, clear_cb):

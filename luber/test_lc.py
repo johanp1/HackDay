@@ -22,44 +22,44 @@ class TestComp(unittest.TestCase):
       time.time = self.savedTimeMethod
 
    def test_init(self):
-      self.assertTrue(self.lubeCtrl.totalDistance == 0)
+      self.assertTrue(self.lubeCtrl.total_distance == 0)
       self.assertTrue(self.lubeCtrl.state == 'OFF')
 
    def test_addDistance(self):
-      self.lubeCtrl.calcDistFromVel(1, 0, 0)
-      expected = round(self.lubeCtrl.totalDistance, 1)
+      self.lubeCtrl.calc_dist_from_vel(1, 0, 0)
+      expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(expected == 0.1)
 
       self.incMockTime(0.1)
 
-      self.lubeCtrl.calcDistFromVel(0, 1, 0)
-      expected = round(self.lubeCtrl.totalDistance, 1)
+      self.lubeCtrl.calc_dist_from_vel(0, 1, 0)
+      expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(expected == 0.2)
 
       self.incMockTime(0.1)
 
-      self.lubeCtrl.calcDistFromVel(0, 0, 1)
-      expected = round(self.lubeCtrl.totalDistance, 1)
+      self.lubeCtrl.calc_dist_from_vel(0, 0, 1)
+      expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(expected == 0.3)
 
    def test_off_to_on(self):
-      self.lubeCtrl.calcDistFromVel(10, 10, 9)
+      self.lubeCtrl.calc_dist_from_vel(10, 10, 9)
       self.lubeCtrl.runStateMachine()
-      expected = round(self.lubeCtrl.totalDistance, 1)
+      expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(expected == 2.9)
       self.assertTrue(self.lubeCtrl.numberOfLubings == 1)
 
       self.incMockTime(0.1)
 
-      self.lubeCtrl.calcDistFromVel(1, 0, 0)
+      self.lubeCtrl.calc_dist_from_vel(1, 0, 0)
       self.lubeCtrl.runStateMachine()
-      expected = round(self.lubeCtrl.totalDistance, 1)
+      expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(self.lubeCtrl.state == 'ON')
       self.assertTrue(expected == 0)
       self.assertTrue(self.lubeCtrl.numberOfLubings == 2)
 
    def test_on_to_off(self):
-      self.lubeCtrl.calcDistFromVel(10, 10, 11)
+      self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
       self.lubeCtrl.runStateMachine()
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
@@ -73,7 +73,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.lubeCtrl.lubeLevelOkOut)
 
    def test_low_lube_level(self):
-      self.lubeCtrl.calcDistFromVel(10, 10, 11)
+      self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
       self.lubeCtrl.runStateMachine()
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
@@ -85,14 +85,14 @@ class TestComp(unittest.TestCase):
       self.assertFalse(self.lubeCtrl.lubeLevelOkOut)
 
    def test_reset(self):
-      self.lubeCtrl.calcDistFromVel(10, 10, 11)
+      self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
       self.lubeCtrl.runStateMachine()
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
       self.lubeCtrl.reset()
 
       self.assertTrue(self.lubeCtrl.state == 'OFF')
-      self.assertTrue(self.lubeCtrl.totalDistance == 0)
+      self.assertTrue(self.lubeCtrl.total_distance == 0)
       self.assertTrue(self.lubeCtrl.numberOfLubings == 2) # don't reset
 
 if __name__ == '__main__':

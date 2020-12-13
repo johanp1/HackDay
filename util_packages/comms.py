@@ -74,7 +74,7 @@ class instrument:
          msg_str = self._read().split('_')
 
          if len(msg_str) == 2 and self._is_number(msg_str[1]):
-            self.msg_hdlr(Message(msg_str[0], msg_str[1]))
+            self.msg_hdlr(msg_str[0], msg_str[1])
 
    def writeMessage(self, m):
       self._write(m.msg + m.val + '\n')

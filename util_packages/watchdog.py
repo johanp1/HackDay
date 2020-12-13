@@ -37,7 +37,7 @@ class WatchDogDaemon(threading.Thread):
       if start == True:
          self.start()
 
-   def ping(self):
+   def ping(self, *args):
       self.wd.ping()
 
    def run(self):
@@ -52,17 +52,20 @@ class WatchDogDaemon(threading.Thread):
       """to be overriden by client"""
       pass
 
+def reset():
+   print 'reset'
+
 def main():
    i = 0
    wdd = WatchDogDaemon(2, 0.5)
-
+   wdd.reset = reset
    try:
       while 1:
          time.sleep(1)
          print 'main_' + str(i)
          i = i+1
 
-         #wdd.ping()
+         wdd.ping()
 
    except KeyboardInterrupt:
       raise SystemExit

@@ -36,21 +36,21 @@ class TestXml(unittest.TestCase):
 
    def test_empty(self):
       x = eh.XmlParser('test.xml')
-      data = x.getParsedData()
+      data = x.get_parsed_data()
       self.assertTrue(len(data) == 0)
 
    def test_unsupportedPinType(self):
       self.addTestPin('jog_pin', 'jog', 'x32')
       
       x = eh.XmlParser('test.xml')
-      data = x.getParsedData()
+      data = x.get_parsed_data()
       self.assertTrue(len(data) == 0)
 
    def test_onePin(self):
       self.addTestPin('jog_pin', 'jog', 'u32')
       
       x = eh.XmlParser('test.xml')
-      data = x.getParsedData()
+      data = x.get_parsed_data()
       self.assertTrue(len(data) == 1)
       self.assertTrue(data['jog'].name == 'jog_pin')
       self.assertTrue(data['jog'].type == 'u32')
@@ -60,7 +60,7 @@ class TestXml(unittest.TestCase):
       self.addTestPin('rth_pin', 'rth', 'bit')
       
       x = eh.XmlParser('test.xml')
-      data = x.getParsedData()
+      data = x.get_parsed_data()
       self.assertTrue(len(data) == 2)
       self.assertTrue(data['jog'].name == 'jog_pin')
       self.assertTrue(data['jog'].type == 'u32')

@@ -1,24 +1,10 @@
-#include "receiver.h"
-#include "event_parser.h"
 #include <avr/wdt.h>
-
-class HeartbeatFunctionoid : public ParserFunctionoid
-{
-  public:
-  void execute() { wdt_reset(); };
-};
 
 boolean send = false;
 byte cnt = 0;
 unsigned int currSpeed;
   
-Receiver receiver(String("rec"));
-EventParser ep;
-HeartbeatFunctionoid heartbeatFunct;
-  
-void setup() {
-  String heartbeatCmd = String("hb");
-   
+void setup() { 
   cli();
   timer1Init();
   timer2Init();
@@ -28,9 +14,6 @@ void setup() {
   wdt_enable(WDTO_2S);
   
   pinMode(5, INPUT);
-
-  receiver.addEventListner(&ep);
-  ep.addAcceptedCmd(heartbeatCmd, heartbeatFunct);
 
   Serial.begin(38400);  // opens serial port
   Serial.setTimeout(500);

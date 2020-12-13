@@ -3,8 +3,8 @@ import unittest
 import comms
    
 class TestComms(unittest.TestCase):
-   def _messageHandler(self, msg):
-      self.m.append(msg)
+   def _messageHandler(self, event_name, data):
+      self.m.append(comms.Message(event_name, data))
 
    def setUp(self):
       self.s = comms.instrument('/dev/ttyS0', self._messageHandler)

@@ -1,12 +1,31 @@
 #! /usr/bin/python
+import threading
+import time
 
 class SerialException(Exception):
    pass
 
-class Serial:
+class Serial(threading.Thread):
 
-   def __init__(self):
+   def __init__(self, start_deamon = True):
       self.reset()
+      threading.Thread.__init__(self)
+      self.daemon=True
+
+      if start_deamon == True:
+         self.start()
+
+   def run(self):
+      while (True):
+         try:
+            input_str = raw_input()
+         except EOFError: 
+            raise SystemExit
+
+         if input_str is not None:
+            self.stub_set_read([input_str])
+
+         time.sleep(0.1) 
 
    def reset(self):
       self.port = 1

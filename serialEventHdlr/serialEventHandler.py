@@ -29,41 +29,45 @@ class Pin:
       return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
    
 class ComponentWrapper:   
-   def __init__(self, name, pinDict = {}):
-      self.evToHALPin = pinDict       # dictionary used to map event to pin
+   def __init__(self, name):
+      self.event_to_hal_pin = {}       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
-
-      for key in self.evToHALPin:
-         self._addHALPin(self.evToHALPin[key].name, self.evToHALPin[key].type)
          
    def __repr__(self):
       tmp_str = ''
-      for k in self.evToHALPin:
-         tmp_str += 'event: ' + k + '\t' + str(self.evToHALPin[k]) + '\n'
+      for k in self.event_to_hal_pin:
+         tmp_str += 'event: ' + k + '\t' + str(self.event_to_hal_pin[k]) + '\n'
       return tmp_str
 
-   def addPin(self, event, name, type):
-      self.evToHALPin[event] = Pin(name, type) 
-      self._addHALPin(name, type)
+   def __getitem__(self, name):
+      if name in self.event_to_hal_pin:
+         return self.event_to_hal_pin[name].val
 
-   def updatePin(self, e):
+   def __setitem__(self, name, val):
+      self.set_pin(name, val)
+
+   def add_pin(self, event_name, hal_name, type):
+      self.event_to_hal_pin[event_name] = Pin(hal_name, type) 
+      self._add_hal_pin(hal_name, type)
+
+   def set_pin(self, event_name, value):
       """ updates pin value with new event data
       input: event object' 
       output: nothing. """
-      if e.msg in self.evToHALPin:
-         self.evToHALPin[e.msg].val = self._typeSaturate(self.evToHALPin[e.msg].type, int(e.val))
+      if event_name in self.event_to_hal_pin:
+         self.event_to_hal_pin[event_name].val = self._type_saturate(self.event_to_hal_pin[event_name].type, int(value))
             
    def setReady(self):
       self.hal.ready()
             
-   def updateHAL(self):
-      for key in self.evToHALPin:
-         self.hal[self.evToHALPin[key].name] = self.evToHALPin[key].val
+   def update_hal(self):
+      for key in self.event_to_hal_pin:
+         self.hal[self.event_to_hal_pin[key].name] = self.event_to_hal_pin[key].val
 
-   def _addHALPin(self, pin_name, type):
-      self.hal.newpin(pin_name, self._getHALType(type), hal.HAL_OUT)  # create the user space HAL-pin
+   def _add_hal_pin(self, hal_name, type):
+      self.hal.newpin(hal_name, self._get_hal_type(type), hal.HAL_OUT)  # create the user space HAL-pin
 
-   def _typeSaturate(self, type, val):
+   def _type_saturate(self, type, val):
       """ helper function to convert type read from xml to HAL-type """
       retVal = 0
    
@@ -82,7 +86,7 @@ class ComponentWrapper:
                
       return retVal      
 
-   def _getHALType(self, str):
+   def _get_hal_type(self, str):
       """ helper function to convert type read from xml to HAL-type """
       retVal = ''
    
@@ -105,12 +109,12 @@ class OptParser:
       self.name = 'my-mpg'       # default name of component in HAL
       self.port = '/dev/ttyUSB0' # default serial port to use
       
-      self._getOptions(argv)
+      self._get_options(argv)
       
    def __repr__(self):
       return 'xml_file: ' + self.xml_file + '\tname: ' + self.name + '\tport: ' + self.port
       
-   def _getOptions(self, argv):
+   def _get_options(self, argv):
       try:
          opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
       except getopt.GetoptError as err:
@@ -140,13 +144,13 @@ class OptParser:
          else:
             self.xml_file = argv[-1]
                
-   def getName(self):
+   def get_name(self):
       return self.name
 
-   def getPort(self):
+   def get_port(self):
       return self.port
 
-   def getXmlFile(self):
+   def get_XML_file(self):
       return self.xml_file
    
    def _usage(self):
@@ -160,21 +164,21 @@ class OptParser:
 class XmlParser:
    def __init__(self, f):
       self.tree = []
-      self.pinDict = {}
+      self.pin_dict = {}
       
-      self._parseFile(f)
+      self._parse_file(f)
       
    def __repr__(self):
       tmp_str = ''
 
-      for k in self.pinDict:
-         tmp_str += 'event: ' + k + '\t' + str(self.pinDict[k]) + '\n'
+      for k in self.pin_dict:
+         tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
       return tmp_str   
       
-   def getParsedData(self):
-      return self.pinDict
+   def get_parsed_data(self):
+      return self.pin_dict
    
-   def _parseFile(self, f):
+   def _parse_file(self, f):
       self.tree = ET.parse(f)
       root = self.tree.getroot()
             
@@ -184,10 +188,10 @@ class XmlParser:
       
          # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
          if type is not None and event is not None:
-            if self._checkSupportedHALType(type.text) == True:
-               self.pinDict[event.text] = Pin(halpin.text.strip('"'), type.text)
+            if self._check_supported_HAL_type(type.text) == True:
+               self.pin_dict[event.text] = Pin(halpin.text.strip('"'), type.text)
 
-   def _checkSupportedHALType(self, str):
+   def _check_supported_HAL_type(self, str):
       """ helper function to check if type is supported """
       retVal = False
    
@@ -198,51 +202,49 @@ class XmlParser:
 
 class EventBroker:
    def __init__(self):
-      self.eventDict = {}
+      self.event_dict = {}
  
-   def attachHandler(self, evName, handler):
-      self.eventDict[evName] = handler
+   def attach_handler(self, event_name, handler):
+      self.event_dict[event_name] = handler
 
-   def handleEvent(self, e):
-      if e.msg in self.eventDict:
-         self.eventDict[e.msg](e)
+   def handle_event(self, event_name, data):
+      if event_name in self.event_dict:
+         self.event_dict[event_name](event_name, data)
 
-def watchDogHandler(e):
-   print 'wdd.ping()' #ping watchdog
+#def watchDogHandler(*args):
+#   print 'wdd.ping()' #ping watchdog
 
-### start of main script #############################################
+################################################
 def main():
    optParser = OptParser(sys.argv[1:])
-   componentName = optParser.getName()
-   portName = optParser.getPort()
-   xmlFile = optParser.getXmlFile()
+   componentName = optParser.get_name()
+   portName = optParser.get_port()
+   xmlFile = optParser.get_XML_file()
    print optParser
       
    xmlParser = XmlParser(xmlFile)
 
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialEventGenerator = comms.instrument(portName, eventBroker.handleEvent) #serial adaptor
+   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event) #serial adaptor
 
-   #wdd = watchdog.WatchDogDaemon(2, 0.5, True)
-   #wdd.reset = reset
+   wdd = watchdog.WatchDogDaemon(2, 0.5)
+   wdd.reset = serialEventGenerator.close # called when watchdog times out
+   
+   eventBroker.attach_handler('hb', wdd.ping) #add handler for heart-beat/watch-dog signal
+   #eventBroker.attach_handler('hb', watchDogHandler)
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
-   parsedXmlDict = xmlParser.getParsedData()
+   parsedXmlDict = xmlParser.get_parsed_data()
    for key in parsedXmlDict:
-      c.addPin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-      eventBroker.attachHandler(key, c.updatePin)
+      c.add_pin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
+      eventBroker.attach_handler(key, c.set_pin)
    
    print c
 
-   c.hal.newpin('reset', hal.HAL_BIT, hal.HAL_IN)
-
-   #add handler for heart-beat/watch-dog signal
-   eventBroker.attachHandler('hb', watchDogHandler)
-  
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()
-   
+      
    try:
       while 1:
          if serialEventGenerator.portOpened == False:
@@ -250,12 +252,8 @@ def main():
             serialEventGenerator.open()
 
          serialEventGenerator.readMessages() #blocks until '\n' received or timeout
-         c.updateHAL()
-            
-         if c.hal['reset'] == True:
-            print 'closing port'
-            serialEventGenerator.close()
-         
+         c.update_hal()
+
          time.sleep(0.05)
 
    except KeyboardInterrupt:
