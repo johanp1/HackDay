@@ -4,6 +4,7 @@ in_file  -  input xml-file describing what knobs and/or button are on the pendan
 -d/--debug= <level>      # debug level, default 0
 -p/--port= <serial port> # serial port to use. '/dev/ttyUSB0' default
 -h                       # Help 
+python serialEventHandler.py -w mpg_pendant/config/mpg.xml
 """
 
 #! /usr/bin/pythone
@@ -30,39 +31,49 @@ class Pin:
    
 class ComponentWrapper:   
    def __init__(self, name):
-      self.event_to_hal_pin = {}       # dictionary used to map event to pin
+      self.pin_dict = {}       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
          
    def __repr__(self):
       tmp_str = ''
-      for k in self.event_to_hal_pin:
-         tmp_str += 'event: ' + k + '\t' + str(self.event_to_hal_pin[k]) + '\n'
+      for k in self.pin_dict:
+         tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
       return tmp_str
 
    def __getitem__(self, name):
-      if name in self.event_to_hal_pin:
-         return self.event_to_hal_pin[name].val
+      if name in self.pin_dict:
+         return self.pin_dict[name].val
 
    def __setitem__(self, name, val):
       self.set_pin(name, val)
 
-   def add_pin(self, event_name, hal_name, type):
-      self.event_to_hal_pin[event_name] = Pin(hal_name, type) 
+   def add_pin(self, name, hal_name, type):
+      self.pin_dict[name] = Pin(hal_name, type) 
       self._add_hal_pin(hal_name, type)
 
-   def set_pin(self, event_name, value):
+   def set_pin(self, name, value):
+      """ updates pin value with new data
+      input: pin name, set value' 
+      output: nothing. """
+      if name in self.pin_dict:
+         self.pin_dict[name].val = self._type_saturate(self.pin_dict[name].type, int(value))
+            
+   def event_set_pin(self, event):
       """ updates pin value with new event data
       input: event object' 
       output: nothing. """
-      if event_name in self.event_to_hal_pin:
-         self.event_to_hal_pin[event_name].val = self._type_saturate(self.event_to_hal_pin[event_name].type, int(value))
+      if event.name in self.pin_dict:
+         try:
+            self.pin_dict[event.name].val = self._type_saturate(self.pin_dict[event.name].type, int(event.data))
+         except ValueError:
+            print 'bad event'  
             
    def setReady(self):
       self.hal.ready()
             
    def update_hal(self):
-      for key in self.event_to_hal_pin:
-         self.hal[self.event_to_hal_pin[key].name] = self.event_to_hal_pin[key].val
+      for key in self.pin_dict:
+         self.hal[self.pin_dict[key].name] = self.pin_dict[key].val
 
    def _add_hal_pin(self, hal_name, type):
       self.hal.newpin(hal_name, self._get_hal_type(type), hal.HAL_OUT)  # create the user space HAL-pin
@@ -108,7 +119,8 @@ class OptParser:
       self.xml_file = ''   # input xml-file describing what knobs and/or button are on the pendant
       self.name = 'my-mpg'       # default name of component in HAL
       self.port = '/dev/ttyUSB0' # default serial port to use
-      
+      self.watchdog_reset = False
+
       self._get_options(argv)
       
    def __repr__(self):
@@ -116,7 +128,7 @@ class OptParser:
       
    def _get_options(self, argv):
       try:
-         opts, args = getopt.getopt(argv, "hp:c:", ["input=", "port="])
+         opts, args = getopt.getopt(argv, "hwp:c:", ["input=", "port="])
       except getopt.GetoptError as err:
          # print help information and exit:
          print(err) # will print something like "option -a not recognized"
@@ -133,6 +145,8 @@ class OptParser:
             self.xml_file = a
          elif o in ("-p", "--port"):
             self.port = a
+         elif o == "-w":
+            self.watchdog_reset = True
          else:
             print o, a
             assert False, "unhandled option"
@@ -153,12 +167,16 @@ class OptParser:
    def get_XML_file(self):
       return self.xml_file
    
+   def get_watchdog_reset(self):
+      return self.watchdog_reset
+
    def _usage(self):
       """ print command line options """
       print "usage serialEventHandler.py -h -c <name> -d/--debug=<level> -p/--port= <serial port> <path/>in_file.xml\n"\
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
+         "-w                       # start watchdog deamon"
          "-h                       # Help test"
 
 class XmlParser:
@@ -200,19 +218,24 @@ class XmlParser:
          
       return retVal 
 
+class BrokeeContainer:
+   def __init__(self, handler, args):
+      self.handler = handler
+      self.args = args
+
 class EventBroker:
    def __init__(self):
-      self.event_dict = {}
- 
-   def attach_handler(self, event_name, handler):
-      self.event_dict[event_name] = handler
+      self.brokee_dict = {}
+      self.received_event = comms.Message('')
 
-   def handle_event(self, event_name, data):
-      if event_name in self.event_dict:
-         self.event_dict[event_name](event_name, data)
+   def attach_handler(self, event_name, handler, args = ()):
+      self.brokee_dict[event_name] = BrokeeContainer(handler, args)
 
-#def watchDogHandler(*args):
-#   print 'wdd.ping()' #ping watchdog
+   def handle_event(self, event):
+      self.received_event.copy(event)
+
+      if event.name in self.brokee_dict:            
+         self.brokee_dict[event.name].handler(*self.brokee_dict[event.name].args)
 
 ################################################
 def main():
@@ -228,17 +251,15 @@ def main():
    eventBroker = EventBroker() #maps incomming events to the correct handler
    serialEventGenerator = comms.instrument(portName, eventBroker.handle_event) #serial adaptor
 
-   wdd = watchdog.WatchDogDaemon(2, 0.5)
+   wdd = watchdog.WatchDogDaemon(2, 0.5, optParser.get_watchdog_reset())
    wdd.reset = serialEventGenerator.close # called when watchdog times out
-   
    eventBroker.attach_handler('hb', wdd.ping) #add handler for heart-beat/watch-dog signal
-   #eventBroker.attach_handler('hb', watchDogHandler)
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.get_parsed_data()
    for key in parsedXmlDict:
       c.add_pin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-      eventBroker.attach_handler(key, c.set_pin)
+      eventBroker.attach_handler(key, c.event_set_pin, args = (eventBroker.received_event,))
    
    print c
 

@@ -24,12 +24,16 @@ CLOSE_PORT_AFTER_EACH_CALL = False
 
 class Message:
    """'container for messages. keeps two strings <message> and <value>"""
-   def __init__(self, message, value = ''):
-      self.msg = message
-      self.val = value
+   def __init__(self, name = '', data = ''):
+      self.name = name
+      self.data = data
       
    def __repr__(self):
-      return 'msg: ' + self.msg + ' val: ' + self.val
+      return 'msg: ' + self.name + ' val: ' + self.data
+
+   def copy(self, msg):
+      self.name = msg.name
+      self.data = msg.data
 
 class instrument:
    """rs232 port"""
@@ -71,13 +75,16 @@ class instrument:
       output: array of events: 
       """
       while self.dataReady():
-         msg_str = self._read().split('_')
+         msg_str = self._read().split('_', 1)
 
-         if len(msg_str) == 2 and self._is_number(msg_str[1]):
-            self.msg_hdlr(msg_str[0], msg_str[1])
+         if msg_str[0] != '':
+            self.msg_hdlr(Message(*msg_str))
 
    def writeMessage(self, m):
-      self._write(m.msg + m.val + '\n')
+      self._write(m.name)
+      if  m.data != '':
+         self._write('_' + m.data)
+      self._write('\n')
 
    def _write(self, str):
       if self.portOpened == True:

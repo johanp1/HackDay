@@ -3,8 +3,8 @@ import unittest
 import comms
    
 class TestComms(unittest.TestCase):
-   def _messageHandler(self, event_name, data):
-      self.m.append(comms.Message(event_name, data))
+   def _messageHandler(self, event):
+      self.m.append(event)
 
    def setUp(self):
       self.s = comms.instrument('/dev/ttyS0', self._messageHandler)
@@ -25,36 +25,33 @@ class TestComms(unittest.TestCase):
       
       self.assertTrue(len(self.m) == 0)
    
-   def test_readOneMessage(self):
+   def test_readOneMessageWithPayload(self):
       self.s.serial.stub_set_read(['jog_10'])
       
       self.s.readMessages()
       
       self.assertTrue(len(self.m) == 1)
-      self.assertTrue(self.m[0].msg == 'jog')
-      self.assertTrue(self.m[0].val == '10')
+      self.assertTrue(self.m[0].name == 'jog')
+      self.assertTrue(self.m[0].data == '10')
       
-   def test_readOneBadMessage(self):
-      self.s.serial.stub_set_read(['jog10'])
-      
-      self.s.readMessages()
-      
-      self.assertTrue(len(self.m) == 0)
-    
-   def test_readOneBadMessage2(self):
-      self.s.serial.stub_set_read(['jog_10_apa'])
+   def test_readOneMessageNoPayload(self):
+      self.s.serial.stub_set_read(['goj'])
       
       self.s.readMessages()
       
-      self.assertTrue(len(self.m) == 0)
+      self.assertTrue(len(self.m) == 1)
+      self.assertTrue(self.m[0].name == 'goj')
+      self.assertTrue(self.m[0].data is '')
       
-   def test_readOneBadMessage3(self):
-      self.s.serial.stub_set_read(['jog_apa'])
+   def test_readBadMessage(self):
+      self.s.serial.stub_set_read(['jog_'])
+      
+      self.s.readMessages()
+      
+      self.assertTrue(len(self.m) == 1)
+      self.assertTrue(self.m[0].name == 'jog')
+      self.assertTrue(self.m[0].data == '')
 
-      self.s.readMessages()
-      
-      self.assertTrue(len(self.m) == 0)
-      
    def test_readOneBadMessage4(self):
       #data that can not be decoded...
       self.s.serial.stub_set_read([b'\xf0'])
@@ -62,7 +59,7 @@ class TestComms(unittest.TestCase):
       self.s.readMessages()
       
       self.assertTrue(len(self.m) == 0)
-
+   
    def test_readTwoMessages(self):
       self.s.serial.stub_set_read(['apa_10', 'bepa_11'])
       
@@ -71,10 +68,10 @@ class TestComms(unittest.TestCase):
       self.assertTrue(len(self.m) == 2)
       
       # the subbed serial-module will return the messages "last in first out"
-      self.assertTrue(self.m[0].msg == 'bepa')
-      self.assertTrue(self.m[0].val == '11')
-      self.assertTrue(self.m[1].msg == 'apa')
-      self.assertTrue(self.m[1].val == '10')
+      self.assertTrue(self.m[0].name == 'bepa')
+      self.assertTrue(self.m[0].data == '11')
+      self.assertTrue(self.m[1].name == 'apa')
+      self.assertTrue(self.m[1].data == '10')
 
    def test_faildOpenPort(self):
       self.s = comms.instrument('fail', self._messageHandler)
@@ -90,7 +87,11 @@ class TestComms(unittest.TestCase):
       
    def test_writeMessage(self):
       self.s.writeMessage(comms.Message('apa', '123'))
-      self.assertTrue(self.s.serial.writeBuf == 'apa123\n')
+      self.assertTrue(self.s.serial.writeBuf == 'apa_123\n')
+
+   def test_writeMessageNoPayload(self):
+      self.s.writeMessage(comms.Message('bepa'))
+      self.assertTrue(self.s.serial.writeBuf == 'bepa\n')
 
    def test_writeMessagePortClosed(self):
       self.s.close()

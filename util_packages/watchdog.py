@@ -37,7 +37,7 @@ class WatchDogDaemon(threading.Thread):
       if start == True:
          self.start()
 
-   def ping(self, *args):
+   def ping(self):
       self.wd.ping()
 
    def run(self):

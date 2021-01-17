@@ -58,7 +58,8 @@ class component:
          return self.parDict[name].val
 
    def __setitem__(self, name, val):
-      if name in self.pinDict:
+      if name in self.pinDict and self.pinDict[name].val != val:
          self.pinDict[name].val = val
+         print name + ': ' + str(val)
       if name in self.parDict:
          self.parDict[name].val = val
