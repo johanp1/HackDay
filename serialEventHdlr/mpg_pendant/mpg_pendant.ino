@@ -6,45 +6,41 @@
 #include "selector.h"
 #include "mpg_pendant.h"
 
-#define NBR_OF_EVENT_GENERATORS NBR_OF_BUTTONS+NBR_OF_SELECTORS+1
-#define HEARTBEAT_PERIOD 2000 //2000ms
-static void encoderISR(void);
+constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 1;
+constexpr auto kHeartbeatPeriod = 2000; //2000ms
 
-Button buttons[NBR_OF_BUTTONS] = {Button("rth", RTH_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
-								                  Button("run", RUN_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY),
-								                  Button("est", EST_BUTTON_PIN, BUTTON_DEBOUNCE_DELAY)} ;
-RotaryEncoder encoder("jog", ENCODER_CLK_PIN, ENCODER_DT_PIN);
-Selector selectors[NBR_OF_SELECTORS] = {Selector("sela", AXIS_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY), 
-									            	        Selector("sels", SCALE_SELECTOR_PIN, SELECTOR_DEBOUNCE_DELAY)};
-Sender sender;
-Buffer buffer;
+static void myISR(void);
 
-EventGenerator* evGenList[NBR_OF_EVENT_GENERATORS];
-
-unsigned long heartbeatTimer = HEARTBEAT_PERIOD;
+static IsrFunctionoid isrFunct;
+static Sender sender;
+static Buffer buffer;
+static EventGenerator* evGenList[kNbrOfEventGenerators];
+static unsigned long heartbeatTimer = kHeartbeatPeriod;
 
 void setup() {
    Serial.begin(38400);  // opens serial port, sets data rate to 9600 bps
    Serial.setTimeout(500);
-
-   attachInterrupt(digitalPinToInterrupt(ENCODER_CLK_PIN), encoderISR, RISING);
-
    Serial.println("mpgPendant::setup()");
+   
+   evGenList[0] = new Button("rth", kFuncButtonPin, kButtonDebounceDelay);
+   evGenList[0]->addEventListner(&sender);
 
-   buttons[0].addEventListner(&sender);
-   buttons[1].addEventListner(&sender);
-   buttons[2].addEventListner(&sender);
-   selectors[0].addEventListner(&sender);
-   selectors[1].addEventListner(&sender);
-   encoder.addEventListner(&buffer);
+   evGenList[1] = new Button("run", kRunButtonPin, kButtonDebounceDelay);
+   evGenList[1]->addEventListner(&sender);
 
-   evGenList[0] = &buttons[0]; 
-   evGenList[1] = &buttons[1];
-   evGenList[2] = &buttons[2];
-   evGenList[3] = &selectors[0];
-   evGenList[4] = &selectors[1];
-   evGenList[5] = &encoder;
+   evGenList[2] = new Button("est", kEStopButtonPin, kButtonDebounceDelay); 
+   evGenList[2]->addEventListner(&sender);
 
+   evGenList[3] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay);
+   evGenList[3]->addEventListner(&sender);
+   
+   evGenList[4] = new Selector("sels", kScaleSelectorPin, kSelectorDebounceDelay);
+   evGenList[4]->addEventListner(&sender);
+
+   evGenList[5] = new RotaryEncoder("jog", kEncoderClockPin, kEncoderDirectionPin);
+   evGenList[5]->addEventListner(&buffer);
+   isrFunct.addEventGenerator(evGenList[5]);
+   attachInterrupt(digitalPinToInterrupt(kEncoderClockPin), myISR, RISING);
 }
 
 void loop() {  
@@ -52,7 +48,7 @@ void loop() {
    byte i;
    C_Event e;
    
-   for (i = 0; i<NBR_OF_EVENT_GENERATORS; i++)
+   for (i = 0; i<kNbrOfEventGenerators; i++)
    {
       evGenList[i]->scan();
    }
@@ -62,19 +58,19 @@ void loop() {
       sender.handleEvent(e);
    }
 
-   //send heart-beat every second
+   //send heart-beat every <kHeartbeatPeriod> [ms]
    if(millis() > heartbeatTimer)
    {
       String tmpStr = "hb";
       C_Event hb_ev = C_Event(tmpStr, 1);
       sender.handleEvent(hb_ev);
-      heartbeatTimer = millis() + HEARTBEAT_PERIOD;
+      heartbeatTimer = millis() + kHeartbeatPeriod;
    }
 
    delay(10); // waits 10ms
 }
 
-static void encoderISR(void)
+static void myISR(void)
 {
-   encoder.update();
+   isrFunct.execute();
 }

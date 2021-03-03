@@ -15,14 +15,12 @@ RotaryEncoder::RotaryEncoder( const String& argName, int argClkPin, int argDtPin
    position = 0;
 }
 
-// call this from your interrupt function
 void RotaryEncoder::update(void) 
 {
    digitalRead(dtPin) ? position++ : position--;
    generateEvent((unsigned int)position);
 }
 
-// returns current position
 int RotaryEncoder::getPosition ()
 {
    return position;
@@ -35,4 +33,5 @@ void RotaryEncoder::clearPosition()
 
 void RotaryEncoder::scan(void)
 {
+   update():
 }

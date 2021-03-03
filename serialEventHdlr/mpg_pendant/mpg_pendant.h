@@ -1,17 +1,30 @@
-#define NBR_OF_BUTTONS   3
-#define NBR_OF_SELECTORS 2
+constexpr auto kNbrOfButtons = 3;
+constexpr auto kNbrOfSelectors = 2;
 
-#define BUTTON_DEBOUNCE_DELAY   50
-#define SELECTOR_DEBOUNCE_DELAY 100
+constexpr auto kButtonDebounceDelay = 50;
+constexpr auto kSelectorDebounceDelay = 100;
 
-#define RTH_BUTTON_PIN 3
-#define RUN_BUTTON_PIN 6
-#define EST_BUTTON_PIN 8
+constexpr auto kFuncButtonPin = 3;
+constexpr auto kRunButtonPin = 6;
+constexpr auto kEStopButtonPin = 8;
 
-#define AXIS_SELECTOR_PIN  A3
-#define SCALE_SELECTOR_PIN A2
+constexpr auto kAxisSelectorPin = A3;
+constexpr auto kScaleSelectorPin = A2;
 
-#define ENCODER_CLK_PIN 2
-#define ENCODER_DT_PIN  7
+constexpr auto kEncoderClockPin = 2;
+constexpr auto kEncoderDirectionPin = 7;
 
-#define LOOP_DELAY_TIME 10 //milli sec
+constexpr auto kLoopDelayTime = 10; //milli sec
+
+class IsrFunctionoid
+{
+   public:
+   IsrFunctionoid(EventGenerator *const generator) : handler_p(generator) {};
+   IsrFunctionoid() {handler_p = nullptr;};
+   
+   void addEventGenerator(EventGenerator *const generator)  {if (generator != nullptr) handler_p = generator;};
+   void execute() {if (handler_p != nullptr) handler_p->scan();};
+
+   private:
+   EventGenerator* handler_p;
+};
