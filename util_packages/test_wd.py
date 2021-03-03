@@ -22,13 +22,13 @@ class TestWatchDog(unittest.TestCase):
       time.time = self.savedTimeMethod
 
    def test_init(self):
-      self.assertTrue(self.wd.tickTime == 0)
+      self.assertTrue(self.wd.last_ping_time == 0)
       self.assertTrue(self.wd.timeout == 10)
 
    def test_tick(self):
       self.incMockTime(100)
       self.wd.ping()
-      self.assertTrue(self.wd.tickTime == 100)
+      self.assertTrue(self.wd.last_ping_time == 100)
 
    def test_check(self):
       # check within timeout/margin

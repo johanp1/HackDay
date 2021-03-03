@@ -6,23 +6,23 @@ import sys
 class WatchDog():
    def __init__(self, timeout):
       self.timeout = timeout
-      self.tickTime = time.time()
+      self.last_ping_time = time.time()
 
    def ping(self):
-      self.tickTime = time.time()
+      self.last_ping_time = time.time()
 
    def check(self):
-      if time.time() - self.tickTime > self.timeout:
-         self.tickTime = time.time() #reset tick time
+      if time.time() - self.last_ping_time > self.timeout:
+         self.last_ping_time = time.time() #reset tick time
          return True
       else:
          return False
          
    def insideMargin(self):
-      if time.time() - self.tickTime <= self.timeout:
+      if time.time() - self.last_ping_time <= self.timeout:
          return True
       else:
-         self.tickTime = time.time() #reset tick time
+         self.last_ping_time = time.time() #reset tick time
          return False
 
 

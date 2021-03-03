@@ -6,7 +6,7 @@
 #include "selector.h"
 #include "mpg_pendant.h"
 
-constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 1;
+constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 1/*kNbrOfRotaryEncoders*/;
 constexpr auto kHeartbeatPeriod = 2000; //2000ms
 
 static void myISR(void);
@@ -47,12 +47,16 @@ void loop() {
 
    byte i;
    C_Event e;
-   
-   for (i = 0; i<kNbrOfEventGenerators; i++)
-   {
-      evGenList[i]->scan();
-   }
 
+   evGenList[0]->scan();
+   evGenList[1]->scan();
+   evGenList[2]->scan();
+   evGenList[3]->scan();
+   evGenList[4]->scan();
+   // we don't need to "evGenList[5]->scan();" since it is connected to an interrupt instead.
+   // Also the implementation of RotaryEncoder::scan() currently only works for interrupts. If it is pulled 
+   // continously it will update its position every iteration
+   
    while(buffer.get(e))
    {  
       sender.handleEvent(e);
