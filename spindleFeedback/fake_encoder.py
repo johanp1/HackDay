@@ -8,19 +8,21 @@ import time
 import watchdog
 
 class FakeEncoderFacade:
-   def __init__(self, portName, dT, scale):
+   """ Facade for the entire encoder subsystem (serial com, watchdog, faked encoder)
+    The <enabled> argument will control if the watchdog thread is running or not"""
+   def __init__(self, portName, dT, scale, wd_enabled):
 
-      self.fake = FakeEncoder(0.05, 500)
+      self.fakeEncoder = FakeEncoder(dT, scale)
       self.speedCounter = comms.instrument(portName, self.handleEvent) #serial adaptor
-      self.wdd = watchdog.WatchDogDaemon(2, 0.5, True)
+      self.wdd = watchdog.WatchDogDaemon(2, 0.5, wd_enabled)
       self.wdd.reset = self.reset
-         
+      
    def reset(self):
       self.speedCounter.close()
       print 'closing com-port'
 
    def handleEvent(self, event_name, data):
-      self.fake.handleEvent(event_name, data)
+      self.fakeEncoder.handleEvent(event_name, data)
       self.wdd.ping() #ping watchdog
 
    def update(self):
@@ -31,19 +33,23 @@ class FakeEncoderFacade:
          print 'opening com-port'
 
    def clear(self):
-      self.fake.clear()
+      self.fakeEncoder.clear()
 
    def getVelocity(self):
-      return self.fake.velocity
+      return self.fakeEncoder.velocity
 
    def getPosition(self):
-      return self.fake.position
+      return self.fakeEncoder.position
+
+   def enableWatchdog(self, enabled):
+      self.wdd.setEnabled(enabled)
+      
 
 class FakeEncoder:
    def __init__(self, dT, scale):
       self.position = 0  # scaled value from count
       self.velocity = 0  # units per sec, i.e. rps
-      self.dT = dT       # delta time between samples
+      self.dT = dT       # delta time between samples [s]
       self.scale = scale # nbr of pulses / rev
 
    def clear(self):
@@ -63,6 +69,7 @@ class HalAdapter:
       self.h.newpin("velocity", hal.HAL_FLOAT, hal.HAL_OUT)
       self.h.newpin("position", hal.HAL_FLOAT, hal.HAL_OUT)
       self.h.newpin("index-enable", hal.HAL_BIT, hal.HAL_IO)
+      self.h.newpin("watchdog-enable", hal.HAL_BIT, hal.HAL_IN)
       self.h.ready()
 
    def update(self, vel, pos):
@@ -73,6 +80,9 @@ class HalAdapter:
          self.clearCallback()
          self.h['position'] = 0
          self.h['index-enable'] = 0
+
+   def isWatchdogEnabled(self):
+      return self.h['watchdog-enable']
 
 class OptParser:
    def __init__(self, argv):
@@ -128,11 +138,12 @@ def main():
 
    print optParser
 
-   fake = FakeEncoderFacade(portName, 0.05, 500)
+   fake = FakeEncoderFacade(portName, 0.05, 500, False)
    h = HalAdapter(componentName, fake.clear)
-    
+
    try:
       while 1:
+         fake.enableWatchdog(h.isWatchdogEnabled())
          fake.update()
             
          h.update(fake.getVelocity(), fake.getPosition())
