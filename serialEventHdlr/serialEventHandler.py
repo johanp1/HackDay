@@ -17,7 +17,6 @@ import sys
 import comms
 import xml.etree.ElementTree as ET
 import hal
-import watchdog
 
 class Pin:
    """ Representation of a Pin and it's data"""
@@ -56,15 +55,8 @@ class ComponentWrapper:
       input: pin name, set value' 
       output: nothing. """
       if name in self.pin_dict:
-         self.pin_dict[name].val = self._type_saturate(self.pin_dict[name].type, int(value))
-            
-   def event_set_pin(self, event):
-      """ updates pin value with new event data
-      input: event object' 
-      output: nothing. """
-      if event.name in self.pin_dict:
          try:
-            self.pin_dict[event.name].val = self._type_saturate(self.pin_dict[event.name].type, int(event.data))
+            self.pin_dict[name].val = self._type_saturate(self.pin_dict[name].type, int(value))
          except ValueError:
             print 'bad event'  
             
@@ -176,7 +168,7 @@ class OptParser:
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
-         "-w                       # start watchdog deamon"
+         "-w                       # start watchdog deamon" \
          "-h                       # Help test"
 
 class XmlParser:
@@ -249,17 +241,13 @@ def main():
 
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event) #serial adaptor
-
-   wdd = watchdog.WatchDogDaemon(2, 0.5, optParser.get_watchdog_reset())
-   wdd.reset = serialEventGenerator.close # called when watchdog times out
-   eventBroker.attach_handler('hb', wdd.ping) #add handler for heart-beat/watch-dog signal
+   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, True) #serial adaptor
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.get_parsed_data()
    for key in parsedXmlDict:
       c.add_pin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-      eventBroker.attach_handler(key, c.event_set_pin, args = (eventBroker.received_event,))
+      eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
    
    print c
 
@@ -268,10 +256,6 @@ def main():
       
    try:
       while 1:
-         if serialEventGenerator.portOpened == False:
-            print 'opening port'
-            serialEventGenerator.open()
-
          serialEventGenerator.readMessages() #blocks until '\n' received or timeout
          c.update_hal()
 

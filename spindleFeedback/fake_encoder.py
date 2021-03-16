@@ -4,62 +4,30 @@ import sys
 import comms
 import hal
 import getopt
-import time
-import watchdog
-
-class FakeEncoderFacade:
-   """ Facade for the entire encoder subsystem (serial com, watchdog, faked encoder)
-    The <enabled> argument will control if the watchdog thread is running or not"""
-   def __init__(self, portName, dT, scale, wd_enabled):
-
-      self.fakeEncoder = FakeEncoder(dT, scale)
-      self.speedCounter = comms.instrument(portName, self.handleEvent) #serial adaptor
-      self.wdd = watchdog.WatchDogDaemon(2, 0.5, wd_enabled)
-      self.wdd.reset = self.reset
-      
-   def reset(self):
-      self.speedCounter.close()
-      print 'closing com-port'
-
-   def handleEvent(self, event_name, data):
-      self.fakeEncoder.handleEvent(event_name, data)
-      self.wdd.ping() #ping watchdog
-
-   def update(self):
-      if self.speedCounter.portOpened:
-         self.speedCounter.readMessages() #blocks until '\n' received or timeout
-      else:
-         self.speedCounter.open()
-         print 'opening com-port'
-
-   def clear(self):
-      self.fakeEncoder.clear()
-
-   def getVelocity(self):
-      return self.fakeEncoder.velocity
-
-   def getPosition(self):
-      return self.fakeEncoder.position
-
-   def enableWatchdog(self, enabled):
-      self.wdd.setEnabled(enabled)
-      
+import time      
 
 class FakeEncoder:
    def __init__(self, dT, scale):
-      self.position = 0  # scaled value from count
-      self.velocity = 0  # units per sec, i.e. rps
-      self.dT = dT       # delta time between samples [s]
-      self.scale = scale # nbr of pulses / rev
+      self._position = 0  # scaled value from count
+      self._velocity = 0  # units per sec, i.e. rps
+      self._dT = dT       # delta time between samples [s]
+      self._scale = scale # nbr of pulses / rev
 
    def clear(self):
-      self.position = 0
+      self._position = 0
       print 'FakeEncoder::clearing position data'
 
    def handleEvent(self, event_name, data):
       if (event_name == 'pos'):
-         self.velocity = float(data)/(self.scale*self.dT) #pos per dT to rps
-         self.position += float(data)/self.scale
+         self._velocity = float(data)/(self._scale*self._dT) #pos per dT to rps
+         self._position += float(data)/self._scale
+
+   def getVelocity(self):
+      return self._velocity
+
+   def getPosition(self):
+      return self._position
+
 
 class HalAdapter:
    def __init__(self, name, clear_cb):
@@ -138,15 +106,16 @@ def main():
 
    print optParser
 
-   fake = FakeEncoderFacade(portName, 0.05, 500, False)
-   h = HalAdapter(componentName, fake.clear)
+   fakeEncoder = FakeEncoder(0.05, 500)
+   speedCounter = comms.instrument(portName, fakeEncoder.handleEvent, False) #serial adaptor, watchdog disabled
+   halAdapter = HalAdapter(componentName, fakeEncoder.clear)
 
    try:
       while 1:
-         fake.enableWatchdog(h.isWatchdogEnabled())
-         fake.update()
+         speedCounter.enableWatchdog(halAdapter.isWatchdogEnabled())
+         speedCounter.readMessages()
             
-         h.update(fake.getVelocity(), fake.getPosition())
+         halAdapter.update(fakeEncoder.getVelocity(), fakeEncoder.getPosition())
       
          time.sleep(0.05)
 
