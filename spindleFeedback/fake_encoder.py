@@ -17,10 +17,10 @@ class FakeEncoder:
       self._position = 0
       print 'FakeEncoder::clearing position data'
 
-   def handleEvent(self, event_name, data):
-      if (event_name == 'pos'):
-         self._velocity = float(data)/(self._scale*self._dT) #pos per dT to rps
-         self._position += float(data)/self._scale
+   def handleEvent(self, event):
+      if (event.name == 'pos'):
+         self._velocity = float(event.data)/(self._scale*self._dT) #pos per dT to rps
+         self._position += float(event.data)/self._scale
 
    def getVelocity(self):
       return self._velocity

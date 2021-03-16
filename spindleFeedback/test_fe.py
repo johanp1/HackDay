@@ -30,7 +30,7 @@ class TestComp(unittest.TestCase):
 
    def test_handleEvent(self):
       pos = 100.0 # => vel = pos/dt/scale = pos/(dt*scale) => 100/25 = 4
-      self.fake.handleEvent('pos', str(int(pos)))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
 
       expectedVel = round(float(pos/25), 3)
       encoderVel = round(self.fake._velocity, 3)
@@ -49,7 +49,7 @@ class TestComp(unittest.TestCase):
 
    def test_handleMultipleEvents(self):
       pos = 60.0 #actual encoder pulses in 0.05s interval 
-      self.fake.handleEvent('pos', str(int(pos)))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
       expectedVel = round(float(60.0/25), 3)
       encoderVel = round(self.fake._velocity, 3)
       expectedPos = round(pos/500, 3)
@@ -64,7 +64,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(halVel == expectedVel)
       self.assertTrue(halPos == expectedPos)   
 
-      self.fake.handleEvent('pos', str(int(pos)))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
       expectedVel = round(float(60.0/25), 3)
       encoderVel = round(self.fake._velocity, 3)
       expectedPos = expectedPos + round(pos/500, 3)
@@ -80,20 +80,20 @@ class TestComp(unittest.TestCase):
       self.assertTrue(halPos == expectedPos)   
 
    def test_wrongEvent(self):
-      self.fake.handleEvent('apa', '1000')
+      self.fake.handleEvent(comms.Message('apa', '1000'))
 
       self.assertTrue(self.fake._position == 0)
       self.assertTrue(self.fake._velocity == 0)   
 
    def test_clear(self):
-      self.fake.handleEvent('pos', '2000')
+      self.fake.handleEvent(comms.Message('pos', '2000'))
       self.fake.clear()
 
       self.assertTrue(self.fake._position == 0)  
 
    def test_setIndexEnable(self):
       pos = 600.0
-      self.fake.handleEvent('pos', str(int(pos)))
+      self.fake.handleEvent(comms.Message('pos', str(int(pos))))
 
       expectedVel = round(pos/25, 3)
       encoderVel = round(self.fake._velocity, 3)
