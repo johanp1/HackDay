@@ -21,6 +21,12 @@ class EventHandlerSpyNoArgs(EventHandlerSpy):
     def eventHandler(self):
         self.has_been_called = True
 
+class EventHandlerSpyTwoArgs(EventHandlerSpy):
+    def eventHandler(self, name, data):
+        self.last_event_name = name
+        self.last_event_data = data
+        self.has_been_called = True
+
 class TestEventBroker(unittest.TestCase):
     
     def setUp(self):
@@ -70,7 +76,7 @@ class TestEventBroker(unittest.TestCase):
         self.assertEqual(self.eh_no_args.last_event_name, '')
         self.assertEqual(self.eh_no_args.last_event_data, '')    
         self.eh_no_args.reset()
-      
+
     def test_wrongEvent(self):
         self.eb.attach_handler('apa', self.eh1.eventHandler, args=(self.eb.received_event,))
         self.eb.attach_handler('bepa', self.eh2.eventHandler, args=(self.eb.received_event,))
@@ -79,6 +85,18 @@ class TestEventBroker(unittest.TestCase):
         
         self.assertFalse(self.eh1.has_been_called)
         self.assertFalse(self.eh2.has_been_called)   
+
+    """todo
+    def test_TwoArgsHandlerAttached(self):
+        self.eh_two_args = EventHandlerSpyTwoArgs()
+        self.eb.attach_handler('hej', 
+                               self.eh_two_args.eventHandler, 
+                               args = (self.eb.received_event.name, self.eb.received_event.data))
+
+        self.eb.handle_event(comms.Message('hej', '123'))
+        self.assertTrue(self.eh_two_args.has_been_called)
+        self.assertEqual(self.eh_two_args.last_event_name, 'hej')
+        self.assertEqual(self.eh_two_args.last_event_data, '123') """
 
 if __name__ == '__main__':
    unittest.main()

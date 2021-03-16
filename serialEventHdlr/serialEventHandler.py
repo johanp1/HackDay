@@ -50,6 +50,17 @@ class ComponentWrapper:
       self.pin_dict[name] = Pin(hal_name, type) 
       self._add_hal_pin(hal_name, type)
 
+   def event_set_pin(self, event):
+      """ updates pin value with new data
+      input: pin name, set value' 
+      output: nothing. """
+      if event.name in self.pin_dict:
+         try:
+            self.pin_dict[event.name].val = self._type_saturate(self.pin_dict[event.name].type, int(event.data))
+         except ValueError:
+            print 'bad event'  
+            
+
    def set_pin(self, name, value):
       """ updates pin value with new data
       input: pin name, set value' 
@@ -247,7 +258,8 @@ def main():
    parsedXmlDict = xmlParser.get_parsed_data()
    for key in parsedXmlDict:
       c.add_pin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-      eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
+      eventBroker.attach_handler(key, c.event_set_pin, args = (eventBroker.received_event,))
+      # TODO eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
    
    print c
 
