@@ -33,5 +33,5 @@ void RotaryEncoder::clearPosition()
 
 void RotaryEncoder::scan(void)
 {
-   update():
+   update();
 }
