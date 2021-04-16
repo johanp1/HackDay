@@ -4,8 +4,6 @@
 #include <string>
 using namespace std;
 
-Arduino_stub ArduinoStub;
-
 byte TCCR1A = 0;  // Timer/Counter1 Control Register A
 byte TCCR1B = 0;  // Timer/Counter1 Control Register B
 int TCNT1 = 0;   // Timer/Counter1
@@ -26,7 +24,7 @@ void interrupts(void)
 
 void delay(unsigned int val)
 {
-   ArduinoStub.incTime(val);
+   (ArduinoStub::GetInstance())->IncTime(val);// .IncTime(val);
 }
 
 byte digitalPinToInterrupt(byte b)
@@ -34,99 +32,113 @@ byte digitalPinToInterrupt(byte b)
    return b;
 }
 
-void attachInterrupt(byte pin, void(*cbf)(void), byte mode)
+void attachInterrupt(byte pin, void(*cbf)(void), InterruptMode mode)
 {
-   ArduinoStub.setInterruptPin(pin);
-   ArduinoStub.setISR(cbf);
+   (ArduinoStub::GetInstance())->SetInterruptPin(pin);
+   (ArduinoStub::GetInstance())->SetISR(cbf);
 
    if(mode == 0){}
 }
 
-void pinMode(int pin, int dir)
+void pinMode(int pin, int m)
 {
-  ArduinoStub.setMode(pin, dir);
+   (ArduinoStub::GetInstance())->SetMode(pin, (PinMode)m);
 }
 
 int digitalRead(int pin)
 {
-  return ArduinoStub.digitalRead(pin);
+  return (ArduinoStub::GetInstance())->DigitalRead(pin);
 }
 
 void digitalWrite(int pin, int w)
 {
-  ArduinoStub.digitalWrite(pin, w);
+  (ArduinoStub::GetInstance())->DigitalWrite(pin, (PinState)w);
 }
 
 int analogRead(int pin)
 {
-  return ArduinoStub.analogRead(pin);
+  return (ArduinoStub::GetInstance())->AnalogRead(pin);
 }
 
 unsigned long millis(void)
 {
-  return (unsigned long)ArduinoStub.getTime()/1000;  //convert us to ms
+  return (unsigned long)(ArduinoStub::GetInstance())->GetTime()/1000;  //convert us to ms
 }
 
 unsigned long micros(void)
 {
-  return (unsigned long)ArduinoStub.getTime();
+  return (unsigned long)(ArduinoStub::GetInstance())->GetTime();
 }
 
-Arduino_stub::Arduino_stub()
+ArduinoStub::ArduinoStub()
 {
-  reset();
+   Reset();
 }
 
-void Arduino_stub::setMode(int pin, int dir)
+ArduinoStub::~ArduinoStub()
 {
-  pinModes[pin] = dir;
+   arduinoStub_.reset(); // clear the weak ptr
 }
 
-int Arduino_stub::getMode(int pin)
+std::weak_ptr<ArduinoStub> ArduinoStub::arduinoStub_;
+
+std::shared_ptr<ArduinoStub> ArduinoStub::GetInstance()
 {
-  return pinModes[pin];
+   if (auto existing_instance = arduinoStub_.lock())
+   {
+      return existing_instance;
+   }
+   else
+   {
+      std::shared_ptr<ArduinoStub> tmp_shared(new ArduinoStub());
+      arduinoStub_ = tmp_shared;
+      return tmp_shared;
+   }
 }
 
-void Arduino_stub::digitalWrite(int pin, int w)
+void ArduinoStub::SetMode(const int pin, const PinMode m)
 {
-  digitalWrites[pin] = w;
+  digitalPins[pin].SetMode(m);
 }
 
-int Arduino_stub::getDigitalWrite(int pin)
+int ArduinoStub::GetMode(const int pin)
 {
-  return digitalWrites[pin];
+   return digitalPins[pin].MockGetMode();
 }
 
-void Arduino_stub::setDigitalRead(int pin, int data)
+void ArduinoStub::DigitalWrite(const int pin, const PinState w)
 {
-  digitalReads[pin] = data;
+  digitalPins[pin].DigitalWrite(w);
 }
 
-int Arduino_stub::digitalRead(int pin)
+int ArduinoStub::GetDigitalWrite(const int pin)
 {
-  return digitalReads[pin];
+  return digitalPins[pin].MockGetDigitalWrite();
 }
 
-void Arduino_stub::setAnalogRead(int pin, int data)
+void ArduinoStub::SetDigitalRead(const int pin, const PinState data)
+{
+  digitalPins[pin].MockSetDigitalRead(data);
+}
+
+int ArduinoStub::DigitalRead(const int pin)
+{
+   return digitalPins[pin].DigitalRead();
+}
+
+void ArduinoStub::SetAnalogRead(const int pin, const PinState data)
 {
   analogReads[pin] = data;
 }
 
-int Arduino_stub::analogRead(int pin)
+int ArduinoStub::AnalogRead(const int pin)
 {
   return analogReads[pin];
 }
 
-void Arduino_stub::reset()
+void ArduinoStub::Reset()
 {
   int i;
-
-  for(i = 0; i < 9; i++)
-  {
-    pinModes[i] = OUTPUT;
-    digitalWrites[i] = LOW;
-    digitalReads[i] = LOW;
-  }
 
   for(i = 0; i < 3; i++)
   {
@@ -138,34 +150,34 @@ void Arduino_stub::reset()
   isr = NULL;
 }
 
-void Arduino_stub::incTime(unsigned long t)
+void ArduinoStub::IncTime(const unsigned long t)
 {
   time += t;
 }
 
-void Arduino_stub::incTimeMs(unsigned long t)
+void ArduinoStub::IncTimeMs(const unsigned long t)
 {
   time += 1000*t;
 }
 
-unsigned long Arduino_stub::getTime()
+unsigned long ArduinoStub::GetTime()
 {
   return time;
 }
 
-void Arduino_stub::setInterruptPin(byte pin)
+void ArduinoStub::SetInterruptPin(byte pin)
 {
    interruptPin = pin;
 }
 
-void Arduino_stub::setISR(void(*cbf)(void))
+void ArduinoStub::SetISR(void(*cbf)(void))
 {
    isr = cbf;
 }
 
-void Arduino_stub::invokeInterrupt(unsigned int val)
+void ArduinoStub::InvokeInterrupt(const unsigned int val)
 {
-  setDigitalRead(interruptPin, (int) val);
+  SetDigitalRead(interruptPin, (PinState) val);
 
    if (isr != NULL)
    {

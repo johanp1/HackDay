@@ -2,19 +2,19 @@
 #define __ARDUINO_TEST_DOUBLE_H_
    
 #include <string>
+#include <array>
 #include "String.h"
 #include "SerialStub.h"
 #include "PinMock.h"
+#include <memory>
 
-#define INPUT PinMode_Input
-#define INPUT_PULLUP PinMode_InputPullUp
-#define OUTPUT PinMode_Output
+typedef enum{
+   InterruptMode_Change = 0,
+   InterruptMode_Rising = 1
+} InterruptMode;
 
-#define LOW PinState_Low
-#define HIGH PinState_High
-
-#define CHANGE 0
-#define RISING 1
+#define CHANGE InterruptMode_Change
+#define RISING InterruptMode_Rising
 
 #define A2 0
 #define A3 1
@@ -35,42 +35,48 @@ using namespace std;
 
 typedef unsigned char byte;
 
-class Arduino_stub
+//singelton class
+class ArduinoStub
 {
    public:
-   Arduino_stub();
+   ~ArduinoStub();
+   
+   ArduinoStub(ArduinoStub&) = delete; // Copy prohibited
+   void operator=(const ArduinoStub&) = delete; // Assignment prohibited
+   ArduinoStub& operator=(ArduinoStub&&) = delete; // Move assignment
 
-   void setMode(int pin, int dir);
-   int getMode(int pin);
+   static std::shared_ptr<ArduinoStub> GetInstance();
 
-   void digitalWrite(int pin, int dir);
-   int getDigitalWrite(int pin);
+   void SetMode(const int pin, const PinMode m);
+   int GetMode(const int pin);
 
-   void setDigitalRead(int pin, int data);
-   int digitalRead(int pin);
+   void DigitalWrite(const int pin, const PinState v);
+   int GetDigitalWrite(const int pin);
 
-   void setAnalogRead(int pin, int val);
-   int analogRead(int pin);
+   void SetDigitalRead(const int pin, const PinState data);
+   int DigitalRead(const int pin);
+
+   void SetAnalogRead(const int pin, const PinState val);
+   int AnalogRead(const int pin);
   
-   void incTimeMs(unsigned long t);
-   void incTime(unsigned long t);
-   unsigned long getTime();
+   void IncTimeMs(const unsigned long t);
+   void IncTime(const unsigned long t);
+   unsigned long GetTime();
 
-   void setInterruptPin(byte pin);
-   void setISR(void(*cbf)(void));
-   void invokeInterrupt(unsigned int val);
+   void SetInterruptPin(const byte pin);
+   void SetISR(void(*cbf)(void));
+   void InvokeInterrupt(const unsigned int val);
 
-   void reset();
+   void Reset();
+
+   protected:
+   ArduinoStub();
 
    private:
-   int pinModes[9];
-   int digitalWrites[9];
-   int digitalReads[9];
-
+   static std::weak_ptr<ArduinoStub> arduinoStub_;
+   array<MockDigitalPin, 9> digitalPins;
    int analogReads[4];
-
    unsigned long time;
-
    void(*isr)(void);
    byte interruptPin;
 };
@@ -79,17 +85,17 @@ void setup();
 void loop();
 void delay(unsigned int val);
 byte digitalPinToInterrupt(byte b);
-void attachInterrupt(byte pin, void(*cbf)(void), byte mode);
+void attachInterrupt(byte pin, void(*cbf)(void), InterruptMode mode);
 void noInterrupts(void);
 void interrupts(void);
-void pinMode(int pin, int dir);
+void pinMode(int pin, int m);
 int digitalRead(int pin);
 void digitalWrite(int pin, int w);
 int analogRead(int pin);
 unsigned long millis(void);
 unsigned long micros(void);
 
-extern Arduino_stub ArduinoStub;
+//extern Arduino_stub ArduinoStub;
 
 extern byte TCCR1A;  // Timer/Counter1 Control Register A
 extern byte TCCR1B;  // Timer/Counter1 Control Register B

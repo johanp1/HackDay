@@ -1,30 +1,37 @@
+#include "Arduino.h"
+#include <iostream>
 #include "CommandLineTestRunner.h"
 #include "TestHarness.h"
-#include "Arduino.h"
 
 TEST_GROUP(ArduinoMockTestGroup)
 {
-  void setup()
-  {  
-     Serial.clear();
-  }
-  
-  void teardown()
-  {
-  }
+   MockDigitalPin testPin;
+   std::shared_ptr<ArduinoStub> arduinoStub;
+
+   void setup()
+   {  
+      Serial.clear();
+      arduinoStub = ArduinoStub::GetInstance();
+   }
+   
+   void teardown()
+   {
+   }
 };
 
 TEST(ArduinoMockTestGroup, Init)
 {
-   CHECK(ArduinoStub.getMode(0) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(1) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(2) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(3) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(4) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(5) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(6) == PinMode_Output);
-   CHECK(ArduinoStub.getMode(7) == PinMode_Output);
-   CHECK(true);
+   CHECK(arduinoStub->GetMode(0) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(1) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(2) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(3) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(4) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(5) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(6) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(7) == PinMode_Input);
+   CHECK(arduinoStub->GetMode(8) == PinMode_Input);
+
+   CHECK(Serial.available() == 0);
 }
 
 TEST(ArduinoMockTestGroup, SerialPrint)
@@ -41,27 +48,59 @@ TEST(ArduinoMockTestGroup, SerialPrintln)
 
 TEST(ArduinoMockTestGroup, ReadInputPin)
 {
-   MockDigitalPin testPin;
+   //MockDigitalPin testPin;
 
-   CHECK(testPin.mockGetMode() == PinMode_Input);
-   testPin.mockSetDigitalRead(PinState_Low);
-   CHECK(testPin.digitalRead() == PinState_Low);
+   CHECK(testPin.MockGetMode() == PinMode_Input);
+   testPin.MockSetDigitalRead(PinState_Low);
+   CHECK(testPin.DigitalRead() == PinState_Low);
+
+   testPin.MockSetDigitalRead(PinState_High);
+   CHECK(testPin.DigitalRead() == PinState_High);
+   CHECK(testPin.MockGetMode() == PinMode_Input);
 }
 
 
 TEST(ArduinoMockTestGroup, WriteOutputPin)
 {
-   MockDigitalPin testPin;
+   //MockDigitalPin testPin;
    
-   testPin.setMode(PinMode_Output);
-   CHECK(testPin.mockGetMode() == PinMode_Output);
-   CHECK(testPin.mockGetDigitalWrite() == PinState_Low);
+   testPin.SetMode(PinMode_Output);
+   CHECK(testPin.MockGetMode() == PinMode_Output);
+   CHECK(testPin.MockGetDigitalWrite() == PinState_Low);
 
-   testPin.digitalWrite(PinState_High);
-   CHECK(testPin.mockGetDigitalWrite() == PinState_High);
+   testPin.DigitalWrite(PinState_High);
+   CHECK(testPin.MockGetDigitalWrite() == PinState_High);
 
-   testPin.digitalWrite(PinState_Low);
-   CHECK(testPin.mockGetDigitalWrite() == PinState_Low);
+   testPin.DigitalWrite(PinState_Low);
+   CHECK(testPin.MockGetDigitalWrite() == PinState_Low);
+}
+
+TEST(ArduinoMockTestGroup, WriteInputPin)
+{
+   //MockDigitalPin testPin;
+   
+   CHECK(testPin.MockGetMode() == PinMode_Input);
+   CHECK(testPin.MockGetDigitalWrite() == PinState_Low);
+
+   testPin.DigitalWrite(PinState_High);
+   CHECK(testPin.MockGetDigitalWrite() == PinState_High);
+   CHECK(testPin.MockGetMode() == PinMode_InputPullUp);
+}
+
+TEST(ArduinoMockTestGroup, ArduinoReadInputPin)
+{
+   CHECK(digitalRead(0) == LOW);
+   arduinoStub->SetDigitalRead(0, PinState_High);
+   CHECK(digitalRead(0) == HIGH);
+}
+
+TEST(ArduinoMockTestGroup, ArduinoWriteOutputPin)
+{
+   pinMode(0, OUTPUT);
+
+   CHECK(arduinoStub->GetDigitalWrite(0) == PinState_Low);
+   digitalWrite(0, HIGH);
+   CHECK(arduinoStub->GetDigitalWrite(0) == PinState_High);
 }
 
 int main(int ac, char** av)

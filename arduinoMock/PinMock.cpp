@@ -5,40 +5,40 @@
 */
 MockDigitalPin::MockDigitalPin()
 {
-   mockPinMode = new PinModeInput();  // as per data-sheet, arudino's pins defaults as inputs
+   mockPinMode = std::make_unique<PinModeInput>();  // as per data-sheet, arudino's pins defaults as inputs
 }
 
 MockDigitalPin::~MockDigitalPin() 
 {
-   delete mockPinMode;
+   //delete mockPinMode;
 }
 
-void MockDigitalPin::setMode(const PinMode _mode)
+void MockDigitalPin::SetMode(const PinMode _mode)
 {
    mockPinMode->SetMode(this, _mode);
 }
 
-void MockDigitalPin::digitalWrite(const PinState state)
+void MockDigitalPin::DigitalWrite(const PinState _state)
 {
-   mockPinMode->SetState(state);
+   mockPinMode->SetState(this, _state);
 }
 
-PinState MockDigitalPin::digitalRead(void)
+PinState MockDigitalPin::DigitalRead(void)
 {
    return mockPinMode->GetState();
 }
 
-void MockDigitalPin::mockSetDigitalRead(const PinState _state)
+void MockDigitalPin::MockSetDigitalRead(const PinState _state)
 {
    mockPinMode->SetState(_state);
 }
 
-PinState MockDigitalPin::mockGetDigitalWrite()
+PinState MockDigitalPin::MockGetDigitalWrite()
 {
    return mockPinMode->GetState();
 }
 
-PinMode MockDigitalPin::mockGetMode()
+PinMode MockDigitalPin::MockGetMode()
 {
    return mockPinMode->GetMode();
 }
@@ -51,9 +51,9 @@ MockPinMode::MockPinMode()
    state = PinState_Low;
 }
 
-PinMode MockPinMode::GetMode(void)
+void MockPinMode::SetState(const PinState _state) 
 {
-   return mode;
+   state = _state;
 }
 
 /*
@@ -61,7 +61,6 @@ PinMode MockPinMode::GetMode(void)
 */
 PinModeOutput::PinModeOutput()
 {
-   mode = PinMode_Output;
 }
 
 PinModeOutput::~PinModeOutput()
@@ -72,13 +71,26 @@ void PinModeOutput::SetMode(MockDigitalPin *mockedPin, const PinMode _mode)
 {
    if(_mode == PinMode_Input)
    {
-      mockedPin->mockPinMode = new PinModeInput();
+      mockedPin->mockPinMode = std::make_unique<PinModeInput>();
+      //mockedPin->mockPinMode = new PinModeInput();
+      //delete this;
    }
-   delete this;
+   if(_mode == PinMode_InputPullUp)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeInputPullUp>(); //new PinModeInputPullUp();
+      //delete this;
+   }
 }
 
-void PinModeOutput::SetState(/*MockDigitalPin *mockedPin,*/ const PinState _state) 
+PinMode PinModeOutput::GetMode(void)
 {
+   return mode;
+}
+
+void PinModeOutput::SetState(MockDigitalPin *mockedPin, const PinState _state) 
+{
+   if (mockedPin == nullptr) {} // dummy, mockedPin unused
+
    state = _state;
 }
 
@@ -92,7 +104,12 @@ PinState PinModeOutput::GetState(void)
 */
 PinModeInput::PinModeInput()
 {
-   mode = PinMode_Input;
+}
+
+PinModeInput::PinModeInput(const PinState _state)
+{
+   state = _state;
+   PinModeInput();
 }
 
 PinModeInput::~PinModeInput()
@@ -101,20 +118,79 @@ PinModeInput::~PinModeInput()
 
 void PinModeInput::SetMode(MockDigitalPin *mockedPin, const PinMode _mode)
 {
-   if(_mode != PinMode_Input)
+   if(_mode == PinMode_InputPullUp)
    {
-      mockedPin->mockPinMode = new PinModeOutput();
+      mockedPin->mockPinMode = std::make_unique<PinModeInputPullUp>(); //new PinModeInputPullUp();
+      //delete this;
    }
-   delete this;
+   if(_mode == PinMode_Output)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeOutput>(); //new PinModeOutput();
+      //delete this;
+   }
+}
+
+PinMode PinModeInput::GetMode(void)
+{
+   return mode;
 }
 
 // when writing to a Input pin, the internal pull up is enabled
-void PinModeInput::SetState(/*MockDigitalPin *mockedPin,*/ const PinState _state) 
+void PinModeInput::SetState(MockDigitalPin *mockedPin, const PinState _state) 
 {
-   state = _state;
+   if (_state == PinState_High)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeInputPullUp>(); //new PinModeInputPullUp();
+      //delete this;
+   }
 }
 
 PinState PinModeInput::GetState(void)
+{
+   return state;
+}
+
+/*
+   PinModeInputPullUp
+*/
+PinModeInputPullUp::PinModeInputPullUp()
+{
+   state = PinState_High;
+}
+
+PinModeInputPullUp::~PinModeInputPullUp()
+{
+}
+
+void PinModeInputPullUp::SetMode(MockDigitalPin *mockedPin, const PinMode _mode)
+{
+   if(_mode == PinMode_Input)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeInput>(); //new PinModeInput();
+      //delete this;
+   }
+   if(_mode == PinMode_Output)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeOutput>(); //new PinModeOutput();
+      //delete this;
+   }
+}
+
+PinMode PinModeInputPullUp::GetMode(void)
+{
+   return mode;
+}
+
+void PinModeInputPullUp::SetState(MockDigitalPin *mockedPin, const PinState _state) 
+{
+   if (_state == PinState_Low)
+   {
+      mockedPin->mockPinMode = std::make_unique<PinModeInput>(PinState_Low); //new PinModeInput(PinState_Low);
+      delete this;
+   }
+}
+
+PinState PinModeInputPullUp::GetState(void)
 {
    return state;
 }
