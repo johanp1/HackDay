@@ -98,56 +98,123 @@ std::shared_ptr<ArduinoStub> ArduinoStub::GetInstance()
 
 void ArduinoStub::SetMode(const int pin, const PinMode m)
 {
-  digitalPins[pin].SetMode(m);
+   /*try
+   {
+      digitalPins.at(pin).SetMode(m);
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }*/
+   digitalPins.at(pin).SetMode(m);
 }
 
 int ArduinoStub::GetMode(const int pin)
 {
-   return digitalPins[pin].MockGetMode();
+   /*int retVal = 0;
+
+   try
+   {
+      retVal = digitalPins.at(pin).MockGetMode();
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }
+
+   return retVal;*/
+   return digitalPins.at(pin).MockGetMode();
 }
 
 void ArduinoStub::DigitalWrite(const int pin, const PinState w)
 {
-  digitalPins[pin].DigitalWrite(w);
+   /*try
+   {
+      digitalPins.at(pin).DigitalWrite(w);
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }*/
+   
+   digitalPins.at(pin).DigitalWrite(w);
 }
 
 int ArduinoStub::GetDigitalWrite(const int pin)
 {
-  return digitalPins[pin].MockGetDigitalWrite();
+   /*int retVal = 0;
+
+   try
+   {
+      retVal = digitalPins.at(pin).MockGetDigitalWrite();
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }
+
+   return retVal;*/
+   return digitalPins.at(pin).MockGetDigitalWrite();
 }
 
 void ArduinoStub::SetDigitalRead(const int pin, const PinState data)
 {
-  digitalPins[pin].MockSetDigitalRead(data);
+   /*try
+   {
+      digitalPins.at(pin).MockSetDigitalRead(data);
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }*/
+   digitalPins.at(pin).MockSetDigitalRead(data);
 }
 
 int ArduinoStub::DigitalRead(const int pin)
 {
-   return digitalPins[pin].DigitalRead();
+/*   int retVal = 0;
+
+   try
+   {
+      retVal = digitalPins.at(pin).DigitalRead();
+   }
+   catch (const std::out_of_range& oor)
+   {
+      std::cerr << "Out of Range error: " << oor.what() << '\n';
+   }
+
+   return retVal;*/
+   return digitalPins.at(pin).DigitalRead();
 }
 
 void ArduinoStub::SetAnalogRead(const int pin, const PinState data)
 {
-  analogReads[pin] = data;
+  analogReads.at(pin) = data;
 }
 
 int ArduinoStub::AnalogRead(const int pin)
 {
-  return analogReads[pin];
+  return analogReads.at(pin);
 }
 
 void ArduinoStub::Reset()
 {
-  int i;
+   int i;
 
-  for(i = 0; i < 3; i++)
-  {
-	  analogReads[i] = 0;
-  }
+   for (auto& pin : digitalPins)
+   {
+      pin.DigitalWrite(PinState_Low);
+      pin.SetMode(PinMode_Input);
+   }
 
-  time = 0;
+   for(auto& ar : analogReads)
+   {
+      ar = 0;
+   }
 
-  isr = NULL;
+   time = 0;
+
+   isr = NULL;
 }
 
 void ArduinoStub::IncTime(const unsigned long t)

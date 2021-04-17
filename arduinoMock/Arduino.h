@@ -75,7 +75,7 @@ class ArduinoStub
    private:
    static std::weak_ptr<ArduinoStub> arduinoStub_;
    array<MockDigitalPin, 9> digitalPins;
-   int analogReads[4];
+   array<int, 4> analogReads;
    unsigned long time;
    void(*isr)(void);
    byte interruptPin;
@@ -94,8 +94,6 @@ void digitalWrite(int pin, int w);
 int analogRead(int pin);
 unsigned long millis(void);
 unsigned long micros(void);
-
-//extern Arduino_stub ArduinoStub;
 
 extern byte TCCR1A;  // Timer/Counter1 Control Register A
 extern byte TCCR1B;  // Timer/Counter1 Control Register B

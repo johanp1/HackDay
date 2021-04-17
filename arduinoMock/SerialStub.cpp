@@ -1,8 +1,9 @@
 #include "SerialStub.h"
+#include <iostream>
 
-Serial_stub Serial;
+SerialStub Serial;
 
-Serial_stub::Serial_stub()
+SerialStub::SerialStub()
 {
    // patch for allocating a larger string at startup. 
    // default seems to be an empty string with 15 chars allocated.
@@ -12,12 +13,12 @@ Serial_stub::Serial_stub()
    clear();
 }
 
-char Serial_stub::available()
+char SerialStub::available()
 {
    return (char)recData.s.length();
 }
 
-void Serial_stub::setRecData(String& str)
+void SerialStub::setRecData(String& str)
 {
    recData.s.append(str.s);
 }
@@ -39,7 +40,7 @@ const String Serial_stub::readStringUntil(const char ch)
    //return recData;
 }
 */
-int Serial_stub::read()
+int SerialStub::read()
 {
    int retVal = (int)recData.s[0];
    //cout << "recData.length " << recData.s.length() << '\n';
@@ -48,63 +49,66 @@ int Serial_stub::read()
    return retVal;
 }
 
-void Serial_stub::clear()
+void SerialStub::clear()
 {
    sendData.clear();
    recData.s.clear();
 }
 
-void Serial_stub::print(String& str)
+void SerialStub::print(String& str)
 {
    sendData.append(str.s);
 }
 
-void Serial_stub::print(int val)
+void SerialStub::print(int val)
 {
    string str = to__string(val);
 
    sendData.append(str);
 }
 
-void Serial_stub::print(const char *s)
+void SerialStub::print(const char *s)
 {
    string str = string(s);
 
    sendData.append(str);
 }
 
-void Serial_stub::println(String& s)
+void SerialStub::println(String& s)
 {
    string str = s.s.append("\n");
 
    sendData.append(str);
 }
 
-void Serial_stub::println(int val)
+void SerialStub::println(int val)
 {
    string str = to__string(val).append("\n");
 
    sendData.append(str);
 }
 
-void Serial_stub::println(const char *s)
+void SerialStub::println(const char *s)
 {
    string str = string(s).append("\n");
 
    sendData.append(str);
 }
 
-const string& Serial_stub::getData()
+const string SerialStub::getData()
 {
-   return sendData;
+   string ret_str = sendData;
+   sendData.clear();
+
+   return ret_str;
 }
 
-void Serial_stub::begin(int val)
+void SerialStub::begin(int val)
 {
    if(val == 0){}
 }
 
-void Serial_stub::setTimeout(int val)
+void SerialStub::setTimeout(int val)
 {
    if (val == 0) {}
 }

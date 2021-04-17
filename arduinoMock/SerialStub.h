@@ -3,10 +3,10 @@
 
 #include "String.h"
 
-class Serial_stub
+class SerialStub
 {
 public:
-   Serial_stub();
+   SerialStub();
 
    char available();
    void setRecData(String& str);
@@ -16,19 +16,21 @@ public:
    void print(String& str);
    void print(int val);
    void print(const char* str);
+
    void println(String& str);
    void println(int val);
    void println(const char* str);
+   
    void begin(int val);
    void setTimeout(int val);
    void clear();
-   const std::string& getData();
+   const std::string getData();
    
 private:
    std::string sendData;
    String recData;
 };
 
-extern Serial_stub Serial;
+extern SerialStub Serial;
 
 #endif /* __ARDUINO_SERIAL_STUB_H_ */
