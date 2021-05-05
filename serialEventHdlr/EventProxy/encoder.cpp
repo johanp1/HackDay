@@ -5,13 +5,10 @@
 // constructor : sets pins as inputs and turns on pullup resistors
 RotaryEncoder::RotaryEncoder( const String& argName, int argClkPin, int argDtPin) : EventGenerator(argName), clkPin ( argClkPin), dtPin( argDtPin ) 
 {
-   // set pin a and b to be input
-   pinMode(clkPin, INPUT);
-   pinMode(dtPin, INPUT);
-   // and turn on pull-up resistors
-   digitalWrite(clkPin, HIGH);
-   digitalWrite(dtPin, HIGH);
-
+   // set pin a and b to be input with pull up enabled
+   pinMode(clkPin, INPUT_PULLUP);
+   pinMode(dtPin, INPUT_PULLUP);
+   
    position = 0;
 }
 

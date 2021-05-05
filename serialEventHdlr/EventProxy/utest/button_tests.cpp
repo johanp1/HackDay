@@ -6,62 +6,63 @@
 
 TEST_GROUP(ButtonTestGroup)
 {
-  class EventListnerSpy : public EventListner{
-  public:
-    void enventListnerSpy()
-    {
-      reset();
-    };
+   class EventListnerSpy : public EventListner{
+   public:
+      void enventListnerSpy()
+      {
+         reset();
+      };
     
-    void handleEvent(C_Event& e)
-    {
-      newData = true;
-      serializedEvent = e.serialize();
-    };
+      void handleEvent(C_Event& e)
+      {
+         newData = true;
+         serializedEvent = e.serialize();
+      };
 
-    void reset()
-    {
-      serializedEvent = "";
-      newData = false;
-    }
+      void reset()
+      {
+         serializedEvent = "";
+         newData = false;
+      }
     
-    String serializedEvent;
-    bool newData;
-  };
+      String serializedEvent;
+      bool newData;
+   };
 
   
-  Button* b;
-  EventListnerSpy evSpy;
+   std::unique_ptr<Button> b;
+   EventListnerSpy evSpy;
+   std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
+
+   void setup()
+   {
+      arduinoStub->Reset();
+      b = std::make_unique<Button>("test", PIN, 50);
+      b->addEventListner(&evSpy);
+   }
   
-  void setup()
-  {
-    ArduinoStub.reset();
-    b = new Button("test", PIN, 50);
-    b->addEventListner(&evSpy);
-  }
-  
-  void teardown()
-  {
-    delete b;
-  }
+   void teardown()
+   {
+      b.reset();
+   }
 
 };
 
 TEST(ButtonTestGroup, Init)
 {
-  LONGS_EQUAL(INPUT, ArduinoStub.getMode(PIN));
+  LONGS_EQUAL(INPUT, arduinoStub->GetMode(PIN));
   LONGS_EQUAL(LOW, b->getState());
 }
 
 TEST(ButtonTestGroup, ButtonNotPressed)
 {
-  ArduinoStub.setDigitalRead(PIN, LOW);
+  arduinoStub->SetDigitalRead(PIN, LOW);
   
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
   
-  ArduinoStub.incTimeMs(51); //longer than debounce delay
+  arduinoStub->IncTimeMs(51); //longer than debounce delay
   
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
@@ -70,13 +71,13 @@ TEST(ButtonTestGroup, ButtonNotPressed)
 
 TEST(ButtonTestGroup, PressButtonLong)
 {
-  ArduinoStub.setDigitalRead(PIN, HIGH);
+  arduinoStub->SetDigitalRead(PIN, HIGH);
 
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
   
-  ArduinoStub.incTimeMs(51); //longer than debounce delay
+  arduinoStub->IncTimeMs(51); //longer than debounce delay
   
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
@@ -86,13 +87,13 @@ TEST(ButtonTestGroup, PressButtonLong)
 
 TEST(ButtonTestGroup, PressButtonShort)
 {
-  ArduinoStub.setDigitalRead(PIN, HIGH);
+  arduinoStub->SetDigitalRead(PIN, HIGH);
 
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
   CHECK(!evSpy.newData);
     
-  ArduinoStub.incTimeMs(49); //shorter than debounce delay
+  arduinoStub->IncTimeMs(49); //shorter than debounce delay
   
   b->scan();
   LONGS_EQUAL(LOW, b->getState());
@@ -101,21 +102,21 @@ TEST(ButtonTestGroup, PressButtonShort)
 
 TEST(ButtonTestGroup, ReleaseButton)
 {
-  ArduinoStub.setDigitalRead(PIN, HIGH);
+  arduinoStub->SetDigitalRead(PIN, HIGH);
 
   b->scan();
 
-  ArduinoStub.incTimeMs(51); //longer than debounce delay
+  arduinoStub->IncTimeMs(51); //longer than debounce delay
 
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
 
-  ArduinoStub.setDigitalRead(PIN, LOW);
+  arduinoStub->SetDigitalRead(PIN, LOW);
 
   b->scan();
   LONGS_EQUAL(HIGH, b->getState());
   
-  ArduinoStub.incTimeMs(51); //longer than debounce delay
+  arduinoStub->IncTimeMs(51); //longer than debounce delay
 
   b->scan();
   LONGS_EQUAL(LOW, b->getState());

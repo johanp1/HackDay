@@ -187,7 +187,7 @@ int ArduinoStub::DigitalRead(const int pin)
    return digitalPins.at(pin).DigitalRead();
 }
 
-void ArduinoStub::SetAnalogRead(const int pin, const PinState data)
+void ArduinoStub::SetAnalogRead(const int pin, const unsigned int data)
 {
   analogReads.at(pin) = data;
 }
@@ -199,8 +199,6 @@ int ArduinoStub::AnalogRead(const int pin)
 
 void ArduinoStub::Reset()
 {
-   int i;
-
    for (auto& pin : digitalPins)
    {
       pin.DigitalWrite(PinState_Low);

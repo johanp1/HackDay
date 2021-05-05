@@ -30,19 +30,21 @@ TEST_GROUP(SelectorTestGroup)
    };
 
   
-   Selector* s;
+   ;
    EventListnerSpy evSpy;
-   
+   std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
+   std::unique_ptr<Selector> s;
+
    void gotoState(byte state)
    {
       //byte oldState = s->getState();
       unsigned const int volt2state[4] = { 250, 350, 500, 1030 };
       unsigned int volt = volt2state[state];
       
-      ArduinoStub.setAnalogRead(PIN, (int)volt);
+      arduinoStub->SetAnalogRead(PIN, (int)volt);
       
       s->scan();
-      ArduinoStub.incTimeMs(101); //longer than debounce delay
+      arduinoStub->IncTimeMs(101); //longer than debounce delay
       s->scan();
    }
    
@@ -54,15 +56,15 @@ TEST_GROUP(SelectorTestGroup)
 
    void setup()
    {
-      ArduinoStub.reset();
+      arduinoStub->Reset();
       evSpy.reset();
-      s = new Selector("test", PIN, 100);
+      s = std::make_unique<Selector>("test", PIN, 100);
       s->addEventListner(&evSpy);
    }
    
    void teardown()
    {
-      delete s;
+      s.reset();
    }
 
 };
@@ -74,12 +76,12 @@ TEST(SelectorTestGroup, Init)
 
 TEST(SelectorTestGroup, SteadyState)
 {
-  ArduinoStub.setAnalogRead(PIN, 0);
+  arduinoStub->SetAnalogRead(PIN, 0);
 
   s->scan();
   LONGS_EQUAL(0, s->getState());
   
-  ArduinoStub.incTime(101); //longer than debounce delay
+  arduinoStub->IncTime(101); //longer than debounce delay
 
   s->scan();
   LONGS_EQUAL(0, s->getState());
@@ -88,12 +90,12 @@ TEST(SelectorTestGroup, SteadyState)
 
 TEST(SelectorTestGroup, checkNoTransitionShortTime)
 {
-	ArduinoStub.setAnalogRead(PIN, 340);
+	arduinoStub->SetAnalogRead(PIN, 340);
 
 	s->scan();
 	LONGS_EQUAL(0, s->getState());
 
-	ArduinoStub.incTimeMs(99); //shorter than debounce delay
+	arduinoStub->IncTimeMs(99); //shorter than debounce delay
 
 	s->scan();
 	LONGS_EQUAL(0, s->getState());
@@ -130,28 +132,28 @@ TEST(SelectorTestGroup, stateTransitions)
 
 TEST(SelectorTestGroup, undefVolt)
 {
-  ArduinoStub.setAnalogRead(PIN, 1100);
+  arduinoStub->SetAnalogRead(PIN, 1100);
   
   s->scan();
-  ArduinoStub.incTimeMs(101); //longer than debounce delay
-  s->scan();
-  
-  LONGS_EQUAL(0, s->getState());
-  CHECK(!evSpy.newData);
-  
-  ArduinoStub.setAnalogRead(PIN, 580);
-  
-  s->scan();
-  ArduinoStub.incTimeMs(101); //longer than debounce delay
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
   s->scan();
   
   LONGS_EQUAL(0, s->getState());
   CHECK(!evSpy.newData);
   
-  ArduinoStub.setAnalogRead(PIN, 100);
+  arduinoStub->SetAnalogRead(PIN, 580);
   
   s->scan();
-  ArduinoStub.incTimeMs(101); //longer than debounce delay
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
+  s->scan();
+  
+  LONGS_EQUAL(0, s->getState());
+  CHECK(!evSpy.newData);
+  
+  arduinoStub->SetAnalogRead(PIN, 100);
+  
+  s->scan();
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
   s->scan();
   
   LONGS_EQUAL(0, s->getState());

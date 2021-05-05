@@ -52,16 +52,17 @@ TEST_GROUP(ReceiverTestGroup)
       {
          CHECK(serializedData.empty());
       }
-
+   
       vector<String> serializedData;
    };
 
    Receiver r = Receiver("test");
    EventListnerSpy evSpy;
+   std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
    void setup()
    {
-      ArduinoStub.reset();
+      arduinoStub->Reset();
       evSpy.reset();
       r.addEventListner(&evSpy);
    }

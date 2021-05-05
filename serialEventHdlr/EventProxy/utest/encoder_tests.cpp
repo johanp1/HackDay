@@ -1,33 +1,35 @@
 #include "TestHarness.h"
 #include "encoder.h"
 #include "Arduino.h"
+#include <memory>
 
 #define CLK_PIN 1
 #define DT_PIN 2
 
 TEST_GROUP(EncoderTestGroup)
 {
-  RotaryEncoder* e;
+  std::unique_ptr<RotaryEncoder> e;
+  std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
+
+   void setup()
+   {
+      arduinoStub->Reset();
+      e = std::make_unique<RotaryEncoder>("enc", CLK_PIN, DT_PIN);
+   }
   
-  void setup()
-  {
-    ArduinoStub.reset();
-    e = new RotaryEncoder("enc", CLK_PIN, DT_PIN);
-  }
-  
-  void teardown()
-  {
-    delete e;
-  }
+   void teardown()
+   {
+      e.reset();
+   }
 
 };
 
 TEST(EncoderTestGroup, Init)
 {
-  LONGS_EQUAL(INPUT, ArduinoStub.getMode(CLK_PIN));
-  LONGS_EQUAL(INPUT, ArduinoStub.getMode(DT_PIN));
-  LONGS_EQUAL(HIGH, ArduinoStub.getDigitalWrite(CLK_PIN));
-  LONGS_EQUAL(HIGH, ArduinoStub.getDigitalWrite(DT_PIN));
+  LONGS_EQUAL(INPUT_PULLUP, arduinoStub->GetMode(CLK_PIN));
+  LONGS_EQUAL(INPUT_PULLUP, arduinoStub->GetMode(DT_PIN));
+  LONGS_EQUAL(HIGH, arduinoStub->GetDigitalWrite(CLK_PIN));
+  LONGS_EQUAL(HIGH, arduinoStub->GetDigitalWrite(DT_PIN));
 }
 
 TEST(EncoderTestGroup, NoMovement)
@@ -37,16 +39,16 @@ TEST(EncoderTestGroup, NoMovement)
  
 TEST(EncoderTestGroup, MoveOneStepClkPosFlankCW)
 {
-  ArduinoStub.setDigitalRead(CLK_PIN, HIGH);
-  ArduinoStub.setDigitalRead(DT_PIN, HIGH);
+  arduinoStub->SetDigitalRead(CLK_PIN, HIGH);
+  arduinoStub->SetDigitalRead(DT_PIN, HIGH);
   e->update();
   LONGS_EQUAL(1, e->getPosition());
 }
 
 TEST(EncoderTestGroup, MoveOneStepClkPosFlankCCW)
 {
-  ArduinoStub.setDigitalRead(CLK_PIN, HIGH);
-  ArduinoStub.setDigitalRead(DT_PIN, LOW);
+  arduinoStub->SetDigitalRead(CLK_PIN, HIGH);
+  arduinoStub->SetDigitalRead(DT_PIN, LOW);
   e->update();
   LONGS_EQUAL(-1, e->getPosition());
 }
