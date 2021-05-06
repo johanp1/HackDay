@@ -5,7 +5,6 @@
 
 TEST_GROUP(ArduinoMockTestGroup)
 {
-   MockDigitalPin testPin;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
    void setup()
@@ -64,7 +63,7 @@ TEST(ArduinoMockTestGroup, SerialPrintln)
 
 TEST(ArduinoMockTestGroup, ReadInputPin)
 {
-   //MockDigitalPin testPin;
+   MockDigitalPin testPin;
 
    CHECK(testPin.MockGetMode() == PinMode_Input);
    testPin.MockSetDigitalRead(PinState_Low);
@@ -78,7 +77,7 @@ TEST(ArduinoMockTestGroup, ReadInputPin)
 
 TEST(ArduinoMockTestGroup, WriteOutputPin)
 {
-   //MockDigitalPin testPin;
+   MockDigitalPin testPin;
    
    testPin.SetMode(PinMode_Output);
    CHECK(testPin.MockGetMode() == PinMode_Output);
@@ -93,7 +92,7 @@ TEST(ArduinoMockTestGroup, WriteOutputPin)
 
 TEST(ArduinoMockTestGroup, WriteInputPin)
 {
-   //MockDigitalPin testPin;
+   MockDigitalPin testPin;
    
    CHECK(testPin.MockGetMode() == PinMode_Input);
    CHECK(testPin.MockGetDigitalWrite() == PinState_Low);
@@ -125,6 +124,48 @@ TEST(ArduinoMockTestGroup, ArduinoDigitalPinOutOfBound)
    CHECK_THROWS(out_of_range, digitalWrite(9, HIGH));
    CHECK_THROWS(out_of_range, digitalRead(9));
    CHECK_THROWS(out_of_range, pinMode(9, OUTPUT));
+}
+
+TEST(ArduinoMockTestGroup, ReadAnalogPinBasic)
+{
+   MockAnalogPin testPin;
+
+   CHECK(testPin.AnalogRead() == 0);
+
+   testPin.SetAnalogVoltage(5);
+   CHECK(testPin.AnalogRead() == 1023);
+
+   testPin.SetAnalogVoltage(0);
+   CHECK(testPin.AnalogRead() == 0);
+
+   testPin.SetAnalogVoltage(1.2f);
+   CHECK(testPin.AnalogRead() ==  (unsigned int)(1023*1.2/5));
+
+   testPin.SetAnalogVoltage(5.5f);
+   CHECK(testPin.AnalogRead() == 1023);
+}
+
+TEST(ArduinoMockTestGroup, ReadAnalogPinReferenceResolution)
+{
+   MockAnalogPin testPin(12, 3.3f);
+
+   CHECK(testPin.AnalogRead() == 0);
+
+   testPin.SetAnalogVoltage(3.3f);
+   CHECK(testPin.AnalogRead() == 4095);
+}
+
+TEST(ArduinoMockTestGroup, ArduinoReadAnalogPin)
+{
+   CHECK(analogRead(0) == 0);
+   arduinoStub->SetAnalogPinVoltage(0, 2.5f);
+   CHECK(analogRead(0) == (unsigned int)(1023*2.5f/5));
+}
+
+// check that nothing catastrophic happens if index outside of bounds
+TEST(ArduinoMockTestGroup, ArduinoAnalogPinOutOfBound)
+{
+   CHECK_THROWS(out_of_range, analogRead(4));
 }
 
 int main(int ac, char** av)

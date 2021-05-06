@@ -6,6 +6,7 @@
 #include "String.h"
 #include "SerialStub.h"
 #include "PinMock.h"
+#include "AnalogPinMock.h"
 #include <memory>
 
 typedef enum{
@@ -17,7 +18,12 @@ typedef enum{
 #define RISING InterruptMode_Rising
 
 #define A2 0
-#define A3 1
+#define A0 0
+#define A1 1
+#define A2 2
+#define A3 3
+#define A4 4
+#define A5 5
 
 #define CS10 0
 #define CS11 1
@@ -56,8 +62,8 @@ class ArduinoStub
    void SetDigitalRead(const int pin, const PinState data);
    int DigitalRead(const int pin);
 
-   void SetAnalogRead(const int pin, const unsigned int val);
-   int AnalogRead(const int pin);
+   void SetAnalogPinVoltage(const int pin, const float v);
+   unsigned int AnalogRead(const int pin);
   
    void IncTimeMs(const unsigned long t);
    void IncTime(const unsigned long t);
@@ -75,7 +81,8 @@ class ArduinoStub
    private:
    static std::weak_ptr<ArduinoStub> arduinoStub_;
    array<MockDigitalPin, 9> digitalPins;
-   array<int, 4> analogReads;
+   array<MockAnalogPin, 4> analogPins;
+
    unsigned long time;
    void(*isr)(void);
    byte interruptPin;

@@ -111,90 +111,37 @@ void ArduinoStub::SetMode(const int pin, const PinMode m)
 
 int ArduinoStub::GetMode(const int pin)
 {
-   /*int retVal = 0;
-
-   try
-   {
-      retVal = digitalPins.at(pin).MockGetMode();
-   }
-   catch (const std::out_of_range& oor)
-   {
-      std::cerr << "Out of Range error: " << oor.what() << '\n';
-   }
-
-   return retVal;*/
    return digitalPins.at(pin).MockGetMode();
 }
 
 void ArduinoStub::DigitalWrite(const int pin, const PinState w)
 {
-   /*try
-   {
-      digitalPins.at(pin).DigitalWrite(w);
-   }
-   catch (const std::out_of_range& oor)
-   {
-      std::cerr << "Out of Range error: " << oor.what() << '\n';
-   }*/
-   
    digitalPins.at(pin).DigitalWrite(w);
 }
 
 int ArduinoStub::GetDigitalWrite(const int pin)
 {
-   /*int retVal = 0;
-
-   try
-   {
-      retVal = digitalPins.at(pin).MockGetDigitalWrite();
-   }
-   catch (const std::out_of_range& oor)
-   {
-      std::cerr << "Out of Range error: " << oor.what() << '\n';
-   }
-
-   return retVal;*/
    return digitalPins.at(pin).MockGetDigitalWrite();
 }
 
 void ArduinoStub::SetDigitalRead(const int pin, const PinState data)
 {
-   /*try
-   {
-      digitalPins.at(pin).MockSetDigitalRead(data);
-   }
-   catch (const std::out_of_range& oor)
-   {
-      std::cerr << "Out of Range error: " << oor.what() << '\n';
-   }*/
    digitalPins.at(pin).MockSetDigitalRead(data);
 }
 
 int ArduinoStub::DigitalRead(const int pin)
 {
-/*   int retVal = 0;
-
-   try
-   {
-      retVal = digitalPins.at(pin).DigitalRead();
-   }
-   catch (const std::out_of_range& oor)
-   {
-      std::cerr << "Out of Range error: " << oor.what() << '\n';
-   }
-
-   return retVal;*/
    return digitalPins.at(pin).DigitalRead();
 }
 
-void ArduinoStub::SetAnalogRead(const int pin, const unsigned int data)
+void ArduinoStub::SetAnalogPinVoltage(const int pin, const float v)
 {
-  analogReads.at(pin) = data;
+  analogPins.at(pin).SetAnalogVoltage(v);
 }
 
-int ArduinoStub::AnalogRead(const int pin)
+unsigned int ArduinoStub::AnalogRead(const int pin)
 {
-  return analogReads.at(pin);
+  return analogPins.at(pin).AnalogRead();
 }
 
 void ArduinoStub::Reset()
@@ -203,11 +150,6 @@ void ArduinoStub::Reset()
    {
       pin.DigitalWrite(PinState_Low);
       pin.SetMode(PinMode_Input);
-   }
-
-   for(auto& ar : analogReads)
-   {
-      ar = 0;
    }
 
    time = 0;
