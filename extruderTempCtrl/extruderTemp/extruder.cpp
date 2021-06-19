@@ -23,17 +23,17 @@ void Extruder::SetTempPwmDuty(int d)
 
 int Extruder::ReadTemp()
 {
-  int adc, T;
+  int adc;
+  long T;
   long mV;
-
+  
   adc = analogRead(tempSensPin);  // adc 0-1023, 1023 = Vref = 5V
   mV = ((long)adc*5000)/1024;       // converted to milli volt
   debug_print(adc);
   debug_print((int)mV);
 
+  T = (long)(2792500 - ((long)(389*mV)))/1000;  //[0.1 degrees]
+  debug_print((int)T);
 
-  T = (int)(2792500 - ((long)(389*mV)))/1000;  //[0.1 degrees]
-  debug_print(T);
-
-  return T;
+  return (int)T;
 }

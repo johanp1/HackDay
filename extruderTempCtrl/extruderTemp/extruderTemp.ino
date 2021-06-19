@@ -1,4 +1,4 @@
-#include "controller.h"
+ #include "controller.h"
 #include "event_parser.h"
 #include "receiver.h"
 #include "extruder.h"
@@ -84,7 +84,7 @@ void loop()
   int currTemp;
 
   currTemp = extruder.ReadTemp();
-  currTemp = (int)(currTemp / 10); // convert from 0.1 degrees unit
+  currTemp = (int)(currTemp); // convert from 0.1 degrees unit
 
   duty = tempCtrl.Step(currTemp, refTemp);  // temp in [0.1 degrees]
 
