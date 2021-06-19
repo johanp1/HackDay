@@ -133,3 +133,8 @@ String String::substring(int from)
    string str = s.substr(from);
    return String(str);
 }
+
+char String::charAt(int n)
+{
+	return s[n];
+}

@@ -6,10 +6,12 @@ class PIDParameters
 {
    public:
    PIDParameters();
-   PIDParameters(PIDParameters &p);
+   PIDParameters(PIDParameters const& p);
    PIDParameters(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta);
-   void setPar(PIDParameters &p);
-   void setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta);
+   void Set(PIDParameters const& p);
+   void Set(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta);
+   bool operator==(PIDParameters const& p) const;
+   bool operator!=(PIDParameters const& p) const;
 
    int K; 
    int Ti;
@@ -17,21 +19,22 @@ class PIDParameters
    int N;
    int Tr;
    int beta;
-
 };
 
 class PIDController
 {
    public:
    PIDController(int period); // [ms]
-   PIDController(int period, PIDParameters &p, int _min, int _max);
-   void setPar(PIDParameters &p);
-   int step(int y, int yRef);
+   PIDController(int period, PIDParameters const& p, int _min, int _max);
+   void SetPar(PIDParameters const& p);
+   int Step(int y, int yRef);
+   PIDParameters const& GetPar() const;
+   void SetEnable(bool e);
+   void SetDebug(bool d);
    
    private:
-   int saturate(int in);
-   int calcOutput(int y, int yRef);
-   //void updateState();
+   int Saturate(int in);
+   int CalcOutput(int y, int yRef);
    
    class PIDParameters par;
 
@@ -41,6 +44,8 @@ class PIDController
    int D;
    int I;
    int yPrev;
+   bool enabled;
+   bool debug;
 };
 
 #endif

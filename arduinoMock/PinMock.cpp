@@ -6,6 +6,7 @@
 MockDigitalPin::MockDigitalPin()
 {
    mockPinMode = std::make_unique<PinModeInput>();  // as per data-sheet, arudino's pins defaults as inputs
+   pwmDuty = 0;
 }
 
 MockDigitalPin::~MockDigitalPin() 
@@ -21,6 +22,11 @@ void MockDigitalPin::SetMode(const PinMode _mode)
 void MockDigitalPin::DigitalWrite(const PinState _state)
 {
    mockPinMode->SetState(this, _state);
+}
+
+void MockDigitalPin::AnalogWrite(int duty)
+{
+	pwmDuty = duty;
 }
 
 PinState MockDigitalPin::DigitalRead(void)
@@ -41,6 +47,11 @@ PinState MockDigitalPin::MockGetDigitalWrite()
 PinMode MockDigitalPin::MockGetMode()
 {
    return mockPinMode->GetMode();
+}
+
+int MockDigitalPin::MockGetAnalogWrite()
+{
+   return pwmDuty;
 }
 
 /*

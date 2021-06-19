@@ -7,7 +7,7 @@ in_file  -  input xml-file describing what knobs and/or button are on the pendan
 python serialEventHandler.py -w mpg_pendant/config/mpg.xml
 """
 
-#! /usr/bin/pythone
+#! /usr/bin/python
 
 ### https://docs.python.org/2/library/xml.etree.elementtree.html
 

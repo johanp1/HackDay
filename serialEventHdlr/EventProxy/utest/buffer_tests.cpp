@@ -115,7 +115,7 @@ TEST(BufferTestGroup, HandleEvent)
   C_Event e;
   C_Event sendEvent = C_Event(str, 99);
 
-  buffer.handleEvent(sendEvent);
+  buffer.HandleEvent(sendEvent);
   CHECK(buffer.get(e));
   CHECK(e.serialize().compare("apa_99") == 0);
 }

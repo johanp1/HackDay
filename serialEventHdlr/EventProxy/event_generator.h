@@ -17,7 +17,7 @@ class EventGenerator {
       C_Event e = C_Event(name, t);
       if (handler_p != 0)
       {
-         handler_p->handleEvent(e);
+         handler_p->HandleEvent(e);
       }
    };
 

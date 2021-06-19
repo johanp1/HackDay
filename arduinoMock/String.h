@@ -35,6 +35,7 @@ public:
    int compareTo(string& _s);
    int length();
    String substring(int from);
+   char charAt(int n);
 
    string s;
 };

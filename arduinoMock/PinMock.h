@@ -13,7 +13,8 @@
 typedef enum{
    PinMode_Input = 0,
    PinMode_InputPullUp = 1,
-   PinMode_Output = 2
+   PinMode_Output = 2,
+   PinMode_PwmOutput = 3
 } PinMode;
 
 typedef enum{
@@ -93,13 +94,17 @@ public:
 
    void SetMode(const PinMode mode);
    void DigitalWrite(const PinState state);
+   void AnalogWrite(int duty);
    PinState DigitalRead(void);
 
    void MockSetDigitalRead(const PinState state);
    PinState MockGetDigitalWrite();
    PinMode MockGetMode();
+   int MockGetAnalogWrite();
    
    std::unique_ptr<MockPinMode> mockPinMode;
+
+   int pwmDuty;
 };
 
 #endif /* __ARDUINO_PIN_MOCK_H_ */

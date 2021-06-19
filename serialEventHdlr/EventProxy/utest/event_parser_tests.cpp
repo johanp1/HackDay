@@ -7,35 +7,32 @@ TEST_GROUP(EventParserTestGroup)
    class ParserFunctionoidSpy : public ParserFunctionoid
    {
       public:
+      ParserFunctionoidSpy(String const& cmd_) : ParserFunctionoid(cmd_){}; 
+
       void execute(String& _parsedData)
       {
          hasBeenCalled = true;
          parsedData.s = _parsedData.s;
-      };
-      void execute()
-      {
-         hasBeenCalledNoData = true;
+         //std::cout << _parsedData.s << std::endl;
       };
       
       void clear()
       {
          hasBeenCalled = false;
-         hasBeenCalledNoData = false;
          parsedData.s.clear();
       };
 
       bool hasBeenCalled;
-      bool hasBeenCalledNoData;
       String parsedData;
    };
 
    EventParser ep;
-   ParserFunctionoidSpy pfSpy;
+   ParserFunctionoidSpy pfSpy{String("apa")};
 
    void setup()
    {
       String eventCmd = String("apa");
-      ep.addAcceptedCmd(eventCmd, pfSpy);
+      ep.AddAcceptedCmd(pfSpy);
    }
   
    void teardown()
@@ -46,92 +43,87 @@ TEST_GROUP(EventParserTestGroup)
 
 TEST(EventParserTestGroup, init)
 {
-   CHECK(ep.getNbrOfAcceptedCmds() == 1);
+   CHECK(ep.GetNbrOfAcceptedCmds() == 1);
 }
 
 TEST(EventParserTestGroup, handleValidEvent)
 {
-   String eventData = String("apa123");
-   String name = String("dummy");
-   C_Event e = C_Event(name, eventData);
+   C_Event e{String("dummy"),  String("apa_123")};
    
    CHECK(!pfSpy.hasBeenCalled);
 
-   ep.handleEvent(e);
+   ep.HandleEvent(e);
    
    CHECK(pfSpy.parsedData.compare("123") == 0 );
    CHECK(pfSpy.hasBeenCalled);
 }
 
-TEST(EventParserTestGroup, handleValidEvent2)
-{
-   String eventCmdType = String("bepa");
-   String eventData = String("bepa456");
-   String name = String("dummy");
-   C_Event e = C_Event(name, eventData);
-
-   CHECK(!pfSpy.hasBeenCalled);
-
-   ep.addAcceptedCmd(eventCmdType, pfSpy);
-
-   ep.handleEvent(e);
-
-   CHECK(pfSpy.parsedData.compare("456") == 0 );
-   CHECK(pfSpy.hasBeenCalled);
-}
-
 TEST(EventParserTestGroup, handleUnvalidEvent)
 {
-   String eventData = String("hej321");
-   String name = String("dummy");
-   C_Event e = C_Event(name, eventData);
+   C_Event e{String("dummy"), String("hej_321")};
    
    CHECK(!pfSpy.hasBeenCalled);
 
-   ep.handleEvent(e);
+   ep.HandleEvent(e);
+
+   CHECK(!pfSpy.hasBeenCalled);
+}
+
+TEST(EventParserTestGroup, handleUnvalidEvent2)
+{
+   C_Event e{String("dummy"), String("apa_")};
+   
+   CHECK(!pfSpy.hasBeenCalled);
+
+   ep.HandleEvent(e);
+
+   CHECK(!pfSpy.hasBeenCalled);
+}
+
+TEST(EventParserTestGroup, handleUnvalidEvent3)
+{
+   C_Event e{String("dummy"), String("apa123")};
+   
+   CHECK(!pfSpy.hasBeenCalled);
+
+   ep.HandleEvent(e);
 
    CHECK(!pfSpy.hasBeenCalled);
 }
 
 TEST(EventParserTestGroup, handleValidEventNoData)
 {
-    String eventData = String("apa");
-   String name = String("dummy");
-   C_Event e = C_Event(name, eventData);
+   C_Event e{String("dummy"), String("apa")};
    
    CHECK(!pfSpy.hasBeenCalled);
-   CHECK(!pfSpy.hasBeenCalledNoData);
 
-   ep.handleEvent(e);
+   ep.HandleEvent(e);
    
-   CHECK(pfSpy.hasBeenCalledNoData);
+   CHECK(pfSpy.parsedData.compare("") == 0 );
+   CHECK(pfSpy.hasBeenCalled);
 }
 
 TEST(EventParserTestGroup, handle2ValidEvent)
 {
-   ParserFunctionoidSpy myPfSpy;
-   String eventData1 = String("apa5");
-   String eventCmd2 = String("bepa");
-   String eventData2 = String("bepaxyz");
-   String name = String("dummy");
+   ParserFunctionoidSpy pfSpy2{"bepa"};
 
-   C_Event e1 = C_Event(name, eventData1);
-   C_Event e2 = C_Event(name, eventData2);
+   C_Event e1{String("dummy"), String("apa_5")};
+   C_Event e2{String("dummy"), String("bepa_xyz")};
 
    CHECK(!pfSpy.hasBeenCalled);
-   CHECK(!myPfSpy.hasBeenCalled);
+   CHECK(!pfSpy2.hasBeenCalled);
    
-   ep.addAcceptedCmd(eventCmd2, myPfSpy);
+   ep.AddAcceptedCmd(pfSpy2);
 
-   ep.handleEvent(e1);
+   ep.HandleEvent(e1);
 
    CHECK(pfSpy.parsedData.compare("5") == 0 );
    CHECK(pfSpy.hasBeenCalled);
-   CHECK(!myPfSpy.hasBeenCalled);
+   CHECK(!pfSpy2.hasBeenCalled);
    pfSpy.clear();
 
-   ep.handleEvent(e2);
-   CHECK(myPfSpy.parsedData.compare("xyz") == 0 );
+   ep.HandleEvent(e2);
+   CHECK(pfSpy2.parsedData.compare("xyz") == 0 );
    CHECK(!pfSpy.hasBeenCalled);
-   CHECK(myPfSpy.hasBeenCalled);
+   CHECK(pfSpy2.hasBeenCalled);
 }

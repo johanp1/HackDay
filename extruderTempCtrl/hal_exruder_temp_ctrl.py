@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import getopt
 import hal
 import sys
@@ -41,8 +42,8 @@ class TempControllerFacade:
       self.enable = False
 
    def msgHandler(self, m):
-      if (m.msg == 'mv'):
-         self.currTemp = int(m.val)
+      if (m.name == 'mv'):
+         self.currTemp = int(m.data)
 
    def setEnable(self, en):
       self.enable = en

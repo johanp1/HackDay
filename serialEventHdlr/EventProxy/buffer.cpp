@@ -11,7 +11,7 @@ Buffer::Buffer()
    numberOfData = 0;
 }
 
-void Buffer::handleEvent(C_Event& e)
+void Buffer::HandleEvent(C_Event& e)
 {
    put((const C_Event&)e);
 }

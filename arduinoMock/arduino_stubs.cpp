@@ -55,6 +55,11 @@ void digitalWrite(int pin, int w)
   (ArduinoStub::GetInstance())->DigitalWrite(pin, (PinState)w);
 }
 
+void analogWrite(int pin, int w)
+{
+  (ArduinoStub::GetInstance())->AnalogWrite(pin, w);
+}
+
 int analogRead(int pin)
 {
   return (ArduinoStub::GetInstance())->AnalogRead(pin);
@@ -122,6 +127,16 @@ void ArduinoStub::DigitalWrite(const int pin, const PinState w)
 int ArduinoStub::GetDigitalWrite(const int pin)
 {
    return digitalPins.at(pin).MockGetDigitalWrite();
+}
+
+void ArduinoStub::AnalogWrite(const int pin, int w)
+{
+   digitalPins.at(pin).AnalogWrite(w);
+}
+
+int ArduinoStub::GetAnalogWrite(const int pin)
+{
+   return digitalPins.at(pin).MockGetAnalogWrite();
 }
 
 void ArduinoStub::SetDigitalRead(const int pin, const PinState data)

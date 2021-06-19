@@ -20,24 +20,24 @@ class TestComp(unittest.TestCase):
    def test_setEnable(self):
       self.tempCtrler.setEnable(True)
       self.assertTrue(self.tempCtrler.enable == True)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en1\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_1\n')
 
    def test_setDisnable(self):
       self.tempCtrler.setEnable(True)
       self.assertTrue(self.tempCtrler.enable == True)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en1\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_1\n')
       self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
 
       self.tempCtrler.setEnable(False)
       self.assertTrue(self.tempCtrler.enable == False)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en0\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_0\n')
 
    def test_setTemp(self):
       self.tempCtrler.setEnable(True)
       self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
       
       self.tempCtrler.setRefTemp(200)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp200\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp_200\n')
 
    def test_getCurrTemp(self):
       # send a message. i.e call the registered callbak with the "received" message

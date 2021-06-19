@@ -2,25 +2,27 @@
 #include "Arduino.h"
 
 #define DEBUG 0
-#define debug_print(x)   if(DEBUG){Serial.print(#x); Serial.print(": "); Serial.println(x);}
+#define debug_print(x)   if(debug){Serial.print(#x); Serial.print(": "); Serial.println(x);}
 
 PIDController::PIDController(int period)
 {
    PIDParameters p;
 
-   setPar(p);
+   SetPar(p);
 
-   h=period;
+   h = period;
    min = 0;
    max = 2000;
    D = 0;
    I = 0;
    yPrev = 0;
+   enabled = false;
+   debug = 0;
 }  
 
-PIDController::PIDController(int period, PIDParameters &p, int _min, int _max)
+PIDController::PIDController(int period, PIDParameters const& p, int _min, int _max)
 {
-   setPar(p);
+   SetPar(p);
    
    h = period;
    min = _min;
@@ -28,19 +30,43 @@ PIDController::PIDController(int period, PIDParameters &p, int _min, int _max)
    D = 0;
    I = 0;
    yPrev = 0;
+   enabled = false;
+   debug = 0;
 }
 
-void PIDController::setPar(PIDParameters &p)
+void PIDController::SetPar(PIDParameters const& p)
 {
-   par.setPar(p);
+   par.Set(p);
 }  
 
-int PIDController::step(int y, int yRef)
+PIDParameters const& PIDController::GetPar() const
 {
-   return calcOutput(y, yRef);
+   return par;
+}
+
+void PIDController::SetEnable(bool e)
+{
+   enabled = e;
+}
+
+int PIDController::Step(int y, int yRef)
+{
+   int retVal = 0;
+   if (enabled == true)
+   {
+      retVal = CalcOutput(y, yRef);
+   } 
+
+   return retVal;
 }   
 
-int PIDController::saturate(int in)
+void PIDController::SetDebug(bool d)
+{
+  debug = d;
+  debug_print(debug);
+}
+
+int PIDController::Saturate(int in)
 {
   int out = in;
 
@@ -56,7 +82,7 @@ int PIDController::saturate(int in)
   return out;
 }   
 
-int PIDController::calcOutput(int y, int yRef)
+int PIDController::CalcOutput(int y, int yRef)
 {
   //cout << "\ncalculate output:\n";
   int I_term1;
@@ -75,12 +101,12 @@ int PIDController::calcOutput(int y, int yRef)
   }
    
   v = par.K*(par.beta*yRef-y) + I + D; // v(t) = K*e(t) + I(t-1) + D(t)
-  u = saturate(v);
+  u = Saturate(v);
   debug_print(v);
   debug_print(u);
  
-  I_term1 = (long)((long)par.K*(long)h*(long)e)/par.Ti;
-  I_term2 = (long)((long)h*(long)(u-v))/par.Tr;
+  I_term1 = (int)((long)par.K*(long)h*(long)e)/par.Ti;
+  I_term2 = (int)((long)h*(long)(u-v))/par.Tr;
   debug_print(I_term1);
   debug_print(I_term2);
   I = I + I_term1 + I_term2;
@@ -93,20 +119,21 @@ int PIDController::calcOutput(int y, int yRef)
 
 PIDParameters::PIDParameters()
 {
-  setPar(0, 0, 0, 0, 0, 0);
+  Set(0, 0, 0, 0, 0, 0);
 }
 
 PIDParameters::PIDParameters(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
 {
-   K = _K;
-   Ti = _Ti;
-   Td = _Td;
-   N = pN;
-   Tr = _Tr;
-   beta = _beta;
+   Set(_K, _Ti, _Td, pN, _Tr, _beta);
 }
 
-void PIDParameters::setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
+PIDParameters::PIDParameters(PIDParameters const& p)
+{
+   Set(p);
+}
+
+
+void PIDParameters::Set(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
 {
    K = _K;
    Ti = _Ti;
@@ -116,7 +143,7 @@ void PIDParameters::setPar(int _K, int _Ti, int _Td, int pN, int _Tr, int _beta)
    beta = _beta;
 }
 
-void PIDParameters::setPar(PIDParameters &p)
+void PIDParameters::Set(PIDParameters const& p)
 {
    K = p.K;
    Ti = p.Ti;
@@ -124,4 +151,14 @@ void PIDParameters::setPar(PIDParameters &p)
    N = p.N;
    Tr = p.Tr;
    beta = p.beta;
+}
+
+bool PIDParameters::operator==(PIDParameters const& p) const
+{
+   return ((K == p.K) &&  (Ti == p.Ti) && (Td == p.Td) && (N == p.N) && (Tr == p.Tr) && (beta == p.beta));
+}
+
+bool PIDParameters::operator!=(PIDParameters const& p) const
+{
+   return ((K != p.K) || (Ti != p.Ti) || (Td != p.Td) || (N != p.N) || (Tr != p.Tr) || (beta != p.beta));
 }

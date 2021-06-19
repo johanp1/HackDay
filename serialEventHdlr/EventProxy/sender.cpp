@@ -1,7 +1,7 @@
 #include "sender.h"
 
 //  public:
-void Sender::handleEvent(C_Event& e)
+void Sender::HandleEvent(C_Event& e)
 {
   String s = e.serialize();
   send(s);

@@ -90,6 +90,16 @@ TEST(ArduinoMockTestGroup, WriteOutputPin)
    CHECK(testPin.MockGetDigitalWrite() == PinState_Low);
 }
 
+TEST(ArduinoMockTestGroup, AnalogWritePin)
+{
+   MockDigitalPin testPin;
+   
+   CHECK(testPin.MockGetAnalogWrite() == 0);
+
+   testPin.AnalogWrite(100);
+   CHECK(testPin.MockGetAnalogWrite() == 100);
+}
+
 TEST(ArduinoMockTestGroup, WriteInputPin)
 {
    MockDigitalPin testPin;
@@ -101,6 +111,7 @@ TEST(ArduinoMockTestGroup, WriteInputPin)
    CHECK(testPin.MockGetDigitalWrite() == PinState_High);
    CHECK(testPin.MockGetMode() == PinMode_InputPullUp);
 }
+
 
 TEST(ArduinoMockTestGroup, ArduinoReadInputPin)
 {
@@ -116,6 +127,13 @@ TEST(ArduinoMockTestGroup, ArduinoWriteOutputPin)
    CHECK(arduinoStub->GetDigitalWrite(0) == PinState_Low);
    digitalWrite(0, HIGH);
    CHECK(arduinoStub->GetDigitalWrite(0) == PinState_High);
+}
+
+TEST(ArduinoMockTestGroup, ArduinoAnalogWritePin)
+{
+   CHECK(arduinoStub->GetAnalogWrite(0) == 0);
+   analogWrite(0, 250);
+   CHECK(arduinoStub->GetAnalogWrite(0) == 250);
 }
 
 // check that nothing catastrophic happens if index outside of bounds

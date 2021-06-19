@@ -14,7 +14,7 @@ public:
    // constructor 
    Buffer();
 
-   void handleEvent(C_Event& e);
+   void HandleEvent(C_Event& e);
    void put(const C_Event& e); 
    bool get(C_Event& e);
    bool isEmpty();

@@ -1,63 +1,58 @@
 #include "event_parser.h"
 #include "Arduino.h"
 
-void CmdFunctionMapper::execute(String& _parsedData)
-{
-   pf->execute(_parsedData);
-}
-void CmdFunctionMapper::execute()
-{
-   pf->execute();
-}
-
 EventParser::EventParser()
 {
-   nbrOfAcceptedCmds = 0;
+   nbrOfCmds = 0;
 }
 
-void EventParser::handleEvent(C_Event& e)
+void EventParser::HandleEvent(C_Event& e)
 {
    String evData = e.serializeData();
-   parseEvent(evData);
+   ParseEvent(evData);
 }
 
-void EventParser::parseEvent(String& unparsedData)
+void EventParser::ParseEvent(String& unparsedData)
 {
-   if(nbrOfAcceptedCmds > 0)
+   if(nbrOfCmds > 0)
    {
       //fetch command
-      for (int i = 0; i < nbrOfAcceptedCmds; i++)
+      for (int i = 0; i < nbrOfCmds; i++)
       {
          // does the unparsed data contian(starts with) some sort of command 
-         bool isAccepted = unparsedData.startsWith(acceptedCmds[i].cmd);
+         bool isAccepted = unparsedData.startsWith(acceptedCmds[i]->cmd);
          if (isAccepted) //data starts with a command
          {
+            String data = String("");
+
             // if the unparsed data contains more than cmd, split out the data-part from the cmd-part
-            if (unparsedData.length() > acceptedCmds[i].cmd.length())
+            // format is "cmd_data"
+            if ((unparsedData.length() > acceptedCmds[i]->cmd.length() + 1) && // does it contain data
+                (unparsedData.charAt(acceptedCmds[i]->cmd.length()) == '_'))   // is the char after the "cmd" a '_'
             {
-               String data = String("");
-               data = unparsedData.substring(acceptedCmds[i].cmd.length());
-               acceptedCmds[i].execute(data);
+               data = unparsedData.substring(acceptedCmds[i]->cmd.length()+1); // take the data part, not the "cmd_"-part
+
+               acceptedCmds[i]->execute(data);
             }
-            else
+            if (unparsedData.length() == acceptedCmds[i]->cmd.length())
             {
-               acceptedCmds[i].execute();
+               acceptedCmds[i]->execute(data);
             }
          }
       }
    }
 }
 
-void EventParser::addAcceptedCmd(String& cmd, ParserFunctionoid& pf)
+void EventParser::AddAcceptedCmd(ParserFunctionoid& pf)
 {
-   if (nbrOfAcceptedCmds < MAX_NBR_OF_ACCEPTED_CMDS)
+   if (nbrOfCmds < c_maxNbrOfAcceptedCmds)
    {
-      acceptedCmds[nbrOfAcceptedCmds] = CmdFunctionMapper(cmd, &pf);
-      nbrOfAcceptedCmds++;
+      acceptedCmds[nbrOfCmds] = &pf;
+      nbrOfCmds++;
    }   
 }
 
-int EventParser::getNbrOfAcceptedCmds()
+int EventParser::GetNbrOfAcceptedCmds()
 {
-   return nbrOfAcceptedCmds;
+   return nbrOfCmds;
 }

@@ -13,7 +13,7 @@ TEST_GROUP(ButtonTestGroup)
          reset();
       };
     
-      void handleEvent(C_Event& e)
+      void HandleEvent(C_Event& e)
       {
          newData = true;
          serializedEvent = e.serialize();

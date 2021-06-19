@@ -24,13 +24,13 @@ TEST(SenderTestGroup, SendEvent)
    CHECK(Serial.getData().compare(expected) == 0);
 }
 
-TEST(SenderTestGroup, handleEvent)
+TEST(SenderTestGroup, HandleEvent)
 {
   String evSource = String("apa");
    string expected = string("apa_321\n");
    C_Event e = C_Event(evSource, 321);
    
-   s.handleEvent(e);
+   s.HandleEvent(e);
    CHECK(Serial.getData().compare(expected) == 0);
 }
 

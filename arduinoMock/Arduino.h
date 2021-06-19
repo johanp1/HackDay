@@ -17,7 +17,6 @@ typedef enum{
 #define CHANGE InterruptMode_Change
 #define RISING InterruptMode_Rising
 
-#define A2 0
 #define A0 0
 #define A1 1
 #define A2 2
@@ -59,6 +58,9 @@ class ArduinoStub
    void DigitalWrite(const int pin, const PinState v);
    int GetDigitalWrite(const int pin);
 
+   void AnalogWrite(const int pin, int w);
+   int GetAnalogWrite(const int pin);
+
    void SetDigitalRead(const int pin, const PinState data);
    int DigitalRead(const int pin);
 
@@ -98,6 +100,7 @@ void interrupts(void);
 void pinMode(int pin, int m);
 int digitalRead(int pin);
 void digitalWrite(int pin, int w);
+void analogWrite(int pin, int w);
 int analogRead(int pin);
 unsigned long millis(void);
 unsigned long micros(void);

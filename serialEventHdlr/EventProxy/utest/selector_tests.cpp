@@ -16,7 +16,7 @@ TEST_GROUP(SelectorTestGroup)
          reset();
       };
       
-      void handleEvent(C_Event& e)
+      void HandleEvent(C_Event& e)
       {
          serializedEvent = e.serialize();
          newData = true;

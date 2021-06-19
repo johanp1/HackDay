@@ -103,7 +103,9 @@ class instrument:
    def writeMessage(self, m):
       self._write(m.name)
       if  m.data != '':
+         #self._write(m.data)
          self._write('_' + m.data)
+
       self._write('\n')
 
    def enableWatchdog(self, enable):

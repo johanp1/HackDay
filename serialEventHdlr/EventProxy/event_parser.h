@@ -1,29 +1,17 @@
 #ifndef __C_EVENT_PARSER_H__
 #define __C_EVENT_PARSER_H__
 
-#define MAX_NBR_OF_ACCEPTED_CMDS 8
-
 #include "event_listner.h"
+
+constexpr byte c_maxNbrOfAcceptedCmds = 8;
 
 class ParserFunctionoid
 {
    public:
-   virtual void execute(String& _parsedData) {_parsedData=_parsedData;};
-   virtual void execute() {};
-};
+   ParserFunctionoid(String const& cmd_) : cmd(cmd_){};
+   virtual void execute(String& _parsedData) {_parsedData = _parsedData;};
 
-class CmdFunctionMapper
-{
-   public:
-   CmdFunctionMapper() {pf = NULL;};
-   CmdFunctionMapper(String& _cmd, ParserFunctionoid* _pf) : cmd(_cmd), pf(_pf) {};
-   void execute(String& _parsedData);
-   void execute();
-   
-   String cmd;
-
-   private:
-   ParserFunctionoid* pf;
+   String cmd;   
 };
 
 class EventParser : public EventListner
@@ -31,15 +19,15 @@ class EventParser : public EventListner
    public:
    EventParser(void);
 
-   void handleEvent(C_Event& e);
-   void addAcceptedCmd(String& cmd, ParserFunctionoid& pf);
-   int getNbrOfAcceptedCmds();
+   void HandleEvent(C_Event& e);
+   void AddAcceptedCmd(ParserFunctionoid& pf);
+   int GetNbrOfAcceptedCmds();
 
    private:
-   void parseEvent(String& data);
+   void ParseEvent(String& data);
    
-   CmdFunctionMapper acceptedCmds[MAX_NBR_OF_ACCEPTED_CMDS];
-   int nbrOfAcceptedCmds;
+   ParserFunctionoid* acceptedCmds[c_maxNbrOfAcceptedCmds];
+   int nbrOfCmds;
 };
 
 #endif // __C_EVENT_PARSER_H__

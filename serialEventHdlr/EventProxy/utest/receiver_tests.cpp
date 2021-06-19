@@ -14,7 +14,7 @@ TEST_GROUP(ReceiverTestGroup)
          reset();
       };
     
-      void handleEvent(C_Event& e)
+      void HandleEvent(C_Event& e)
       {
          serializedData.push_back(e.serializeData());
       };
