@@ -39,7 +39,7 @@ class TempControllerFacade:
       self.tempController = comms.instrument(port, self.msgHandler) #serial adaptor
       self.currTemp = 100
       self.refTemp = 100
-      self.enable = False
+      self.enable = True
 
    def msgHandler(self, m):
       if (m.name == 'mv'):

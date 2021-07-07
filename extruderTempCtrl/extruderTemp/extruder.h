@@ -14,7 +14,6 @@ class Extruder
    bool debug;
    int tempSensPin;
    int pwmPin;
-   bool enable;
 };
 
 #endif

@@ -16,7 +16,7 @@ PIDController::PIDController(int period)
    D = 0;
    I = 0;
    yPrev = 0;
-   enabled = false;
+   enabled = true;
    debug = 0;
 }  
 
@@ -30,7 +30,7 @@ PIDController::PIDController(int period, PIDParameters const& p, int _min, int _
    D = 0;
    I = 0;
    yPrev = 0;
-   enabled = false;
+   enabled = true;
    debug = 0;
 }
 
