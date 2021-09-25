@@ -14,7 +14,7 @@ static void myISR(void);
 static IsrFunctionoid isrFunct;
 static Sender sender;
 static Buffer buffer;
-static EventGenerator* evGenList[kNbrOfEventGenerators];
+static EventGenerator* eventGenerators[kNbrOfEventGenerators];
 static unsigned long heartbeatTimer = kHeartbeatPeriod;
 
 void setup() {
@@ -22,24 +22,24 @@ void setup() {
    Serial.setTimeout(500);
    Serial.println("mpgPendant::setup()");
    
-   evGenList[0] = new Button("rth", kFuncButtonPin, kButtonDebounceDelay);
-   evGenList[0]->addEventListner(&sender);
+   eventGenerators[0] = new Button("rth", kFuncButtonPin, kButtonDebounceDelay);
+   eventGenerators[0]->addEventListner(&sender);
 
-   evGenList[1] = new Button("run", kRunButtonPin, kButtonDebounceDelay);
-   evGenList[1]->addEventListner(&sender);
+   eventGenerators[1] = new Button("run", kRunButtonPin, kButtonDebounceDelay);
+   eventGenerators[1]->addEventListner(&sender);
 
-   evGenList[2] = new Button("est", kEStopButtonPin, kButtonDebounceDelay); 
-   evGenList[2]->addEventListner(&sender);
+   eventGenerators[2] = new Button("est", kEStopButtonPin, kButtonDebounceDelay); 
+   eventGenerators[2]->addEventListner(&sender);
 
-   evGenList[3] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay);
-   evGenList[3]->addEventListner(&sender);
+   eventGenerators[3] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay);
+   eventGenerators[3]->addEventListner(&sender);
    
-   evGenList[4] = new Selector("sels", kScaleSelectorPin, kSelectorDebounceDelay);
-   evGenList[4]->addEventListner(&sender);
+   eventGenerators[4] = new Selector("sels", kScaleSelectorPin, kSelectorDebounceDelay);
+   eventGenerators[4]->addEventListner(&sender);
 
-   evGenList[5] = new RotaryEncoder("jog", kEncoderClockPin, kEncoderDirectionPin);
-   evGenList[5]->addEventListner(&buffer);
-   isrFunct.addEventGenerator(evGenList[5]);
+   eventGenerators[5] = new RotaryEncoder("jog", kEncoderClockPin, kEncoderDirectionPin);
+   eventGenerators[5]->addEventListner(&buffer);
+   isrFunct.addEventGenerator(eventGenerators[5]);
    attachInterrupt(digitalPinToInterrupt(kEncoderClockPin), myISR, RISING);
 }
 
@@ -48,18 +48,18 @@ void loop() {
    byte i;
    C_Event e;
 
-   evGenList[0]->scan();
-   evGenList[1]->scan();
-   evGenList[2]->scan();
-   evGenList[3]->scan();
-   evGenList[4]->scan();
-   // we don't need to "evGenList[5]->scan();" since it is connected to an interrupt instead.
+   eventGenerators[0]->scan();
+   eventGenerators[1]->scan();
+   eventGenerators[2]->scan();
+   eventGenerators[3]->scan();
+   eventGenerators[4]->scan();
+   // we don't need to "eventGenerators[5]->scan();" since it is connected to an interrupt instead.
    // Also the implementation of RotaryEncoder::scan() currently only works for interrupts. If it is pulled 
    // continously it will update its position every iteration
    
    while(buffer.get(e))
    {  
-      sender.handleEvent(e);
+      sender.HandleEvent(e);
    }
 
    //send heart-beat every <kHeartbeatPeriod> [ms]
@@ -67,7 +67,7 @@ void loop() {
    {
       String tmpStr = "hb";
       C_Event hb_ev = C_Event(tmpStr, 1);
-      sender.handleEvent(hb_ev);
+      sender.HandleEvent(hb_ev);
       heartbeatTimer = millis() + kHeartbeatPeriod;
    }
 

@@ -1,3 +1,5 @@
+#include "event_generator.h"
+
 constexpr auto kNbrOfButtons = 3;
 constexpr auto kNbrOfSelectors = 2;
 
