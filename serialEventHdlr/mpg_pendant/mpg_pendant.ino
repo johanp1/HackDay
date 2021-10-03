@@ -22,7 +22,7 @@ void setup() {
    Serial.setTimeout(500);
    Serial.println("mpgPendant::setup()");
    
-   eventGenerators[0] = new Button("rth", kFuncButtonPin, kButtonDebounceDelay);
+   eventGenerators[0] = new Button("func", kFuncButtonPin, kButtonDebounceDelay);
    eventGenerators[0]->addEventListner(&sender);
 
    eventGenerators[1] = new Button("run", kRunButtonPin, kButtonDebounceDelay);

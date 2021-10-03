@@ -26,6 +26,7 @@ class HalAdapter:
       self.h.newpin('z-vel', hal.HAL_FLOAT, hal.HAL_IN)
       self.h.newpin('lube-level-ok',hal.HAL_BIT, hal.HAL_IN)
       self.h.newpin('reset', hal.HAL_BIT, hal.HAL_IN)
+      self.h.newpin('lube-ext-req', hal.HAL_BIT, hal.HAL_IN)
       self.h.newpin('lube-cmd', hal.HAL_BIT, hal.HAL_OUT)
       self.h.newpin('lube-level-alarm', hal.HAL_BIT, hal.HAL_OUT)
       self.h.newpin('accumulated-distance', hal.HAL_FLOAT, hal.HAL_OUT)
@@ -40,6 +41,9 @@ class HalAdapter:
 
    def is_reset(self):
       return self.h['reset']
+
+   def is_lube_ext_req(self):
+      return self.h['lube-ext-req']
 
    def get_velocities(self):
       velocities = namedtuple("velocities", ["x", "y", "z"])
@@ -129,9 +133,9 @@ class LubeControl:
       self.prev_time = current_time
 
 
-   def runStateMachine(self):
+   def runStateMachine(self, ext_req):
       currentTime = time.time()
-      if self.total_distance >= self.distance_threshold:
+      if self.total_distance >= self.distance_threshold or ext_req == True:
          self.state = 'ON'
          self.timeout = self.lubeOnTime + currentTime
          self.total_distance = 0
@@ -209,9 +213,10 @@ def main():
 
          lubeCtrl.setLubeLevelOK(h.is_lube_level_ok())
          v = h.get_velocities()
+         lubing_external_request = h.is_lube_ext_req()
          lubeCtrl.calc_dist_from_vel(v.x, v.y, v.z)
 
-         lubeCtrl.runStateMachine()
+         lubeCtrl.runStateMachine(lubing_external_request)
 
          h.set_lube_on(lubeCtrl.state == 'ON')
          h.set_lube_level_alarm(lubeCtrl.lubeLevelOkOut)

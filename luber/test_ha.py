@@ -23,6 +23,7 @@ class TestHalAdapter(unittest.TestCase):
       self.assertTrue(self.local_ha.h.pinDict.has_key('lube-cmd'))
       self.assertTrue(self.local_ha.h.pinDict.has_key('lube-level-alarm'))
       self.assertTrue(self.local_ha.h.pinDict.has_key('accumulated-distance'))
+      self.assertTrue(self.local_ha.h.pinDict.has_key('lube-ext-req'))
 
    def test_is_lube_level_ok(self):
       self.ha.h['lube-level-ok'] = 1
@@ -72,6 +73,14 @@ class TestHalAdapter(unittest.TestCase):
       self.assertTrue(self.ha.h['accumulated-distance'] == 0)
       self.ha.set_accumulated_distance(100.1)
       self.assertTrue(self.ha.h['accumulated-distance'] == 100.1)
+
+   def test_is_external_request(self):
+      self.ha.h['lube-ext-req'] = 1
+      self.assertTrue(self.ha.is_lube_ext_req() == True)
+
+      self.ha.h['lube-ext-req'] = 0
+      self.assertTrue(self.ha.is_lube_ext_req() == False)
+
 
 if __name__ == '__main__':
    unittest.main()
