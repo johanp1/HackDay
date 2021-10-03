@@ -1,3 +1,4 @@
+#! /usr/bin/python
 """usage serialEventHanlder.py -h -c <name> -d/--debug= <level> -p/--port= <serial port> <path/>in_file.xml
 in_file  -  input xml-file describing what knobs and/or button are on the pendant
 -c <name>                # name of component in HAL. 'my-mpg' default
@@ -6,8 +7,6 @@ in_file  -  input xml-file describing what knobs and/or button are on the pendan
 -h                       # Help 
 python serialEventHandler.py -w mpg_pendant/config/mpg.xml
 """
-
-#! /usr/bin/python
 
 ### https://docs.python.org/2/library/xml.etree.elementtree.html
 
@@ -252,7 +251,7 @@ def main():
 
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, True) #serial adaptor
+   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, True, 5, 1) #serial adaptor
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.get_parsed_data()
