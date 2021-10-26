@@ -36,9 +36,9 @@ typedef enum{
 #define ISR(X) void interruptServiceRoutine(X)
 #define TIMER2_COMPA_vect void
 
-using namespace std;
-
-typedef unsigned char byte;
+namespace arduino_stub
+{
+using byte = char;
 
 //singelton class
 class ArduinoStub
@@ -82,8 +82,8 @@ class ArduinoStub
 
    private:
    static std::weak_ptr<ArduinoStub> arduinoStub_;
-   array<MockDigitalPin, 9> digitalPins;
-   array<MockAnalogPin, 4> analogPins;
+   std::array<MockDigitalPin, 9> digitalPins;
+   std::array<MockAnalogPin, 4> analogPins;
 
    unsigned long time;
    void(*isr)(void);
@@ -116,3 +116,4 @@ extern byte OCR2A;   // compare match every 10th milli-sec @20MHz
 extern byte TCNT2;   // clear timer2
 
 #endif /* __ARDUINO_TEST_DOUBLE_H_ */
+} // end namespace arduinoMock
