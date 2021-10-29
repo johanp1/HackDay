@@ -1,39 +1,39 @@
-#include "TestHarness.h"
+#include <gtest/gtest.h>
 #include "selector.h"
 #include "Arduino.h"
 #include <array>
 #include <iostream>
 #include <string>
 
-#define PIN 2
+constexpr int PIN = 2;
 
-TEST_GROUP(SelectorTestGroup)
-{
-   class EventListnerSpy : public EventListner{
-   public:
-      void enventListnerSpy()
-      {
-         reset();
-      };
+namespace {
+class EventListnerSpy : public EventListner{
+public:
+void enventListnerSpy()
+   {
+      reset();
+   };
       
-      void HandleEvent(C_Event& e)
-      {
-         serializedEvent = e.serialize();
-         newData = true;
-      };
-
-      void reset()
-      {
-         serializedEvent = String("");
-         newData = false;
-      };
-      
-      String serializedEvent;
-      bool newData;
+   void HandleEvent(C_Event& e)
+   {
+      serializedEvent = e.serialize();
+      newData = true;
    };
 
-  
-   ;
+   void reset()
+   {
+      serializedEvent = String("");
+      newData = false;
+   };
+      
+   String serializedEvent;
+   bool newData;
+};
+
+class SelectorTestFixture : public testing::Test 
+{
+   protected: 
    EventListnerSpy evSpy;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
    std::unique_ptr<Selector> s;
@@ -61,11 +61,11 @@ TEST_GROUP(SelectorTestGroup)
    
    void checkEvent(string& expected)
    {
-      CHECK(evSpy.newData);
-      CHECK(evSpy.serializedEvent.compare(expected) == 0);
+      ASSERT_TRUE(evSpy.newData);
+      ASSERT_TRUE(evSpy.serializedEvent.compare(expected) == 0);
    }
 
-   void setup()
+   void SetUp()
    {
       arduinoStub->Reset();
       evSpy.reset();
@@ -73,74 +73,74 @@ TEST_GROUP(SelectorTestGroup)
       s->addEventListner(&evSpy);
    }
    
-   void teardown()
+   void TearDown()
    {
       evSpy.reset();
    }
 };
 
-TEST(SelectorTestGroup, Init)
+TEST_F(SelectorTestFixture, Init)
 {
-  LONGS_EQUAL(0, s->getState());
+  ASSERT_TRUE(0 == s->getState());
 }
 
-TEST(SelectorTestGroup, SteadyState)
+TEST_F(SelectorTestFixture, SteadyState)
 {
   arduinoStub->SetAnalogPinVoltage(PIN, 0);
 
   s->scan();
-  LONGS_EQUAL(0, s->getState());
+  ASSERT_TRUE(0 == s->getState());
   
   arduinoStub->IncTime(101); //longer than debounce delay
 
   s->scan();
-  LONGS_EQUAL(0, s->getState());
-  CHECK(!evSpy.newData);
+  ASSERT_TRUE(0 == s->getState());
+  ASSERT_TRUE(!evSpy.newData);
 }
 
-TEST(SelectorTestGroup, checkNoTransitionShortTime)
+TEST_F(SelectorTestFixture, checkNoTransitionShortTime)
 {
 	arduinoStub->SetAnalogPinVoltage(PIN, 1.7f);
 
 	s->scan();
-	LONGS_EQUAL(0, s->getState());
+	ASSERT_TRUE(0 == s->getState());
 
 	arduinoStub->IncTimeMs(99); //shorter than debounce delay
 
 	s->scan();
-	LONGS_EQUAL(0, s->getState());
+	ASSERT_TRUE(0 == s->getState());
 }
 
-TEST(SelectorTestGroup, stateTransitions)
+TEST_F(SelectorTestFixture, stateTransitions)
 {
   string expected;
   
   gotoState(0);
-  LONGS_EQUAL(0, s->getState());
-  CHECK(!evSpy.newData);  //no new event since 0 is the init state
+  ASSERT_TRUE(0 == s->getState());
+  ASSERT_TRUE(!evSpy.newData);  //no new event since 0 is the init state
   
   gotoState(1);
-  LONGS_EQUAL(1, s->getState());
+  ASSERT_TRUE(1 == s->getState());
   expected = "test_1";
   checkEvent(expected);
 
   gotoState(2);
-  LONGS_EQUAL(2, s->getState());
+  ASSERT_TRUE(2 == s->getState());
   expected = "test_2";
   checkEvent(expected);
   
   gotoState(3);
-  LONGS_EQUAL(3, s->getState());
+  ASSERT_TRUE(3 == s->getState());
   expected = "test_3";
   checkEvent(expected);
   
   gotoState(0);
-  LONGS_EQUAL(0, s->getState());
+  ASSERT_TRUE(0 == s->getState());
   expected = "test_0";
   checkEvent(expected);
 }
 
-TEST(SelectorTestGroup, undefVolt)
+TEST_F(SelectorTestFixture, undefVolt)
 {
   arduinoStub->SetAnalogPinVoltage(PIN, 2.83f);
   
@@ -148,8 +148,8 @@ TEST(SelectorTestGroup, undefVolt)
   arduinoStub->IncTimeMs(101); //longer than debounce delay
   s->scan();
   
-  LONGS_EQUAL(0, s->getState());
-  CHECK(!evSpy.newData);
+  ASSERT_TRUE(0 == s->getState());
+  ASSERT_TRUE(!evSpy.newData);
   
   arduinoStub->SetAnalogPinVoltage(PIN, 0.5f);
   
@@ -157,6 +157,7 @@ TEST(SelectorTestGroup, undefVolt)
   arduinoStub->IncTimeMs(101); //longer than debounce delay
   s->scan();
   
-  LONGS_EQUAL(0, s->getState());
-  CHECK(!evSpy.newData);
+  ASSERT_TRUE(0 == s->getState());
+  ASSERT_TRUE(!evSpy.newData);
 }
+} // namespace

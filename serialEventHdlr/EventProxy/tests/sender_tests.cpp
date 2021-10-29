@@ -1,8 +1,10 @@
-#include "TestHarness.h"
+#include <gtest/gtest.h>
 #include "sender.h"
 #include "Arduino.h"
-TEST_GROUP(SenderTestGroup)
+namespace {
+class SenderTestFixture : public testing::Test 
 {
+   protected: 
    Sender s;
   
    void setup()
@@ -15,22 +17,22 @@ TEST_GROUP(SenderTestGroup)
    }
 };
 
-TEST(SenderTestGroup, SendEvent)
+TEST_F(SenderTestFixture, SendEvent)
 {
    String sendStr = String("bepa_123");
    string expected = string("bepa_123\n");
    
    s.send(sendStr);
-   CHECK(Serial.getData().compare(expected) == 0);
+   ASSERT_TRUE(Serial.getData().compare(expected) == 0);
 }
 
-TEST(SenderTestGroup, HandleEvent)
+TEST_F(SenderTestFixture, HandleEvent)
 {
   String evSource = String("apa");
    string expected = string("apa_321\n");
    C_Event e = C_Event(evSource, 321);
    
    s.HandleEvent(e);
-   CHECK(Serial.getData().compare(expected) == 0);
+   ASSERT_TRUE(Serial.getData().compare(expected) == 0);
 }
-
+} // namespace
