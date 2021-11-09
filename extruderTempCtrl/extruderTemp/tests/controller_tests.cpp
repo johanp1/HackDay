@@ -1,20 +1,9 @@
-#include "TestHarness.h"
+#include <gtest/gtest.h>
 #include "controller.h"
 #include "Arduino.h"
 #include <iostream>
 
-TEST_GROUP(ControllerTestGroup)
-{
-   //Sender s;
-  
-   void setup()
-   {  
-   }
-  
-   void teardown()
-   {
-   }
-};
+namespace {
 
 TEST(ControllerTestGroup, creatingParameters)
 {
@@ -28,22 +17,22 @@ TEST(ControllerTestGroup, creatingParameters)
    PIDParameters p2;
    PIDParameters p3(p1);
    
-   CHECK(p1.K == 2);
-   CHECK(p1.Ti == 12000);
-   CHECK(p1.Td == 0);
-   CHECK(p1.N == 10);
-   CHECK(p1.Tr == 3000);
-   CHECK(p1.beta == 1);
+   ASSERT_TRUE(p1.K == 2);
+   ASSERT_TRUE(p1.Ti == 12000);
+   ASSERT_TRUE(p1.Td == 0);
+   ASSERT_TRUE(p1.N == 10);
+   ASSERT_TRUE(p1.Tr == 3000);
+   ASSERT_TRUE(p1.beta == 1);
 
-   CHECK(p2.K == 0);
-   CHECK(p2.Ti == 0);
-   CHECK(p2.Td == 0);
-   CHECK(p2.N == 0);
-   CHECK(p2.Tr == 0);
-   CHECK(p2.beta == 0);
+   ASSERT_TRUE(p2.K == 0);
+   ASSERT_TRUE(p2.Ti == 0);
+   ASSERT_TRUE(p2.Td == 0);
+   ASSERT_TRUE(p2.N == 0);
+   ASSERT_TRUE(p2.Tr == 0);
+   ASSERT_TRUE(p2.beta == 0);
 
-   CHECK(p3 == p1);
-   CHECK(p1 != p2);
+   ASSERT_TRUE(p3 == p1);
+   ASSERT_TRUE(p1 != p2);
 }
    //PIDController tempCtrl(1000, p, 0, 200);
 
@@ -58,7 +47,7 @@ TEST(ControllerTestGroup, initController)
                    6);// beta
 
    PIDController tempCtrl(1000, p, 0, 200);
-   CHECK(p == tempCtrl.GetPar());
+   ASSERT_TRUE(p == tempCtrl.GetPar());
 }
 
 TEST(ControllerTestGroup, outputWhenDisabled)
@@ -72,7 +61,7 @@ TEST(ControllerTestGroup, outputWhenDisabled)
 
    PIDController tempCtrl(1000, p, 0, 5);
    
-   CHECK(tempCtrl.Step(0, 1) == 0);
+   ASSERT_TRUE(tempCtrl.Step(0, 1) == 0);
 }
 
 TEST(ControllerTestGroup, CalcOutput)
@@ -86,8 +75,8 @@ TEST(ControllerTestGroup, CalcOutput)
 
    PIDController tempCtrl(1000, p, 0, 5);
    tempCtrl.SetEnable(true);
-   CHECK(tempCtrl.Step(0, 1) == 1);
-   CHECK(tempCtrl.Step(0, 1) == 5); // check saturated
+   ASSERT_TRUE(tempCtrl.Step(0, 1) == 1);
+   ASSERT_TRUE(tempCtrl.Step(0, 1) == 5); // check saturated
 }
 
 TEST(ControllerTestGroup, setDebug)
@@ -95,9 +84,10 @@ TEST(ControllerTestGroup, setDebug)
    PIDController tempCtrl(100);
 
    tempCtrl.SetDebug(0);
-   CHECK(Serial.getData().compare(""s) == 0);
+   ASSERT_TRUE(Serial.getData().compare(""s) == 0);
 
    string expected = string("debug: 1\n");
    tempCtrl.SetDebug(1);
-   CHECK(Serial.getData().compare(expected) == 0);
+   ASSERT_TRUE(Serial.getData().compare(expected) == 0);
+}
 }
