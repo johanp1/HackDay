@@ -5,29 +5,34 @@
 
 constexpr byte c_maxNbrOfAcceptedCmds = 8;
 
-class ParserFunctionoid
+class CommandHandler
 {
-   public:
-   ParserFunctionoid(String const& cmd_) : cmd(cmd_){};
-   virtual void execute(String& _parsedData) {_parsedData = _parsedData;};
+public:
+   CommandHandler(String const &cmd_) : cmd(cmd_){};
+   virtual void operator()(String &_parsedData) { (void)_parsedData; };
+   virtual void operator()(){};
 
-   String cmd;   
+//private:
+   String cmd;
 };
 
 class EventParser : public EventListner
 {
-   public:
+public:
    EventParser(void);
 
-   void HandleEvent(C_Event& e);
-   void AddAcceptedCmd(ParserFunctionoid& pf);
+   void HandleEvent(C_Event &e);
+
+   void AddAcceptedCmd(CommandHandler &f);
+
    int GetNbrOfAcceptedCmds();
 
-   private:
-   void ParseEvent(String& data);
-   
-   ParserFunctionoid* acceptedCmds[c_maxNbrOfAcceptedCmds];
-   int nbrOfCmds;
+private:
+   void ParseEvent(String &data);
+
+   //String acceptedCmds[c_maxNbrOfAcceptedCmds];
+   CommandHandler *commandHandlers[c_maxNbrOfAcceptedCmds];
+   int nbrOfAcceptedCmds;
 };
 
 #endif // __C_EVENT_PARSER_H__

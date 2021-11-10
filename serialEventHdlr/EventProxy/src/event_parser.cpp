@@ -3,7 +3,7 @@
 
 EventParser::EventParser()
 {
-   nbrOfCmds = 0;
+   nbrOfAcceptedCmds = 0;
 }
 
 void EventParser::HandleEvent(C_Event& e)
@@ -14,45 +14,53 @@ void EventParser::HandleEvent(C_Event& e)
 
 void EventParser::ParseEvent(String& unparsedData)
 {
-   if(nbrOfCmds > 0)
+   if(nbrOfAcceptedCmds > 0)
    {
+      int i = 0;
+      CommandHandler *hdlr = nullptr;
+
       //fetch command
-      for (int i = 0; i < nbrOfCmds; i++)
+      while((hdlr == nullptr) && (i < nbrOfAcceptedCmds))
       {
-         // does the unparsed data contian(starts with) some sort of command 
-         bool isAccepted = unparsedData.startsWith(acceptedCmds[i]->cmd);
-         if (isAccepted) //data starts with a command
+         if (unparsedData.startsWith(commandHandlers[i]->cmd)) //data starts with a command
          {
-            String data = String("");
+            hdlr = commandHandlers[i]; // found handlerfor this command
+         }
 
-            // if the unparsed data contains more than cmd, split out the data-part from the cmd-part
-            // format is "cmd_data"
-            if ((unparsedData.length() > acceptedCmds[i]->cmd.length() + 1) && // does it contain data
-                (unparsedData.charAt(acceptedCmds[i]->cmd.length()) == '_'))   // is the char after the "cmd" a '_'
-            {
-               data = unparsedData.substring(acceptedCmds[i]->cmd.length()+1); // take the data part, not the "cmd_"-part
+         i++;
+      }
 
-               acceptedCmds[i]->execute(data);
-            }
-            if (unparsedData.length() == acceptedCmds[i]->cmd.length())
-            {
-               acceptedCmds[i]->execute(data);
-            }
+      if(hdlr != nullptr)
+      {
+         int cmd_length = hdlr->cmd.length();
+         if (unparsedData.length() == cmd_length)
+         {
+            (*hdlr)();
+         }
+
+         // if the unparsed data contains more than the "cmd"-word, split out the data-part from the cmd-part
+         // format is <cmd>_<data>"
+         if ((unparsedData.length() > cmd_length + 1) && // does it contain data
+             (unparsedData.charAt(cmd_length) == '_'))   // is the char after the "cmd" a '_'
+         {
+            String data = unparsedData.substring(cmd_length + 1); // take the data part, not the "cmd_"-part
+
+            (*hdlr)(data);
          }
       }
    }
 }
 
-void EventParser::AddAcceptedCmd(ParserFunctionoid& pf)
+void EventParser::AddAcceptedCmd(CommandHandler &f)
 {
-   if (nbrOfCmds < c_maxNbrOfAcceptedCmds)
+   if (nbrOfAcceptedCmds < c_maxNbrOfAcceptedCmds)
    {
-      acceptedCmds[nbrOfCmds] = &pf;
-      nbrOfCmds++;
+      commandHandlers[nbrOfAcceptedCmds] = &f;
+      nbrOfAcceptedCmds++;
    }   
 }
 
 int EventParser::GetNbrOfAcceptedCmds()
 {
-   return nbrOfCmds;
+   return nbrOfAcceptedCmds;
 }
