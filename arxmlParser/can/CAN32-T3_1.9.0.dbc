@@ -1,0 +1,1475 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: VCM ADS
+
+
+BO_ 149 VCM_Sts1Axl6_C32: 8 VCM
+ SG_ Sts1Axle6_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle6_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle6_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ Sts1Axle6_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle6_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle6_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle6_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle6_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+
+BO_ 148 VCM_Sts1Axl5_C32: 8 VCM
+ SG_ Sts1Axle5_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle5_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle5_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ Sts1Axle5_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle5_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle5_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle5_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle5_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+
+BO_ 147 VCM_Sts1Axl4_C32: 8 VCM
+ SG_ Sts1Axle4_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ Sts1Axle4_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle4_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle4_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle4_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle4_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle4_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle4_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+
+BO_ 146 VCM_Sts1Axl3_C32: 8 VCM
+ SG_ Sts1Axle3_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle3_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle3_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle3_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle3_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle3_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle3_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle3_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+
+BO_ 145 VCM_Sts1Axl2_C32: 8 VCM
+ SG_ Sts1Axle2_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle2_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle2_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle2_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle2_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle2_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle2_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle2_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+
+BO_ 144 VCM_Sts1Axl1_C32: 8 VCM
+ SG_ Sts1Axle1_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ Sts1Axle1_WhlRotAgCntrRi : 55|9@1+ (1,0) [0|511] "Count"  ADS
+ SG_ Sts1Axle1_WhlRotSpdLe : 16|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle1_WhlRotQltyRi : 14|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle1_WhlRotQltyLe : 12|2@1+ (1,0) [0|0] ""  ADS
+ SG_ Sts1Axle1_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ Sts1Axle1_WhlRotSpdRi : 40|15@1+ (0.01,-140) [-140|187.67] "Rad_per_s"  ADS
+ SG_ Sts1Axle1_WhlRotAgCntrLe : 31|9@1+ (1,0) [0|511] "Count"  ADS
+
+BO_ 663 VCM_10P_C32: 8 VCM
+ SG_ VehCombRetardtnSts_EnergyCap : 0|8@1+ (0.125,0) [0|31.875] "KWh"  ADS
+ SG_ VehCombRetardtnSts_ThreshldPwr : 8|8@1+ (1,0) [0|255] "kW"  ADS
+ SG_ DriverSeatBeltSwitch : 16|2@1+ (1,0) [0|0] ""  ADS
+ SG_ DirectionIndicatorLightsStatus : 18|4@1+ (1,0) [0|0] ""  ADS
+
+BO_ 1305 VCM_09P_C32: 8 VCM
+ SG_ VehicleLgtMotionCpby_DrvgDir : 16|3@1+ (1,0) [0|0] ""  ADS
+ SG_ VehicleLgtMotionCpby_VelFwdMax : 8|8@1+ (0.25,0) [0|63.75] "m_per_s"  ADS
+ SG_ VehicleLgtMotionCpby_VelFwdMin : 0|8@1+ (0.015625,0) [0|3.984375] "m_per_s"  ADS
+
+BO_ 140 VCM_08P_C32: 8 VCM
+ SG_ AntiLockBrakingActive : 58|2@1+ (1,0) [0|0] ""  ADS
+ SG_ VehicleLgtMotionSts2_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ VehicleMotionChInCmdSts : 48|2@1+ (1,0) [0|0] ""  ADS
+ SG_ VehicleLgtMotionSts2_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ TransmissionDrivelineEngaged : 56|2@1+ (1,0) [0|0] ""  ADS
+ SG_ TractionFunctionSelected : 50|3@1+ (1,0) [0|0] ""  ADS
+ SG_ AcceleratorPedalPosition1 : 40|8@1+ (0.4,0) [0|102] "Percent"  ADS
+ SG_ VehicleLgtMotionSts2_Velocity : 16|16@1+ (0.005,-30) [-30|297.675] "m_per_s"  ADS
+ SG_ ESCState : 53|3@1+ (1,0) [0|0] ""  ADS
+ SG_ VehicleLgtMotionSts2_DrvgDir : 12|3@1+ (1,0) [0|0] ""  ADS
+ SG_ BrakePedalPosition : 32|8@1+ (0.4,0) [0|102] "Percent"  ADS
+
+BO_ 142 VCM_07P_C32: 8 VCM
+ SG_ SteeringWheelTorque_Estimate : 30|10@1+ (0.05,-25) [-25|26.15] "Nm"  ADS
+ SG_ VehModeSts_SqC : 48|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ IntvBySftyDrvrDetd_OnSteerWhl : 4|2@1+ (1,0) [0|0] ""  ADS
+ SG_ SteeringWheelTorque_CRC : 16|8@1+ (1,0) [0|255] ""  ADS
+ SG_ VehModeSts_ReasonForDisengmt : 56|3@1+ (1,0) [0|0] ""  ADS
+ SG_ VehModeSts_Automation : 62|2@1+ (1,0) [0|0] ""  ADS
+ SG_ IntvBySftyDrvrDetd_OnBrkPedal : 8|2@1+ (1,0) [0|0] ""  ADS
+ SG_ ADSModeReq_OperatorEngmt : 0|2@1+ (1,0) [0|0] ""  ADS
+ SG_ VehModeSts_Operator : 59|3@1+ (1,0) [0|0] ""  ADS
+ SG_ VehModeSts_CRC : 40|8@1+ (1,0) [0|255] ""  ADS
+ SG_ IntvBySftyDrvrDetd_OnAccPedal : 2|2@1+ (1,0) [0|0] ""  ADS
+ SG_ IntvBySftyDrvrDetd_DrvrPresUkwn : 10|2@1+ (1,0) [0|0] ""  ADS
+ SG_ SteeringWheelTorque_SqC : 24|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ VehModeSts_Motion : 52|4@1+ (1,0) [0|0] ""  ADS
+ SG_ IntvBySftyDrvrDetd_OnParkBrake : 6|2@1+ (1,0) [0|0] ""  ADS
+
+BO_ 1301 VCM_06P_C32: 8 VCM
+ SG_ IfcUpstreamVersion_Major : 46|5@1+ (1,0) [0|0] ""  ADS
+ SG_ IfcUpstreamVersion_Minor : 51|4@1+ (1,0) [0|0] ""  ADS
+ SG_ VehicleStructureSts_Mass : 0|16@1+ (1,0) [0|65535] "kg"  ADS
+ SG_ VCMSwNumber_Major : 16|10@1+ (1,0) [0|0] ""  ADS
+ SG_ VCMSwNumber_Patch : 36|10@1+ (1,0) [0|0] ""  ADS
+ SG_ VCMSwNumber_Minor : 26|10@1+ (1,0) [0|0] ""  ADS
+
+BO_ 1393 VCM_05P_C32_FCM: 8 ADS
+ SG_ VCM_05P_C32_FCS : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 1392 VCM_05P_C32: 11 VCM
+ SG_ VIN_stat : 0|88@1+ (1,0) [0|0] ""  ADS
+
+BO_ 656 VCM_04P_C32: 8 VCM
+ SG_ BatterySOH : 8|8@1+ (0.5,0) [0|127.5] "Percent"  ADS
+ SG_ BatterySOCnom : 0|8@1+ (0.5,0) [0|127.5] "Percent"  ADS
+ SG_ BatteryCurrent : 24|16@1+ (0.05,-1600) [-1600|1676.75] "A"  ADS
+ SG_ BatteryVoltageDisplayValue : 40|16@1+ (0.05,0) [0|3276.75] "V"  ADS
+ SG_ BatteryTemp : 16|8@1+ (1,-45) [-45|210] "DegreeC"  ADS
+
+BO_ 218 VCM_03P_C32: 8 VCM
+ SG_ RoadInclination : 56|8@1+ (0.2,-25) [-25|26] "Percent"  ADS
+ SG_ VehicleMode : 3|4@1+ (1,0) [0|0] ""  ADS
+ SG_ TransmissionSelectedGear : 8|8@1+ (1,-125) [-125|130] "GearValue"  ADS
+ SG_ TransmEstimatedTimeToShift : 24|16@1+ (0.00390625,0) [0|255.99609375] "s"  ADS
+ SG_ EngineSpeed : 40|16@1+ (0.125,0) [0|8191.875] "rpm"  ADS
+ SG_ TransmissionCurrentGear : 16|8@1+ (1,-125) [-125|130] "GearValue"  ADS
+ SG_ KeyPosition : 0|3@1+ (1,0) [0|0] ""  ADS
+
+BO_ 138 VCM_02P_C32: 8 VCM
+ SG_ VehicleLgtMotionSts1_AccelTarget : 48|16@1+ (0.000976563,-32) [-32|31.999056205] "m_per_s_squared"  ADS
+ SG_ VehicleLgtMotionSts1_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ VehicleLgtMotionSts1_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ VehicleLgtMotionSts1_AccelExtCmp : 32|16@1+ (0.000976563,-32) [-32|31.999056205] "m_per_s_squared"  ADS
+ SG_ VehicleLgtMotionSts1_Accel : 16|16@1+ (0.000976563,-32) [-32|31.999056205] "m_per_s_squared"  ADS
+
+BO_ 135 VCM_01P_C32: 8 VCM
+ SG_ RoadWheelAngleResp_CRC : 0|8@1+ (1,0) [0|255] ""  ADS
+ SG_ RoadWheelAngleResp_MinCap : 40|8@1+ (0.01,-1.6) [-1.6|0.95] "rad"  ADS
+ SG_ RoadWheelAngleResp_RateCap : 32|8@1+ (0.004,0) [0|1.02] "Rad_per_s"  ADS
+ SG_ VehicleModeCpby_Automation : 56|3@1+ (1,0) [0|0] ""  ADS
+ SG_ RoadWheelAngleResp_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  ADS
+ SG_ RoadWheelAngleResp_Status : 16|16@1+ (5E-005,-1.6) [-1.6|1.67675] "rad"  ADS
+ SG_ VehicleModeCpby_Motion : 59|3@1+ (1,0) [0|0] ""  ADS
+ SG_ RoadWheelAngleResp_MaxCap : 48|8@1+ (0.01,0) [0|2.55] "rad"  ADS
+
+BO_ 1290 ADS_05P_C32: 8 ADS
+ SG_ ADMSwNumber_Minor : 10|10@1+ (1,0) [0|0] ""  VCM
+ SG_ ADMSwNumber_Patch : 20|10@1+ (1,0) [0|0] ""  VCM
+ SG_ IfcDwnstreamVersion_Major : 30|5@1+ (1,0) [0|0] ""  VCM
+ SG_ IfcDwnstreamVersion_Minor : 35|4@1+ (1,0) [0|0] ""  VCM
+ SG_ ADMSwNumber_Major : 0|10@1+ (1,0) [0|0] ""  VCM
+
+BO_ 666 ADS_04P_C32: 8 ADS
+ SG_ DirectionIndicatorLightsExtReq : 0|3@1+ (1,0) [0|0] ""  VCM
+
+BO_ 215 ADS_03P_C32: 8 ADS
+ SG_ RoadInclinationAngleDriverSts : 0|16@1+ (2.5E-005,0) [0|1.638375] "rad"  VCM
+
+BO_ 137 ADS_02P_C32: 8 ADS
+ SG_ VehicleModeReq_Automation : 44|3@1+ (1,0) [0|0] ""  VCM
+ SG_ VehicleLgtMotionReq_DrvgDir : 12|3@1+ (1,0) [0|0] ""  VCM
+ SG_ VehicleModeReq_CRC : 32|8@1+ (1,0) [0|255] ""  VCM
+ SG_ VehicleModeReq_SqC : 40|4@1+ (1,0) [0|14] "NotApplicable"  VCM
+ SG_ VehicleLgtMotionReq_Acceleration : 16|16@1+ (0.000976563,-32) [-32|31.999056205] "m_per_s_squared"  VCM
+ SG_ VehicleLgtMotionReq_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  VCM
+ SG_ VehicleModeReq_Motion : 51|2@1+ (1,0) [0|0] ""  VCM
+ SG_ VehicleModeReq_MtnCtrlType : 48|3@1+ (1,0) [0|0] ""  VCM
+ SG_ VehicleLgtMotionReq_CRC : 0|8@1+ (1,0) [0|255] ""  VCM
+
+BO_ 136 ADS_01P_C32: 8 ADS
+ SG_ VehicleLatMotionReq_RWhlAg : 16|16@1+ (5E-005,-1.6) [-1.6|1.67675] "rad"  VCM
+ SG_ VehicleLatMotionReq_RWhlAgRate : 32|16@1+ (5E-005,-1.6) [-1.6|1.67675] "Rad_per_s"  VCM
+ SG_ VehicleLatMotionReq_CRC : 0|8@1+ (1,0) [0|255] ""  VCM
+ SG_ VehicleLatMotionReq_SqC : 8|4@1+ (1,0) [0|14] "NotApplicable"  VCM
+
+
+
+CM_ "COM_MATRIX_T3_1.9.0";
+CM_ BU_ VCM "Vehicle Control Module";
+CM_ BO_ 149 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+CM_ BO_ 148 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+CM_ BO_ 147 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+CM_ BO_ 146 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+CM_ BO_ 145 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+CM_ BO_ 144 "EventTriggered on CAN32 based on Msg reception on CAN03, 10ms period";
+BA_DEF_ BO_  "GenMsgStartDelayTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgDelayTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgNrOfRepetition" INT 0 0;
+BA_DEF_ BO_  "GenMsgCycleTimeFast" INT 0 0;
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "Cyclic","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed","IfActive","NoMsgSendType","NotUsed";
+BA_DEF_ SG_  "GenSigStartValue" INT 0 0;
+BA_DEF_ SG_  "GenSigInactiveValue" INT 0 0;
+BA_DEF_ SG_  "GenSigCycleTimeActive" INT 0 0;
+BA_DEF_ SG_  "GenSigCycleTime" INT 0 0;
+BA_DEF_ SG_  "GenSigSendType" ENUM  "Cyclic","OnWrite","OnWriteWithRepetition","OnChange","OnChangeWithRepetition","IfActive","IfActiveWithRepetition","NoSigSendType","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed";
+BA_DEF_  "Baudrate" INT 0 1000000;
+BA_DEF_  "NmType" STRING ;
+BA_DEF_  "Manufacturer" STRING ;
+BA_DEF_  "VersionYear" INT 0 99;
+BA_DEF_  "VersionNumber" INT 0 99;
+BA_DEF_  "VersionMonth" INT 1 12;
+BA_DEF_  "VersionDay" INT 1 31;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","J1939PG","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","StandardCAN_FD","ExtendedCAN_FD";
+BA_DEF_ BU_  "TpOwnSystemEcuNumber" HEX 0 255;
+BA_DEF_ BO_  "TpJ1939VarDlc" ENUM  "No","Yes";
+BA_DEF_ SG_  "SigType" ENUM  "Default","Range","RangeSigned","ASCII","Discrete","Control","ReferencePGN","DTC","StringDelimiter","StringLength","StringLengthControl";
+BA_DEF_ SG_  "SeToolVersion_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolUniqueID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolOwnerSigGroup_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolOwnerSigGroupID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolName_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolItemID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolAncestorID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SPN" INT 0 524287;
+BA_DEF_ BU_  "ReRoutJ1939ToCom" ENUM  "No","Yes";
+BA_DEF_  "ProtocolType" STRING ;
+BA_DEF_ SG_  "Platform_Vivis2_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_Vivis1_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_VMCU1_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_FactoryIf_Sig" ENUM  "No","Yes";
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_ BU_  "NmStationAddress" INT 0 255;
+BA_DEF_ BO_  "NmMessage" ENUM  "no","yes";
+BA_DEF_ BU_  "NmJ1939SystemInstance" INT 0 15;
+BA_DEF_ BU_  "NmJ1939System" INT 0 127;
+BA_DEF_ BU_  "NmJ1939ManufacturerCode" INT 0 2047;
+BA_DEF_ BU_  "NmJ1939IndustryGroup" INT 0 7;
+BA_DEF_ BU_  "NmJ1939IdentityNumber" INT 0 2097151;
+BA_DEF_ BU_  "NmJ1939FunctionInstance" INT 0 7;
+BA_DEF_ BU_  "NmJ1939Function" INT 0 255;
+BA_DEF_ BU_  "NmJ1939ECUInstance" INT 0 3;
+BA_DEF_ BU_  "NmJ1939AAC" INT 0 1;
+BA_DEF_  "NmAsrWaitBusSleepTime" INT 0 65535;
+BA_DEF_  "NmAsrTimeoutTime" INT 0 65535;
+BA_DEF_  "NmAsrRepeatMessageTime" INT 0 65535;
+BA_DEF_ BU_  "NmAsrNodeIdentifier" HEX 0 253;
+BA_DEF_ BU_  "NmAsrNode" ENUM  "No","Yes";
+BA_DEF_  "NmAsrMessageCount" INT 1 256;
+BA_DEF_ BO_  "NmAsrMessage" ENUM  "No","Yes";
+BA_DEF_  "NmAsrCanMsgCycleTime" INT 0 65535;
+BA_DEF_ BU_  "NmAsrCanMsgCycleOffset" INT 0 65535;
+BA_DEF_  "NmAsrBaseAddress" HEX 0 536870911;
+BA_DEF_  "NetworkExportIndices_1" STRING ;
+BA_DEF_  "NetworkExportIndices_0" STRING ;
+BA_DEF_  "NetworkExportIndices" STRING ;
+BA_DEF_ SG_  "NeedsUpdateBit" ENUM  "No","Yes";
+BA_DEF_ SG_  "MmAnSignal" ENUM  "No","Yes";
+BA_DEF_ BU_  "MmAnMaster" ENUM  "No","Yes";
+BA_DEF_ BU_  "IsOBDrelevant" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigMaxLatency" INT 0 65535;
+BA_DEF_ SG_  "GenSigILSupport" ENUM  "Yes","No";
+BA_DEF_ BO_  "GenMsgRequestable" INT 0 1;
+BA_DEF_ BO_  "GenMsgILSupport" ENUM  "No","Yes";
+BA_DEF_ BU_  "ECU" STRING ;
+BA_DEF_ SG_  "E2EProfile" STRING ;
+BA_DEF_  "E2EP05WindowSize" INT 0 65535;
+BA_DEF_  "E2EP05UpperHeaderBitsToShift" INT 0 65535;
+BA_DEF_  "E2EP05ProfileName" STRING ;
+BA_DEF_  "E2EP05Offset" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateValid" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateInit" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateValid" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateInit" INT 0 65535;
+BA_DEF_  "E2EP05MaxDeltaCounter" INT 0 65535;
+BA_DEF_  "E2EP01WindowSize" INT 0 65535;
+BA_DEF_  "E2EP01UpperHeaderBitsToShift" INT 0 65535;
+BA_DEF_  "E2EP01SyncCounterInit" INT 0 65535;
+BA_DEF_  "E2EP01ProfileName" STRING ;
+BA_DEF_  "E2EP01MinOkStateValid" INT 0 65535;
+BA_DEF_  "E2EP01MinOkStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP01MinOkStateInit" INT 0 65535;
+BA_DEF_  "E2EP01MaxNoNewOrRepeatedData" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateValid" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateInit" INT 0 65535;
+BA_DEF_  "E2EP01MaxDeltaCounter" INT 0 65535;
+BA_DEF_  "E2EP01DataIdMode" ENUM  "all16Bit","alternating8Bit","lower12Bit","lower8Bit";
+BA_DEF_  "E2EP01CrcOffset" INT 0 65535;
+BA_DEF_  "E2EP01CounterOffset" INT 0 65535;
+BA_DEF_ SG_  "E2EDataLength" INT 0 65535;
+BA_DEF_ SG_  "E2EDataId" INT 0 65535;
+BA_DEF_ BU_  "DiagnosticClientAddress" HEX 0 255;
+BA_DEF_ BO_  "DiagUUDTResponse" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagState" ENUM  "No","Yes";
+BA_DEF_  "DiagRoutingPriority" INT 0 0;
+BA_DEF_ BU_  "DiagRole" ENUM  "None","OBDTester","ExternalTester","InternalTester";
+BA_DEF_ BO_  "DiagResponse" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagRequest" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagConnection" HEX 0 65535;
+BA_DEF_  "DBName" STRING ;
+BA_DEF_ BO_  "CanTpSTmin" INT 0 255;
+BA_DEF_ BO_  "CanTpFcFrameId" HEX 0 2147483647;
+BA_DEF_ BO_  "CanTpBs" INT 0 255;
+BA_DEF_ BO_  "CANFD_BRS" ENUM  "0","1";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_  "BaudrateCANFD" INT 0 5000000;
+BA_DEF_REL_ BU_SG_REL_  "GenSigTimeoutTime" INT 0 65535;
+BA_DEF_REL_ BU_SG_REL_  "GenSigFirstTimeoutTime" INT 0 65535;
+BA_DEF_DEF_  "GenMsgStartDelayTime" 0;
+BA_DEF_DEF_  "GenMsgDelayTime" 0;
+BA_DEF_DEF_  "GenMsgNrOfRepetition" 0;
+BA_DEF_DEF_  "GenMsgCycleTimeFast" 0;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_DEF_DEF_  "GenMsgSendType" "Cyclic";
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_DEF_DEF_  "GenSigInactiveValue" 0;
+BA_DEF_DEF_  "GenSigCycleTimeActive" 0;
+BA_DEF_DEF_  "GenSigCycleTime" 0;
+BA_DEF_DEF_  "GenSigSendType" "Cyclic";
+BA_DEF_DEF_  "Baudrate" 500000;
+BA_DEF_DEF_  "NmType" "";
+BA_DEF_DEF_  "Manufacturer" "VOLVO_AB";
+BA_DEF_DEF_  "VersionYear" 0;
+BA_DEF_DEF_  "VersionNumber" 0;
+BA_DEF_DEF_  "VersionMonth" 1;
+BA_DEF_DEF_  "VersionDay" 1;
+BA_DEF_DEF_  "VFrameFormat" "ExtendedCAN";
+BA_DEF_DEF_  "TpOwnSystemEcuNumber" 0;
+BA_DEF_DEF_  "TpJ1939VarDlc" "No";
+BA_DEF_DEF_  "SigType" "Default";
+BA_DEF_DEF_  "SeToolVersion_SIGNAL" "";
+BA_DEF_DEF_  "SeToolUniqueID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolOwnerSigGroup_SIGNAL" "";
+BA_DEF_DEF_  "SeToolOwnerSigGroupID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolName_SIGNAL" "";
+BA_DEF_DEF_  "SeToolItemID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolAncestorID_SIGNAL" "";
+BA_DEF_DEF_  "SPN" 0;
+BA_DEF_DEF_  "ReRoutJ1939ToCom" "No";
+BA_DEF_DEF_  "ProtocolType" "";
+BA_DEF_DEF_  "Platform_Vivis2_Sig" "No";
+BA_DEF_DEF_  "Platform_Vivis1_Sig" "No";
+BA_DEF_DEF_  "Platform_VMCU1_Sig" "No";
+BA_DEF_DEF_  "Platform_FactoryIf_Sig" "No";
+BA_DEF_DEF_  "NodeLayerModules" "";
+BA_DEF_DEF_  "NmStationAddress" 254;
+BA_DEF_DEF_  "NmMessage" "no";
+BA_DEF_DEF_  "NmJ1939SystemInstance" 0;
+BA_DEF_DEF_  "NmJ1939System" 0;
+BA_DEF_DEF_  "NmJ1939ManufacturerCode" 0;
+BA_DEF_DEF_  "NmJ1939IndustryGroup" 0;
+BA_DEF_DEF_  "NmJ1939IdentityNumber" 0;
+BA_DEF_DEF_  "NmJ1939FunctionInstance" 0;
+BA_DEF_DEF_  "NmJ1939Function" 0;
+BA_DEF_DEF_  "NmJ1939ECUInstance" 0;
+BA_DEF_DEF_  "NmJ1939AAC" 0;
+BA_DEF_DEF_  "NmAsrWaitBusSleepTime" 750;
+BA_DEF_DEF_  "NmAsrTimeoutTime" 5000;
+BA_DEF_DEF_  "NmAsrRepeatMessageTime" 300;
+BA_DEF_DEF_  "NmAsrNodeIdentifier" 0;
+BA_DEF_DEF_  "NmAsrNode" "Yes";
+BA_DEF_DEF_  "NmAsrMessageCount" 256;
+BA_DEF_DEF_  "NmAsrMessage" "No";
+BA_DEF_DEF_  "NmAsrCanMsgCycleTime" 200;
+BA_DEF_DEF_  "NmAsrCanMsgCycleOffset" 0;
+BA_DEF_DEF_  "NmAsrBaseAddress" 486506496;
+BA_DEF_DEF_  "NetworkExportIndices_1" "";
+BA_DEF_DEF_  "NetworkExportIndices_0" "";
+BA_DEF_DEF_  "NetworkExportIndices" "";
+BA_DEF_DEF_  "NeedsUpdateBit" "No";
+BA_DEF_DEF_  "MmAnSignal" "No";
+BA_DEF_DEF_  "MmAnMaster" "No";
+BA_DEF_DEF_  "IsOBDrelevant" "No";
+BA_DEF_DEF_  "GenSigMaxLatency" 0;
+BA_DEF_DEF_  "GenSigILSupport" "Yes";
+BA_DEF_DEF_  "GenMsgRequestable" 0;
+BA_DEF_DEF_  "GenMsgILSupport" "Yes";
+BA_DEF_DEF_  "ECU" "";
+BA_DEF_DEF_  "E2EProfile" "none";
+BA_DEF_DEF_  "E2EP05WindowSize" 5;
+BA_DEF_DEF_  "E2EP05UpperHeaderBitsToShift" 0;
+BA_DEF_DEF_  "E2EP05ProfileName" "PROFILE_05";
+BA_DEF_DEF_  "E2EP05Offset" 0;
+BA_DEF_DEF_  "E2EP05MinOkStateValid" 1;
+BA_DEF_DEF_  "E2EP05MinOkStateInvalid" 3;
+BA_DEF_DEF_  "E2EP05MinOkStateInit" 1;
+BA_DEF_DEF_  "E2EP05MaxErrorStateValid" 3;
+BA_DEF_DEF_  "E2EP05MaxErrorStateInvalid" 1;
+BA_DEF_DEF_  "E2EP05MaxErrorStateInit" 2;
+BA_DEF_DEF_  "E2EP05MaxDeltaCounter" 1;
+BA_DEF_DEF_  "E2EP01WindowSize" 5;
+BA_DEF_DEF_  "E2EP01UpperHeaderBitsToShift" 0;
+BA_DEF_DEF_  "E2EP01SyncCounterInit" 1;
+BA_DEF_DEF_  "E2EP01ProfileName" "PROFILE_01";
+BA_DEF_DEF_  "E2EP01MinOkStateValid" 1;
+BA_DEF_DEF_  "E2EP01MinOkStateInvalid" 3;
+BA_DEF_DEF_  "E2EP01MinOkStateInit" 1;
+BA_DEF_DEF_  "E2EP01MaxNoNewOrRepeatedData" 5;
+BA_DEF_DEF_  "E2EP01MaxErrorStateValid" 3;
+BA_DEF_DEF_  "E2EP01MaxErrorStateInvalid" 1;
+BA_DEF_DEF_  "E2EP01MaxErrorStateInit" 2;
+BA_DEF_DEF_  "E2EP01MaxDeltaCounter" 1;
+BA_DEF_DEF_  "E2EP01DataIdMode" "all16Bit";
+BA_DEF_DEF_  "E2EP01CrcOffset" 0;
+BA_DEF_DEF_  "E2EP01CounterOffset" 8;
+BA_DEF_DEF_  "E2EDataLength" 0;
+BA_DEF_DEF_  "E2EDataId" 0;
+BA_DEF_DEF_  "DiagnosticClientAddress" 0;
+BA_DEF_DEF_  "DiagUUDTResponse" "No";
+BA_DEF_DEF_  "DiagState" "No";
+BA_DEF_DEF_  "DiagRoutingPriority" 0;
+BA_DEF_DEF_  "DiagRole" "None";
+BA_DEF_DEF_  "DiagResponse" "No";
+BA_DEF_DEF_  "DiagRequest" "No";
+BA_DEF_DEF_  "DiagConnection" 0;
+BA_DEF_DEF_  "DBName" "";
+BA_DEF_DEF_  "CanTpSTmin" 0;
+BA_DEF_DEF_  "CanTpFcFrameId" 2147483647;
+BA_DEF_DEF_  "CanTpBs" 255;
+BA_DEF_DEF_  "CANFD_BRS" "0";
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "BaudrateCANFD" 0;
+BA_DEF_DEF_REL_ "GenSigTimeoutTime" 0;
+BA_DEF_DEF_REL_ "GenSigFirstTimeoutTime" 0;
+BA_ "Manufacturer" "VOLVO_AB";
+BA_ "NmType" "NmAsr";
+BA_ "BusType" "CAN";
+BA_ "Baudrate" 500000;
+BA_ "VersionDay" 24;
+BA_ "VersionMonth" 2;
+BA_ "VersionNumber" 1;
+BA_ "VersionYear" 22;
+BA_ "DBName" "CAN32";
+BA_ "DiagRole" BU_ VCM 3;
+BA_ "DiagnosticClientAddress" BU_ VCM 244;
+BA_ "IsOBDrelevant" BU_ VCM 1;
+BA_ "TpOwnSystemEcuNumber" BU_ VCM 36;
+BA_ "NmAsrNodeIdentifier" BU_ VCM 36;
+BA_ "VFrameFormat" BO_ 149 0;
+BA_ "GenMsgSendType" BO_ 149 8;
+BA_ "VFrameFormat" BO_ 148 0;
+BA_ "GenMsgSendType" BO_ 148 8;
+BA_ "VFrameFormat" BO_ 147 0;
+BA_ "GenMsgSendType" BO_ 147 8;
+BA_ "VFrameFormat" BO_ 146 0;
+BA_ "GenMsgSendType" BO_ 146 8;
+BA_ "VFrameFormat" BO_ 145 0;
+BA_ "GenMsgSendType" BO_ 145 8;
+BA_ "VFrameFormat" BO_ 144 0;
+BA_ "GenMsgSendType" BO_ 144 8;
+BA_ "VFrameFormat" BO_ 663 0;
+BA_ "GenMsgSendType" BO_ 663 0;
+BA_ "GenMsgCycleTime" BO_ 663 100;
+BA_ "VFrameFormat" BO_ 1305 0;
+BA_ "GenMsgSendType" BO_ 1305 0;
+BA_ "GenMsgCycleTime" BO_ 1305 1000;
+BA_ "VFrameFormat" BO_ 140 0;
+BA_ "GenMsgSendType" BO_ 140 0;
+BA_ "GenMsgCycleTime" BO_ 140 10;
+BA_ "VFrameFormat" BO_ 142 0;
+BA_ "GenMsgSendType" BO_ 142 0;
+BA_ "GenMsgCycleTime" BO_ 142 10;
+BA_ "VFrameFormat" BO_ 1301 0;
+BA_ "GenMsgSendType" BO_ 1301 0;
+BA_ "GenMsgCycleTime" BO_ 1301 1000;
+BA_ "GenMsgILSupport" BO_ 1393 0;
+BA_ "VFrameFormat" BO_ 1393 0;
+BA_ "GenMsgSendType" BO_ 1393 8;
+BA_ "CanTpFcFrameId" BO_ 1392 1393;
+BA_ "VFrameFormat" BO_ 1392 0;
+BA_ "GenMsgSendType" BO_ 1392 0;
+BA_ "GenMsgCycleTime" BO_ 1392 1000;
+BA_ "VFrameFormat" BO_ 656 0;
+BA_ "GenMsgSendType" BO_ 656 0;
+BA_ "GenMsgCycleTime" BO_ 656 100;
+BA_ "VFrameFormat" BO_ 218 0;
+BA_ "GenMsgSendType" BO_ 218 0;
+BA_ "GenMsgCycleTime" BO_ 218 20;
+BA_ "VFrameFormat" BO_ 138 0;
+BA_ "GenMsgSendType" BO_ 138 0;
+BA_ "GenMsgCycleTime" BO_ 138 10;
+BA_ "VFrameFormat" BO_ 135 0;
+BA_ "GenMsgSendType" BO_ 135 0;
+BA_ "GenMsgCycleTime" BO_ 135 10;
+BA_ "VFrameFormat" BO_ 1290 0;
+BA_ "GenMsgSendType" BO_ 1290 0;
+BA_ "GenMsgCycleTime" BO_ 1290 1000;
+BA_ "VFrameFormat" BO_ 666 0;
+BA_ "GenMsgSendType" BO_ 666 0;
+BA_ "GenMsgCycleTime" BO_ 666 100;
+BA_ "VFrameFormat" BO_ 215 0;
+BA_ "GenMsgSendType" BO_ 215 0;
+BA_ "GenMsgCycleTime" BO_ 215 20;
+BA_ "VFrameFormat" BO_ 137 0;
+BA_ "GenMsgSendType" BO_ 137 0;
+BA_ "GenMsgCycleTime" BO_ 137 10;
+BA_ "VFrameFormat" BO_ 136 0;
+BA_ "GenMsgSendType" BO_ 136 0;
+BA_ "GenMsgCycleTime" BO_ 136 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_SqC 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_SqC 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_CRC 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_CRC 10;
+BA_ "E2EDataId" SG_ 149 Sts1Axle6_CRC 255;
+BA_ "E2EDataLength" SG_ 149 Sts1Axle6_CRC 64;
+BA_ "E2EProfile" SG_ 149 Sts1Axle6_CRC "P01";
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 149 Sts1Axle6_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 149 Sts1Axle6_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 149 Sts1Axle6_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_SqC 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_SqC 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_CRC 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_CRC 10;
+BA_ "E2EDataId" SG_ 148 Sts1Axle5_CRC 254;
+BA_ "E2EDataLength" SG_ 148 Sts1Axle5_CRC 64;
+BA_ "E2EProfile" SG_ 148 Sts1Axle5_CRC "P01";
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 148 Sts1Axle5_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 148 Sts1Axle5_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 148 Sts1Axle5_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_SqC 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_SqC 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_CRC 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_CRC 10;
+BA_ "E2EDataId" SG_ 147 Sts1Axle4_CRC 253;
+BA_ "E2EDataLength" SG_ 147 Sts1Axle4_CRC 64;
+BA_ "E2EProfile" SG_ 147 Sts1Axle4_CRC "P01";
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 147 Sts1Axle4_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 147 Sts1Axle4_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 147 Sts1Axle4_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_CRC 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_CRC 10;
+BA_ "E2EDataId" SG_ 146 Sts1Axle3_CRC 252;
+BA_ "E2EDataLength" SG_ 146 Sts1Axle3_CRC 64;
+BA_ "E2EProfile" SG_ 146 Sts1Axle3_CRC "P01";
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 146 Sts1Axle3_SqC 1;
+BA_ "GenSigStartValue" SG_ 146 Sts1Axle3_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 146 Sts1Axle3_SqC 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_CRC 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_CRC 10;
+BA_ "E2EDataId" SG_ 145 Sts1Axle2_CRC 251;
+BA_ "E2EDataLength" SG_ 145 Sts1Axle2_CRC 64;
+BA_ "E2EProfile" SG_ 145 Sts1Axle2_CRC "P01";
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 145 Sts1Axle2_SqC 1;
+BA_ "GenSigStartValue" SG_ 145 Sts1Axle2_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 145 Sts1Axle2_SqC 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_SqC 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_SqC 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotAgCntrRi 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotAgCntrRi 511;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotAgCntrRi 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotSpdLe 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotSpdLe 32767;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotSpdLe 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotQltyRi 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotQltyRi 3;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotQltyRi 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotQltyLe 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotQltyLe 3;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotQltyLe 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_CRC 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_CRC 10;
+BA_ "E2EDataId" SG_ 144 Sts1Axle1_CRC 250;
+BA_ "E2EDataLength" SG_ 144 Sts1Axle1_CRC 64;
+BA_ "E2EProfile" SG_ 144 Sts1Axle1_CRC "P01";
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotSpdRi 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotSpdRi 32767;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotSpdRi 10;
+BA_ "GenSigSendType" SG_ 144 Sts1Axle1_WhlRotAgCntrLe 1;
+BA_ "GenSigStartValue" SG_ 144 Sts1Axle1_WhlRotAgCntrLe 511;
+BA_ "GenSigMaxLatency" SG_ 144 Sts1Axle1_WhlRotAgCntrLe 10;
+BA_ "GenSigSendType" SG_ 663 VehCombRetardtnSts_EnergyCap 0;
+BA_ "GenSigCycleTime" SG_ 663 VehCombRetardtnSts_EnergyCap 100;
+BA_ "GenSigCycleTimeActive" SG_ 663 VehCombRetardtnSts_EnergyCap 100;
+BA_ "GenSigStartValue" SG_ 663 VehCombRetardtnSts_EnergyCap 255;
+BA_ "GenSigMaxLatency" SG_ 663 VehCombRetardtnSts_EnergyCap 100;
+BA_ "GenSigSendType" SG_ 663 VehCombRetardtnSts_ThreshldPwr 0;
+BA_ "GenSigCycleTime" SG_ 663 VehCombRetardtnSts_ThreshldPwr 100;
+BA_ "GenSigCycleTimeActive" SG_ 663 VehCombRetardtnSts_ThreshldPwr 100;
+BA_ "GenSigStartValue" SG_ 663 VehCombRetardtnSts_ThreshldPwr 255;
+BA_ "GenSigMaxLatency" SG_ 663 VehCombRetardtnSts_ThreshldPwr 100;
+BA_ "GenSigSendType" SG_ 663 DriverSeatBeltSwitch 0;
+BA_ "GenSigCycleTime" SG_ 663 DriverSeatBeltSwitch 100;
+BA_ "GenSigCycleTimeActive" SG_ 663 DriverSeatBeltSwitch 100;
+BA_ "GenSigStartValue" SG_ 663 DriverSeatBeltSwitch 3;
+BA_ "GenSigMaxLatency" SG_ 663 DriverSeatBeltSwitch 100;
+BA_ "GenSigSendType" SG_ 663 DirectionIndicatorLightsStatus 0;
+BA_ "GenSigCycleTime" SG_ 663 DirectionIndicatorLightsStatus 100;
+BA_ "GenSigCycleTimeActive" SG_ 663 DirectionIndicatorLightsStatus 100;
+BA_ "GenSigStartValue" SG_ 663 DirectionIndicatorLightsStatus 15;
+BA_ "GenSigMaxLatency" SG_ 663 DirectionIndicatorLightsStatus 100;
+BA_ "GenSigSendType" SG_ 1305 VehicleLgtMotionCpby_DrvgDir 0;
+BA_ "GenSigCycleTime" SG_ 1305 VehicleLgtMotionCpby_DrvgDir 100;
+BA_ "GenSigCycleTimeActive" SG_ 1305 VehicleLgtMotionCpby_DrvgDir 100;
+BA_ "GenSigStartValue" SG_ 1305 VehicleLgtMotionCpby_DrvgDir 7;
+BA_ "GenSigMaxLatency" SG_ 1305 VehicleLgtMotionCpby_DrvgDir 1000;
+BA_ "GenSigSendType" SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 0;
+BA_ "GenSigCycleTime" SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 100;
+BA_ "GenSigCycleTimeActive" SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 100;
+BA_ "GenSigStartValue" SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 255;
+BA_ "GenSigMaxLatency" SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 1000;
+BA_ "GenSigSendType" SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 0;
+BA_ "GenSigCycleTime" SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 100;
+BA_ "GenSigCycleTimeActive" SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 100;
+BA_ "GenSigStartValue" SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 255;
+BA_ "GenSigMaxLatency" SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 1000;
+BA_ "GenSigSendType" SG_ 140 AntiLockBrakingActive 0;
+BA_ "GenSigCycleTime" SG_ 140 AntiLockBrakingActive 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 AntiLockBrakingActive 100;
+BA_ "GenSigStartValue" SG_ 140 AntiLockBrakingActive 3;
+BA_ "GenSigMaxLatency" SG_ 140 AntiLockBrakingActive 10;
+BA_ "GenSigSendType" SG_ 140 VehicleLgtMotionSts2_CRC 0;
+BA_ "GenSigCycleTime" SG_ 140 VehicleLgtMotionSts2_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 VehicleLgtMotionSts2_CRC 100;
+BA_ "GenSigStartValue" SG_ 140 VehicleLgtMotionSts2_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 140 VehicleLgtMotionSts2_CRC 10;
+BA_ "E2EDataId" SG_ 140 VehicleLgtMotionSts2_CRC 248;
+BA_ "E2EDataLength" SG_ 140 VehicleLgtMotionSts2_CRC 32;
+BA_ "E2EProfile" SG_ 140 VehicleLgtMotionSts2_CRC "P01";
+BA_ "GenSigSendType" SG_ 140 VehicleMotionChInCmdSts 0;
+BA_ "GenSigCycleTime" SG_ 140 VehicleMotionChInCmdSts 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 VehicleMotionChInCmdSts 100;
+BA_ "GenSigStartValue" SG_ 140 VehicleMotionChInCmdSts 3;
+BA_ "GenSigMaxLatency" SG_ 140 VehicleMotionChInCmdSts 10;
+BA_ "GenSigSendType" SG_ 140 VehicleLgtMotionSts2_SqC 0;
+BA_ "GenSigCycleTime" SG_ 140 VehicleLgtMotionSts2_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 VehicleLgtMotionSts2_SqC 100;
+BA_ "GenSigStartValue" SG_ 140 VehicleLgtMotionSts2_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 140 VehicleLgtMotionSts2_SqC 10;
+BA_ "GenSigSendType" SG_ 140 TransmissionDrivelineEngaged 0;
+BA_ "GenSigCycleTime" SG_ 140 TransmissionDrivelineEngaged 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 TransmissionDrivelineEngaged 100;
+BA_ "GenSigStartValue" SG_ 140 TransmissionDrivelineEngaged 3;
+BA_ "GenSigMaxLatency" SG_ 140 TransmissionDrivelineEngaged 10;
+BA_ "GenSigSendType" SG_ 140 TractionFunctionSelected 0;
+BA_ "GenSigCycleTime" SG_ 140 TractionFunctionSelected 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 TractionFunctionSelected 100;
+BA_ "GenSigStartValue" SG_ 140 TractionFunctionSelected 7;
+BA_ "GenSigMaxLatency" SG_ 140 TractionFunctionSelected 10;
+BA_ "GenSigSendType" SG_ 140 AcceleratorPedalPosition1 0;
+BA_ "GenSigCycleTime" SG_ 140 AcceleratorPedalPosition1 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 AcceleratorPedalPosition1 100;
+BA_ "GenSigStartValue" SG_ 140 AcceleratorPedalPosition1 255;
+BA_ "GenSigMaxLatency" SG_ 140 AcceleratorPedalPosition1 10;
+BA_ "GenSigSendType" SG_ 140 VehicleLgtMotionSts2_Velocity 0;
+BA_ "GenSigCycleTime" SG_ 140 VehicleLgtMotionSts2_Velocity 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 VehicleLgtMotionSts2_Velocity 100;
+BA_ "GenSigStartValue" SG_ 140 VehicleLgtMotionSts2_Velocity 65535;
+BA_ "GenSigMaxLatency" SG_ 140 VehicleLgtMotionSts2_Velocity 10;
+BA_ "GenSigSendType" SG_ 140 ESCState 0;
+BA_ "GenSigCycleTime" SG_ 140 ESCState 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 ESCState 100;
+BA_ "GenSigStartValue" SG_ 140 ESCState 7;
+BA_ "GenSigMaxLatency" SG_ 140 ESCState 10;
+BA_ "GenSigSendType" SG_ 140 VehicleLgtMotionSts2_DrvgDir 0;
+BA_ "GenSigCycleTime" SG_ 140 VehicleLgtMotionSts2_DrvgDir 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 VehicleLgtMotionSts2_DrvgDir 100;
+BA_ "GenSigStartValue" SG_ 140 VehicleLgtMotionSts2_DrvgDir 7;
+BA_ "GenSigMaxLatency" SG_ 140 VehicleLgtMotionSts2_DrvgDir 10;
+BA_ "GenSigSendType" SG_ 140 BrakePedalPosition 0;
+BA_ "GenSigCycleTime" SG_ 140 BrakePedalPosition 100;
+BA_ "GenSigCycleTimeActive" SG_ 140 BrakePedalPosition 100;
+BA_ "GenSigStartValue" SG_ 140 BrakePedalPosition 255;
+BA_ "GenSigMaxLatency" SG_ 140 BrakePedalPosition 10;
+BA_ "GenSigSendType" SG_ 142 SteeringWheelTorque_Estimate 0;
+BA_ "GenSigCycleTime" SG_ 142 SteeringWheelTorque_Estimate 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 SteeringWheelTorque_Estimate 100;
+BA_ "GenSigStartValue" SG_ 142 SteeringWheelTorque_Estimate 1023;
+BA_ "GenSigMaxLatency" SG_ 142 SteeringWheelTorque_Estimate 10;
+BA_ "GenSigSendType" SG_ 142 VehModeSts_SqC 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_SqC 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_SqC 10;
+BA_ "GenSigSendType" SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 0;
+BA_ "GenSigCycleTime" SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 100;
+BA_ "GenSigStartValue" SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 3;
+BA_ "GenSigMaxLatency" SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 10;
+BA_ "GenSigSendType" SG_ 142 SteeringWheelTorque_CRC 0;
+BA_ "GenSigCycleTime" SG_ 142 SteeringWheelTorque_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 SteeringWheelTorque_CRC 100;
+BA_ "GenSigStartValue" SG_ 142 SteeringWheelTorque_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 142 SteeringWheelTorque_CRC 10;
+BA_ "E2EDataId" SG_ 142 SteeringWheelTorque_CRC 201;
+BA_ "E2EDataLength" SG_ 142 SteeringWheelTorque_CRC 24;
+BA_ "E2EProfile" SG_ 142 SteeringWheelTorque_CRC "P01";
+BA_ "GenSigSendType" SG_ 142 VehModeSts_ReasonForDisengmt 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_ReasonForDisengmt 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_ReasonForDisengmt 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_ReasonForDisengmt 7;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_ReasonForDisengmt 10;
+BA_ "GenSigSendType" SG_ 142 VehModeSts_Automation 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_Automation 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_Automation 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_Automation 3;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_Automation 10;
+BA_ "GenSigSendType" SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 0;
+BA_ "GenSigCycleTime" SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 100;
+BA_ "GenSigStartValue" SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 3;
+BA_ "GenSigMaxLatency" SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 10;
+BA_ "GenSigSendType" SG_ 142 ADSModeReq_OperatorEngmt 0;
+BA_ "GenSigCycleTime" SG_ 142 ADSModeReq_OperatorEngmt 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 ADSModeReq_OperatorEngmt 100;
+BA_ "GenSigStartValue" SG_ 142 ADSModeReq_OperatorEngmt 3;
+BA_ "GenSigMaxLatency" SG_ 142 ADSModeReq_OperatorEngmt 10;
+BA_ "GenSigSendType" SG_ 142 VehModeSts_Operator 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_Operator 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_Operator 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_Operator 7;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_Operator 10;
+BA_ "GenSigSendType" SG_ 142 VehModeSts_CRC 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_CRC 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_CRC 10;
+BA_ "E2EDataId" SG_ 142 VehModeSts_CRC 249;
+BA_ "E2EDataLength" SG_ 142 VehModeSts_CRC 24;
+BA_ "E2EProfile" SG_ 142 VehModeSts_CRC "P01";
+BA_ "GenSigSendType" SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 0;
+BA_ "GenSigCycleTime" SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 100;
+BA_ "GenSigStartValue" SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 3;
+BA_ "GenSigMaxLatency" SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 10;
+BA_ "GenSigSendType" SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 0;
+BA_ "GenSigCycleTime" SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 100;
+BA_ "GenSigStartValue" SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 3;
+BA_ "GenSigMaxLatency" SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 10;
+BA_ "GenSigSendType" SG_ 142 SteeringWheelTorque_SqC 0;
+BA_ "GenSigCycleTime" SG_ 142 SteeringWheelTorque_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 SteeringWheelTorque_SqC 100;
+BA_ "GenSigStartValue" SG_ 142 SteeringWheelTorque_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 142 SteeringWheelTorque_SqC 10;
+BA_ "GenSigSendType" SG_ 142 VehModeSts_Motion 0;
+BA_ "GenSigCycleTime" SG_ 142 VehModeSts_Motion 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 VehModeSts_Motion 100;
+BA_ "GenSigStartValue" SG_ 142 VehModeSts_Motion 15;
+BA_ "GenSigMaxLatency" SG_ 142 VehModeSts_Motion 10;
+BA_ "GenSigSendType" SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 0;
+BA_ "GenSigCycleTime" SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 100;
+BA_ "GenSigCycleTimeActive" SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 100;
+BA_ "GenSigStartValue" SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 3;
+BA_ "GenSigMaxLatency" SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 10;
+BA_ "GenSigSendType" SG_ 1301 IfcUpstreamVersion_Major 0;
+BA_ "GenSigCycleTime" SG_ 1301 IfcUpstreamVersion_Major 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 IfcUpstreamVersion_Major 100;
+BA_ "GenSigStartValue" SG_ 1301 IfcUpstreamVersion_Major 31;
+BA_ "GenSigMaxLatency" SG_ 1301 IfcUpstreamVersion_Major 1000;
+BA_ "GenSigSendType" SG_ 1301 IfcUpstreamVersion_Minor 0;
+BA_ "GenSigCycleTime" SG_ 1301 IfcUpstreamVersion_Minor 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 IfcUpstreamVersion_Minor 100;
+BA_ "GenSigStartValue" SG_ 1301 IfcUpstreamVersion_Minor 15;
+BA_ "GenSigMaxLatency" SG_ 1301 IfcUpstreamVersion_Minor 1000;
+BA_ "GenSigSendType" SG_ 1301 VehicleStructureSts_Mass 0;
+BA_ "GenSigCycleTime" SG_ 1301 VehicleStructureSts_Mass 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 VehicleStructureSts_Mass 100;
+BA_ "GenSigStartValue" SG_ 1301 VehicleStructureSts_Mass 65535;
+BA_ "GenSigMaxLatency" SG_ 1301 VehicleStructureSts_Mass 1000;
+BA_ "GenSigSendType" SG_ 1301 VCMSwNumber_Major 0;
+BA_ "GenSigCycleTime" SG_ 1301 VCMSwNumber_Major 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 VCMSwNumber_Major 100;
+BA_ "GenSigStartValue" SG_ 1301 VCMSwNumber_Major 1023;
+BA_ "GenSigMaxLatency" SG_ 1301 VCMSwNumber_Major 1000;
+BA_ "GenSigSendType" SG_ 1301 VCMSwNumber_Patch 0;
+BA_ "GenSigCycleTime" SG_ 1301 VCMSwNumber_Patch 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 VCMSwNumber_Patch 100;
+BA_ "GenSigStartValue" SG_ 1301 VCMSwNumber_Patch 1023;
+BA_ "GenSigMaxLatency" SG_ 1301 VCMSwNumber_Patch 1000;
+BA_ "GenSigSendType" SG_ 1301 VCMSwNumber_Minor 0;
+BA_ "GenSigCycleTime" SG_ 1301 VCMSwNumber_Minor 100;
+BA_ "GenSigCycleTimeActive" SG_ 1301 VCMSwNumber_Minor 100;
+BA_ "GenSigStartValue" SG_ 1301 VCMSwNumber_Minor 1023;
+BA_ "GenSigMaxLatency" SG_ 1301 VCMSwNumber_Minor 1000;
+BA_ "GenSigSendType" SG_ 1393 VCM_05P_C32_FCS 7;
+BA_ "GenSigSendType" SG_ 1392 VIN_stat 0;
+BA_ "GenSigCycleTime" SG_ 1392 VIN_stat 100;
+BA_ "GenSigCycleTimeActive" SG_ 1392 VIN_stat 100;
+BA_ "GenSigMaxLatency" SG_ 1392 VIN_stat 1000;
+BA_ "GenSigSendType" SG_ 656 BatterySOH 0;
+BA_ "GenSigCycleTime" SG_ 656 BatterySOH 100;
+BA_ "GenSigCycleTimeActive" SG_ 656 BatterySOH 100;
+BA_ "GenSigStartValue" SG_ 656 BatterySOH 255;
+BA_ "GenSigMaxLatency" SG_ 656 BatterySOH 100;
+BA_ "GenSigSendType" SG_ 656 BatterySOCnom 0;
+BA_ "GenSigCycleTime" SG_ 656 BatterySOCnom 100;
+BA_ "GenSigCycleTimeActive" SG_ 656 BatterySOCnom 100;
+BA_ "GenSigStartValue" SG_ 656 BatterySOCnom 255;
+BA_ "GenSigMaxLatency" SG_ 656 BatterySOCnom 100;
+BA_ "GenSigSendType" SG_ 656 BatteryCurrent 0;
+BA_ "GenSigCycleTime" SG_ 656 BatteryCurrent 100;
+BA_ "GenSigCycleTimeActive" SG_ 656 BatteryCurrent 100;
+BA_ "GenSigStartValue" SG_ 656 BatteryCurrent 65535;
+BA_ "GenSigMaxLatency" SG_ 656 BatteryCurrent 100;
+BA_ "GenSigSendType" SG_ 656 BatteryVoltageDisplayValue 0;
+BA_ "GenSigCycleTime" SG_ 656 BatteryVoltageDisplayValue 100;
+BA_ "GenSigCycleTimeActive" SG_ 656 BatteryVoltageDisplayValue 100;
+BA_ "GenSigStartValue" SG_ 656 BatteryVoltageDisplayValue 65535;
+BA_ "GenSigMaxLatency" SG_ 656 BatteryVoltageDisplayValue 100;
+BA_ "GenSigSendType" SG_ 656 BatteryTemp 0;
+BA_ "GenSigCycleTime" SG_ 656 BatteryTemp 100;
+BA_ "GenSigCycleTimeActive" SG_ 656 BatteryTemp 100;
+BA_ "GenSigStartValue" SG_ 656 BatteryTemp 255;
+BA_ "GenSigMaxLatency" SG_ 656 BatteryTemp 100;
+BA_ "GenSigSendType" SG_ 218 RoadInclination 0;
+BA_ "GenSigCycleTime" SG_ 218 RoadInclination 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 RoadInclination 100;
+BA_ "GenSigStartValue" SG_ 218 RoadInclination 255;
+BA_ "GenSigMaxLatency" SG_ 218 RoadInclination 25;
+BA_ "GenSigSendType" SG_ 218 VehicleMode 0;
+BA_ "GenSigCycleTime" SG_ 218 VehicleMode 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 VehicleMode 100;
+BA_ "GenSigStartValue" SG_ 218 VehicleMode 15;
+BA_ "GenSigMaxLatency" SG_ 218 VehicleMode 20;
+BA_ "GenSigSendType" SG_ 218 TransmissionSelectedGear 0;
+BA_ "GenSigCycleTime" SG_ 218 TransmissionSelectedGear 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 TransmissionSelectedGear 100;
+BA_ "GenSigStartValue" SG_ 218 TransmissionSelectedGear 255;
+BA_ "GenSigMaxLatency" SG_ 218 TransmissionSelectedGear 20;
+BA_ "GenSigSendType" SG_ 218 TransmEstimatedTimeToShift 0;
+BA_ "GenSigCycleTime" SG_ 218 TransmEstimatedTimeToShift 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 TransmEstimatedTimeToShift 100;
+BA_ "GenSigStartValue" SG_ 218 TransmEstimatedTimeToShift 65535;
+BA_ "GenSigMaxLatency" SG_ 218 TransmEstimatedTimeToShift 20;
+BA_ "GenSigSendType" SG_ 218 EngineSpeed 0;
+BA_ "GenSigCycleTime" SG_ 218 EngineSpeed 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 EngineSpeed 100;
+BA_ "GenSigStartValue" SG_ 218 EngineSpeed 65535;
+BA_ "GenSigMaxLatency" SG_ 218 EngineSpeed 20;
+BA_ "GenSigSendType" SG_ 218 TransmissionCurrentGear 0;
+BA_ "GenSigCycleTime" SG_ 218 TransmissionCurrentGear 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 TransmissionCurrentGear 100;
+BA_ "GenSigStartValue" SG_ 218 TransmissionCurrentGear 255;
+BA_ "GenSigMaxLatency" SG_ 218 TransmissionCurrentGear 20;
+BA_ "GenSigSendType" SG_ 218 KeyPosition 0;
+BA_ "GenSigCycleTime" SG_ 218 KeyPosition 100;
+BA_ "GenSigCycleTimeActive" SG_ 218 KeyPosition 100;
+BA_ "GenSigStartValue" SG_ 218 KeyPosition 7;
+BA_ "GenSigMaxLatency" SG_ 218 KeyPosition 20;
+BA_ "GenSigSendType" SG_ 138 VehicleLgtMotionSts1_AccelTarget 0;
+BA_ "GenSigCycleTime" SG_ 138 VehicleLgtMotionSts1_AccelTarget 100;
+BA_ "GenSigCycleTimeActive" SG_ 138 VehicleLgtMotionSts1_AccelTarget 100;
+BA_ "GenSigStartValue" SG_ 138 VehicleLgtMotionSts1_AccelTarget 65535;
+BA_ "GenSigMaxLatency" SG_ 138 VehicleLgtMotionSts1_AccelTarget 10;
+BA_ "GenSigSendType" SG_ 138 VehicleLgtMotionSts1_CRC 0;
+BA_ "GenSigCycleTime" SG_ 138 VehicleLgtMotionSts1_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 138 VehicleLgtMotionSts1_CRC 100;
+BA_ "GenSigStartValue" SG_ 138 VehicleLgtMotionSts1_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 138 VehicleLgtMotionSts1_CRC 10;
+BA_ "E2EDataId" SG_ 138 VehicleLgtMotionSts1_CRC 247;
+BA_ "E2EDataLength" SG_ 138 VehicleLgtMotionSts1_CRC 64;
+BA_ "E2EProfile" SG_ 138 VehicleLgtMotionSts1_CRC "P01";
+BA_ "GenSigSendType" SG_ 138 VehicleLgtMotionSts1_SqC 0;
+BA_ "GenSigCycleTime" SG_ 138 VehicleLgtMotionSts1_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 138 VehicleLgtMotionSts1_SqC 100;
+BA_ "GenSigStartValue" SG_ 138 VehicleLgtMotionSts1_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 138 VehicleLgtMotionSts1_SqC 10;
+BA_ "GenSigSendType" SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 0;
+BA_ "GenSigCycleTime" SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 100;
+BA_ "GenSigCycleTimeActive" SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 100;
+BA_ "GenSigStartValue" SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 65535;
+BA_ "GenSigMaxLatency" SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 10;
+BA_ "GenSigSendType" SG_ 138 VehicleLgtMotionSts1_Accel 0;
+BA_ "GenSigCycleTime" SG_ 138 VehicleLgtMotionSts1_Accel 100;
+BA_ "GenSigCycleTimeActive" SG_ 138 VehicleLgtMotionSts1_Accel 100;
+BA_ "GenSigStartValue" SG_ 138 VehicleLgtMotionSts1_Accel 65535;
+BA_ "GenSigMaxLatency" SG_ 138 VehicleLgtMotionSts1_Accel 10;
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_CRC 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_CRC 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_CRC 10;
+BA_ "E2EDataId" SG_ 135 RoadWheelAngleResp_CRC 199;
+BA_ "E2EDataLength" SG_ 135 RoadWheelAngleResp_CRC 56;
+BA_ "E2EProfile" SG_ 135 RoadWheelAngleResp_CRC "P01";
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_MinCap 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_MinCap 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_MinCap 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_MinCap 255;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_MinCap 10;
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_RateCap 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_RateCap 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_RateCap 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_RateCap 255;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_RateCap 10;
+BA_ "GenSigSendType" SG_ 135 VehicleModeCpby_Automation 0;
+BA_ "GenSigCycleTime" SG_ 135 VehicleModeCpby_Automation 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 VehicleModeCpby_Automation 100;
+BA_ "GenSigStartValue" SG_ 135 VehicleModeCpby_Automation 7;
+BA_ "GenSigMaxLatency" SG_ 135 VehicleModeCpby_Automation 10;
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_SqC 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_SqC 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_SqC 10;
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_Status 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_Status 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_Status 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_Status 65535;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_Status 10;
+BA_ "GenSigSendType" SG_ 135 VehicleModeCpby_Motion 0;
+BA_ "GenSigCycleTime" SG_ 135 VehicleModeCpby_Motion 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 VehicleModeCpby_Motion 100;
+BA_ "GenSigStartValue" SG_ 135 VehicleModeCpby_Motion 7;
+BA_ "GenSigMaxLatency" SG_ 135 VehicleModeCpby_Motion 10;
+BA_ "GenSigSendType" SG_ 135 RoadWheelAngleResp_MaxCap 0;
+BA_ "GenSigCycleTime" SG_ 135 RoadWheelAngleResp_MaxCap 100;
+BA_ "GenSigCycleTimeActive" SG_ 135 RoadWheelAngleResp_MaxCap 100;
+BA_ "GenSigStartValue" SG_ 135 RoadWheelAngleResp_MaxCap 255;
+BA_ "GenSigMaxLatency" SG_ 135 RoadWheelAngleResp_MaxCap 10;
+BA_ "GenSigSendType" SG_ 1290 ADMSwNumber_Minor 0;
+BA_ "GenSigCycleTime" SG_ 1290 ADMSwNumber_Minor 100;
+BA_ "GenSigCycleTimeActive" SG_ 1290 ADMSwNumber_Minor 100;
+BA_ "GenSigStartValue" SG_ 1290 ADMSwNumber_Minor 1023;
+BA_ "GenSigMaxLatency" SG_ 1290 ADMSwNumber_Minor 1000;
+BA_ "GenSigSendType" SG_ 1290 ADMSwNumber_Patch 0;
+BA_ "GenSigCycleTime" SG_ 1290 ADMSwNumber_Patch 100;
+BA_ "GenSigCycleTimeActive" SG_ 1290 ADMSwNumber_Patch 100;
+BA_ "GenSigStartValue" SG_ 1290 ADMSwNumber_Patch 1023;
+BA_ "GenSigMaxLatency" SG_ 1290 ADMSwNumber_Patch 1000;
+BA_ "GenSigSendType" SG_ 1290 IfcDwnstreamVersion_Major 0;
+BA_ "GenSigCycleTime" SG_ 1290 IfcDwnstreamVersion_Major 100;
+BA_ "GenSigCycleTimeActive" SG_ 1290 IfcDwnstreamVersion_Major 100;
+BA_ "GenSigStartValue" SG_ 1290 IfcDwnstreamVersion_Major 31;
+BA_ "GenSigMaxLatency" SG_ 1290 IfcDwnstreamVersion_Major 1000;
+BA_ "GenSigSendType" SG_ 1290 IfcDwnstreamVersion_Minor 0;
+BA_ "GenSigCycleTime" SG_ 1290 IfcDwnstreamVersion_Minor 100;
+BA_ "GenSigCycleTimeActive" SG_ 1290 IfcDwnstreamVersion_Minor 100;
+BA_ "GenSigStartValue" SG_ 1290 IfcDwnstreamVersion_Minor 15;
+BA_ "GenSigMaxLatency" SG_ 1290 IfcDwnstreamVersion_Minor 1000;
+BA_ "GenSigSendType" SG_ 1290 ADMSwNumber_Major 0;
+BA_ "GenSigCycleTime" SG_ 1290 ADMSwNumber_Major 100;
+BA_ "GenSigCycleTimeActive" SG_ 1290 ADMSwNumber_Major 100;
+BA_ "GenSigStartValue" SG_ 1290 ADMSwNumber_Major 1023;
+BA_ "GenSigMaxLatency" SG_ 1290 ADMSwNumber_Major 1000;
+BA_ "GenSigSendType" SG_ 666 DirectionIndicatorLightsExtReq 0;
+BA_ "GenSigCycleTime" SG_ 666 DirectionIndicatorLightsExtReq 100;
+BA_ "GenSigCycleTimeActive" SG_ 666 DirectionIndicatorLightsExtReq 100;
+BA_ "GenSigStartValue" SG_ 666 DirectionIndicatorLightsExtReq 7;
+BA_ "GenSigMaxLatency" SG_ 666 DirectionIndicatorLightsExtReq 100;
+BA_ "GenSigSendType" SG_ 215 RoadInclinationAngleDriverSts 0;
+BA_ "GenSigCycleTime" SG_ 215 RoadInclinationAngleDriverSts 100;
+BA_ "GenSigCycleTimeActive" SG_ 215 RoadInclinationAngleDriverSts 100;
+BA_ "GenSigStartValue" SG_ 215 RoadInclinationAngleDriverSts 65535;
+BA_ "GenSigMaxLatency" SG_ 215 RoadInclinationAngleDriverSts 25;
+BA_ "GenSigSendType" SG_ 137 VehicleModeReq_Automation 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleModeReq_Automation 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleModeReq_Automation 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleModeReq_Automation 7;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleModeReq_Automation 10;
+BA_ "GenSigSendType" SG_ 137 VehicleLgtMotionReq_DrvgDir 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleLgtMotionReq_DrvgDir 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleLgtMotionReq_DrvgDir 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleLgtMotionReq_DrvgDir 7;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleLgtMotionReq_DrvgDir 10;
+BA_ "GenSigSendType" SG_ 137 VehicleModeReq_CRC 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleModeReq_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleModeReq_CRC 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleModeReq_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleModeReq_CRC 10;
+BA_ "E2EDataId" SG_ 137 VehicleModeReq_CRC 246;
+BA_ "E2EDataLength" SG_ 137 VehicleModeReq_CRC 24;
+BA_ "E2EProfile" SG_ 137 VehicleModeReq_CRC "P01";
+BA_ "GenSigSendType" SG_ 137 VehicleModeReq_SqC 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleModeReq_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleModeReq_SqC 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleModeReq_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleModeReq_SqC 10;
+BA_ "GenSigSendType" SG_ 137 VehicleLgtMotionReq_Acceleration 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleLgtMotionReq_Acceleration 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleLgtMotionReq_Acceleration 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleLgtMotionReq_Acceleration 65535;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleLgtMotionReq_Acceleration 10;
+BA_ "GenSigSendType" SG_ 137 VehicleLgtMotionReq_SqC 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleLgtMotionReq_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleLgtMotionReq_SqC 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleLgtMotionReq_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleLgtMotionReq_SqC 10;
+BA_ "GenSigSendType" SG_ 137 VehicleModeReq_Motion 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleModeReq_Motion 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleModeReq_Motion 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleModeReq_Motion 3;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleModeReq_Motion 10;
+BA_ "GenSigSendType" SG_ 137 VehicleModeReq_MtnCtrlType 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleModeReq_MtnCtrlType 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleModeReq_MtnCtrlType 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleModeReq_MtnCtrlType 7;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleModeReq_MtnCtrlType 10;
+BA_ "GenSigSendType" SG_ 137 VehicleLgtMotionReq_CRC 0;
+BA_ "GenSigCycleTime" SG_ 137 VehicleLgtMotionReq_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 137 VehicleLgtMotionReq_CRC 100;
+BA_ "GenSigStartValue" SG_ 137 VehicleLgtMotionReq_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 137 VehicleLgtMotionReq_CRC 10;
+BA_ "E2EDataId" SG_ 137 VehicleLgtMotionReq_CRC 244;
+BA_ "E2EDataLength" SG_ 137 VehicleLgtMotionReq_CRC 32;
+BA_ "E2EProfile" SG_ 137 VehicleLgtMotionReq_CRC "P01";
+BA_ "GenSigSendType" SG_ 136 VehicleLatMotionReq_RWhlAg 0;
+BA_ "GenSigCycleTime" SG_ 136 VehicleLatMotionReq_RWhlAg 100;
+BA_ "GenSigCycleTimeActive" SG_ 136 VehicleLatMotionReq_RWhlAg 100;
+BA_ "GenSigStartValue" SG_ 136 VehicleLatMotionReq_RWhlAg 65535;
+BA_ "GenSigMaxLatency" SG_ 136 VehicleLatMotionReq_RWhlAg 10;
+BA_ "GenSigSendType" SG_ 136 VehicleLatMotionReq_RWhlAgRate 0;
+BA_ "GenSigCycleTime" SG_ 136 VehicleLatMotionReq_RWhlAgRate 100;
+BA_ "GenSigCycleTimeActive" SG_ 136 VehicleLatMotionReq_RWhlAgRate 100;
+BA_ "GenSigStartValue" SG_ 136 VehicleLatMotionReq_RWhlAgRate 65535;
+BA_ "GenSigMaxLatency" SG_ 136 VehicleLatMotionReq_RWhlAgRate 10;
+BA_ "GenSigSendType" SG_ 136 VehicleLatMotionReq_CRC 0;
+BA_ "GenSigCycleTime" SG_ 136 VehicleLatMotionReq_CRC 100;
+BA_ "GenSigCycleTimeActive" SG_ 136 VehicleLatMotionReq_CRC 100;
+BA_ "GenSigStartValue" SG_ 136 VehicleLatMotionReq_CRC 255;
+BA_ "GenSigMaxLatency" SG_ 136 VehicleLatMotionReq_CRC 10;
+BA_ "E2EDataId" SG_ 136 VehicleLatMotionReq_CRC 245;
+BA_ "E2EDataLength" SG_ 136 VehicleLatMotionReq_CRC 48;
+BA_ "E2EProfile" SG_ 136 VehicleLatMotionReq_CRC "P01";
+BA_ "GenSigSendType" SG_ 136 VehicleLatMotionReq_SqC 0;
+BA_ "GenSigCycleTime" SG_ 136 VehicleLatMotionReq_SqC 100;
+BA_ "GenSigCycleTimeActive" SG_ 136 VehicleLatMotionReq_SqC 100;
+BA_ "GenSigStartValue" SG_ 136 VehicleLatMotionReq_SqC 14;
+BA_ "GenSigMaxLatency" SG_ 136 VehicleLatMotionReq_SqC 10;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 149 Sts1Axle6_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 148 Sts1Axle5_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 147 Sts1Axle4_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 146 Sts1Axle3_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 145 Sts1Axle2_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotAgCntrRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotAgCntrRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotSpdLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotSpdLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotQltyRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotQltyRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotQltyLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotQltyLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotSpdRi 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotSpdRi 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotAgCntrLe 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 144 Sts1Axle1_WhlRotAgCntrLe 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 663 VehCombRetardtnSts_EnergyCap 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 663 VehCombRetardtnSts_EnergyCap 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 663 VehCombRetardtnSts_ThreshldPwr 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 663 VehCombRetardtnSts_ThreshldPwr 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 663 DriverSeatBeltSwitch 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 663 DriverSeatBeltSwitch 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 663 DirectionIndicatorLightsStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 663 DirectionIndicatorLightsStatus 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_DrvgDir 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_DrvgDir 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_VelFwdMax 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1305 VehicleLgtMotionCpby_VelFwdMin 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 AntiLockBrakingActive 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 AntiLockBrakingActive 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleMotionChInCmdSts 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleMotionChInCmdSts 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 TransmissionDrivelineEngaged 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 TransmissionDrivelineEngaged 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 TractionFunctionSelected 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 TractionFunctionSelected 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 AcceleratorPedalPosition1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 AcceleratorPedalPosition1 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_Velocity 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_Velocity 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 ESCState 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 ESCState 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_DrvgDir 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 VehicleLgtMotionSts2_DrvgDir 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 140 BrakePedalPosition 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 140 BrakePedalPosition 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_Estimate 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_Estimate 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnSteerWhl 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_ReasonForDisengmt 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_ReasonForDisengmt 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Automation 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Automation 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnBrkPedal 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 ADSModeReq_OperatorEngmt 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 ADSModeReq_OperatorEngmt 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Operator 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Operator 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnAccPedal 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 SteeringWheelTorque_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Motion 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 VehModeSts_Motion 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 142 IntvBySftyDrvrDetd_OnParkBrake 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 IfcUpstreamVersion_Major 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 IfcUpstreamVersion_Major 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 IfcUpstreamVersion_Minor 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 IfcUpstreamVersion_Minor 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VehicleStructureSts_Mass 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VehicleStructureSts_Mass 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Major 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Major 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Patch 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Patch 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Minor 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1301 VCMSwNumber_Minor 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 1392 VIN_stat 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 1392 VIN_stat 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatterySOH 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatterySOH 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatterySOCnom 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatterySOCnom 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryCurrent 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryCurrent 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryVoltageDisplayValue 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryVoltageDisplayValue 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryTemp 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 656 BatteryTemp 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 RoadInclination 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 RoadInclination 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 VehicleMode 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 VehicleMode 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmissionSelectedGear 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmissionSelectedGear 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmEstimatedTimeToShift 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmEstimatedTimeToShift 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 EngineSpeed 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 EngineSpeed 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmissionCurrentGear 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 TransmissionCurrentGear 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 218 KeyPosition 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 218 KeyPosition 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_AccelTarget 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_AccelTarget 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_AccelExtCmp 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_Accel 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 138 VehicleLgtMotionSts1_Accel 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_MinCap 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_MinCap 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_RateCap 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_RateCap 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 VehicleModeCpby_Automation 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 VehicleModeCpby_Automation 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_Status 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_Status 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 VehicleModeCpby_Motion 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 VehicleModeCpby_Motion 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_MaxCap 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ ADS SG_ 135 RoadWheelAngleResp_MaxCap 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Minor 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Minor 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Patch 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Patch 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1290 IfcDwnstreamVersion_Major 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1290 IfcDwnstreamVersion_Major 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1290 IfcDwnstreamVersion_Minor 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1290 IfcDwnstreamVersion_Minor 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Major 24000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1290 ADMSwNumber_Major 6000;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 666 DirectionIndicatorLightsExtReq 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 666 DirectionIndicatorLightsExtReq 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 215 RoadInclinationAngleDriverSts 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 215 RoadInclinationAngleDriverSts 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_Automation 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_Automation 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_DrvgDir 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_DrvgDir 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_Acceleration 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_Acceleration 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_SqC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_Motion 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_Motion 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_MtnCtrlType 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleModeReq_MtnCtrlType 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 137 VehicleLgtMotionReq_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_RWhlAg 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_RWhlAg 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_RWhlAgRate 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_RWhlAgRate 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_CRC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_CRC 100;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_SqC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 136 VehicleLatMotionReq_SqC 100;
+VAL_ 149 Sts1Axle6_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 149 Sts1Axle6_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 148 Sts1Axle5_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 148 Sts1Axle5_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 147 Sts1Axle4_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 147 Sts1Axle4_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 146 Sts1Axle3_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 146 Sts1Axle3_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 145 Sts1Axle2_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 145 Sts1Axle2_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 144 Sts1Axle1_WhlRotQltyRi 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 144 Sts1Axle1_WhlRotQltyLe 3 "OperationalDegraded_NotAvailable" 2 "OperationalDegraded_Error" 1 "OperationalDegraded_Degraded" 0 "OperationalDegraded_Operational" ;
+VAL_ 663 DriverSeatBeltSwitch 3 "DriverSeatBeltSwitch_NotAvailable" 2 "DriverSeatBeltSwitch_Error" 1 "DriverSeatBeltSwitch_SeatBeltBuckledFastened" 0 "DriverSeatBeltSwitch_SeatBeltUnbuckledUnfastened" ;
+VAL_ 663 DirectionIndicatorLightsStatus 15 "DirectionIndicatorLightsStatus_NotAvailable" 14 "DirectionIndicatorLightsStatus_Error" 13 "DirectionIndicatorLightsStatus_Spare7" 12 "DirectionIndicatorLightsStatus_Spare6" 11 "DirectionIndicatorLightsStatus_Spare5" 10 "DirectionIndicatorLightsStatus_Spare4" 9 "DirectionIndicatorLightsStatus_Spare3" 8 "DirectionIndicatorLightsStatus_Spare2" 7 "DirectionIndicatorLightsStatus_Spare1" 6 "DirectionIndicatorLightsStatus_ActiveOtherIndication" 5 "DirectionIndicatorLightsStatus_ActiveHazard" 4 "DirectionIndicatorLightsStatus_ActiveRightAndHazard" 3 "DirectionIndicatorLightsStatus_ActiveLeftAndHazard" 2 "DirectionIndicatorLightsStatus_ActiveRight" 1 "DirectionIndicatorLightsStatus_ActiveLeft" 0 "DirectionIndicatorLightsStatus_NotActive" ;
+VAL_ 1305 VehicleLgtMotionCpby_DrvgDir 7 "DrivingDir_NotAvailable" 6 "DrivingDir_Error" 5 "DrivingDir_BackwardStandstill" 4 "DrivingDir_ForwardStandstill" 3 "DrivingDir_ForwardStandstillBackward" 2 "DrivingDir_Backward" 1 "DrivingDir_Forward" 0 "DrivingDir_Standstill" ;
+VAL_ 140 AntiLockBrakingActive 3 "AntiLockBrakingActive_NotAvailable" 2 "AntiLockBrakingActive_Reserved" 1 "AntiLockBrakingActive_ABSActive" 0 "AntiLockBrakingActive_ABSPassiveButInstalled" ;
+VAL_ 140 VehicleMotionChInCmdSts 3 "RedundantChannel_NotAvailable" 2 "RedundantChannel_Error" 1 "RedundantChannel_SecondaryChannel" 0 "RedundantChannel_PrimaryChannel" ;
+VAL_ 140 TransmissionDrivelineEngaged 3 "DisengageEngage_NotAvailable" 2 "DisengageEngage_Error" 1 "DisengageEngage_Engage" 0 "DisengageEngage_Disengage" ;
+VAL_ 140 TractionFunctionSelected 7 "TractionFunctionSelected_NotAvailable" 6 "TractionFunctionSelected_Error" 5 "TractionFunctionSelected_Spare_02" 4 "TractionFunctionSelected_Spare_01" 3 "TractionFunctionSelected_Spare" 2 "TractionFunctionSelected_TractionOFFROAD" 1 "TractionFunctionSelected_TractionOFF" 0 "TractionFunctionSelected_TractionON" ;
+VAL_ 140 ESCState 7 "ESCState_NotAvailable" 6 "ESCState_Error" 5 "ESCState_Spare03" 4 "ESCState_Spare02" 3 "ESCState_Spare01" 2 "ESCState_Reduced" 1 "ESCState_On" 0 "ESCState_Off" ;
+VAL_ 140 VehicleLgtMotionSts2_DrvgDir 7 "DrivingDir_NotAvailable" 6 "DrivingDir_Error" 5 "DrivingDir_BackwardStandstill" 4 "DrivingDir_ForwardStandstill" 3 "DrivingDir_ForwardStandstillBackward" 2 "DrivingDir_Backward" 1 "DrivingDir_Forward" 0 "DrivingDir_Standstill" ;
+VAL_ 142 IntvBySftyDrvrDetd_OnSteerWhl 3 "OnSteerWhl_NotAvailable" 2 "OnSteerWhl_Error" 1 "OnSteerWhl_InterventionOnSteeringWheel" 0 "OnSteerWhl_NoIntervention" ;
+VAL_ 142 VehModeSts_ReasonForDisengmt 7 "ReasonForDisengmt_NotAvailable" 6 "ReasonForDisengmt_Error" 5 "ReasonForDisengmt_ExternalInterupt" 4 "ReasonForDisengmt_AdsRequestNotValid" 3 "ReasonForDisengmt_VehicleDiagnosticInterupt" 2 "ReasonForDisengmt_SafetyDriverIntervention" 1 "ReasonForDisengmt_AdsRequest" 0 "ReasonForDisengmt_NoTransitionOccured" ;
+VAL_ 142 VehModeSts_Automation 3 "AutomationStatus_NotAvailable" 2 "AutomationStatus_Error" 1 "AutomationStatus_AutonomousControl" 0 "AutomationStatus_ManualControl" ;
+VAL_ 142 IntvBySftyDrvrDetd_OnBrkPedal 3 "OnBrkPedal_NotAvailable" 2 "OnBrkPedal_Error" 1 "OnBrkPedal_InterventionOnBrakePedal" 0 "OnBrkPedal_NoIntervention" ;
+VAL_ 142 ADSModeReq_OperatorEngmt 3 "NoRequestRequest_NotAvailable" 2 "NoRequestRequest_Error" 1 "NoRequestRequest_Request" 0 "NoRequestRequest_NoRequest" ;
+VAL_ 142 VehModeSts_Operator 7 "VehicleOperator_NotAvailable" 6 "VehicleOperator_Error" 5 "VehicleOperator_Spare3" 4 "VehicleOperator_Spare2" 3 "VehicleOperator_Spare1" 2 "VehicleOperator_NotPresent" 1 "VehicleOperator_Present" 0 "VehicleOperator_Undetermined" ;
+VAL_ 142 IntvBySftyDrvrDetd_OnAccPedal 3 "OnAccPedal_NotAvailable" 2 "OnAccPedal_Error" 1 "OnAccPedal_InterventionOnAcceleratorPedal" 0 "OnAccPedal_NoIntervention" ;
+VAL_ 142 IntvBySftyDrvrDetd_DrvrPresUkwn 3 "DrvrPresUkwn_NotAvailable" 2 "DrvrPresUkwn_Error" 1 "DrvrPresUkwn_DriverPresenceNotClear" 0 "DrvrPresUkwn_DriverDetected" ;
+VAL_ 142 VehModeSts_Motion 15 "MotionMode4bit_NotAvailable" 14 "MotionMode4bit_Error" 13 "MotionMode4bit_Spare6" 12 "MotionMode4bit_Spare5" 11 "MotionMode4bit_Spare4" 10 "MotionMode4bit_Spare3" 9 "MotionMode4bit_Spare2" 8 "MotionMode4bit_Spare1" 7 "MotionMode4bit_VehiclePlatformExecutingStop" 6 "MotionMode4bit_MotionControlImmediateStopRequired" 5 "MotionMode4bit_MotionControlUrgentBackup" 4 "MotionMode4bit_MotionControlBackup" 3 "MotionMode4bit_MotionControlMaintenanceRequired" 2 "MotionMode4bit_MotionControlFullyOperational" 1 "MotionMode4bit_SecurelyParkedPrepMotionControl" 0 "MotionMode4bit_SecurelyParked" ;
+VAL_ 142 IntvBySftyDrvrDetd_OnParkBrake 3 "OnParkBrake_NotAvailable" 2 "OnParkBrake_Error" 1 "OnParkBrake_InterventionOnParkBrake" 0 "OnParkBrake_NoIntervention" ;
+VAL_ 218 VehicleMode 15 "VehicleMode_NotAvailable" 14 "VehicleMode_Error" 13 "VehicleMode_Spare_7" 12 "VehicleMode_Spare_6" 11 "VehicleMode_Spare_5" 10 "VehicleMode_Spare_4" 9 "VehicleMode_Spare_3" 8 "VehicleMode_Spare_2" 7 "VehicleMode_Spare_1" 6 "VehicleMode_Running" 5 "VehicleMode_Cranking" 4 "VehicleMode_PreRunning" 3 "VehicleMode_Accessory" 2 "VehicleMode_Living" 1 "VehicleMode_Parked" 0 "VehicleMode_Hibernate" ;
+VAL_ 218 KeyPosition 7 "KeyPosition_NotAvailable" 6 "KeyPosition_ErrorIndicator" 5 "KeyPosition_IgnitionKeyInCrankPosition" 4 "KeyPosition_IgnitionKeyInPreheatPosition" 3 "KeyPosition_IgnitionKeyIn15PositionNormalDrivingPosition" 2 "KeyPosition_IgnitionKeyInAccessoryPosition" 1 "KeyPosition_IgnitionKeyInOffPosition" 0 "KeyPosition_KeyOut" ;
+VAL_ 135 VehicleModeCpby_Automation 7 "SteeringCtrlModeCap_NotAvailable" 6 "SteeringCtrlModeCap_Error" 5 "SteeringCtrlModeCap_Spare3" 4 "SteeringCtrlModeCap_Spare2" 3 "SteeringCtrlModeCap_Spare1" 2 "SteeringCtrlModeCap_AutonomousAndManual" 1 "SteeringCtrlModeCap_Autonomous" 0 "SteeringCtrlModeCap_Manual" ;
+VAL_ 135 VehicleModeCpby_Motion 7 "MotionMode3bit_NotAvailable" 6 "MotionMode3bit_Error" 5 "MotionMode3bit_Spare5" 4 "MotionMode3bit_Spare2" 3 "MotionMode3bit_Spare1" 2 "MotionMode3bit_MotionControlAndSecurelyParked" 1 "MotionMode3bit_MotionControl" 0 "MotionMode3bit_SecurelyParked" ;
+VAL_ 666 DirectionIndicatorLightsExtReq 7 "DirectionIndicatorLights_rqst_NotAvailable" 6 "DirectionIndicatorLights_rqst_Error" 5 "DirectionIndicatorLights_rqst_SpareValue_02" 4 "DirectionIndicatorLights_rqst_SpareValue_01" 3 "DirectionIndicatorLights_rqst_SpareValue" 2 "DirectionIndicatorLights_rqst_RightDirectionIndicatorActive" 1 "DirectionIndicatorLights_rqst_LeftDirectionIndicatorActive" 0 "DirectionIndicatorLights_rqst_NotActive" ;
+VAL_ 137 VehicleModeReq_Automation 7 "SteeringCtrlModeCap_NotAvailable" 6 "SteeringCtrlModeCap_Error" 5 "SteeringCtrlModeCap_Spare3" 4 "SteeringCtrlModeCap_Spare2" 3 "SteeringCtrlModeCap_Spare1" 2 "SteeringCtrlModeCap_AutonomousAndManual" 1 "SteeringCtrlModeCap_Autonomous" 0 "SteeringCtrlModeCap_Manual" ;
+VAL_ 137 VehicleLgtMotionReq_DrvgDir 7 "DrivingDir_NotAvailable" 6 "DrivingDir_Error" 5 "DrivingDir_BackwardStandstill" 4 "DrivingDir_ForwardStandstill" 3 "DrivingDir_ForwardStandstillBackward" 2 "DrivingDir_Backward" 1 "DrivingDir_Forward" 0 "DrivingDir_Standstill" ;
+VAL_ 137 VehicleModeReq_Motion 3 "MotionMode_NotAvailable" 2 "MotionMode_Error" 1 "MotionMode_MotionControl" 0 "MotionMode_SecurelyParked" ;
+VAL_ 137 VehicleModeReq_MtnCtrlType 7 "MtnCtrlType_NotAvailable" 6 "MtnCtrlType_Error" 5 "MtnCtrlType_Spare3" 4 "MtnCtrlType_Spare2" 3 "MtnCtrlType_Spare1" 2 "MtnCtrlType_OnlyLongitudinalControl" 1 "MtnCtrlType_OnlyLateralControl" 0 "MtnCtrlType_BothLatAndLongControl" ;
+SIG_GROUP_ 149 Sts1Axle6_sg 1 : Sts1Axle6_WhlRotQltyLe Sts1Axle6_WhlRotAgCntrRi Sts1Axle6_SqC Sts1Axle6_WhlRotSpdRi Sts1Axle6_CRC Sts1Axle6_WhlRotQltyRi Sts1Axle6_WhlRotAgCntrLe Sts1Axle6_WhlRotSpdLe;
+SIG_GROUP_ 148 Sts1Axle5_sg 1 : Sts1Axle5_WhlRotSpdLe Sts1Axle5_WhlRotQltyRi Sts1Axle5_SqC Sts1Axle5_WhlRotAgCntrLe Sts1Axle5_CRC Sts1Axle5_WhlRotQltyLe Sts1Axle5_WhlRotAgCntrRi Sts1Axle5_WhlRotSpdRi;
+SIG_GROUP_ 147 Sts1Axle4_sg 1 : Sts1Axle4_SqC Sts1Axle4_WhlRotQltyRi Sts1Axle4_WhlRotQltyLe Sts1Axle4_WhlRotSpdLe Sts1Axle4_WhlRotSpdRi Sts1Axle4_CRC Sts1Axle4_WhlRotAgCntrLe Sts1Axle4_WhlRotAgCntrRi;
+SIG_GROUP_ 146 Sts1Axle3_sg 1 : Sts1Axle3_WhlRotQltyLe Sts1Axle3_WhlRotAgCntrLe Sts1Axle3_WhlRotAgCntrRi Sts1Axle3_WhlRotQltyRi Sts1Axle3_WhlRotSpdLe Sts1Axle3_CRC Sts1Axle3_WhlRotSpdRi Sts1Axle3_SqC;
+SIG_GROUP_ 145 Sts1Axle2_sg 1 : Sts1Axle2_WhlRotQltyRi Sts1Axle2_WhlRotSpdLe Sts1Axle2_WhlRotQltyLe Sts1Axle2_WhlRotAgCntrRi Sts1Axle2_WhlRotAgCntrLe Sts1Axle2_CRC Sts1Axle2_WhlRotSpdRi Sts1Axle2_SqC;
+SIG_GROUP_ 144 Sts1Axle1_sg 1 : Sts1Axle1_SqC Sts1Axle1_WhlRotAgCntrRi Sts1Axle1_WhlRotSpdLe Sts1Axle1_WhlRotQltyRi Sts1Axle1_WhlRotQltyLe Sts1Axle1_CRC Sts1Axle1_WhlRotSpdRi Sts1Axle1_WhlRotAgCntrLe;
+SIG_GROUP_ 663 VehCombRetardtnSts_sg 1 : VehCombRetardtnSts_EnergyCap VehCombRetardtnSts_ThreshldPwr;
+SIG_GROUP_ 1305 VehicleLgtMotionCpby_sg 1 : VehicleLgtMotionCpby_DrvgDir VehicleLgtMotionCpby_VelFwdMax VehicleLgtMotionCpby_VelFwdMin;
+SIG_GROUP_ 140 VehicleLgtMotionSts2_sg 1 : VehicleLgtMotionSts2_CRC VehicleLgtMotionSts2_SqC VehicleLgtMotionSts2_Velocity VehicleLgtMotionSts2_DrvgDir;
+SIG_GROUP_ 142 VehModeSts_sg 1 : VehModeSts_SqC VehModeSts_ReasonForDisengmt VehModeSts_Automation VehModeSts_Operator VehModeSts_CRC VehModeSts_Motion;
+SIG_GROUP_ 142 ADSModeReq_sg 1 : ADSModeReq_OperatorEngmt;
+SIG_GROUP_ 142 IntvBySftyDrvrDetd_sg 1 : IntvBySftyDrvrDetd_OnSteerWhl IntvBySftyDrvrDetd_OnBrkPedal IntvBySftyDrvrDetd_OnAccPedal IntvBySftyDrvrDetd_DrvrPresUkwn IntvBySftyDrvrDetd_OnParkBrake;
+SIG_GROUP_ 142 SteeringWheelTorque_sg 1 : SteeringWheelTorque_Estimate SteeringWheelTorque_CRC SteeringWheelTorque_SqC;
+SIG_GROUP_ 1301 IfcUpstreamVersion_sg 1 : IfcUpstreamVersion_Major IfcUpstreamVersion_Minor;
+SIG_GROUP_ 1301 VehicleStructureSts_sg 1 : VehicleStructureSts_Mass;
+SIG_GROUP_ 1301 VCMSwNumber_sg 1 : VCMSwNumber_Major VCMSwNumber_Patch VCMSwNumber_Minor;
+SIG_GROUP_ 138 VehicleLgtMotionSts1_sg 1 : VehicleLgtMotionSts1_AccelTarget VehicleLgtMotionSts1_CRC VehicleLgtMotionSts1_SqC VehicleLgtMotionSts1_AccelExtCmp VehicleLgtMotionSts1_Accel;
+SIG_GROUP_ 135 RoadWheelAngleResp_sg 1 : RoadWheelAngleResp_CRC RoadWheelAngleResp_MinCap RoadWheelAngleResp_RateCap RoadWheelAngleResp_SqC RoadWheelAngleResp_Status RoadWheelAngleResp_MaxCap;
+SIG_GROUP_ 135 VehicleModeCpby_sg 1 : VehicleModeCpby_Automation VehicleModeCpby_Motion;
+SIG_GROUP_ 1290 ADMSwNumber_sg 1 : ADMSwNumber_Minor ADMSwNumber_Patch ADMSwNumber_Major;
+SIG_GROUP_ 1290 IfcDwnstreamVersion_sg 1 : IfcDwnstreamVersion_Major IfcDwnstreamVersion_Minor;
+SIG_GROUP_ 137 VehicleModeReq_sg 1 : VehicleModeReq_Automation VehicleModeReq_CRC VehicleModeReq_SqC VehicleModeReq_Motion VehicleModeReq_MtnCtrlType;
+SIG_GROUP_ 137 VehicleLgtMotionReq_sg 1 : VehicleLgtMotionReq_DrvgDir VehicleLgtMotionReq_Acceleration VehicleLgtMotionReq_SqC VehicleLgtMotionReq_CRC;
+SIG_GROUP_ 136 VehicleLatMotionReq_sg 1 : VehicleLatMotionReq_RWhlAg VehicleLatMotionReq_RWhlAgRate VehicleLatMotionReq_CRC VehicleLatMotionReq_SqC;
+
