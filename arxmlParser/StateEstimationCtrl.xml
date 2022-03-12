@@ -1,0 +1,159 @@
+<Component Name="StateEstimationCtrl">
+	<SenderReceiverPorts>
+		<Port Name="ASREngineControlActive" Direction="Receive" Signal="ASREngineControlActive" Stub="true" />
+		<Port Name="EngineSpeed" Direction="Receive" Signal="EngineSpeed" Stub="true" />
+		<Port Name="ActualEnginePercentTorque" Direction="Receive" Signal="ActualEnginePercentTorque" Stub="true" />
+		<Port Name="ActualDrvlnRetdrPercentTorque" Direction="Receive" Signal="ActualDrvlnRetdrPercentTorque" Stub="true" />
+		<Port Name="EngineReferenceTorque" Direction="Receive" Signal="EngineReferenceTorque" Stub="true" />
+		<Port Name="TransmissionActualGearRatio" Direction="Receive" Signal="TransmissionActualGearRatio" Stub="true" />
+		<Port Name="TransmissionShiftInProcess" Direction="Receive" Signal="TransmissionShiftInProcess" Stub="true" />
+		<Port Name="TransmissionDrivelineEngaged" Direction="Receive" Signal="TransmissionDrivelineEngaged" Stub="true" />
+		<Port Name="TransmissionCurrentGear" Direction="Receive" Signal="TransmissionCurrentGear" Stub="true" />
+		<Port Name="ACC_SGO_Status" Direction="Receive" Signal="ACC_SGO_Status" Stub="true" />
+		<Port Name="RoadInclinationPerc" Direction="Receive" Signal="RoadInclinationPerc" Stub="true" />
+		<Port Name="ABSAxle1Active" Direction="Receive" Signal="ABSAxle1Active" Stub="true" />
+		<Port Name="ABSAxle2Active" Direction="Receive" Signal="ABSAxle2Active" Stub="true" />
+		<Port Name="ABSAxle3Active" Direction="Receive" Signal="ABSAxle3Active" Stub="true" />
+		<Port Name="ABSAxle4Active" Direction="Receive" Signal="ABSAxle4Active" Stub="true" />
+		<Port Name="ABSAxle5Active" Direction="Receive" Signal="ABSAxle5Active" Stub="true" />
+		<Port Name="ASRBrakeControlActive" Direction="Receive" Signal="ASRBrakeControlActive" Stub="true" />
+		<Port Name="ActualEHPusherWheelAngle" Direction="Receive" Signal="ActuaEHPusherWheelAngle" Stub="true" />
+		<Port Name="ActualEHTagWheelAngle" Direction="Receive" Signal="ActualEHTagWheelAngle" Stub="true" />
+		<Port Name="ActualTagWheelAngle" Direction="Receive" Signal="ActualTagWheelAngle" Stub="true" />
+		<Port Name="DriveAxleLoad" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="FASFullyOperational" Direction="Receive" Signal="FASFullyOperational" Stub="true" />
+		<Port Name="FrAxleLtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleLtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="FrAxleRtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleRtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="FrontAxle1Load" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="FrontAxle2Load" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="FrontAxleLeftWheelSpeed" Direction="Receive" Signal="FrontAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="FrontAxleRightWheelSpeed" Direction="Receive" Signal="FrontAxleRightWheelSpeed" Stub="true" />
+		<Port Name="FrontRoadWheelAngleEstimate" Direction="Receive" Signal="FrontRoadWheelAngleEstimate" Stub="true" />
+		<Port Name="KFactor" Direction="Receive" Signal="KFactor" Stub="true" />
+		<Port Name="LiftAxle1PositionStatus" Direction="Receive" Signal="LiftAxle1PositionStatus" Stub="true" />
+		<Port Name="LiftAxle2PositionStatus" Direction="Receive" Signal="LiftAxle2PositionStatus" Stub="true" />
+		<Port Name="LongitudinalAcceleration" Direction="Receive" Signal="LongitudinalAcceleration" Stub="true" />
+		<Port Name="PusherAxleLeftWheelSpeed" Direction="Receive" Signal="PusherAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="PusherAxleLoad" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="PusherAxleRightWheelSpeed" Direction="Receive" Signal="PusherAxleRightWheelSpeed" Stub="true" />
+		<Port Name="RearAxleLeftWheelSpeed" Direction="Receive" Signal="RearAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="RearAxleRightWheelSpeed" Direction="Receive" Signal="RearAxleRightWheelSpeed" Stub="true" />
+		<Port Name="RearAxleSteeringFunctionStatus" Direction="Receive" Signal="RearAxleSteeringFunctionStatus" Stub="true" />
+		<Port Name="RrAxle1LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle1LtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="RrAxle1RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle1RtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="RrAxle2LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle2LtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="RrAxle2RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle2RtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="RrAxle3LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3LtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="RrAxle3RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3RtWhlBrakeApplPrsHiRng" Stub="true" />
+		<Port Name="ScndFrAxleLeftWheelSpeed" Direction="Receive" Signal="ScndFrAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="ScndFrAxleRightWheelSpeed" Direction="Receive" Signal="ScndFrAxleRightWheelSpeed" Stub="true" />
+		<Port Name="SecondaryDriveAxleLoad" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="SteeringWheelAngle" Direction="Receive" Signal="SteeringWheelAngle" Stub="true" />
+		<Port Name="TagAxleLeftWheelSpeed" Direction="Receive" Signal="TagAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="TagAxleLoad" Direction="Receive" Signal="AxleLoad" Stub="true" />
+		<Port Name="TagAxleRightWheelSpeed" Direction="Receive" Signal="TagAxleRightWheelSpeed" Stub="true" />
+		<Port Name="TransmOutputShaftSpeedSigned" Direction="Receive" Signal="TransmOutputShaftSpeedSigned" Stub="true" />
+		<Port Name="XPRsystemstate" Direction="Receive" Signal="XPRsystemstate" Stub="true" />
+		<Port Name="YawRate" Direction="Receive" Signal="YawRate" Stub="true" />
+		<Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode" Stub="true" />
+		<Port Name="ScndRrDriveAxleLeftWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleLeftWheelSpeed" Stub="true" />
+		<Port Name="ScndRrDriveAxleRightWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleRightWheelSpeed" Stub="true" />
+		<Port Name="FrontAxleSpeed" Direction="Receive" Signal="FrontAxleSpeed" Stub="true" />
+		<Port Name="ABSFullyOperational" Direction="Receive" Signal="ABSFullyOperational" Stub="true" />
+		<Port Name="VehicleYawInertia" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="VehicleYawInertia_Inertia" Element="Inertia" />
+				<Signal Name="VehicleYawInertia_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="VehicleRollInertia" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="VehicleRollInertia_Inertia" Element="Inertia" />
+				<Signal Name="VehicleRollInertia_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="VehiclePitchInertia" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="VehiclePitchInertia_Inertia" Element="Inertia" />
+				<Signal Name="VehiclePitchInertia_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="RearAxleCurvature" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="RearAxleCurvature_Curvature" Element="Curvature" />
+				<Signal Name="RearAxleCurvature_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="SpeedOverGround" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="SpeedOverGround_Speed" Element="Speed" />
+				<Signal Name="SpeedOverGround_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="LongitudinalAccelerationQ" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="LongitudinalAccelerationQ_Acceleration" Element="Acceleration" />
+				<Signal Name="LongitudinalAccelerationQ_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="ArticulationAngle" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="ArticulationAngle_Angle" Element="Angle" />
+				<Signal Name="ArticulationAngle_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="FrontAxleLoadQ" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="FrontAxleLoadQ_Load" Element="Load" />
+				<Signal Name="FrontAxleLoadQ_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="PusherAxleLoadQ" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="PusherAxleLoadQ_Load" Element="Load" />
+				<Signal Name="PusherAxleLoadQ_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="DriveAxleLoadQ" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="DriveAxleLoadQ_Load" Element="Load" />
+				<Signal Name="DriveAxleLoadQ_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="TrailerAxleLoadQ" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="TrailerAxleLoadQ_Load" Element="Load" />
+				<Signal Name="TrailerAxleLoadQ_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="RearAxleLifted" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="RearAxleLifted_Lifted" Element="Lifted" />
+				<Signal Name="RearAxleLifted_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="MotionState" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="MotionState_State" Element="State" />
+				<Signal Name="MotionState_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="TrailerConnected" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="TrailerConnected_Connected" Element="Connected" />
+				<Signal Name="TrailerConnected_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="VehicleStandstill" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="VehicleStandstill_StandStill" Element="StandStill" />
+				<Signal Name="VehicleStandstill_QualityFlag" Element="QualityFlag" />
+			</Signals>
+		</Port>
+		<Port Name="VehicleStructureSts" Direction="Send" Stub="true" >
+			<Signals>
+				<Signal Name="VehicleStructureSts_Mass_RE" Element="Mass_RE" />
+			</Signals>
+		</Port>
+	</SenderReceiverPorts>
+</Component>
