@@ -60,8 +60,9 @@ TEST(ControllerTestGroup, outputWhenDisabled)
                    1);// beta
 
    PIDController tempCtrl(1000, p, 0, 5);
-   
-   ASSERT_TRUE(tempCtrl.Step(0, 1) == 0);
+   tempCtrl.SetRef(1);
+   tempCtrl.Step(0);
+   ASSERT_TRUE(tempCtrl.GetOut() == 0);
 }
 
 TEST(ControllerTestGroup, CalcOutput)
@@ -75,8 +76,14 @@ TEST(ControllerTestGroup, CalcOutput)
 
    PIDController tempCtrl(1000, p, 0, 5);
    tempCtrl.SetEnable(true);
-   ASSERT_TRUE(tempCtrl.Step(0, 1) == 1);
-   ASSERT_TRUE(tempCtrl.Step(0, 1) == 5); // check saturated
+
+   tempCtrl.SetRef(1);
+   tempCtrl.Step(0);
+   ASSERT_TRUE(tempCtrl.GetOut() == 1);
+
+   tempCtrl.SetRef(1);
+   tempCtrl.Step(0);
+   ASSERT_TRUE(tempCtrl.GetOut() == 5); // check saturated
 }
 
 TEST(ControllerTestGroup, setDebug)

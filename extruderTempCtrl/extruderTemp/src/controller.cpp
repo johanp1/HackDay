@@ -15,6 +15,8 @@ PIDController::PIDController(int period)
    max = 2000;
    D = 0;
    I = 0;
+   v = 0;
+   yRef = 0;
    yPrev = 0;
    enabled = false;
    debug = 0;
@@ -29,6 +31,8 @@ PIDController::PIDController(int period, PIDParameters const& p, int _min, int _
    max = _max;
    D = 0;
    I = 0;
+   v = 0;
+   yRef = 0;
    yPrev = 0;
    enabled = false;
    debug = 0;
@@ -37,6 +41,11 @@ PIDController::PIDController(int period, PIDParameters const& p, int _min, int _
 void PIDController::SetPar(PIDParameters const& p)
 {
    par.Set(p);
+}  
+
+void PIDController::SetRef(int yRef_)
+{
+   yRef = yRef_;
 }  
 
 PIDParameters const& PIDController::GetPar() const
@@ -49,16 +58,18 @@ void PIDController::SetEnable(bool e)
    enabled = e;
 }
 
-int PIDController::Step(int y, int yRef)
+void PIDController::Step(int y)
 {
-   int retVal = 0;
    if (enabled == true)
    {
-      retVal = CalcOutput(y, yRef);
+      v = CalcOutput(y, yRef);
    } 
-
-   return retVal;
 }   
+
+int PIDController::GetOut(void)
+{
+   return v;
+}
 
 void PIDController::SetDebug(bool d)
 {
@@ -87,7 +98,6 @@ int PIDController::CalcOutput(int y, int yRef)
   //cout << "\ncalculate output:\n";
   int I_term1;
   int I_term2;
-  int v; //output from controller
   int u; //output from actuator (saturated v)
   int e = yRef - y;
   debug_print(y);

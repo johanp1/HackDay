@@ -26,8 +26,11 @@ class PIDController
    public:
    PIDController(int period); // [ms]
    PIDController(int period, PIDParameters const& p, int _min, int _max);
+
    void SetPar(PIDParameters const& p);
-   int Step(int y, int yRef);
+   void SetRef(int yRef_);
+   void Step(int y);
+   int GetOut(void);
    PIDParameters const& GetPar() const;
    void SetEnable(bool e);
    void SetDebug(bool d);
@@ -44,6 +47,8 @@ class PIDController
    int D;
    int I;
    int yPrev;
+   int yRef;
+   int v; //output from controller
    bool enabled;
    bool debug;
 };

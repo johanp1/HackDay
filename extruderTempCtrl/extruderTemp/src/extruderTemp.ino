@@ -8,10 +8,13 @@ void setRefTemp(int newRef);
 class SetTempFunctionoid : public ParserFunctionoid
 {
   public:
-    SetTempFunctionoid() : ParserFunctionoid{String("sp")} {};
+    SetTempFunctionoid(PIDController& ctrl) : ParserFunctionoid{String("sp")}, controller(ctrl) {};
     void execute(String& _parsedData) {
-      setRefTemp(_parsedData.toInt());
+      controller.SetRef((_parsedData.toInt()) * 10); // convert to 0.1 degrees unit
     };
+
+  private:
+    PIDController& controller;
 };
 
 class SetEnableFunctionoid : public ParserFunctionoid
@@ -43,7 +46,6 @@ class SetDebugFunctionoid : public ParserFunctionoid
 // defines pins numbers
 const int pwmPin = 5;
 const int tempPin = A4;
-int refTemp = 1000; // reference temperature in [0.1 degrees], i.e 250 = 25 degrees
 
 PIDParameters p(2,    // K,
                 12000, // Ti, rule of thumb h/Ti = 0.1-0.3 (h=period)
@@ -75,6 +77,8 @@ void setup() {
   ep.AddAcceptedCmd(setEnableFunct);
   ep.AddAcceptedCmd(setDebugFunct);
 
+  tempCtrl.SetRef(1000); // reference temperature in [0.1 degrees], i.e 250 = 25 degrees
+
   Serial.println("setup done"); // tell server setup is done
 }
 
@@ -84,9 +88,9 @@ void loop()
   int currTemp;
 
   currTemp = extruder.ReadTemp();
-  currTemp = (int)(currTemp); // convert from 0.1 degrees unit
 
-  duty = tempCtrl.Step(currTemp, refTemp);  // temp in [0.1 degrees]
+  tempCtrl.Step(currTemp);  // temp in [0.1 degrees]
+  duty = tempCtrl.GetOut();
 
   Serial.print("mv_");
   Serial.println((int)(currTemp) / 10);
@@ -94,11 +98,6 @@ void loop()
   extruder.SetTempPwmDuty(duty);
 
   delay(1000); // One second delay
-}
-
-void setRefTemp(int newRef)
-{
-  refTemp = newRef * 10; // convert to 0.1 degrees unit
 }
 
 void serialEvent()
