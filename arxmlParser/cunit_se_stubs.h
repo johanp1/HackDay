@@ -486,12 +486,6 @@ typedef struct
 		Std_ReturnType ret;
 	} Rte_VehicleStructureSts_VehicleStructureSts;
 
-	struct
-	{
-		VehicleStructureSts_T par;
-		Std_ReturnType ret;
-	} Rte_VehicleStructureSts_VehicleStructureSts;
-
 } StubSignals_Type;
 
 extern StubSignals_Type p;

@@ -16,7 +16,7 @@ class CANSignal:
 class DbcParser:
    def __init__(self):
       self.signal_dict = {}
-      self.f_log = open('./logs/can_log.txt', 'w')
+      #self.f_log = open('./logs/can_log.txt', 'w')
 
    def parse(self, dbc_file, net_name):
       f_dbc = open(dbc_file, 'r')
@@ -48,7 +48,7 @@ class DbcParser:
          scale = self._findSignalScale(signal_description_array[5])
          offset = self._findSignalOffset(signal_description_array[5])
          self.signal_dict[name] = CANSignal(net_name, frame_name, name, size, scale, offset)
-         self.f_log.write('net_name: ' + net_name + '\tframe_name: ' + frame_name + '\tsignal name: ' + name + '\tsize: ' + size + '\tscale: ' + scale + '\toffset: ' + offset + '\n')
+         #self.f_log.write('net_name: ' + net_name + '\tframe_name: ' + frame_name + '\tsignal name: ' + name + '\tsize: ' + size + '\tscale: ' + scale + '\toffset: ' + offset + '\n')
 
    def _dbc2signalsInFrame(self, fHandle, frame):
       """get all lines/signals contained in <frame>.

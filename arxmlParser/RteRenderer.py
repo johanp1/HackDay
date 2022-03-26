@@ -1,4 +1,5 @@
-import ArxmlParser
+#import ArxmlParser
+from ArxmlParser import Port
 
 class RteRenderer:
    def __init__(self, module, ldc, swc):
@@ -29,13 +30,12 @@ class RteRenderer:
       self.f_out.write('#endif\n')
       self.f_out.close()
 
-   def render(self, arxml_parser):
-      for port in arxml_parser.port_array:
-         if port.direction == 'provided' and port.signal_name != '':
-            self._newWriteFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.is_struct_type, port.comment)
+   def render(self, port):
+      if port.direction == 'provided' and port.signal_name != '':
+         self._newWriteFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.is_struct_type, port.comment)
 
-         if port.direction == 'required' and port.signal_name != '':
-            self._newReadFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.comment)
+      if port.direction == 'required' and port.signal_name != '':
+         self._newReadFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.comment)
 
    def _newReadFunction(self, port_name, signal_name, datatype, scale = '1', offset = '0', comment = ''):
       scale_str = '' if scale == '1' else str(scale) + '*'
@@ -53,7 +53,7 @@ class RteRenderer:
       s = s.replace('#port_name', port_name)
       s = s.replace('#signal_name', signal_name)
       s = s.replace('#datatype', datatype)
-      #print(s)
+
       self.f_out.write(s)
 
    def _newWriteFunction(self, portName, signalName, datatype, scale, offset, use_const_ptr = False, comment = ''):     
@@ -69,5 +69,4 @@ class RteRenderer:
       s = s.replace('#dataType', datatype)
       s = s.replace('#write_data', write_data)
 
-      #print(s) 
       self.f_out.write(s)

@@ -17,6 +17,14 @@ class Port:
    def __repr__(self):
       return 'port name: ' + self.port_name + '\tport if: ' + self.port_if + '\tsignal name: ' + self.signal_name + '\tdirection: ' + self.direction + '\ttype: ' + self.type +  '\tis_struct_type: ' + str(self.is_struct_type) + '\n'
 
+class PPort(Port):
+   def __init__(self, port_name, port_if):
+      super().__init__(port_name, port_if, 'provided')
+
+class RPort(Port):
+   def __init__(self, port_name, port_if):
+      super().__init__(port_name, port_if, 'required')
+
 class ArxmlParser:
    def __init__(self):
       self.port_array = []
@@ -34,7 +42,6 @@ class ArxmlParser:
             port.signal_name = self.signal_dict[port.port_if].name
             port.type = self.signal_dict[port.port_if].type
             port.is_struct_type = True if self.type_dict[port.type] else False
-      
 
    def _getRPorts(self, namespace, swc_arxml):
       tree = ET.parse(swc_arxml)
@@ -95,7 +102,7 @@ class ArxmlParser:
       tree = ET.parse(types_arxml)
       root = tree.getroot()
       ns = {'default_ns':namespace}
-      #f_log = open('./logs/types.txt', 'w')
+      f_log = open('./logs/types.txt', 'w')
 
       tag = '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE'
       for data_type in root.iter(tag):
@@ -105,6 +112,8 @@ class ArxmlParser:
          #self.type_dict[data_type_name] = True if data_type_category == 'STRUCTURE' else False
          self.type_dict[data_type_name] = []
 
+         f_log.write('data_type_name ' + data_type_name + ' category ' + data_type_category + '\n')
+         
          if data_type_category == 'STRUCTURE':
             struct_tag =  '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
             for struct_data_type in data_type.iter(struct_tag):

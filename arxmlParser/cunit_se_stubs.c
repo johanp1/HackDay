@@ -766,12 +766,12 @@ void _stubs_check_VehicleYawInertia_VehicleYawInertia(InertiaQ_T* expected, cons
 	{
 		printf("%s in %s on line: %d, Inertia: expected %d but was %d\n", file, function, line, expected->Inertia, p.Rte_VehicleYawInertia_VehicleYawInertia.par.Inertia);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleYawInertia_VehicleYawInertia.par.Inertia == expected-> Inertia);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleYawInertia_VehicleYawInertia.par.Inertia == expected->Inertia);
 	if (p.Rte_VehicleYawInertia_VehicleYawInertia.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_VehicleYawInertia_VehicleYawInertia.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleYawInertia_VehicleYawInertia.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleYawInertia_VehicleYawInertia.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_VehicleRollInertia_VehicleRollInertia(InertiaQ_T* expected, const char *file, const char *function, const int line)
@@ -780,12 +780,12 @@ void _stubs_check_VehicleRollInertia_VehicleRollInertia(InertiaQ_T* expected, co
 	{
 		printf("%s in %s on line: %d, Inertia: expected %d but was %d\n", file, function, line, expected->Inertia, p.Rte_VehicleRollInertia_VehicleRollInertia.par.Inertia);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleRollInertia_VehicleRollInertia.par.Inertia == expected-> Inertia);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleRollInertia_VehicleRollInertia.par.Inertia == expected->Inertia);
 	if (p.Rte_VehicleRollInertia_VehicleRollInertia.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_VehicleRollInertia_VehicleRollInertia.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleRollInertia_VehicleRollInertia.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleRollInertia_VehicleRollInertia.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_VehiclePitchInertia_VehiclePitchInertia(InertiaQ_T* expected, const char *file, const char *function, const int line)
@@ -794,12 +794,12 @@ void _stubs_check_VehiclePitchInertia_VehiclePitchInertia(InertiaQ_T* expected, 
 	{
 		printf("%s in %s on line: %d, Inertia: expected %d but was %d\n", file, function, line, expected->Inertia, p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.Inertia);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.Inertia == expected-> Inertia);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.Inertia == expected->Inertia);
 	if (p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehiclePitchInertia_VehiclePitchInertia.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_RearAxleCurvature_RearAxleCurvature(AxleCurvature_T* expected, const char *file, const char *function, const int line)
@@ -808,12 +808,12 @@ void _stubs_check_RearAxleCurvature_RearAxleCurvature(AxleCurvature_T* expected,
 	{
 		printf("%s in %s on line: %d, Curvature: expected %d but was %d\n", file, function, line, expected->Curvature, p.Rte_RearAxleCurvature_RearAxleCurvature.par.Curvature);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleCurvature_RearAxleCurvature.par.Curvature == expected-> Curvature);
+	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleCurvature_RearAxleCurvature.par.Curvature == expected->Curvature);
 	if (p.Rte_RearAxleCurvature_RearAxleCurvature.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_RearAxleCurvature_RearAxleCurvature.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleCurvature_RearAxleCurvature.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleCurvature_RearAxleCurvature.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_SpeedOverGround_SpeedOverGround(SpeedQ_T* expected, const char *file, const char *function, const int line)
@@ -822,12 +822,12 @@ void _stubs_check_SpeedOverGround_SpeedOverGround(SpeedQ_T* expected, const char
 	{
 		printf("%s in %s on line: %d, Speed: expected %d but was %d\n", file, function, line, expected->Speed, p.Rte_SpeedOverGround_SpeedOverGround.par.Speed);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_SpeedOverGround_SpeedOverGround.par.Speed == expected-> Speed);
+	CU_ASSERT_TRUE_FATAL(p.Rte_SpeedOverGround_SpeedOverGround.par.Speed == expected->Speed);
 	if (p.Rte_SpeedOverGround_SpeedOverGround.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_SpeedOverGround_SpeedOverGround.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_SpeedOverGround_SpeedOverGround.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_SpeedOverGround_SpeedOverGround.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_LongitudinalAccelerationQ_LongitudinalAccelerationQ(AccelerationQ_T* expected, const char *file, const char *function, const int line)
@@ -836,12 +836,12 @@ void _stubs_check_LongitudinalAccelerationQ_LongitudinalAccelerationQ(Accelerati
 	{
 		printf("%s in %s on line: %d, Acceleration: expected %d but was %d\n", file, function, line, expected->Acceleration, p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.Acceleration);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.Acceleration == expected-> Acceleration);
+	CU_ASSERT_TRUE_FATAL(p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.Acceleration == expected->Acceleration);
 	if (p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_ArticulationAngle_ArticulationAngle(AngleQ_T* expected, const char *file, const char *function, const int line)
@@ -850,12 +850,12 @@ void _stubs_check_ArticulationAngle_ArticulationAngle(AngleQ_T* expected, const 
 	{
 		printf("%s in %s on line: %d, Angle: expected %d but was %d\n", file, function, line, expected->Angle, p.Rte_ArticulationAngle_ArticulationAngle.par.Angle);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_ArticulationAngle_ArticulationAngle.par.Angle == expected-> Angle);
+	CU_ASSERT_TRUE_FATAL(p.Rte_ArticulationAngle_ArticulationAngle.par.Angle == expected->Angle);
 	if (p.Rte_ArticulationAngle_ArticulationAngle.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_ArticulationAngle_ArticulationAngle.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_ArticulationAngle_ArticulationAngle.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_ArticulationAngle_ArticulationAngle.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_FrontAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line)
@@ -864,12 +864,12 @@ void _stubs_check_FrontAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file
 	{
 		printf("%s in %s on line: %d, Load: expected %d but was %d\n", file, function, line, expected->Load, p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.Load);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.Load == expected-> Load);
+	CU_ASSERT_TRUE_FATAL(p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.Load == expected->Load);
 	if (p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_FrontAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_PusherAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line)
@@ -878,12 +878,12 @@ void _stubs_check_PusherAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *fil
 	{
 		printf("%s in %s on line: %d, Load: expected %d but was %d\n", file, function, line, expected->Load, p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.Load);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.Load == expected-> Load);
+	CU_ASSERT_TRUE_FATAL(p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.Load == expected->Load);
 	if (p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_PusherAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_DriveAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line)
@@ -892,12 +892,12 @@ void _stubs_check_DriveAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file
 	{
 		printf("%s in %s on line: %d, Load: expected %d but was %d\n", file, function, line, expected->Load, p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.Load);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.Load == expected-> Load);
+	CU_ASSERT_TRUE_FATAL(p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.Load == expected->Load);
 	if (p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_DriveAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_TrailerAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line)
@@ -906,12 +906,12 @@ void _stubs_check_TrailerAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *fi
 	{
 		printf("%s in %s on line: %d, Load: expected %d but was %d\n", file, function, line, expected->Load, p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.Load);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.Load == expected-> Load);
+	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.Load == expected->Load);
 	if (p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerAxleLoadQ_AxleLoadQ_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_RearAxleLifted_RearAxleLifted_I(LiftedQ_T* expected, const char *file, const char *function, const int line)
@@ -920,12 +920,12 @@ void _stubs_check_RearAxleLifted_RearAxleLifted_I(LiftedQ_T* expected, const cha
 	{
 		printf("%s in %s on line: %d, Lifted: expected %d but was %d\n", file, function, line, expected->Lifted, p.Rte_RearAxleLifted_RearAxleLifted_I.par.Lifted);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleLifted_RearAxleLifted_I.par.Lifted == expected-> Lifted);
+	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleLifted_RearAxleLifted_I.par.Lifted == expected->Lifted);
 	if (p.Rte_RearAxleLifted_RearAxleLifted_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_RearAxleLifted_RearAxleLifted_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleLifted_RearAxleLifted_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_RearAxleLifted_RearAxleLifted_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_MotionState_MotionState_I(MotionStateQ_T* expected, const char *file, const char *function, const int line)
@@ -934,12 +934,12 @@ void _stubs_check_MotionState_MotionState_I(MotionStateQ_T* expected, const char
 	{
 		printf("%s in %s on line: %d, State: expected %d but was %d\n", file, function, line, expected->State, p.Rte_MotionState_MotionState_I.par.State);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_MotionState_MotionState_I.par.State == expected-> State);
+	CU_ASSERT_TRUE_FATAL(p.Rte_MotionState_MotionState_I.par.State == expected->State);
 	if (p.Rte_MotionState_MotionState_I.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_MotionState_MotionState_I.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_MotionState_MotionState_I.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_MotionState_MotionState_I.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_TrailerConnected_TrailerConnected(TrailerConnectedQ_T* expected, const char *file, const char *function, const int line)
@@ -948,12 +948,12 @@ void _stubs_check_TrailerConnected_TrailerConnected(TrailerConnectedQ_T* expecte
 	{
 		printf("%s in %s on line: %d, Connected: expected %d but was %d\n", file, function, line, expected->Connected, p.Rte_TrailerConnected_TrailerConnected.par.Connected);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerConnected_TrailerConnected.par.Connected == expected-> Connected);
+	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerConnected_TrailerConnected.par.Connected == expected->Connected);
 	if (p.Rte_TrailerConnected_TrailerConnected.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_TrailerConnected_TrailerConnected.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerConnected_TrailerConnected.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_TrailerConnected_TrailerConnected.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_VehicleStandstill_VehicleStandstill(StandstillQ_T* expected, const char *file, const char *function, const int line)
@@ -962,12 +962,12 @@ void _stubs_check_VehicleStandstill_VehicleStandstill(StandstillQ_T* expected, c
 	{
 		printf("%s in %s on line: %d, StandStill: expected %d but was %d\n", file, function, line, expected->StandStill, p.Rte_VehicleStandstill_VehicleStandstill.par.StandStill);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStandstill_VehicleStandstill.par.StandStill == expected-> StandStill);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStandstill_VehicleStandstill.par.StandStill == expected->StandStill);
 	if (p.Rte_VehicleStandstill_VehicleStandstill.par.QualityFlag != expected->QualityFlag)
 	{
 		printf("%s in %s on line: %d, QualityFlag: expected %d but was %d\n", file, function, line, expected->QualityFlag, p.Rte_VehicleStandstill_VehicleStandstill.par.QualityFlag);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStandstill_VehicleStandstill.par.QualityFlag == expected-> QualityFlag);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStandstill_VehicleStandstill.par.QualityFlag == expected->QualityFlag);
 }
 
 void _stubs_check_VehicleStructureSts_VehicleStructureSts(VehicleStructureSts_T* expected, const char *file, const char *function, const int line)
@@ -976,6 +976,6 @@ void _stubs_check_VehicleStructureSts_VehicleStructureSts(VehicleStructureSts_T*
 	{
 		printf("%s in %s on line: %d, Mass_RE: expected %d but was %d\n", file, function, line, expected->Mass_RE, p.Rte_VehicleStructureSts_VehicleStructureSts.par.Mass_RE);
 	}
-	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStructureSts_VehicleStructureSts.par.Mass_RE == expected-> Mass_RE);
+	CU_ASSERT_TRUE_FATAL(p.Rte_VehicleStructureSts_VehicleStructureSts.par.Mass_RE == expected->Mass_RE);
 }
 

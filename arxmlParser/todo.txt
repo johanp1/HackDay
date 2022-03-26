@@ -1,3 +1,11 @@
+renderer skall jobba med idividuella portar.
+sub-klassa port enligt UML-diagram
+
+sub-klassa renderer
+
+
+
+inte jätteviktigt:
 printf förutsätter int med %d, funkar inte för float
 
 assert förutsätter bool eller int. funkar inte för float
