@@ -56,6 +56,17 @@ class StubRenderer:
       self._collect_stub_set_functions(port)
       self._collect_stub_check_functions(port, port_type)
       
+   def renderPPort(self,port, port_type):
+      self._collect_stub_struct_elements(port)
+      self._collect_stub_signals(port)
+      self._collect_stub_set_functions(port)
+      self._collect_stub_check_functions(port, port_type)
+
+   def renderRPort(self,port, port_type):
+      self._collect_stub_struct_elements(port)
+      self._collect_stub_signals(port)
+      self._collect_stub_set_functions(port)
+      self._collect_stub_check_functions(port, port_type)
 
    def _collect_stub_struct_elements(self, port):
       self.signal_struct_elements += '\tstruct\n'

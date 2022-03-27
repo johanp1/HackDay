@@ -13,18 +13,56 @@ class Port:
       self.direction = direction
       self.is_struct_type = is_struct_type
       self.comment = comment
+      self.signal_array = []
         
    def __repr__(self):
       return 'port name: ' + self.port_name + '\tport if: ' + self.port_if + '\tsignal name: ' + self.signal_name + '\tdirection: ' + self.direction + '\ttype: ' + self.type +  '\tis_struct_type: ' + str(self.is_struct_type) + '\n'
 
+   def accept(self, v):
+      pass
+
 class PPort(Port):
-   def __init__(self, port_name, port_if):
+   def __init__(self, port_name, port_if, dummy = ''):
       super().__init__(port_name, port_if, 'provided')
 
+   def accept(self, v):
+      v.renderPPort(self)
+
 class RPort(Port):
-   def __init__(self, port_name, port_if):
+   def __init__(self, port_name, port_if, dummy = ''):
       super().__init__(port_name, port_if, 'required')
 
+   def accept(self, v):
+      v.renderRPort(self)
+
+class Signal:
+   def __init__(self, name, type):
+       self.name = name
+       self.type = type
+
+   def accept(self):
+      pass
+
+class ValueSignal(Signal):
+   def __init__(self, name, type, scale, offset):
+       super().__init__(name, type)
+       self.scale = scale
+       self.offset = offset
+
+class StructSignal(Signal):
+   def __init__(self, name, type):
+       self.name = name
+       self.type = type
+       self.element = []
+
+"""this might be the same as ValueSignal"""
+class StructSignalElement:
+   def __init__(self, name, type, scale, offset):
+       self.name = name
+       self.type = type
+       self.scale = scale
+       self.offset = offset
+       
 class ArxmlParser:
    def __init__(self):
       self.port_array = []
@@ -56,7 +94,7 @@ class ArxmlParser:
          if_tref = required_port.find('default_ns:REQUIRED-INTERFACE-TREF', ns)
          if if_tref.attrib['DEST'] == 'SENDER-RECEIVER-INTERFACE':
             port_if = if_tref.text.split('/')[-1]
-            self.port_array.append(Port(name, port_if, 'required'))
+            self.port_array.append(RPort(name, port_if, 'required'))
             #f_log.write('port name: ' + name + ' port-if: ' + port_if + '\n')
 
       #f_log.close()
@@ -72,7 +110,7 @@ class ArxmlParser:
       for provided_port in root.iter(tag):
          name = provided_port.find('default_ns:SHORT-NAME', ns).text
          port_if = provided_port.find('default_ns:PROVIDED-INTERFACE-TREF', ns).text.split('/')[-1]
-         self.port_array.append(Port(name, port_if, 'provided'))
+         self.port_array.append(PPort(name, port_if, 'provided'))
          #f_log.write('port name: ' + name + ' port-if: ' + port_if + '\n')
 
       #f_log.close()
@@ -81,7 +119,7 @@ class ArxmlParser:
       tree = ET.parse(port_arxml)
       root = tree.getroot()
       ns = {'default_ns':namespace}
-      #f_log = open('./logs/port_type.txt', 'w')
+      f_log = open('./logs/port_type.txt', 'w')
 
       tag = '{' + ns['default_ns']+ '}' + 'SENDER-RECEIVER-INTERFACE'
       for port_if in root.iter(tag):
@@ -94,9 +132,9 @@ class ArxmlParser:
          Signal = namedtuple("Signal", ["name", "type"])
          self.signal_dict[port_if_name] = Signal(signal_name, signal_type)
          
-         #f_log.write('port-if: ' + port_if_name + ' signal_name: ' + signal_name + ' signal_type: ' + signal_type + '\n')
+         f_log.write('port-if: ' + port_if_name + ' signal_name: ' + signal_name + ' signal_type: ' + signal_type + '\n')
 
-      #f_log.close()   
+      f_log.close()   
 
    def _getTypes(self, namespace, types_arxml):
       tree = ET.parse(types_arxml)
@@ -111,8 +149,6 @@ class ArxmlParser:
          
          #self.type_dict[data_type_name] = True if data_type_category == 'STRUCTURE' else False
          self.type_dict[data_type_name] = []
-
-         f_log.write('data_type_name ' + data_type_name + ' category ' + data_type_category + '\n')
          
          if data_type_category == 'STRUCTURE':
             struct_tag =  '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
@@ -125,3 +161,7 @@ class ArxmlParser:
 
                   Element = namedtuple("Element", ["element_name", "element_type"])
                   self.type_dict[data_type_name].append(Element(element_name, element_type))      
+
+                  f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+
+      f_log.close() 

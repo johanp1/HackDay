@@ -30,13 +30,13 @@ class RteRenderer:
       self.f_out.write('#endif\n')
       self.f_out.close()
 
-   def render(self, port):
-      if port.direction == 'provided' and port.signal_name != '':
-         self._newWriteFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.is_struct_type, port.comment)
+   def renderPPort(self, port):
+      self._newWriteFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.is_struct_type, port.comment)
 
-      if port.direction == 'required' and port.signal_name != '':
-         self._newReadFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.comment)
+   def renderRPort(self, port):
+      self._newReadFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.comment)
 
+      
    def _newReadFunction(self, port_name, signal_name, datatype, scale = '1', offset = '0', comment = ''):
       scale_str = '' if scale == '1' else str(scale) + '*'
       offset_str = '' if offset == '0' else ' + (' + str(offset) + ')'
