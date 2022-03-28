@@ -56,17 +56,15 @@ class StubRenderer:
       self._collect_stub_set_functions(port)
       self._collect_stub_check_functions(port, port_type)
       
-   def renderPPort(self,port, port_type):
+   def renderPPort(self, port):
       self._collect_stub_struct_elements(port)
-      self._collect_stub_signals(port)
-      self._collect_stub_set_functions(port)
-      self._collect_stub_check_functions(port, port_type)
+      self._collect_pport_stub_signals(port)
+      #self._collect_stub_check_functions(port)
 
-   def renderRPort(self,port, port_type):
+   def renderRPort(self, port):
       self._collect_stub_struct_elements(port)
-      self._collect_stub_signals(port)
+      self._collect_rport_stub_signals(port)
       self._collect_stub_set_functions(port)
-      self._collect_stub_check_functions(port, port_type)
 
    def _collect_stub_struct_elements(self, port):
       self.signal_struct_elements += '\tstruct\n'
@@ -75,20 +73,21 @@ class StubRenderer:
       self.signal_struct_elements += '\t\t' + 'Std_ReturnType ret;\n'
       self.signal_struct_elements += '\t}' + ' ' + 'Rte_' + port.port_name + '_' + port.signal_name + ';\n\n'
    
-   def _collect_stub_signals(self, port):
+   def _collect_pport_stub_signals(self, port):
       port_signal = port.port_name + '_' + port.signal_name
-      if port.direction == 'required':
-         self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + port.type + '* par)\n'
-         self.stub_signals += '{\n'
-         self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
-         
-      if port.direction == 'provided':
-         ptr_to_struct = ' const*' if port.is_struct_type == True else ''
-         dereference_ptr = '*' if port.is_struct_type == True else ''
-         self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + port.type + ptr_to_struct + ' par)\n'
-         self.stub_signals += '{\n'
-         self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + dereference_ptr + 'par;\n'
+      ptr_to_struct = ' const*' if port.is_struct_type == True else ''
+      dereference_ptr = '*' if port.is_struct_type == True else ''
+      self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + port.type + ptr_to_struct + ' par)\n'
+      self.stub_signals += '{\n'
+      self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + dereference_ptr + 'par;\n'
+      self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
+      self.stub_signals += '}\n\n'
 
+   def _collect_rport_stub_signals(self, port):
+      port_signal = port.port_name + '_' + port.signal_name
+      self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + port.type + '* par)\n'
+      self.stub_signals += '{\n'
+      self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
       self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
       self.stub_signals += '}\n\n'
 

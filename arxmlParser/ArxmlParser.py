@@ -40,29 +40,38 @@ class Signal:
        self.name = name
        self.type = type
 
-   def accept(self):
+   def accept(self, v):
       pass
 
 class ValueSignal(Signal):
-   def __init__(self, name, type, scale, offset):
+   def __init__(self, name, type, scale = '1', offset = '0'):
        super().__init__(name, type)
        self.scale = scale
        self.offset = offset
+
+   def accept(self, v):
+      v.renderValueSignal(self)
 
 class StructSignal(Signal):
    def __init__(self, name, type):
        self.name = name
        self.type = type
-       self.element = []
+       self.element_array = []
+
+   def accept(self, v):
+      v.renderStructSignal(self)
 
 """this might be the same as ValueSignal"""
 class StructSignalElement:
-   def __init__(self, name, type, scale, offset):
+   def __init__(self, name, type, scale = '1', offset = '0'):
        self.name = name
        self.type = type
        self.scale = scale
        self.offset = offset
        
+   def accept(self, v):
+      v.renderStructElement(self)
+
 class ArxmlParser:
    def __init__(self):
       self.port_array = []
@@ -77,6 +86,11 @@ class ArxmlParser:
 
       for port in self.port_array:
          if port.port_if in self.signal_dict:
+            if self.type_dict[port.type]:
+               port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+            else:
+               port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+               
             port.signal_name = self.signal_dict[port.port_if].name
             port.type = self.signal_dict[port.port_if].type
             port.is_struct_type = True if self.type_dict[port.type] else False
