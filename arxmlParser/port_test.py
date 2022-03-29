@@ -76,14 +76,25 @@ class TestPort(unittest.TestCase):
    def test_visit_struct_signal(self):
       p = RPort('rport', 'rport_if')
       p.signal_array.append(StructSignal('struct_signal', 'struct_type'))
-      p.signal_array[0].element_array.append(StructSignalElement('element1', 'element1_type'))
+      p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element1_type'))
 
       p.accept(self.visitor)
       self.assertTrue(len(p.signal_array) == 1)
-      self.assertTrue(len(p.signal_array[0].element_array) == 1)
+      self.assertTrue(len(p.signal_array[-1].element_array) == 1)
       self.assertTrue(self.visitor.visited_rport == 'rport')
       self.assertTrue(self.visitor.visited_signal == 'struct_signal')
       self.assertTrue(self.visitor.visited_element == 'element1')
+
+   def test3(self):
+      p = RPort('name', 'name_if') 
+      p.signal_array.append(ValueSignal('signal1', 'signal_type1', '1', '0'))
+      p.signal_array.append(ValueSignal('signal2', 'signal_type2', '1', '0'))
+      p.signal_array.append(StructSignal('signal3', 'signal_type3'))
+
+      p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element_type1', '1', '0'))
+      p.signal_array[-1].element_array.append(StructSignalElement('element2', 'element_type2', '1', '0'))
+
+      print(p)
 
 if __name__ == '__main__':
    unittest.main()

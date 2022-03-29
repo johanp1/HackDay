@@ -16,7 +16,7 @@ class Port:
       self.signal_array = []
         
    def __repr__(self):
-      return 'port name: ' + self.port_name + '\tport if: ' + self.port_if + '\tsignal name: ' + self.signal_name + '\tdirection: ' + self.direction + '\ttype: ' + self.type +  '\tis_struct_type: ' + str(self.is_struct_type) + '\n'
+      return 'port name: ' + self.port_name + ', port if: ' + self.port_if + '\n'
 
    def accept(self, v):
       pass
@@ -25,12 +25,24 @@ class PPort(Port):
    def __init__(self, port_name, port_if, dummy = ''):
       super().__init__(port_name, port_if, 'provided')
 
+   def __repr__(self):
+      str = super().__repr__()
+      for s in self.signal_array:
+         str += repr(s)
+      return 'r-port: ' + str  + '\n'
+
    def accept(self, v):
       v.renderPPort(self)
 
 class RPort(Port):
    def __init__(self, port_name, port_if, dummy = ''):
       super().__init__(port_name, port_if, 'required')
+
+   def __repr__(self):
+      str = super().__repr__()
+      for s in self.signal_array:
+         str += repr(s)
+      return 'r-port: ' + str  + '\n'
 
    def accept(self, v):
       v.renderRPort(self)
@@ -39,6 +51,9 @@ class Signal:
    def __init__(self, name, type):
        self.name = name
        self.type = type
+
+   def __repr__(self):
+      return 'Signal name: ' + self.name + ' type: ' + self.type
 
    def accept(self, v):
       pass
@@ -49,6 +64,10 @@ class ValueSignal(Signal):
        self.scale = scale
        self.offset = offset
 
+   def __repr__(self):
+      str = super().__repr__()
+      return '\tValueSignal ' + str + ' scale: ' + self.scale + ' offset: ' + self.offset + '\n'
+
    def accept(self, v):
       v.renderValueSignal(self)
 
@@ -57,6 +76,13 @@ class StructSignal(Signal):
        self.name = name
        self.type = type
        self.element_array = []
+
+   def __repr__(self):
+      str = super().__repr__() + '\n'
+      for element in self.element_array:
+         str += repr(element)
+      return '\tStructSignal ' + str
+
 
    def accept(self, v):
       v.renderStructSignal(self)
@@ -68,7 +94,10 @@ class StructSignalElement:
        self.type = type
        self.scale = scale
        self.offset = offset
-       
+   
+   def __repr__(self):
+      return '\t\tStructSignalElement name: ' + self.name + ' type: ' + self.type + ' scale: ' + self.scale + ' offset: ' + self.offset + '\n'
+
    def accept(self, v):
       v.renderStructElement(self)
 
@@ -86,14 +115,15 @@ class ArxmlParser:
 
       for port in self.port_array:
          if port.port_if in self.signal_dict:
-            if self.type_dict[port.type]:
-               port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-            else:
-               port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-               
             port.signal_name = self.signal_dict[port.port_if].name
             port.type = self.signal_dict[port.port_if].type
             port.is_struct_type = True if self.type_dict[port.type] else False
+
+            #if self.type_dict[port.type]:
+            #   port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+               #port.signal_array[-1].element_array.append
+            #else:
+            #   port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
 
    def _getRPorts(self, namespace, swc_arxml):
       tree = ET.parse(swc_arxml)
@@ -143,8 +173,8 @@ class ArxmlParser:
          signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', ns).text # get port_if name
          signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', ns).text.split('/')[-1]
 
-         Signal = namedtuple("Signal", ["name", "type"])
-         self.signal_dict[port_if_name] = Signal(signal_name, signal_type)
+         SignalTuple = namedtuple("Signal", ["name", "type"])
+         self.signal_dict[port_if_name] = SignalTuple(signal_name, signal_type)
          
          f_log.write('port-if: ' + port_if_name + ' signal_name: ' + signal_name + ' signal_type: ' + signal_type + '\n')
 
