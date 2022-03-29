@@ -83,7 +83,6 @@ class StructSignal(Signal):
          str += repr(element)
       return '\tStructSignal ' + str
 
-
    def accept(self, v):
       v.renderStructSignal(self)
 
@@ -119,12 +118,14 @@ class ArxmlParser:
             port.type = self.signal_dict[port.port_if].type
             port.is_struct_type = True if self.type_dict[port.type] else False
 
-            #if self.type_dict[port.type]:
-            #   port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-               #port.signal_array[-1].element_array.append
-            #else:
-            #   port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-
+            type_key = self.signal_dict[port.port_if].type
+            if self.type_dict[type_key]:
+               port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+               for element in self.type_dict[type_key]:
+                  port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
+            else:
+               port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+            
    def _getRPorts(self, namespace, swc_arxml):
       tree = ET.parse(swc_arxml)
       root = tree.getroot()

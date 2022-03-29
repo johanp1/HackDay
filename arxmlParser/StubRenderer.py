@@ -59,7 +59,7 @@ class StubRenderer:
    def renderPPort(self, port):
       self._collect_stub_struct_elements(port)
       self._collect_pport_stub_signals(port)
-      self._collect_stub_check_functions(port)
+      self._collect_stub_check_value(port)
 
    def renderRPort(self, port):
       self._collect_stub_struct_elements(port)
@@ -137,7 +137,7 @@ class StubRenderer:
                self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par.' + element.element_name + ' == expected->' + element.element_name + ');\n'
          else:
             self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par != expected)\n'
-            self.stub_check_functionss += '\t{\n'
+            self.stub_check_functions += '\t{\n'
             self.stub_check_functions += '\t\tprintf(\"%s in %s on line: %d, ' + port_signal + ': expected %d but was %d\\n\", file, function, line, expected, p.Rte_' + port_signal + '.par);\n'
             self.stub_check_functions += '\t}\n'
             self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par == expected);\n'
@@ -145,6 +145,25 @@ class StubRenderer:
          self.stub_check_functions += '}\n\n'
 
          self.stub_check_function_prototypes += function_define + '\n' + function_prototype + ';\n\n'
+
+   def _collect_stub_check_value(self, port):
+      port_signal = port.port_name + '_' + port.signal_name
+      function_define = '#define stubs_check_' + port_signal + '(expected) _stubs_check_' + port_signal + '(expected, __FILE__, __FUNCTION__, __LINE__);'
+      function_prototype = 'void _stubs_check_' + port_signal + '(' +  port.type + ' expected, const char *file, const char *function, const int line)'
+
+      self.stub_check_functions += function_prototype + '\n'
+      self.stub_check_functions += '{\n'
+      self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par != expected)\n'
+      self.stub_check_functions += '\t{\n'
+      self.stub_check_functions += '\t\tprintf(\"%s in %s on line: %d, ' + port_signal + ': expected %d but was %d\\n\", file, function, line, expected, p.Rte_' + port_signal + '.par);\n'
+      self.stub_check_functions += '\t}\n'
+      self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par == expected);\n'
+      self.stub_check_functions += '}\n\n'
+
+      self.stub_check_function_prototypes += function_define + '\n' + function_prototype + ';\n\n'
+
+   def _collect_stub_check_struct(self, port):
+     pass
 
    def _write_stub_signal_struct(self):
       self.f_header.write('typedef struct\n{')

@@ -85,7 +85,7 @@ class TestPort(unittest.TestCase):
       self.assertTrue(self.visitor.visited_signal == 'struct_signal')
       self.assertTrue(self.visitor.visited_element == 'element1')
 
-   def test3(self):
+   """def test3(self):
       p = RPort('name', 'name_if') 
       p.signal_array.append(ValueSignal('signal1', 'signal_type1', '1', '0'))
       p.signal_array.append(ValueSignal('signal2', 'signal_type2', '1', '0'))
@@ -94,7 +94,7 @@ class TestPort(unittest.TestCase):
       p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element_type1', '1', '0'))
       p.signal_array[-1].element_array.append(StructSignalElement('element2', 'element_type2', '1', '0'))
 
-      print(p)
+      print(p)"""
 
 if __name__ == '__main__':
    unittest.main()
