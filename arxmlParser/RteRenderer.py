@@ -1,10 +1,40 @@
-#import ArxmlParser
-from ArxmlParser import Port
+from ArxmlParser import RPort, PPort, ValueSignal, StructSignal, StructSignalElement
+
+class PPortVisitor:
+   def __init__(self, renderer):
+      self.renderer = renderer
+      self.port_name = ''
+
+   def renderValueSignal(self, signal):
+      self.renderer.render_pport_value_signal(self.port_name, signal)
+
+   def renderStructSignal(self, signal):
+      self.renderer.render_pport_struct_signal(self.port_name, signal)
+      
+   def renderStructElement(self, element):
+      pass
+
+class RPortVisitor:
+   def __init__(self, renderer):
+      self.renderer = renderer
+      self.port_name = ''
+
+   def renderValueSignal(self, signal):
+      self.renderer.render_value_signal(self.port_name, signal)
+      
+   def renderStructSignal(self, signal):
+      self.renderer.render_value_signal(self.port_name, signal)
+
+   def renderStructElement(self, signal):
+      self.renderer.render_struct_signal(self.port_name, signal)
 
 class RteRenderer:
    def __init__(self, module, ldc, swc):
       f_template = open('template/template.h', 'r')
       self.f_out = open(module + '.h', 'w')
+
+      self.pport_visitor = PPortVisitor(self)
+      self.rport_visitor = RPortVisitor(self)
 
       # copy template until
       for l in f_template:
@@ -31,42 +61,58 @@ class RteRenderer:
       self.f_out.close()
 
    def renderPPort(self, port):
-      self._newWriteFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.is_struct_type, port.comment)
+      self.pport_visitor.port_name = port.port_name
+      for signal in port.signal_array:
+         signal.accept(self.pport_visitor)
 
    def renderRPort(self, port):
-      self._newReadFunction(port.port_name, port.signal_name, port.type, port.scale, port.offset, port.comment)
+      self.rport_visitor.port_name = port.port_name
+      for signal in port.signal_array:
+         signal.accept(self.rport_visitor)
 
-      
-   def _newReadFunction(self, port_name, signal_name, datatype, scale = '1', offset = '0', comment = ''):
-      scale_str = '' if scale == '1' else str(scale) + '*'
-      offset_str = '' if offset == '0' else ' + (' + str(offset) + ')'
-      comment_str = '  // ' + comment if comment != '' else ''
-      var_name = signal_name[0].lower() + signal_name[1:]
+   def render_value_signal(self, port_name, signal):
+      scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
+      offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+      var_name = signal.name[0].lower() + signal.name[1:]
 
       s = "\t{"
       s = s + "#datatype #var_name;\n"
-      s = s + "\t(void)Rte_Read_#port_name_#signal_name(&#var_name);" + comment_str + "\n"
+      s = s + "\t(void)Rte_Read_#port_name_#signal_name(&#var_name);\n"
       s = s + "\t/*dummy*/ rx->#var_name = " + scale_str + "#var_name" + offset_str + ";"   
       s = s + "}\n\n"
 
       s = s.replace('#var_name', var_name)
       s = s.replace('#port_name', port_name)
-      s = s.replace('#signal_name', signal_name)
-      s = s.replace('#datatype', datatype)
+      s = s.replace('#signal_name', signal.name)
+      s = s.replace('#datatype', signal.type)
 
       self.f_out.write(s)
 
-   def _newWriteFunction(self, portName, signalName, datatype, scale, offset, use_const_ptr = False, comment = ''):     
+   def render_pport_value_signal(self, port_name, signal): 
       write_data = 'tx->data'
-      scale_str = '' if scale == '1' else '/' + str(scale)
-      offset_str = '' if offset == '0' else ' - (' + str(offset) + scale_str + ')'
-      arg_str = '(#dataType)(#write_data' + scale_str + offset_str + ')' if use_const_ptr == False else '(#dataType*)(&#write_data)'
-      comment_str = '  // ' + comment if comment != '' else ''
-      s = '\t(void)Rte_Write_#portName_#signalName('+ arg_str +');' + comment_str + '\n\n'
+      scale_str = '' if signal.scale == '1' else '/' + str(signal.scale)
+      offset_str = '' if signal.offset == '0' else ' - (' + str(signal.offset) + scale_str + ')'
+      arg_str = '(#dataType*)(&#write_data)'
+      s = '\t(void)Rte_Write_#portName_#signalName('+ arg_str +');\n\n'
 
-      s = s.replace('#portName', portName)
-      s = s.replace('#signalName', signalName)
-      s = s.replace('#dataType', datatype)
+      s = s.replace('#portName', port_name)
+      s = s.replace('#signalName', signal.name)
+      s = s.replace('#dataType', signal.type)
+      s = s.replace('#write_data', write_data)
+
+      self.f_out.write(s)
+
+   def render_pport_struct_signal(self, port_name, signal): 
+      write_data = 'tx->data'
+      #scale_str = '' if signal.scale == '1' else '/' + str(signal.scale)
+      #offset_str = '' if offset == '0' else ' - (' + str(offset) + scale_str + ')'
+      #arg_str = '(#dataType)(#write_data' + scale_str + offset_str + ')' 
+      arg_str = '(#dataType)(#write_data)' 
+      s = '\t(void)Rte_Write_#portName_#signalName('+ arg_str +');\n\n'
+
+      s = s.replace('#portName', port_name)
+      s = s.replace('#signalName', signal.name)
+      s = s.replace('#dataType', signal.type)
       s = s.replace('#write_data', write_data)
 
       self.f_out.write(s)

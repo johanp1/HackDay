@@ -1,12 +1,49 @@
-#import ArxmlParser
-from collections import namedtuple
-from ArxmlParser import Port
+from ArxmlParser import RPort, PPort, ValueSignal, StructSignal, StructSignalElement
+
+class PPortVisitor:
+   def __init__(self, renderer):
+      self.renderer = renderer
+      self.port_name = ''
+
+   def renderValueSignal(self, signal):
+      self.renderer._collect_stub_struct_elements(self.port_name, signal)
+      self.renderer._collect_pport_stub_value_signals(self.port_name, signal)
+      self.renderer._collect_pport_stub_check_value_signals(self.port_name, signal)
+
+   def renderStructSignal(self, signal):
+      self.renderer._collect_stub_struct_elements(self.port_name, signal)
+      self.renderer._collect_pport_stub_struct_signals(self.port_name, signal)
+      self.renderer._collect_pport_stub_check_stuct_signals(self.port_name, signal)
+
+   def renderStructElement(self, element):
+      pass
+
+class RPortVisitor:
+   def __init__(self, renderer):
+      self.renderer = renderer
+      self.port_name = ''
+
+   def renderValueSignal(self, signal):
+      self.renderer._collect_stub_struct_elements(self.port_name, signal)
+      self.renderer._collect_rport_stub_value_signals(self.port_name, signal)
+      self.renderer._collect_rport_stub_set_signals(self.port_name, signal)
+
+   def renderStructSignal(self, signal):
+      self.renderer._collect_stub_struct_elements(self.port_name, signal)
+      self.renderer._collect_rport_stub_struct_signals(self.port_name, signal)
+      self.renderer._collect_rport_stub_set_signals(self.port_name, signal)
+
+   def renderStructElement(self, element):
+      pass
 
 class StubRenderer:
    def __init__(self, module, ldc, swc):
       f_template = open('template/template.h', 'r')
       self.f_header = open(module + '.h', 'w')
       self.f_source = open(module + '.c', 'w')
+
+      self.pport_visitor = PPortVisitor(self)
+      self.rport_visitor = RPortVisitor(self)
 
       # copy template to header file
       for l in f_template:
@@ -46,111 +83,74 @@ class StubRenderer:
       self._write_stub_check_signals()
 
       self.f_header.write('#endif\n')
+      
       self.f_header.close()
-
       self.f_source.close()
-
-   def render(self,port, port_type):
-      self._collect_stub_struct_elements(port)
-      self._collect_stub_signals(port)
-      self._collect_stub_set_functions(port)
-      self._collect_stub_check_functions(port, port_type)
       
    def renderPPort(self, port):
-      self._collect_stub_struct_elements(port)
-      self._collect_pport_stub_signals(port)
-      self._collect_stub_check_value(port)
+      self.pport_visitor.port_name = port.port_name
+      for signal in port.signal_array:
+         signal.accept(self.pport_visitor)
 
    def renderRPort(self, port):
-      self._collect_stub_struct_elements(port)
-      self._collect_rport_stub_signals(port)
-      self._collect_stub_set_functions(port)
+      self.rport_visitor.port_name = port.port_name
+      for signal in port.signal_array:
+         signal.accept(self.rport_visitor)
 
-   def _collect_stub_struct_elements(self, port):
+   def _collect_stub_struct_elements(self, port_name, signal):
       self.signal_struct_elements += '\tstruct\n'
       self.signal_struct_elements += '\t{\n'
-      self.signal_struct_elements += '\t\t' + port.type + ' ' + 'par;\n'
+      self.signal_struct_elements += '\t\t' + signal.type + ' ' + 'par;\n'
       self.signal_struct_elements += '\t\t' + 'Std_ReturnType ret;\n'
-      self.signal_struct_elements += '\t}' + ' ' + 'Rte_' + port.port_name + '_' + port.signal_name + ';\n\n'
-   
-   def _collect_stub_signals(self, port):
-      port_signal = port.port_name + '_' + port.signal_name
-      if port.direction == 'provided':
-         ptr_to_struct = ' const*' if port.is_struct_type == True else ''
-         dereference_ptr = '*' if port.is_struct_type == True else ''
-         self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + port.type + ptr_to_struct + ' par)\n'
-         self.stub_signals += '{\n'
-         self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + dereference_ptr + 'par;\n'
-      else:
-         self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + port.type + '* par)\n'
-         self.stub_signals += '{\n'
-         self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
+      self.signal_struct_elements += '\t}' + ' ' + 'Rte_' + port_name + '_' + signal.name + ';\n\n'
 
-      self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
-      self.stub_signals += '}\n\n'
-
-   def _collect_pport_stub_signals(self, port):
-      port_signal = port.port_name + '_' + port.signal_name
-      ptr_to_struct = ' const*' if port.is_struct_type == True else ''
-      dereference_ptr = '*' if port.is_struct_type == True else ''
-      self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + port.type + ptr_to_struct + ' par)\n'
+   def _collect_pport_stub_value_signals(self, port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + signal.type + ' par)\n'
       self.stub_signals += '{\n'
-      self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + dereference_ptr + 'par;\n'
+      self.stub_signals += '\tp.Rte_' + port_signal + '.par = par;\n'
       self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
       self.stub_signals += '}\n\n'
 
-   def _collect_rport_stub_signals(self, port):
-      port_signal = port.port_name + '_' + port.signal_name
-      self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + port.type + '* par)\n'
+   def _collect_pport_stub_struct_signals(self ,port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal + '(' + signal.type + ' const*' + ' par)\n'
+      self.stub_signals += '{\n'
+      self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + '*' + 'par;\n'
+      self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
+      self.stub_signals += '}\n\n'
+
+   def _collect_rport_stub_value_signals(self, port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + signal.type + '* par)\n'
       self.stub_signals += '{\n'
       self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
       self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
       self.stub_signals += '}\n\n'
 
-   def _collect_stub_set_functions(self, port):
-      if port.direction == 'required':
-         port_signal = port.port_name + '_' + port.signal_name
-         function_prototype = 'void stubs_set_' + port_signal + '(' +  port.type + ' par)'
+   def _collect_rport_stub_struct_signals(self ,port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal + '(' + signal.type + '* par)\n'
+      self.stub_signals += '{\n'
+      self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
+      self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
+      self.stub_signals += '}\n\n'
 
-         self.stub_set_functions += function_prototype + '\n'
-         self.stub_set_functions += '{\n'
-         self.stub_set_functions += '\tp.Rte_' + port_signal + '.par = par;\n'
-         self.stub_set_functions += '}\n\n'
+   def _collect_rport_stub_set_signals(self ,port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      function_prototype = 'void stubs_set_' + port_signal + '(' +  signal.type + ' par)'
 
-         self.stub_set_function_prototypes += function_prototype + ';\n'
+      self.stub_set_functions += function_prototype + '\n'
+      self.stub_set_functions += '{\n'
+      self.stub_set_functions += '\tp.Rte_' + port_signal + '.par = par;\n'
+      self.stub_set_functions += '}\n\n'
 
-   def _collect_stub_check_functions(self, port, type_tuple):
-      if port.direction == 'provided':
-         ptr_to_struct = '*' if port.is_struct_type == True else ''
-         port_signal = port.port_name + '_' + port.signal_name
-         function_define = '#define stubs_check_' + port_signal + '(expected) _stubs_check_' + port_signal + '(expected, __FILE__, __FUNCTION__, __LINE__);'
-         function_prototype = 'void _stubs_check_' + port_signal + '(' +  port.type + ptr_to_struct + ' expected, const char *file, const char *function, const int line)'
+      self.stub_set_function_prototypes += function_prototype + ';\n'
 
-         self.stub_check_functions += function_prototype + '\n'
-         self.stub_check_functions += '{\n'
-         if type_tuple:
-            for element in type_tuple:
-               self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par.' + element.element_name + ' != expected->' + element.element_name + ')\n'
-               self.stub_check_functions += '\t{\n'
-               self.stub_check_functions += '\t\tprintf(\"%s in %s on line: %d, ' + element.element_name + ': expected %d but was %d\\n\", file, function, line, expected->' + element.element_name + ', p.Rte_' + port_signal + '.par.' + element.element_name + ');\n'
-               self.stub_check_functions += '\t}\n'
-               self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par.' + element.element_name + ' == expected->' + element.element_name + ');\n'
-         else:
-            self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par != expected)\n'
-            self.stub_check_functions += '\t{\n'
-            self.stub_check_functions += '\t\tprintf(\"%s in %s on line: %d, ' + port_signal + ': expected %d but was %d\\n\", file, function, line, expected, p.Rte_' + port_signal + '.par);\n'
-            self.stub_check_functions += '\t}\n'
-            self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par == expected);\n'
-
-         self.stub_check_functions += '}\n\n'
-
-         self.stub_check_function_prototypes += function_define + '\n' + function_prototype + ';\n\n'
-
-   def _collect_stub_check_value(self, port):
-      port_signal = port.port_name + '_' + port.signal_name
+   def _collect_pport_stub_check_value_signals(self, port_name, signal):
+      port_signal = port_name + '_' + signal.name
       function_define = '#define stubs_check_' + port_signal + '(expected) _stubs_check_' + port_signal + '(expected, __FILE__, __FUNCTION__, __LINE__);'
-      function_prototype = 'void _stubs_check_' + port_signal + '(' +  port.type + ' expected, const char *file, const char *function, const int line)'
-
+      function_prototype = 'void _stubs_check_' + port_signal + '(' +  signal.type + ' expected, const char *file, const char *function, const int line)'
       self.stub_check_functions += function_prototype + '\n'
       self.stub_check_functions += '{\n'
       self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par != expected)\n'
@@ -162,8 +162,22 @@ class StubRenderer:
 
       self.stub_check_function_prototypes += function_define + '\n' + function_prototype + ';\n\n'
 
-   def _collect_stub_check_struct(self, port):
-     pass
+   def _collect_pport_stub_check_stuct_signals(self, port_name, signal):
+      port_signal = port_name + '_' + signal.name
+      function_define = '#define stubs_check_' + port_signal + '(expected) _stubs_check_' + port_signal + '(expected, __FILE__, __FUNCTION__, __LINE__);'
+      function_prototype = 'void _stubs_check_' + port_signal + '(' +  signal.type + '* expected, const char *file, const char *function, const int line)'
+
+      self.stub_check_functions += function_prototype + '\n'
+      self.stub_check_functions += '{\n'
+      for element in signal.element_array:
+         self.stub_check_functions += '\tif (p.Rte_' + port_signal + '.par.' + element.name + ' != expected->' + element.name + ')\n'
+         self.stub_check_functions += '\t{\n'
+         self.stub_check_functions += '\t\tprintf(\"%s in %s on line: %d, ' + element.name + ': expected %d but was %d\\n\", file, function, line, expected->' + element.name + ', p.Rte_' + port_signal + '.par.' + element.name + ');\n'
+         self.stub_check_functions += '\t}\n'
+         self.stub_check_functions += '\tCU_ASSERT_TRUE_FATAL(p.Rte_' + port_signal + '.par.' + element.name + ' == expected->' + element.name + ');\n'
+      self.stub_check_functions += '}\n\n'
+
+      self.stub_check_function_prototypes += function_define + '\n' + function_prototype + ';\n\n'
 
    def _write_stub_signal_struct(self):
       self.f_header.write('typedef struct\n{')

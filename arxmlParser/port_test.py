@@ -40,7 +40,6 @@ class TestPort(unittest.TestCase):
             
       self.assertTrue(p.port_name == 'test_rport')
       self.assertTrue(p.port_if == 'rport_if')
-      self.assertTrue(p.direction == 'required')
       self.assertTrue(len(p.signal_array) == 0)
 
    def test_init_rport(self):
@@ -48,7 +47,6 @@ class TestPort(unittest.TestCase):
             
       self.assertTrue(p.port_name == 'test_pport')
       self.assertTrue(p.port_if == 'pport_if')
-      self.assertTrue(p.direction == 'provided')
       self.assertTrue(len(p.signal_array) == 0)
 
    def test_visit_pport(self):

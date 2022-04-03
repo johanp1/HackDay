@@ -3,16 +3,9 @@ from collections import namedtuple
 
 class Port:
    """representation of a AUTOSAR-port"""
-   def __init__(self, port_name, port_if, direction, signal_name = '', type = '', scale = '1', offset = '0', is_struct_type = False, comment = ''):
+   def __init__(self, port_name, port_if):
       self.port_name = port_name
       self.port_if = port_if
-      self.signal_name = signal_name
-      self.type = type
-      self.scale = scale
-      self.offset = offset
-      self.direction = direction
-      self.is_struct_type = is_struct_type
-      self.comment = comment
       self.signal_array = []
         
    def __repr__(self):
@@ -23,20 +16,20 @@ class Port:
 
 class PPort(Port):
    def __init__(self, port_name, port_if, dummy = ''):
-      super().__init__(port_name, port_if, 'provided')
+      super().__init__(port_name, port_if)
 
    def __repr__(self):
       str = super().__repr__()
       for s in self.signal_array:
          str += repr(s)
-      return 'r-port: ' + str  + '\n'
+      return 'p-port: ' + str  + '\n'
 
    def accept(self, v):
       v.renderPPort(self)
 
 class RPort(Port):
    def __init__(self, port_name, port_if, dummy = ''):
-      super().__init__(port_name, port_if, 'required')
+      super().__init__(port_name, port_if)
 
    def __repr__(self):
       str = super().__repr__()
@@ -57,6 +50,7 @@ class Signal:
 
    def accept(self, v):
       pass
+
 
 class ValueSignal(Signal):
    def __init__(self, name, type, scale = '1', offset = '0'):
@@ -139,7 +133,7 @@ class ArxmlParser:
          if_tref = required_port.find('default_ns:REQUIRED-INTERFACE-TREF', ns)
          if if_tref.attrib['DEST'] == 'SENDER-RECEIVER-INTERFACE':
             port_if = if_tref.text.split('/')[-1]
-            self.port_array.append(RPort(name, port_if, 'required'))
+            self.port_array.append(RPort(name, port_if))
             #f_log.write('port name: ' + name + ' port-if: ' + port_if + '\n')
 
       #f_log.close()
@@ -155,7 +149,7 @@ class ArxmlParser:
       for provided_port in root.iter(tag):
          name = provided_port.find('default_ns:SHORT-NAME', ns).text
          port_if = provided_port.find('default_ns:PROVIDED-INTERFACE-TREF', ns).text.split('/')[-1]
-         self.port_array.append(PPort(name, port_if, 'provided'))
+         self.port_array.append(PPort(name, port_if))
          #f_log.write('port name: ' + name + ' port-if: ' + port_if + '\n')
 
       #f_log.close()

@@ -44,10 +44,12 @@ def main():
             port.scale = scale
             port.offset = offset
             port.comment = dp.signal_dict[sig_key].net_name
-
+      #print(port)
       port.accept(rr)
-      sr.render(port, ap.type_dict[port.type])
-      cr.render(port, ap.type_dict[port.type])
+      port.accept(sr)
+      #if port.port_name=="PusherAxleLoadQ":
+      #   temp = 1
+      port.accept(cr)
 
 if __name__ == '__main__':
    main()
