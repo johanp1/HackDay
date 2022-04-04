@@ -3,8 +3,10 @@
 import DbcParser
 import ArxmlParser
 import RteRenderer
+from SignalVisitor import SignalVisitor
 import StubRenderer
 import ComponentRenderer
+import SignalVisitor
 
 """ main script """
 def main():
@@ -30,25 +32,14 @@ def main():
    sr = StubRenderer.StubRenderer('cunit_se_stubs', ldc_name, swc_name)
    cr = ComponentRenderer.ComponentRenderer(ldc_name)
 
-   # find offset and scale
+   # find offset and scale from parsed can-db
+   sv = SignalVisitor.SignalVisitor(dp.signal_dict)
    for port in ap.port_array:
-      # get scale and offset from can-db
-      scale = '1'
-      offset = '0'
+      port.accept(sv)
 
-      for sig_key in dp.signal_dict:
-         if sig_key.startswith(port.signal_name):
-            scale = dp.signal_dict[sig_key].scale
-            offset = dp.signal_dict[sig_key].offset
-
-            port.scale = scale
-            port.offset = offset
-            port.comment = dp.signal_dict[sig_key].net_name
-      #print(port)
+   for port in ap.port_array:
       port.accept(rr)
       port.accept(sr)
-      #if port.port_name=="PusherAxleLoadQ":
-      #   temp = 1
       port.accept(cr)
 
 if __name__ == '__main__':
