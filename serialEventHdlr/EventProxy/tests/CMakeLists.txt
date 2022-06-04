@@ -14,11 +14,12 @@ set(TEST_SOURCE
   receiver_tests.cpp
   selector_tests.cpp
   sender_tests.cpp
+  ldc_writer_tests.cpp
   main.cpp)
 
 add_executable(arduinoEvents_test ${TEST_SOURCE})
 target_include_directories(arduinoEvents_test PUBLIC . ../src)
-target_link_libraries(arduinoEvents_test arduinoEvents gtest_main)
+target_link_libraries(arduinoEvents_test arduinoEvents gtest_main gmock_main)
 
 include(GoogleTest)
 gtest_discover_tests(arduinoEvents_test)
