@@ -16,7 +16,8 @@ add_library(arduinoEvents
     event_parser.cpp
     receiver.cpp
     selector.cpp
-    sender.cpp)
+    sender.cpp
+    lcd_writer.cpp)
 
 target_include_directories(arduinoEvents PUBLIC . ${arduinoMock_SOURCE_DIR})
 target_link_libraries(arduinoEvents arduinoMock )
