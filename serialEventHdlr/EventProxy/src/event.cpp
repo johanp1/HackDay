@@ -1,21 +1,29 @@
 #include "event.h"
 
 //   public:
-C_Event::C_Event() : source(""), data(0) {}
+C_Event::C_Event() : source(""), data("") {}
 
-String C_Event::serialize(void)
+const String C_Event::serialize(void)
 {
    String retStr = String(source);
    
-   retStr.concat("_");
-   retStr.concat(data);
-
+   // if no data, the event is just it's name
+   if (data.compare("") != 0)
+   {
+      retStr.concat("_");
+      retStr.concat(data);
+   }
    return retStr;
 }
 
-String C_Event::serializeData(void)
+String& C_Event::GetName(void)
 {
-   String retStr = String(data);  
-   return retStr;
+   return source;
 }
+
+String& C_Event::GetData(void)
+{
+   return data;
+}
+
 

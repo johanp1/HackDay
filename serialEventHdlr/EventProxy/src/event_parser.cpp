@@ -8,45 +8,34 @@ EventParser::EventParser()
 
 void EventParser::HandleEvent(C_Event& e)
 {
-   String evData = e.serializeData();
-   ParseEvent(evData);
+   ParseEvent(e);
 }
-
-void EventParser::ParseEvent(String& unparsedData)
+void EventParser::ParseEvent(C_Event& e)
 {
-   if(nbrOfAcceptedCmds > 0)
+   int i = 0;
+   CommandHandler *hdlr = nullptr;
+
+   // fetch command
+   while((hdlr == nullptr) && (i < nbrOfAcceptedCmds))
    {
-      int i = 0;
-      CommandHandler *hdlr = nullptr;
-
-      //fetch command
-      while((hdlr == nullptr) && (i < nbrOfAcceptedCmds))
+      if (e.GetName().compareTo(commandHandlers[i]->cmd) == 0) //data starts with a command
       {
-         if (unparsedData.startsWith(commandHandlers[i]->cmd)) //data starts with a command
-         {
-            hdlr = commandHandlers[i]; // found handlerfor this command
-         }
-
-         i++;
+         hdlr = commandHandlers[i]; // found handlerfor this command
       }
 
-      if(hdlr != nullptr)
+      i++;
+   }
+
+   if(hdlr != nullptr)
+   {
+      String event_data = e.GetData();
+      if (event_data.compareTo("") == 0)
       {
-         int cmd_length = hdlr->cmd.length();
-         if (unparsedData.length() == cmd_length)
-         {
-            (*hdlr)();
-         }
-
-         // if the unparsed data contains more than the "cmd"-word, split out the data-part from the cmd-part
-         // format is <cmd>_<data>"
-         if ((unparsedData.length() > cmd_length + 1) && // does it contain data
-             (unparsedData.charAt(cmd_length) == '_'))   // is the char after the "cmd" a '_'
-         {
-            String data = unparsedData.substring(cmd_length + 1); // take the data part, not the "cmd_"-part
-
-            (*hdlr)(data);
-         }
+         (*hdlr)();
+      }
+      else
+      {
+         (*hdlr)(event_data);
       }
    }
 }

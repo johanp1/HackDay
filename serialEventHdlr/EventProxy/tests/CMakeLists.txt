@@ -14,7 +14,8 @@ set(TEST_SOURCE
   receiver_tests.cpp
   selector_tests.cpp
   sender_tests.cpp
-  ldc_writer_tests.cpp
+  lcd_writer_tests.cpp
+  event_generator_tests.cpp
   main.cpp)
 
 add_executable(arduinoEvents_test ${TEST_SOURCE})

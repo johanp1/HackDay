@@ -108,7 +108,8 @@ TEST_F(BufferTestFixture, PutFull)
 
   buffer.put(C_Event(str, 100));
   ASSERT_TRUE(buffer.get(e));
-  ASSERT_TRUE(e.serialize().compare("test_0") == 0);
+//  ASSERT_TRUE(e.serialize().compare("test_0") == 0);
+   ASSERT_TRUE(String("test_0").compare(e.serialize()) == 0);
 }
 
 TEST_F(BufferTestFixture, HandleEvent)
@@ -119,6 +120,6 @@ TEST_F(BufferTestFixture, HandleEvent)
 
   buffer.HandleEvent(sendEvent);
   ASSERT_TRUE(buffer.get(e));
-  ASSERT_TRUE(e.serialize().compare("apa_99") == 0);
+  ASSERT_TRUE(String("apa_99").compare(e.serialize()) == 0);
 }
 } // namespace

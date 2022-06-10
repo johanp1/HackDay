@@ -15,44 +15,43 @@ public:
     
    void HandleEvent(C_Event& e)
    {
-      serializedData.push_back(e.serializeData());
+      events.push_back(e);
    };
 
    void reset()
    {
-      serializedData.clear();
+      events.clear();
    };
-      
-   void checkEvent(vector<String>& expectedEvents)
+
+   void checkEvent(vector<C_Event>& expectedEvents)
    {
-      ASSERT_TRUE(expectedEvents.size() == serializedData.size());
+      ASSERT_TRUE(expectedEvents.size() == events.size());
 
       if (!expectedEvents.empty())
       {
-         vector<String>::const_iterator expectedDataIterator;
-         vector<String>::const_iterator dataIterator;
-
-         for (expectedDataIterator = expectedEvents.begin(), dataIterator = serializedData.begin();
-              expectedDataIterator != expectedEvents.end();
-              ++expectedDataIterator, ++dataIterator)
+         for (int i = 0; i < expectedEvents.size(); i++)
          {
-            ASSERT_TRUE( (*dataIterator).s.compare( (*expectedDataIterator).s ) == 0);
+            String expected_name = expectedEvents.at(i).GetName();
+            String expected_data = expectedEvents.at(i).GetData();
+            ASSERT_TRUE( events.at(i).GetName().compare(expected_name.s) == 0);
+            ASSERT_TRUE( events.at(i).GetData().compare(expected_data.s) == 0);
          }
       }
    }
 
-   void checkEvent(const String& expectedEvent)
+   void checkEvent(const String& expectedEventName, const String& expectedEventData)
    {
-      ASSERT_TRUE(serializedData.size() == 1);
-      ASSERT_TRUE(serializedData.at(0).compare(expectedEvent) == 0);
+      ASSERT_TRUE(events.size() == 1);
+      ASSERT_TRUE(events.at(0).GetName().compare(expectedEventName) == 0);
+      ASSERT_TRUE(events.at(0).GetData().compare(expectedEventData) == 0);
    }
 
    void checkNoEvent()
    {
-      ASSERT_TRUE(serializedData.empty());
+      ASSERT_TRUE(events.empty());
    }
    
-   vector<String> serializedData;
+   vector<C_Event> events;
 };
 
 class ReceiverTestFixture : public testing::Test 
@@ -90,44 +89,60 @@ TEST_F(ReceiverTestFixture, halfMsgRec)
    evSpy.checkNoEvent();
 }
 
+TEST_F(ReceiverTestFixture, badMsgRec)
+{
+   String sendStr = "sa_\n"; //no new-line, event nerver generated
+
+   Serial.setRecData(sendStr);
+   r.scan();
+   evSpy.checkNoEvent();
+}
+
+TEST_F(ReceiverTestFixture, badMsgRec2)
+{
+   String sendStr = "_"; //no new-line, event nerver generated
+
+   Serial.setRecData(sendStr);
+   r.scan();
+   evSpy.checkNoEvent();
+}
+
+TEST_F(ReceiverTestFixture, badMsgRec3)
+{
+   String sendStr = "_abc"; //no new-line, event nerver generated
+
+   Serial.setRecData(sendStr);
+   r.scan();
+   evSpy.checkNoEvent();
+}
+
 TEST_F(ReceiverTestFixture, eventOneMsgRec)
 {
    String sendStr = "sa\n";
-   String expectedStr = "sa";
    Serial.setRecData(sendStr);
    r.scan();
-   evSpy.checkEvent(expectedStr);
+   evSpy.checkEvent(String{"sa"}, String{""});
 }
+
+TEST_F(ReceiverTestFixture, eventOneMsgRec2)
+{
+   String sendStr = "sa_123\n";
+   Serial.setRecData(sendStr);
+   r.scan();
+   evSpy.checkEvent(String{"sa"}, String{"123"});
+}
+
 TEST_F(ReceiverTestFixture, eventTwoMsgRec)
 {
-   String sendStr = "apa\nbepa\n";
-   String expectedStr1 = "apa";
-   const String& expectedStr2 = "bepa";
-   vector<String> expectedEvents;
-   expectedEvents.push_back(expectedStr1);
-   expectedEvents.push_back(expectedStr2);
+   String sendStr = "apa\nbepa_45\n";
+   vector<C_Event> expectedEvents;
+   expectedEvents.push_back(C_Event{String("apa"), String("")});
+   expectedEvents.push_back(C_Event{String("bepa"), String("45")});
 
    Serial.setRecData(sendStr);
    r.scan();
+
    evSpy.checkEvent(expectedEvents);
 }
-
-/*
-TEST_F(ReceiverTestFixture, vectorTest)
-{
-   vector<String> v;
-   vector<String>::const_iterator iter;
-
-   v.push_back("0");
-   v.push_back("*1");
-   v.push_back("**2");
-   v.push_back("***3");
-   v.push_back("****4");
-
-   for(iter = v.begin(); iter != v.end(); ++iter)
-   {
-      cout << (*iter).s << endl;
-   }
-}*/
 
 } // namespace

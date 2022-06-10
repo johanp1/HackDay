@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "lcd_writer.h"
+#include <Arduino.h>
 
 class MockLcd
 {
@@ -27,15 +28,41 @@ class MockLcd
    void rightToLeft();
    void createChar(uint8_t, byte[]);
    void setBacklight(uint8_t brightness);*/
+   
+   MOCK_METHOD(void, begin, (uint8_t cols, uint8_t rows), ());
    MOCK_METHOD(void, clear, (), ());
-   //MOCK_METHOD(const Packet*, GetPacket, (size_t packet_number), (const));
-   //MOCK_METHOD(size_t, NumberOfPackets, (), (const));
+   MOCK_METHOD(void, home, (), ());
+   MOCK_METHOD(void, print, (const String& str), ());
+   MOCK_METHOD(void, setCursor, (uint8_t col, uint8_t row), ());
 };
 
-TEST(LcdWriterTestGroup, init)
+TEST(LcdWriterTestGroup, clearing)
 {
    MockLcd mock_lcd(0x27);
+   LcdWriter<MockLcd> lcdWriter(mock_lcd, String("apa"));
 
-   LcdWriter<MockLcd> lcdWriter(&mock_lcd);
-   lcdWriter.clear();
+   EXPECT_CALL(mock_lcd, clear());
+   //lcdWriter.clear();
+   lcdWriter();
+}
+
+TEST(LcdWriterTestGroup, homing)
+{
+   MockLcd mock_lcd(0x27);
+   LcdWriter<MockLcd> lcdWriter(mock_lcd, String("apa"));
+
+   EXPECT_CALL(mock_lcd, home());
+   //lcdWriter.home();
+   lcdWriter();
+}
+
+TEST(LcdWriterTestGroup, print_simple)
+{
+   String temp_str = String("hej");
+   MockLcd mock_lcd(0x27);
+   LcdWriter<MockLcd> lcdWriter(mock_lcd, String("apa"));
+
+   EXPECT_CALL(mock_lcd, print(String("hej")));
+   //lcdWriter.print(String("hej"));
+   lcdWriter(temp_str);
 }

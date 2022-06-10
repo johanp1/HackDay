@@ -14,9 +14,11 @@ class C_Event {
       data.concat(argData);
    };
 
-   String serialize(void);
-   String serializeData(void);
-  
+   const String serialize(void);
+
+   String& GetName(void);
+   String& GetData(void);
+
  private:
    String source;
    String data;

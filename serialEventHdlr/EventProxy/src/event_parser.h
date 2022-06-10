@@ -28,9 +28,8 @@ public:
    int GetNbrOfAcceptedCmds();
 
 private:
-   void ParseEvent(String &data);
+   void ParseEvent(C_Event& e);
 
-   //String acceptedCmds[c_maxNbrOfAcceptedCmds];
    CommandHandler *commandHandlers[c_maxNbrOfAcceptedCmds];
    int nbrOfAcceptedCmds;
 };
