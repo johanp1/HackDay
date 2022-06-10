@@ -1,0 +1,20 @@
+<mpg>  
+   <radiobutton>
+      <halpin>"axis-selector"<event>sela</event><type>u32</type></halpin>
+   </radiobutton>
+   <radiobutton>
+      <halpin>"scale-selector"<event>sels</event><type>u32</type></halpin>
+   </radiobutton>   
+   <button> 
+      <halpin>"jog-pos-btn"<event>jpos</event><type>bit</type></halpin> 
+   </button>
+   <button> 
+      <halpin>"jog-neg-btn"<event>jneg</event><type>bit</type></halpin>
+   </button>
+   <button> 
+      <halpin>"estop-btn"<event>est</event><type>bit</type></halpin>
+   </button>
+   <button> 
+      <halpin>"func-btn"<event>func</event><type>bit</type></halpin>
+   </button>
+</mpg>
