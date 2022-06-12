@@ -2,7 +2,7 @@
 #include "sender.h"
 #include "event_listner.h"
 #include "buffer.h"
-#include "selector.h"
+#include "selector2.h"
 #include "event_parser.h"
 #include "receiver.h"
 #include "mpg_pendant_lathe.h"
@@ -68,36 +68,40 @@ void setup() {
   eventGenerators[3] = new Button("est", cEStopButtonPin, cButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
-  eventGenerators[4] = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay);
+  eventGenerators[4] = new Selector2("sela", cAxisSelectorPin1, cAxisSelectorPin2, cAxisSelectorPin3, cSelectorDebounceDelay);
   eventGenerators[4]->addEventListner(&sender);
 
-  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, cSelectorDebounceDelay);
-  eventGenerators[5]->addEventListner(&sender);
+//  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, cSelectorDebounceDelay);
+//  eventGenerators[5]->addEventListner(&sender);
 
-  receiver.addEventListner(&ep);
-  ep.AddAcceptedCmd(updateXCommandHandler);
-  ep.AddAcceptedCmd(updateYCommandHandler);
+//  receiver.addEventListner(&ep);
+//  ep.AddAcceptedCmd(updateXCommandHandler);
+//  ep.AddAcceptedCmd(updateYCommandHandler);
 
   lcd.begin(16, 2); // initialize the lcd
+  lcd.clear();
+  lcd.setBacklight(255);
+  lcd.print("hej");
 }
 
 void loop() {
 
   byte i;
   C_Event e;
-
+  byte dummy = 0;
+  
   eventGenerators[0]->scan();
   eventGenerators[1]->scan();
   eventGenerators[2]->scan();
   eventGenerators[3]->scan();
   eventGenerators[4]->scan();
-  eventGenerators[5]->scan();
+  //eventGenerators[5]->scan();
   
   //send heart-beat every <cHeartbeatPeriod> [ms]
   if (millis() > heartbeatTimer)
   {
     String tmpStr = "hb";
-    C_Event hb_ev = C_Event(tmpStr, 1);
+    C_Event hb_ev = C_Event(tmpStr, "");
     sender.HandleEvent(hb_ev);
     heartbeatTimer = millis() + cHeartbeatPeriod;
   }

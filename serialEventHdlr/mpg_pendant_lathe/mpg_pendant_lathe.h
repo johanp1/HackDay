@@ -1,16 +1,18 @@
 #include "event_generator.h"
 
 constexpr auto cNbrOfButtons = 4;
-constexpr auto cNbrOfSelectors = 2;
+constexpr auto cNbrOfSelectors = 1;
 
 constexpr auto cButtonDebounceDelay = 50;
 constexpr auto cSelectorDebounceDelay = 100;
 
 constexpr auto cFuncButtonPin = 3;
-constexpr auto cEStopButtonPin = 8;
+constexpr auto cEStopButtonPin = 2;
 constexpr auto cJogPosButtonPin = 4;
 constexpr auto cJogNegButtonPin = 5;
-constexpr auto cAxisSelectorPin = A3;
+constexpr auto cAxisSelectorPin1 = 6;
+constexpr auto cAxisSelectorPin2 = 7;
+constexpr auto cAxisSelectorPin3= 8;
 constexpr auto cScaleSelectorPin = A2;
 
 constexpr auto cLoopDelayTime = 10; //milli sec
