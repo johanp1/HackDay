@@ -64,7 +64,6 @@ TEST_F(ParserTestFixture, handleValidEvent)
    ASSERT_FALSE(cmdHdlr.hasBeenCalled);
 
    ep.HandleEvent(e);
-   cout << "hej " << cmdHdlr.parsedData.s << '\n';
    ASSERT_TRUE(cmdHdlr.parsedData.compare("123") == 0 );
    ASSERT_TRUE(cmdHdlr.hasBeenCalled);
 }

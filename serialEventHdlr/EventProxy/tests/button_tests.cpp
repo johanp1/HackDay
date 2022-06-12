@@ -37,6 +37,7 @@ class ButtonTestFixture : public testing::Test
 
    void SetUp() override
    {
+      evSpy.reset();
       arduinoStub->Reset();
       b = std::make_unique<Button>("test", PIN, 50);
       b->addEventListner(&evSpy);

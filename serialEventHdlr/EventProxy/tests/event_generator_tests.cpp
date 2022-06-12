@@ -42,6 +42,7 @@ class EventGeneratorTestFixture : public testing::Test
 
    void SetUp() override
    {
+      evSpy.reset();
       generator = std::make_unique<TestEventGenerator>("test");
       generator->addEventListner(&evSpy);
    }
@@ -106,8 +107,6 @@ TEST_F(EventGeneratorTestFixture, twoListners)
    ASSERT_FALSE(evSpy2.newData);
 
    generator->generateEvent(1);
-   cout << evSpy.serializedEvent.s << "\n";
-   cout << evSpy2.serializedEvent.s << "\n";
    ASSERT_TRUE(evSpy.newData);
    ASSERT_TRUE(evSpy2.newData);
    ASSERT_TRUE(evSpy.serializedEvent.compare("test_1") == 0);
