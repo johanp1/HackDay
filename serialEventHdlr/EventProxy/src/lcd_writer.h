@@ -95,6 +95,7 @@ void AxisView<Lcd>::Draw()
    row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
    row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_y ? '*' : ' ');
 
+   this->myLcd.clear()
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
@@ -119,6 +120,7 @@ void SpindleView<Lcd>::Draw()
    row2.concat(this->myModel.GetSpindleSpeed());
    row2.concat(String(" rpm"));
 
+   this->myLcd.clear()
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
@@ -133,8 +135,10 @@ public:
    {
       LcdView<Lcd>* myView = new AxisView<Lcd>(myLcd, myModel);
 
-      myLcd.begin(16, 2);
-      myLcd.setBacklight(200);
+      // for some reason this didn't work?. Client needs to 
+      // do begin and setBacklight
+      //myLcd.begin(16, 2);
+      //myLcd.setBacklight(200);
    };
    ~LcdWriter(){};
 
