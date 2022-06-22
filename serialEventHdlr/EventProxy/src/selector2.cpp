@@ -1,5 +1,4 @@
 #include "selector2.h"
-#include <iostream>
 
 #define LIMIT 60u
 #define NUM_STATES 4

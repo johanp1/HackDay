@@ -52,17 +52,35 @@ class Model
 };
 
 template <class Lcd>
+class Controller;
+
+template <class Lcd>
 class LcdView : public Observer
 {
    public:
-   LcdView(Lcd& lcd, Model& model) : myLcd(lcd), myModel(model) {myModel.Attach(this);};
-   virtual ~LcdView(){myModel.Detach(this);};
+   LcdView(Lcd& lcd, Model& model) : myLcd(lcd), myModel(model)
+   {
+      myModel.Attach(this); 
+      enabled_ = false;
+      myController = MakeController();
+   };
+   virtual ~LcdView(){myModel.Detach(this); if (myController != nullptr){delete myController;}};
    virtual void Update(){this->Draw();};
    virtual void Draw();
+   //virtual void Initialize(){myController = MakeController();};
+
+   // factory function for creating controller, maybe a view wants a special kind of controller
+   virtual Controller<Lcd>* MakeController(){return new Controller<Lcd>(this);};
+
+   void SetEnabled(bool enabled){enabled_ = enabled;};
+   bool GetEnable(){return enabled_;}
+   Controller<Lcd>* GetController(){return myController;};
+   Model& myModel;
 
    protected:
    Lcd& myLcd;
-   Model& myModel;
+   Controller<Lcd>* myController = nullptr;
+   bool enabled_;
 };
 
 template <class Lcd>
@@ -95,7 +113,7 @@ void AxisView<Lcd>::Draw()
    row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
    row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_y ? '*' : ' ');
 
-   this->myLcd.clear()
+   this->myLcd.clear();
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
@@ -120,53 +138,28 @@ void SpindleView<Lcd>::Draw()
    row2.concat(this->myModel.GetSpindleSpeed());
    row2.concat(String(" rpm"));
 
-   this->myLcd.clear()
+   this->myLcd.clear();
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
    this->myLcd.print(row2);
 };
 
+// not used yet
 template <class Lcd>
-class LcdWriter
+class Controller : public EventParser
 {
-public:
-   LcdWriter(Lcd& lcd /*, uint8_t cols, uint8_t rows*/)  : myLcd(lcd)
+   public:
+   Controller(LcdView<Lcd>* view) : myView(view)
    {
-      LcdView<Lcd>* myView = new AxisView<Lcd>(myLcd, myModel);
-
-      // for some reason this didn't work?. Client needs to 
-      // do begin and setBacklight
-      //myLcd.begin(16, 2);
-      //myLcd.setBacklight(200);
+      myModel = &myView->myModel;
    };
-   ~LcdWriter(){};
+   virtual ~Controller(){};
+   void AddEvent(CommandHandler &h){AddAcceptedCmd(h);};
 
-   void SetX(Position p) {myModel.SetX(p);};
-   void SetY(Position p) {myModel.SetY(p);};
-   void SetSpindleSpeed(Speed s) {myModel.SetSpindleSpeed(s);};
-   void SetActiveAxis(Axis a) {myModel.SetActiveAxis(a);};
-   void SetAxisView()
-   {
-      delete myView;
-
-      myView = new AxisView<Lcd>(myLcd, myModel);
-      myView->Draw();
-   };
-   void SetSpindleView()
-   {
-      delete myView;
-
-      myView = new SpindleView<Lcd>(myLcd, myModel);
-      myView->Draw();
-   };
-
-   Model myModel;
-
-private:
-   Lcd& myLcd;
+   private:
+   Model* myModel;
    LcdView<Lcd>* myView;
-   
 };
 
 #endif // __C_LCD_WRITER_H__

@@ -99,7 +99,6 @@ TEST_F(Selector2TestFixture, checkTransitionAfterTimeout)
 	arduinoStub->IncTimeMs(101); //shorter than debounce delay
 	s->scan();
 	ASSERT_TRUE(evSpy.newData);
-   cout << evSpy.serializedEvent.s << "\n";
    ASSERT_TRUE(evSpy.serializedEvent.compare("test_3") == 0);
 }
 
@@ -113,7 +112,6 @@ TEST_F(Selector2TestFixture, checkTransitionState1)
 	arduinoStub->IncTimeMs(101); //shorter than debounce delay
 	s->scan();
 	ASSERT_TRUE(evSpy.newData);
-   cout << evSpy.serializedEvent.s << "\n";
    ASSERT_TRUE(evSpy.serializedEvent.compare("test_1") == 0);
 }
 
@@ -127,7 +125,6 @@ TEST_F(Selector2TestFixture, checkTransitionState2)
 	arduinoStub->IncTimeMs(101); //shorter than debounce delay
 	s->scan();
 	ASSERT_TRUE(evSpy.newData);
-   cout << evSpy.serializedEvent.s << "\n";
    ASSERT_TRUE(evSpy.serializedEvent.compare("test_2") == 0);
 }
 

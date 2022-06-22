@@ -6,6 +6,19 @@
 using ::testing::_;
 using ::testing::NiceMock;
 
+class TestEventFunctor : public CommandHandler
+{
+   public:
+   TestEventFunctor(String const& event_name) : CommandHandler(event_name), hasBeenCalled{false} {}; 
+   
+   void operator()(void)
+   {
+      hasBeenCalled = true;
+   };
+
+   bool hasBeenCalled;
+};
+
 class MockLcd
 {
    public:
@@ -127,55 +140,35 @@ TEST(LcdWriterTestGroup, spindle_view_set_speed)
    lcdModel.SetSpindleSpeed(1000);
 }
 
-TEST(LcdWriterTestGroup, lcd_writer_init)
+TEST(LcdWriterTestGroup, enable_view)
 {
-   MockLcd mock_lcd(0x27);
-
-   EXPECT_CALL(mock_lcd, begin(16, 2));
-   EXPECT_CALL(mock_lcd, setBacklight(200));
-   LcdWriter<MockLcd> lcdWriter(mock_lcd);
-}
-
-TEST(LcdWriterTestGroup, lcd_writer_set_x)
-{
+   Model lcdModel;
    NiceMock<MockLcd> mock_lcd(0x27);
-   LcdWriter<MockLcd> lcdWriter(mock_lcd);
-
-   EXPECT_CALL(mock_lcd, setCursor(0, 0));
-   EXPECT_CALL(mock_lcd, setCursor(0, 1));
-   EXPECT_CALL(mock_lcd, print(String("*x: 10.9")));
-   EXPECT_CALL(mock_lcd, print(String(" y: 0")));
-   lcdWriter.SetX(10.9f);
+   LcdView<MockLcd> view(mock_lcd, lcdModel);
+   
+   ASSERT_FALSE(view.GetEnable());
+   view.SetEnabled(true);
+   ASSERT_TRUE(view.GetEnable());
 }
 
-using ::testing::InSequence;
-
-TEST(LcdWriterTestGroup, lcd_writer_set_spindle_view)
+TEST(LcdWriterTestGroup, controller_register_event)
 {
+    C_Event e{String("test"), String("")};
+   Model lcdModel;
    NiceMock<MockLcd> mock_lcd(0x27);
-   LcdWriter<MockLcd> lcdWriter(mock_lcd);
+   LcdView<MockLcd> view(mock_lcd, lcdModel);
+   TestEventFunctor eventFunctor(String("test"));
 
-   {
-      InSequence seq;
-      EXPECT_CALL(mock_lcd, setCursor(0, 0));
-      EXPECT_CALL(mock_lcd, print(String(" spindle speed:")));
-      EXPECT_CALL(mock_lcd, setCursor(0, 1));
-      EXPECT_CALL(mock_lcd, print(String(" 0 rpm")));
-   }
-   lcdWriter.SetSpindleView();
+   //ASSERT_TRUE(view.GetController() == nullptr);
+   //view.Initialize();
+   ASSERT_TRUE(view.GetController() != nullptr);
+
+   view.GetController()->AddEvent(eventFunctor);
+   ASSERT_FALSE(eventFunctor.hasBeenCalled);
+   view.GetController()->HandleEvent(e);
+   ASSERT_TRUE(eventFunctor.hasBeenCalled);
 }
 
-TEST(LcdWriterTestGroup, lcd_writer_set_axis_view)
-{
-   NiceMock<MockLcd> mock_lcd(0x27);
-   LcdWriter<MockLcd> lcdWriter(mock_lcd);
-
-   {
-      InSequence seq;
-      EXPECT_CALL(mock_lcd, setCursor(0, 0));
-      EXPECT_CALL(mock_lcd, print(String("*x: 0")));
-      EXPECT_CALL(mock_lcd, setCursor(0, 1));
-      EXPECT_CALL(mock_lcd, print(String(" y: 0")));
-   }
-   lcdWriter.SetAxisView();
-}
+/*
+lcdWriter doesnt need a member lcd (myLcd)
+*/
