@@ -155,7 +155,7 @@ class Controller : public EventParser
       myModel = &myView->myModel;
    };
    virtual ~Controller(){};
-   void AddEvent(CommandHandler &h){AddAcceptedCmd(h);};
+   void AddEvent(EventHandler &h){AddAcceptedHandler(h);};
 
    private:
    Model* myModel;

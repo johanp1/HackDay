@@ -5,10 +5,10 @@
 
 namespace {
 
-class TestCommandHandler : public CommandHandler
+class TestEventHandler : public EventHandler
 {
    public:
-   TestCommandHandler(String const& cmd_) : CommandHandler(cmd_), hasBeenCalled{false} {}; 
+   TestEventHandler(String const& event_name) : EventHandler(event_name), hasBeenCalled{false} {}; 
 
    void operator()(String& _parsedData)
    {
@@ -35,11 +35,11 @@ class ParserTestFixture : public testing::Test
 {
    protected: 
    EventParser ep;
-   TestCommandHandler cmdHdlr{String("apa")};
+   TestEventHandler cmdHdlr{String("apa")};
 
    ParserTestFixture()
    {
-      ep.AddAcceptedCmd(cmdHdlr);
+      ep.AddAcceptedHandler(cmdHdlr);
    }
 
    void SetUp()
@@ -54,7 +54,7 @@ class ParserTestFixture : public testing::Test
 
 TEST_F(ParserTestFixture, init)
 {
-   ASSERT_TRUE(ep.GetNbrOfAcceptedCmds() == 1);
+   ASSERT_TRUE(ep.GetNbrOfAcceptedHandlers() == 1);
 }
 
 TEST_F(ParserTestFixture, handleValidEvent)
@@ -103,7 +103,7 @@ TEST_F(ParserTestFixture, handleValidEventNoData)
 
 TEST_F(ParserTestFixture, handle2ValidEvents)
 {
-   TestCommandHandler cmdHdlr2{String("bepa")};
+   TestEventHandler cmdHdlr2{String("bepa")};
 
    C_Event e1{String("apa"), String("5")};
    C_Event e2{String("bepa"), String("xyz")};
@@ -111,8 +111,8 @@ TEST_F(ParserTestFixture, handle2ValidEvents)
     ASSERT_FALSE(cmdHdlr.hasBeenCalled);
     ASSERT_FALSE(cmdHdlr2.hasBeenCalled);
    
-   ep.AddAcceptedCmd(cmdHdlr2);
-   ASSERT_TRUE(ep.GetNbrOfAcceptedCmds() == 2);
+   ep.AddAcceptedHandler(cmdHdlr2);
+   ASSERT_TRUE(ep.GetNbrOfAcceptedHandlers() == 2);
 
    ep.HandleEvent(e1);
 

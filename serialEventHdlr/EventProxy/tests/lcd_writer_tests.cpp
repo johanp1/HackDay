@@ -6,10 +6,10 @@
 using ::testing::_;
 using ::testing::NiceMock;
 
-class TestEventFunctor : public CommandHandler
+class TestEventFunctor : public EventHandler
 {
    public:
-   TestEventFunctor(String const& event_name) : CommandHandler(event_name), hasBeenCalled{false} {}; 
+   TestEventFunctor(String const& event_name) : EventHandler(event_name), hasBeenCalled{false} {}; 
    
    void operator()(void)
    {
@@ -22,9 +22,9 @@ class TestEventFunctor : public CommandHandler
 class MockLcd
 {
    public:
-   MockLcd(uint8_t i2cAddr_) : i2cAddr(i2cAddr_){};
+   MockLcd(uint8_t i2cAddr) : i2cAddr(i2cAddr){};
 
-   uint8_t i2cAddr;
+   uint8_t i2cAddr_;
 
    /*void begin(uint8_t cols, uint8_t rows);
    void clear();

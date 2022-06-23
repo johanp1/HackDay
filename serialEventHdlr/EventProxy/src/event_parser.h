@@ -3,17 +3,17 @@
 
 #include "event_listner.h"
 
-constexpr byte c_maxNbrOfAcceptedCmds = 8;
+constexpr byte c_maxNbrOfAcceptedHandlers = 8;
 
-class CommandHandler
+class EventHandler
 {
 public:
-   CommandHandler(String const &cmd_) : cmd(cmd_){};
+   EventHandler(String const &event_name) : event_name_(event_name){};
    virtual void operator()(String &_parsedData) { (void)_parsedData; };
    virtual void operator()(){};
 
 //private:
-   String cmd;
+   String event_name_;
 };
 
 class EventParser : public EventListner
@@ -23,15 +23,15 @@ public:
 
    void HandleEvent(C_Event &e);
 
-   void AddAcceptedCmd(CommandHandler &f);
+   void AddAcceptedHandler(EventHandler &f);
 
-   int GetNbrOfAcceptedCmds();
+   int GetNbrOfAcceptedHandlers();
 
 private:
    void ParseEvent(C_Event& e);
 
-   CommandHandler *commandHandlers[c_maxNbrOfAcceptedCmds];
-   int nbrOfAcceptedCmds;
+   EventHandler *eventHandlers_[c_maxNbrOfAcceptedHandlers];
+   int nbrOfAcceptedHandlers_;
 };
 
 #endif // __C_EVENT_PARSER_H__
