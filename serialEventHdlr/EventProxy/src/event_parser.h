@@ -5,10 +5,10 @@
 
 constexpr byte c_maxNbrOfAcceptedHandlers = 8;
 
-class EventHandler
+class EventFunctor
 {
 public:
-   EventHandler(String const &event_name) : event_name_(event_name){};
+   EventFunctor(String const &event_name) : event_name_(event_name){};
    virtual void operator()(String &_parsedData) { (void)_parsedData; };
    virtual void operator()(){};
 
@@ -23,14 +23,14 @@ public:
 
    void HandleEvent(C_Event &e);
 
-   void AddAcceptedHandler(EventHandler &f);
+   void AddAcceptedHandler(EventFunctor &h);
 
    int GetNbrOfAcceptedHandlers();
 
 private:
    void ParseEvent(C_Event& e);
 
-   EventHandler *eventHandlers_[c_maxNbrOfAcceptedHandlers];
+   EventFunctor *eventHandlers_[c_maxNbrOfAcceptedHandlers];
    int nbrOfAcceptedHandlers_;
 };
 

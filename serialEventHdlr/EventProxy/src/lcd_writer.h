@@ -72,7 +72,7 @@ class LcdView : public Observer
    // factory function for creating controller, maybe a view wants a special kind of controller
    virtual Controller<Lcd>* MakeController(){return new Controller<Lcd>(this);};
 
-   void SetEnabled(bool enabled){enabled_ = enabled;};
+   virtual void SetEnabled(bool enabled){enabled_ = enabled;};
    bool GetEnable(){return enabled_;}
    Controller<Lcd>* GetController(){return myController;};
    Model& myModel;
@@ -109,11 +109,13 @@ void AxisView<Lcd>::Draw()
    row1.concat(this->myModel.GetX());
    row2.concat(this->myModel.GetY());
    
+   row1.concat("   "); //add some spaces to avoid doing clear between prints
+   row2.concat("   ");
+
    // indicate the jogged/active axis with a  '*'
    row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
    row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_y ? '*' : ' ');
 
-   this->myLcd.clear();
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
@@ -125,22 +127,31 @@ class SpindleView : public LcdView<Lcd>
 {
    public:
    SpindleView(Lcd& lcd, Model& model) : LcdView<Lcd>(lcd, model){};
-
+   void SetEnabled(bool enabled);
    void Draw() override;
+};
+
+template <class Lcd>
+void SpindleView<Lcd>::SetEnabled(bool enabled)
+{ 
+   if(!this->enabled_)
+   {
+      this->enabled_ = enabled;
+      String row1 = String(" spindle speed:");
+
+      this->myLcd.setCursor(0, 0);
+      this->myLcd.print(row1);
+   }
 };
 
 template <class Lcd>
 void SpindleView<Lcd>::Draw()
 {
-   String row1 = String(" spindle speed:");
    String row2 = String(" ");
 
    row2.concat(this->myModel.GetSpindleSpeed());
-   row2.concat(String(" rpm"));
+   row2.concat(String(" rpm    "));
 
-   this->myLcd.clear();
-   this->myLcd.setCursor(0, 0);
-   this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
    this->myLcd.print(row2);
 };
@@ -155,7 +166,7 @@ class Controller : public EventParser
       myModel = &myView->myModel;
    };
    virtual ~Controller(){};
-   void AddEvent(EventHandler &h){AddAcceptedHandler(h);};
+   void AddEvent(EventFunctor &h){AddAcceptedHandler(h);};
 
    private:
    Model* myModel;

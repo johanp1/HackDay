@@ -13,12 +13,12 @@ void EventParser::HandleEvent(C_Event& e)
 void EventParser::ParseEvent(C_Event& e)
 {
    int i = 0;
-   EventHandler *hdlr = nullptr;
+   EventFunctor *hdlr = nullptr;
 
    // fetch command
    while((hdlr == nullptr) && (i < nbrOfAcceptedHandlers_))
    {
-      if (e.GetName().compareTo(eventHandlers_[i]->cmd) == 0) //data starts with a command
+      if (e.GetName().compareTo(eventHandlers_[i]->event_name_) == 0) //data starts with a command
       {
          hdlr = eventHandlers_[i]; // found handlerfor this command
       }
@@ -40,16 +40,16 @@ void EventParser::ParseEvent(C_Event& e)
    }
 }
 
-void EventParser::AddAcceptedCmd(CommandHandler &f)
+void EventParser::AddAcceptedHandler(EventFunctor &h)
 {
    if (nbrOfAcceptedHandlers_ < c_maxNbrOfAcceptedHandlers)
    {
-      eventHandlers_[nbrOfAcceptedHandlers_] = &f;
+      eventHandlers_[nbrOfAcceptedHandlers_] = &h;
       nbrOfAcceptedHandlers_++;
    }   
 }
 
 int EventParser::GetNbrOfAcceptedHandlers()
 {
-   return c_maxNbrOfAcceptedHandlers;
+   return nbrOfAcceptedHandlers_;
 }

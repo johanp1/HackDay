@@ -5,10 +5,10 @@
 
 namespace {
 
-class TestEventHandler : public EventHandler
+class TestEventFunctor : public EventFunctor
 {
    public:
-   TestEventHandler(String const& event_name) : EventHandler(event_name), hasBeenCalled{false} {}; 
+   TestEventFunctor(String const& event_name) : EventFunctor(event_name), hasBeenCalled{false} {}; 
 
    void operator()(String& _parsedData)
    {
@@ -35,7 +35,7 @@ class ParserTestFixture : public testing::Test
 {
    protected: 
    EventParser ep;
-   TestEventHandler cmdHdlr{String("apa")};
+   TestEventFunctor cmdHdlr{String("apa")};
 
    ParserTestFixture()
    {
@@ -103,7 +103,7 @@ TEST_F(ParserTestFixture, handleValidEventNoData)
 
 TEST_F(ParserTestFixture, handle2ValidEvents)
 {
-   TestEventHandler cmdHdlr2{String("bepa")};
+   TestEventFunctor cmdHdlr2{String("bepa")};
 
    C_Event e1{String("apa"), String("5")};
    C_Event e2{String("bepa"), String("xyz")};
