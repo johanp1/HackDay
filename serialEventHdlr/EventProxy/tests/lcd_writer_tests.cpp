@@ -6,10 +6,10 @@
 using ::testing::_;
 using ::testing::NiceMock;
 
-class TestEventFunctor : public CommandHandler
+class TestEventFunctor : public EventFunctor
 {
    public:
-   TestEventFunctor(String const& event_name) : CommandHandler(event_name), hasBeenCalled{false} {}; 
+   TestEventFunctor(String const& event_name) : EventFunctor(event_name), hasBeenCalled{false} {}; 
    
    void operator()(void)
    {
@@ -22,9 +22,9 @@ class TestEventFunctor : public CommandHandler
 class MockLcd
 {
    public:
-   MockLcd(uint8_t i2cAddr_) : i2cAddr(i2cAddr_){};
+   MockLcd(uint8_t i2cAddr) : i2cAddr_(i2cAddr){};
 
-   uint8_t i2cAddr;
+   uint8_t i2cAddr_;
 
    /*void begin(uint8_t cols, uint8_t rows);
    void clear();
@@ -96,8 +96,8 @@ TEST(LcdWriterTestGroup, axis_view_set_x)
 
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
-   EXPECT_CALL(mock_lcd, print(String("*x: 1.1")));
-   EXPECT_CALL(mock_lcd, print(String(" y: 0")));
+   EXPECT_CALL(mock_lcd, print(String("*x: 1.1   ")));
+   EXPECT_CALL(mock_lcd, print(String(" y: 0   ")));
    lcdModel.SetX(1.1f);
 }
 
@@ -109,8 +109,8 @@ TEST(LcdWriterTestGroup, axis_view_set_y)
 
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
-   EXPECT_CALL(mock_lcd, print(String("*x: 0")));
-   EXPECT_CALL(mock_lcd, print(String(" y: 99.99")));
+   EXPECT_CALL(mock_lcd, print(String("*x: 0   ")));
+   EXPECT_CALL(mock_lcd, print(String(" y: 99.99   ")));
    lcdModel.SetY(99.99f);
 }
 
@@ -122,21 +122,29 @@ TEST(LcdWriterTestGroup, axis_view_set_active_axis)
 
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
-   EXPECT_CALL(mock_lcd, print(String(" x: 0")));
-   EXPECT_CALL(mock_lcd, print(String("*y: 0")));
+   EXPECT_CALL(mock_lcd, print(String(" x: 0   ")));
+   EXPECT_CALL(mock_lcd, print(String("*y: 0   ")));
    lcdModel.SetActiveAxis(axis_y);
 }
 
-TEST(LcdWriterTestGroup, spindle_view_set_speed)
+TEST(LcdWriterTestGroup, spindle_view_enable)
 {
    Model lcdModel;
    NiceMock<MockLcd> mock_lcd(0x27);
    SpindleView<MockLcd> spindleView(mock_lcd, lcdModel);
 
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
-   EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String(" spindle speed:")));
-   EXPECT_CALL(mock_lcd, print(String(" 1000 rpm")));
+   spindleView.SetEnabled(true);
+}
+TEST(LcdWriterTestGroup, spindle_view_set_speed)
+{
+   Model lcdModel;
+   NiceMock<MockLcd> mock_lcd(0x27);
+   SpindleView<MockLcd> spindleView(mock_lcd, lcdModel);
+
+   EXPECT_CALL(mock_lcd, setCursor(0, 1));
+   EXPECT_CALL(mock_lcd, print(String(" 1000 rpm    ")));
    lcdModel.SetSpindleSpeed(1000);
 }
 
@@ -159,8 +167,6 @@ TEST(LcdWriterTestGroup, controller_register_event)
    LcdView<MockLcd> view(mock_lcd, lcdModel);
    TestEventFunctor eventFunctor(String("test"));
 
-   //ASSERT_TRUE(view.GetController() == nullptr);
-   //view.Initialize();
    ASSERT_TRUE(view.GetController() != nullptr);
 
    view.GetController()->AddEvent(eventFunctor);
@@ -168,7 +174,3 @@ TEST(LcdWriterTestGroup, controller_register_event)
    view.GetController()->HandleEvent(e);
    ASSERT_TRUE(eventFunctor.hasBeenCalled);
 }
-
-/*
-lcdWriter doesnt need a member lcd (myLcd)
-*/
