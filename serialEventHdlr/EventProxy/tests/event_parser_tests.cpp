@@ -127,4 +127,25 @@ TEST_F(ParserTestFixture, handle2ValidEvents)
    ASSERT_TRUE(cmdHdlr2.hasBeenCalled);
 }
 
+TEST_F(ParserTestFixture, handle2ValidEventsSameName)
+{
+   TestEventFunctor cmdHdlr2{String("apa")};
+
+   C_Event e1{String("apa"), String("5")};
+
+    ASSERT_FALSE(cmdHdlr.hasBeenCalled);
+    ASSERT_FALSE(cmdHdlr2.hasBeenCalled);
+   
+   ep.AddAcceptedHandler(cmdHdlr2);
+   ASSERT_TRUE(ep.GetNbrOfAcceptedHandlers() == 2);
+
+   ep.HandleEvent(e1);
+
+   ASSERT_TRUE(cmdHdlr.parsedData.compare("5") == 0 );
+   ASSERT_TRUE(cmdHdlr.hasBeenCalled);
+   ASSERT_TRUE(cmdHdlr2.parsedData.compare("5") == 0 );
+   ASSERT_TRUE(cmdHdlr2.hasBeenCalled);
+   cmdHdlr.clear();
+}
+
 } // namespace

@@ -16,26 +16,21 @@ void EventParser::ParseEvent(C_Event& e)
    EventFunctor *hdlr = nullptr;
 
    // fetch command
-   while((hdlr == nullptr) && (i < nbrOfAcceptedHandlers_))
+   for (i = 0; i < nbrOfAcceptedHandlers_; i++)
    {
-      if (e.GetName().compareTo(eventHandlers_[i]->event_name_) == 0) //data starts with a command
+      if(eventHandlers_[i] != nullptr)
       {
-         hdlr = eventHandlers_[i]; // found handlerfor this command
-      }
-
-      i++;
-   }
-
-   if(hdlr != nullptr)
-   {
-      String event_data = e.GetData();
-      if (event_data.compareTo("") == 0)
-      {
-         (*hdlr)();
-      }
-      else
-      {
-         (*hdlr)(event_data);
+         if (e.GetName().compareTo(eventHandlers_[i]->event_name_) == 0) //data starts with a command
+         {
+            if ( e.GetData().compareTo("") == 0)
+            {
+               (*eventHandlers_[i])();
+            }
+            else
+            {
+               (*eventHandlers_[i])(e.GetData());
+            }
+         }
       }
    }
 }

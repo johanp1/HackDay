@@ -19,6 +19,23 @@ class TestEventFunctor : public EventFunctor
    bool hasBeenCalled;
 };
 
+class TestObserver : public Observer
+{
+   public:
+   TestObserver() {hasBeenCalled = false;};
+   void Update() override
+   {
+      hasBeenCalled = true;
+   };
+
+   void Reset()
+   {
+      hasBeenCalled = false;
+   };
+   
+   bool hasBeenCalled;
+};
+
 class MockLcd
 {
    public:
@@ -53,16 +70,77 @@ class MockLcd
    MOCK_METHOD(void, setBacklight, (uint8_t brightness), ());
 };
 
-/*
-TEST(LcdWriterTestGroup, init)
+TEST(LcdWriterTestGroup, notify_observer)
 {
-   Model lcdModel;
-   MockLcd mock_lcd(0x27);
-   EXPECT_CALL(mock_lcd, begin(16, 2));
-   EXPECT_CALL(mock_lcd, setBacklight(200));
+   TestObserver o;
+   Model model;
 
-   LcdView<MockLcd> lcdView(mock_lcd, lcdModel);
-}*/
+   model.Attach(&o);
+
+   ASSERT_FALSE(o.hasBeenCalled);
+   model.SetX(0);
+   ASSERT_TRUE(o.hasBeenCalled);
+}
+
+TEST(LcdWriterTestGroup, notify_observers)
+{
+   TestObserver o1;
+   TestObserver o2;
+   Model model;
+
+   model.Attach(&o1);
+   model.Attach(&o2);
+
+   ASSERT_FALSE(o1.hasBeenCalled);
+   ASSERT_FALSE(o2.hasBeenCalled);
+   model.SetX(0);
+   ASSERT_TRUE(o1.hasBeenCalled);
+   ASSERT_TRUE(o2.hasBeenCalled);
+}
+
+TEST(LcdWriterTestGroup, detach_observer)
+{
+   TestObserver o;
+   Model model;
+
+   model.Attach(&o);
+
+   ASSERT_FALSE(o.hasBeenCalled);
+   model.SetX(0);
+   ASSERT_TRUE(o.hasBeenCalled);
+   o.Reset();
+   model.Detach(&o);
+   model.SetX(0);
+   ASSERT_FALSE(o.hasBeenCalled);
+}
+
+TEST(LcdWriterTestGroup, detach_observers)
+{
+   TestObserver o1;
+   TestObserver o2;
+   TestObserver o3;
+   Model model;
+
+   model.Attach(&o1);
+   model.Attach(&o2);
+   model.Attach(&o3);
+
+   model.SetX(0);
+   ASSERT_TRUE(o1.hasBeenCalled);
+   ASSERT_TRUE(o2.hasBeenCalled);
+   ASSERT_TRUE(o3.hasBeenCalled);
+
+   o1.Reset();
+   o2.Reset();
+   o3.Reset();
+
+   model.Detach(&o1);
+   model.Detach(&o2);
+   model.SetX(0);
+   ASSERT_FALSE(o1.hasBeenCalled);
+   ASSERT_FALSE(o2.hasBeenCalled);
+   ASSERT_TRUE(o3.hasBeenCalled);
+}
 
 TEST(LcdWriterTestGroup, updating)
 {
@@ -73,10 +151,10 @@ TEST(LcdWriterTestGroup, updating)
    EXPECT_CALL(mock_lcd, clear());
    EXPECT_CALL(mock_lcd, setCursor(_, _));
    EXPECT_CALL(mock_lcd, print(_));
-   lcdView.Draw();
+   lcdView.Update();
 }
 
-TEST(LcdWriterTestGroup, observer_update)
+TEST(LcdWriterTestGroup, notify_update)
 {
    Model lcdModel;
    NiceMock<MockLcd> mock_lcd(0x27);
@@ -94,6 +172,7 @@ TEST(LcdWriterTestGroup, axis_view_set_x)
    NiceMock<MockLcd> mock_lcd(0x27);
    AxisView<MockLcd> axisView(mock_lcd, lcdModel);
 
+   axisView.SetEnabled(true);
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String("*x: 1.1   ")));
@@ -107,6 +186,7 @@ TEST(LcdWriterTestGroup, axis_view_set_y)
    NiceMock<MockLcd> mock_lcd(0x27);
    AxisView<MockLcd> axisView(mock_lcd, lcdModel);
 
+   axisView.SetEnabled(true);
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String("*x: 0   ")));
@@ -120,6 +200,7 @@ TEST(LcdWriterTestGroup, axis_view_set_active_axis)
    NiceMock<MockLcd> mock_lcd(0x27);
    AxisView<MockLcd> axisView(mock_lcd, lcdModel);
 
+   axisView.SetEnabled(true);
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String(" x: 0   ")));
@@ -133,8 +214,11 @@ TEST(LcdWriterTestGroup, spindle_view_enable)
    NiceMock<MockLcd> mock_lcd(0x27);
    SpindleView<MockLcd> spindleView(mock_lcd, lcdModel);
 
+   EXPECT_CALL(mock_lcd, clear());
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, print(String(" spindle speed:")));
+   EXPECT_CALL(mock_lcd, setCursor(0, 1));
+   EXPECT_CALL(mock_lcd, print(String(" 0 rpm    ")));
    spindleView.SetEnabled(true);
 }
 TEST(LcdWriterTestGroup, spindle_view_set_speed)
@@ -142,7 +226,8 @@ TEST(LcdWriterTestGroup, spindle_view_set_speed)
    Model lcdModel;
    NiceMock<MockLcd> mock_lcd(0x27);
    SpindleView<MockLcd> spindleView(mock_lcd, lcdModel);
-
+   
+   spindleView.SetEnabled(true);
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String(" 1000 rpm    ")));
    lcdModel.SetSpindleSpeed(1000);
@@ -174,3 +259,8 @@ TEST(LcdWriterTestGroup, controller_register_event)
    view.GetController()->HandleEvent(e);
    ASSERT_TRUE(eventFunctor.hasBeenCalled);
 }
+
+/*
+more controller stuff. controller::myModel and controller::myView not used at all
+maybe add all events in specialised cpntroller constructor
+*/

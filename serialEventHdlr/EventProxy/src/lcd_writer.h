@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include "event_parser.h"
 
+constexpr auto k_maxNbrOfObservers = 4;
+
 using Position = float;
 using Speed = int;
 using Row = byte;
@@ -13,44 +15,97 @@ class Observer
 {
    public:
    Observer(){};
+   virtual ~Observer(){};
    virtual void Update(){};
 };
 
 class Model
 {
    public:
-   Model(){x_pos_ = 0.0f, y_pos_ = 0.0f, spindle_speed_ = 0; active_axis_ = axis_x;};
+   Model();
 
-   void Attach(Observer* o){registry = o;};
-   void Detach(Observer* o)
-   {
-      if (registry == o)
-      {
-         registry = nullptr;
-      }
-   };
+   void Attach(Observer* o);
+   void Detach(Observer* o);
 
-   void SetX(Position p){x_pos_ = p; Notify();};
-   void SetY(Position p){y_pos_ = p; Notify();};
-   void SetSpindleSpeed(Speed s){spindle_speed_ = s; Notify();};
-   void SetActiveAxis(Axis a){active_axis_ = a;Notify();};
+   void SetX(Position p) {x_pos_ = p; Notify();};
+   void SetY(Position p) {y_pos_ = p; Notify();};
+   void SetSpindleSpeed(Speed s) {spindle_speed_ = s; Notify();};
+   void SetActiveAxis(Axis a) {active_axis_ = a;Notify();};
 
-   Position GetX(){return x_pos_;};
-   Position GetY(){return y_pos_;};
-   Speed GetSpindleSpeed(){return spindle_speed_;};
-   Axis GetActiveAxis(){return active_axis_;};
+   Position GetX() {return x_pos_;};
+   Position GetY() {return y_pos_;};
+   Speed GetSpindleSpeed() {return spindle_speed_;};
+   Axis GetActiveAxis() {return active_axis_;};
 
    protected:
-   virtual void Notify(){registry->Update();};
+   virtual void Notify();
 
    private:
    Position x_pos_;
    Position y_pos_;
    Speed spindle_speed_;
    Axis active_axis_;
-   Observer* registry;
+   Observer* registry[k_maxNbrOfObservers];
 };
 
+Model::Model()
+{
+   x_pos_ = 0.0f;
+   y_pos_ = 0.0f; 
+   spindle_speed_ = 0;
+   active_axis_ = axis_x; 
+
+   for(int i = 0; i < k_maxNbrOfObservers; i++)
+   {
+      registry[i] = nullptr;
+   }
+};
+
+void Model::Attach(Observer* o)
+{
+   int i = 0;
+   bool found  = false;
+
+   // look for empty spot to place new observer
+   while ((!found) && (i < k_maxNbrOfObservers))
+   {
+      if(registry[i] == nullptr)
+      {
+         registry[i] = o;
+         found = true;
+      }
+      i++;
+   }
+};
+
+void Model::Detach(Observer* o)
+{
+   int i = 0;
+   bool found  = false;
+
+   // look for observer to detach
+   while ((!found) && (i < k_maxNbrOfObservers))
+   {
+      if (registry[i] == o)
+      {
+         registry[i] = nullptr;
+         found = true;
+      }
+      i++;
+   }
+};
+
+void Model::Notify()
+{
+   for(int i = 0; i < k_maxNbrOfObservers; i++)
+   {
+      if(registry[i] != nullptr)
+      {
+         registry[i]->Update();
+      }
+   }
+};
+   
 template <class Lcd>
 class Controller;
 
@@ -72,7 +127,7 @@ class LcdView : public Observer
    // factory function for creating controller, maybe a view wants a special kind of controller
    virtual Controller<Lcd>* MakeController(){return new Controller<Lcd>(this);};
 
-   virtual void SetEnabled(bool enabled){enabled_ = enabled;};
+   virtual void SetEnabled(bool enabled);
    bool GetEnable(){return enabled_;}
    Controller<Lcd>* GetController(){return myController;};
    Model& myModel;
@@ -92,6 +147,23 @@ void LcdView<Lcd>::Draw()
 };
 
 template <class Lcd>
+void LcdView<Lcd>::SetEnabled(bool enabled)
+{
+   // if this view wasn't enabled before
+   if (enabled && !enabled_)
+   {
+      myLcd.clear();
+   }
+
+   enabled_ = enabled;
+   
+   if(enabled_)
+   {
+      Draw();
+   }
+};
+
+template <class Lcd>
 class AxisView : public LcdView<Lcd> 
 {
    public:
@@ -103,6 +175,8 @@ class AxisView : public LcdView<Lcd>
 template <class Lcd>
 void AxisView<Lcd>::Draw()
 {
+  if(this->enabled_)
+  {
    String row1 = String(" x: ");
    String row2 = String(" y: ");
 
@@ -120,6 +194,7 @@ void AxisView<Lcd>::Draw()
    this->myLcd.print(row1);
    this->myLcd.setCursor(0, 1);
    this->myLcd.print(row2);
+  }
 };
 
 template <class Lcd>
@@ -127,33 +202,40 @@ class SpindleView : public LcdView<Lcd>
 {
    public:
    SpindleView(Lcd& lcd, Model& model) : LcdView<Lcd>(lcd, model){};
-   void SetEnabled(bool enabled);
+   void SetEnabled(bool enabled); //override;
    void Draw() override;
 };
 
 template <class Lcd>
 void SpindleView<Lcd>::SetEnabled(bool enabled)
 { 
-   if(!this->enabled_)
+   this->enabled_ = enabled;
+   if(this->enabled_)
    {
-      this->enabled_ = enabled;
       String row1 = String(" spindle speed:");
+
+      this->myLcd.clear();
 
       this->myLcd.setCursor(0, 0);
       this->myLcd.print(row1);
-   }
+  
+      Draw();  
+   }  
 };
 
 template <class Lcd>
 void SpindleView<Lcd>::Draw()
 {
-   String row2 = String(" ");
+  if(this->enabled_)
+   {
+    String row2 = String(" ");
+   
+    row2.concat(this->myModel.GetSpindleSpeed());
+    row2.concat(String(" rpm    "));
 
-   row2.concat(this->myModel.GetSpindleSpeed());
-   row2.concat(String(" rpm    "));
-
-   this->myLcd.setCursor(0, 1);
-   this->myLcd.print(row2);
+    this->myLcd.setCursor(0, 1);
+    this->myLcd.print(row2);
+   }
 };
 
 // not used yet
