@@ -262,5 +262,5 @@ TEST(LcdWriterTestGroup, controller_register_event)
 
 /*
 more controller stuff. controller::myModel and controller::myView not used at all
-maybe add all events in specialised cpntroller constructor
+maybe add all events in specialised controller constructor
 */

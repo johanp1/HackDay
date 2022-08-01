@@ -15,7 +15,6 @@ set(TEST_SOURCE
   selector_tests.cpp
   selector2_tests.cpp
   sender_tests.cpp
-  lcd_writer_tests.cpp
   event_generator_tests.cpp
   main.cpp)
 
