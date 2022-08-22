@@ -23,7 +23,7 @@ class TestComp(unittest.TestCase):
       self.c.setReady()
       self.assertTrue(self.c.hal.readyFlag)
       
-   def test_addOnePin(self):
+   def test_addOutputPin(self):
       self.local_c = eh.ComponentWrapper('local_hal_comp')
       
       self.local_c.add_pin('local_ev', 'local_pin', 'u32')
@@ -32,9 +32,25 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.pin_dict['local_ev'].name == 'local_pin')
       self.assertTrue(self.local_c.pin_dict['local_ev'].val == 0)
       self.assertTrue(self.local_c.pin_dict['local_ev'].type == 'u32')
+      self.assertTrue(self.local_c.pin_dict['local_ev'].direction == 'out')
       self.assertTrue(self.local_c.hal['local_pin'] == 0)
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_U32')
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_OUT')
          
+   def test_addInputPin(self):
+      self.local_c = eh.ComponentWrapper('local_hal_comp')
+      
+      self.local_c.add_pin('local_ev', 'local_pin', 'u32', 'in')
+      
+      self.assertTrue(len(self.local_c.pin_dict) == 1)
+      self.assertTrue(self.local_c.pin_dict['local_ev'].name == 'local_pin')
+      self.assertTrue(self.local_c.pin_dict['local_ev'].val == 0)
+      self.assertTrue(self.local_c.pin_dict['local_ev'].type == 'u32')
+      self.assertTrue(self.local_c.pin_dict['local_ev'].direction == 'in')
+      self.assertTrue(self.local_c.hal['local_pin'] == 0)
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_U32')
+      self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_IN')
+
    def test_noEvents(self):
       self.assertTrue(self.c.hal['apa_pin'] == 0)
       self.assertTrue(self.c.hal['bepa_pin'] == 0)
@@ -100,6 +116,20 @@ class TestComp(unittest.TestCase):
    def test_setItem(self):
       self.c['bepa'] = 21
       self.assertTrue(self.c['bepa'] == 21)
+
+   def test_updateInputPin(self):     
+      self.c.add_pin('inpin', 'in-pin', 'u32', 'in')
+      self.assertTrue(self.c.pin_dict['inpin'].name == 'in-pin')
+      self.assertTrue(self.c.pin_dict['inpin'].val == 0)
+      self.assertTrue(self.c.pin_dict['inpin'].type == 'u32')
+      self.assertTrue(self.c.hal['in-pin'] == 0)
+      self.assertTrue(self.c.hal.pinDict['in-pin'].type == 'HAL_U32')
+      
+      self.c.hal['in-pin'] = 1
+
+      self.c.update_hal()
+
+      self.assertTrue(self.c.pin_dict['inpin'].val == 1)
 
 if __name__ == '__main__':
    unittest.main()

@@ -13,12 +13,13 @@ class TestXml(unittest.TestCase):
       self.f.close()
 
       
-   def addTestPin(self, pinName, pinEvent, pinType):
+   def addTestPin(self, pinName, pinEvent, pinType, pinDirection = 'out'):
       f = open('test.xml', 'r')
       contents = f.readlines()
       f.close()
 
-      str = '\t<test>\n\t\t<halpin>\"' + pinName + '\"<event>' + pinEvent + '</event><type>' +  pinType + '</type></halpin>\n\t</test>\n'
+      str = '\t<test>\n\t\t<halpin>\"' + pinName + '\"<event>' + pinEvent + '</event><type>' +  pinType + '</type><direction>' +  pinDirection + '</direction></halpin>\n\t</test>\n'
+      
       contents.insert(-1, str)
 
       f = open('test.xml', 'w')
@@ -46,6 +47,13 @@ class TestXml(unittest.TestCase):
       data = x.get_parsed_data()
       self.assertTrue(len(data) == 0)
 
+   def test_unsupportedPinDirection(self):
+      self.addTestPin('jog_pin', 'jog', 'u32', 'iut')
+      
+      x = eh.XmlParser('test.xml')
+      data = x.get_parsed_data()
+      self.assertTrue(len(data) == 0)
+
    def test_onePin(self):
       self.addTestPin('jog_pin', 'jog', 'u32')
       
@@ -54,18 +62,22 @@ class TestXml(unittest.TestCase):
       self.assertTrue(len(data) == 1)
       self.assertTrue(data['jog'].name == 'jog_pin')
       self.assertTrue(data['jog'].type == 'u32')
+      self.assertTrue(data['jog'].direction == 'out')
 
    def test_twoPin(self):
       self.addTestPin('jog_pin', 'jog', 'u32')
-      self.addTestPin('rth_pin', 'rth', 'bit')
+      self.addTestPin('rth_pin', 'rth', 'bit', 'in')
       
       x = eh.XmlParser('test.xml')
       data = x.get_parsed_data()
       self.assertTrue(len(data) == 2)
       self.assertTrue(data['jog'].name == 'jog_pin')
       self.assertTrue(data['jog'].type == 'u32')
+      self.assertTrue(data['jog'].direction == 'out')
       self.assertTrue(data['rth'].name == 'rth_pin')
       self.assertTrue(data['rth'].type == 'bit')
+      self.assertTrue(data['rth'].direction == 'in')
+
       
    """  
    test empty file

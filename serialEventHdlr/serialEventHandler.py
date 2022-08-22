@@ -18,15 +18,36 @@ import xml.etree.ElementTree as ET
 import hal
 
 class Pin:
-   """ Representation of a Pin and it's data"""
-   def __init__(self, name, type):
+   """ General representation of a Pin and it's data"""
+   def __init__(self, name, type, direction = 'out'):
       self.name = name  # HAL pin name
       self.val = 0    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # type (string read from xml)
+      self.direction = direction
 
    def __repr__(self):
-      return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
-   
+      return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type + '\tdirection: ' + self.direction
+
+   def update(self, v):
+      """ to be overriden in child-class"""
+      pass
+
+class InPin(Pin):
+   """ Specialization of Pin-class"""
+   def __init__(self, name, type):
+      Pin.__init__(self, name, type, 'in')
+
+   def update(self, v):
+      self.val = v
+
+class OutPin(Pin):
+   """ Specialization of Pin-class"""
+   def __init__(self, name, type):
+      Pin.__init__(self, name, type, 'out')
+
+   def update(self, v):
+      pass #v = self.val
+
 class ComponentWrapper:   
    def __init__(self, name):
       self.pin_dict = {}       # dictionary used to map event to pin
@@ -45,9 +66,9 @@ class ComponentWrapper:
    def __setitem__(self, name, val):
       self.set_pin(name, val)
 
-   def add_pin(self, name, hal_name, type):
-      self.pin_dict[name] = Pin(hal_name, type) 
-      self._add_hal_pin(hal_name, type)
+   def add_pin(self, name, hal_name, type, direction = 'out'):
+      self.pin_dict[name] = self._createPin(hal_name, type, direction) 
+      self._add_hal_pin(hal_name, type, direction)
 
    def event_set_pin(self, event):
       """ updates pin value with new data
@@ -57,7 +78,7 @@ class ComponentWrapper:
          try:
             self.pin_dict[event.name].val = self._type_saturate(self.pin_dict[event.name].type, int(event.data))
          except ValueError:
-            print 'bad event'  
+            print 'bad event: ' + event.name  
             
 
    def set_pin(self, name, value):
@@ -68,17 +89,29 @@ class ComponentWrapper:
          try:
             self.pin_dict[name].val = self._type_saturate(self.pin_dict[name].type, int(value))
          except ValueError:
-            print 'bad event'  
+            print 'bad event' + name  
             
    def setReady(self):
       self.hal.ready()
             
    def update_hal(self):
       for key in self.pin_dict:
-         self.hal[self.pin_dict[key].name] = self.pin_dict[key].val
+         if self.pin_dict[key].direction == 'out':
+            self.hal[self.pin_dict[key].name] = self.pin_dict[key].val
 
-   def _add_hal_pin(self, hal_name, type):
-      self.hal.newpin(hal_name, self._get_hal_type(type), hal.HAL_OUT)  # create the user space HAL-pin
+         if self.pin_dict[key].direction == 'in':
+            self.pin_dict[key].update(self.hal[self.pin_dict[key].name])
+         #   self.pin_dict[key].val = self.hal[self.pin_dict[key].name]
+
+   def _createPin(self, name, type, direction):
+      """ factory function to create pin"""
+      if direction == 'in':
+         return InPin(name, type)
+      if direction == 'out':
+         return OutPin(name, type)
+
+   def _add_hal_pin(self, hal_name, type, direction = 'out'):
+      self.hal.newpin(hal_name, self._get_hal_type(type), self._get_hal_direction(direction))  # create the user space HAL-pin
 
    def _type_saturate(self, type, val):
       """ helper function to convert type read from xml to HAL-type """
@@ -114,7 +147,20 @@ class ComponentWrapper:
 
       if str == 'u32':
          retVal = hal.HAL_U32
+
       return retVal 
+
+   def _get_hal_direction(self, direction):
+      """ helper function to convert pin-direction read from xml to HAL-direction """
+      retVal = ''
+
+      if direction == 'out':
+         retVal = hal.HAL_OUT
+
+      if direction == 'in':
+         retVal = hal.HAL_IN
+      
+      return retVal
 
 class OptParser:
    def __init__(self, argv):
@@ -205,12 +251,13 @@ class XmlParser:
       for halpin in root.iter('halpin'):
          type = halpin.find('type')
          event = halpin.find('event')
-      
-         # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
-         if type is not None and event is not None:
-            if self._check_supported_HAL_type(type.text) == True:
-               self.pin_dict[event.text] = Pin(halpin.text.strip('"'), type.text)
+         direction = halpin.find('direction')
 
+         # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
+         if type is not None and event is not None and self._check_supported_HAL_direction(direction.text):
+            if self._check_supported_HAL_type(type.text) == True:
+               self.pin_dict[event.text] = Pin(halpin.text.strip('"'), type.text, direction.text)
+   
    def _check_supported_HAL_type(self, str):
       """ helper function to check if type is supported """
       retVal = False
@@ -218,6 +265,15 @@ class XmlParser:
       if str == 'bit' or str == 'float' or str == 's32' or str == 'u32':
          retVal = True
          
+      return retVal 
+
+   def _check_supported_HAL_direction(self, str):
+      """ helper function to check if direction is supported """
+      retVal = False
+   
+      if str == 'in' or str == 'out':
+         retVal = True
+
       return retVal 
 
 class BrokeeContainer:
@@ -245,13 +301,14 @@ def main():
    componentName = optParser.get_name()
    portName = optParser.get_port()
    xmlFile = optParser.get_XML_file()
+   watchdogEnable = optParser.get_watchdog_reset()
    print optParser
       
    xmlParser = XmlParser(xmlFile)
 
    c = ComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, True, 5, 1) #serial adaptor
+   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, watchdogEnable, 5, 1) #serial adaptor
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsedXmlDict = xmlParser.get_parsed_data()
