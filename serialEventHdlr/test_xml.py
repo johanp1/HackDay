@@ -11,7 +11,6 @@ class TestXml(unittest.TestCase):
       self.f.write("<mpg>\n"\
                    "</mpg>")
       self.f.close()
-
       
    def addTestPin(self, pinName, pinEvent, pinType, pinDirection = 'out'):
       f = open('test.xml', 'r')
@@ -30,7 +29,6 @@ class TestXml(unittest.TestCase):
    def setUp(self):
       #subprocess.call("rm test.xml", shell=True) 
       self.f = self.createTestFile()
-
    
    def tearDown(self):
       subprocess.call("rm test.xml", shell=True) 
@@ -60,9 +58,10 @@ class TestXml(unittest.TestCase):
       x = eh.XmlParser('test.xml')
       data = x.get_parsed_data()
       self.assertTrue(len(data) == 1)
-      self.assertTrue(data['jog'].name == 'jog_pin')
-      self.assertTrue(data['jog'].type == 'u32')
-      self.assertTrue(data['jog'].direction == 'out')
+      
+      self.assertTrue(data[0].name == 'jog_pin')
+      self.assertTrue(data[0].type == 'u32')
+      self.assertTrue(data[0].direction == 'out')
 
    def test_twoPin(self):
       self.addTestPin('jog_pin', 'jog', 'u32')
@@ -71,14 +70,14 @@ class TestXml(unittest.TestCase):
       x = eh.XmlParser('test.xml')
       data = x.get_parsed_data()
       self.assertTrue(len(data) == 2)
-      self.assertTrue(data['jog'].name == 'jog_pin')
-      self.assertTrue(data['jog'].type == 'u32')
-      self.assertTrue(data['jog'].direction == 'out')
-      self.assertTrue(data['rth'].name == 'rth_pin')
-      self.assertTrue(data['rth'].type == 'bit')
-      self.assertTrue(data['rth'].direction == 'in')
-
       
+      self.assertTrue(data[0].name == 'jog_pin')
+      self.assertTrue(data[0].type == 'u32')
+      self.assertTrue(data[0].direction == 'out')
+      self.assertTrue(data[1].name == 'rth_pin')
+      self.assertTrue(data[1].type == 'bit')
+      self.assertTrue(data[1].direction == 'in')
+
    """  
    test empty file
    test empty root

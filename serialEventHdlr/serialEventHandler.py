@@ -16,6 +16,7 @@ import sys
 import comms
 import xml.etree.ElementTree as ET
 import hal
+from collections import namedtuple
 
 class Pin:
    """ General representation of a Pin and it's data"""
@@ -227,37 +228,39 @@ class OptParser:
          "-w                       # start watchdog deamon" \
          "-h                       # Help test"
 
+""" Parser data container"""
+HalPin = namedtuple("HalPin", ['name', 'event', 'type', 'direction'])
+
 class XmlParser:
    def __init__(self, f):
       self.tree = []
-      self.pin_dict = {}
-      
+      self.parsed_data = [] #array of named tuples (HalPin)
+
       self._parse_file(f)
       
    def __repr__(self):
       tmp_str = ''
 
-      for k in self.pin_dict:
-         tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
+      for element in self.parsed_data:
+         tmp_str += 'name: ' + element.name + '\t' + 'event: ' + element.event + '\t' +  'type: ' + element.type + '\n'
       return tmp_str   
       
    def get_parsed_data(self):
-      return self.pin_dict
+      return self.parsed_data
    
    def _parse_file(self, f):
       self.tree = ET.parse(f)
       root = self.tree.getroot()
             
       for halpin in root.iter('halpin'):
-         type = halpin.find('type')
-         event = halpin.find('event')
-         direction = halpin.find('direction')
+         name = halpin.text.strip('"')
+         type = 'u32' if halpin.find('type') is None else halpin.find('type').text
+         event = name if halpin.find('event') is None else halpin.find('event').text
+         direction = 'out' if halpin.find('direction') is None else halpin.find('direction').text
 
-         # create the LinuxCNC hal pin and create mapping dictionary binding incomming events with data and the hal pins
-         if type is not None and event is not None and self._check_supported_HAL_direction(direction.text):
-            if self._check_supported_HAL_type(type.text) == True:
-               self.pin_dict[event.text] = Pin(halpin.text.strip('"'), type.text, direction.text)
-   
+         if self._check_supported_HAL_type(type) and self._check_supported_HAL_direction(direction):
+            self.parsed_data.append(HalPin(name, event, type, direction))
+
    def _check_supported_HAL_type(self, str):
       """ helper function to check if type is supported """
       retVal = False
@@ -311,10 +314,10 @@ def main():
    serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, watchdogEnable, 5, 1) #serial adaptor
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
-   parsedXmlDict = xmlParser.get_parsed_data()
-   for key in parsedXmlDict:
-      c.add_pin(key, parsedXmlDict[key].name, parsedXmlDict[key].type)
-      eventBroker.attach_handler(key, c.event_set_pin, args = (eventBroker.received_event,))
+   parsed_data = xmlParser.get_parsed_data()
+   for pin in parsed_data:
+      c.add_pin(pin.event, pin.name, pin.type)
+      eventBroker.attach_handler(pin.event, c.event_set_pin, args = (eventBroker.received_event,))
       # TODO eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
    
    print c
@@ -327,7 +330,7 @@ def main():
          serialEventGenerator.readMessages() #blocks until '\n' received or timeout
          c.update_hal()
 
-         time.sleep(0.05)
+         time.sleep(0.1)
 
    except KeyboardInterrupt:
       raise SystemExit
