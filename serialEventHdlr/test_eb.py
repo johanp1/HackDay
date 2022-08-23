@@ -21,11 +21,11 @@ class EventHandlerSpyNoArgs(EventHandlerSpy):
     def eventHandler(self):
         self.has_been_called = True
 
-class EventHandlerSpyTwoArgs(EventHandlerSpy):
-    def eventHandler(self, name, data):
-        self.last_event_name = name
-        self.last_event_data = data
-        self.has_been_called = True
+#class EventHandlerSpyTwoArgs(EventHandlerSpy):
+#    def eventHandler(self, name, data):
+#        self.last_event_name = name
+#        self.last_event_data = data
+#        self.has_been_called = True
 
 class TestEventBroker(unittest.TestCase):
     

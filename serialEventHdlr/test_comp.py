@@ -32,7 +32,8 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.pin_dict['local_ev'].name == 'local_pin')
       self.assertTrue(self.local_c.pin_dict['local_ev'].val == 0)
       self.assertTrue(self.local_c.pin_dict['local_ev'].type == 'u32')
-      self.assertTrue(self.local_c.pin_dict['local_ev'].direction == 'out')
+      self.assertTrue(self.local_c.pin_dict['local_ev'].__class__.__name__ == 'OutPin')
+
       self.assertTrue(self.local_c.hal['local_pin'] == 0)
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_U32')
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_OUT')
@@ -46,7 +47,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.pin_dict['local_ev'].name == 'local_pin')
       self.assertTrue(self.local_c.pin_dict['local_ev'].val == 0)
       self.assertTrue(self.local_c.pin_dict['local_ev'].type == 'u32')
-      self.assertTrue(self.local_c.pin_dict['local_ev'].direction == 'in')
+
       self.assertTrue(self.local_c.hal['local_pin'] == 0)
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].type == 'HAL_U32')
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_IN')
@@ -122,14 +123,21 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.pin_dict['inpin'].name == 'in-pin')
       self.assertTrue(self.c.pin_dict['inpin'].val == 0)
       self.assertTrue(self.c.pin_dict['inpin'].type == 'u32')
+      self.assertTrue(self.c.pin_dict['inpin'].__class__.__name__ == 'InPin')
+
       self.assertTrue(self.c.hal['in-pin'] == 0)
       self.assertTrue(self.c.hal.pinDict['in-pin'].type == 'HAL_U32')
+      self.assertTrue(self.c.hal.pinDict['in-pin'].dir == 'HAL_IN')
       
+      #set a new value on the (mocked)hal-pin
       self.c.hal['in-pin'] = 1
 
       self.c.update_hal()
-
+      #make sure the updated value is propagated to the componentWrapper-instance
       self.assertTrue(self.c.pin_dict['inpin'].val == 1)
 
 if __name__ == '__main__':
    unittest.main()
+
+#setting input pin
+#setting non-int value

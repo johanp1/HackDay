@@ -20,99 +20,20 @@ from collections import namedtuple
 
 class Pin:
    """ General representation of a Pin and it's data"""
-   def __init__(self, name, type, direction = 'out'):
+   def __init__(self, name, type):
       self.name = name  # HAL pin name
       self.val = 0    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # type (string read from xml)
-      self.direction = direction
 
    def __repr__(self):
-      return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type + '\tdirection: ' + self.direction
+      return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
 
-   def update(self, v):
+   def update_hal(self, v):
       """ to be overriden in child-class"""
       pass
 
-class InPin(Pin):
-   """ Specialization of Pin-class"""
-   def __init__(self, name, type):
-      Pin.__init__(self, name, type, 'in')
-
-   def update(self, v):
-      self.val = v
-
-class OutPin(Pin):
-   """ Specialization of Pin-class"""
-   def __init__(self, name, type):
-      Pin.__init__(self, name, type, 'out')
-
-   def update(self, v):
-      pass #v = self.val
-
-class ComponentWrapper:   
-   def __init__(self, name):
-      self.pin_dict = {}       # dictionary used to map event to pin
-      self.hal = hal.component(name)  # instanciate the HAL-component
-         
-   def __repr__(self):
-      tmp_str = ''
-      for k in self.pin_dict:
-         tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
-      return tmp_str
-
-   def __getitem__(self, name):
-      if name in self.pin_dict:
-         return self.pin_dict[name].val
-
-   def __setitem__(self, name, val):
-      self.set_pin(name, val)
-
-   def add_pin(self, name, hal_name, type, direction = 'out'):
-      self.pin_dict[name] = self._createPin(hal_name, type, direction) 
-      self._add_hal_pin(hal_name, type, direction)
-
-   def event_set_pin(self, event):
-      """ updates pin value with new data
-      input: pin name, set value' 
-      output: nothing. """
-      if event.name in self.pin_dict:
-         try:
-            self.pin_dict[event.name].val = self._type_saturate(self.pin_dict[event.name].type, int(event.data))
-         except ValueError:
-            print 'bad event: ' + event.name  
-            
-
-   def set_pin(self, name, value):
-      """ updates pin value with new data
-      input: pin name, set value' 
-      output: nothing. """
-      if name in self.pin_dict:
-         try:
-            self.pin_dict[name].val = self._type_saturate(self.pin_dict[name].type, int(value))
-         except ValueError:
-            print 'bad event' + name  
-            
-   def setReady(self):
-      self.hal.ready()
-            
-   def update_hal(self):
-      for key in self.pin_dict:
-         if self.pin_dict[key].direction == 'out':
-            self.hal[self.pin_dict[key].name] = self.pin_dict[key].val
-
-         if self.pin_dict[key].direction == 'in':
-            self.pin_dict[key].update(self.hal[self.pin_dict[key].name])
-         #   self.pin_dict[key].val = self.hal[self.pin_dict[key].name]
-
-   def _createPin(self, name, type, direction):
-      """ factory function to create pin"""
-      if direction == 'in':
-         return InPin(name, type)
-      if direction == 'out':
-         return OutPin(name, type)
-
-   def _add_hal_pin(self, hal_name, type, direction = 'out'):
-      self.hal.newpin(hal_name, self._get_hal_type(type), self._get_hal_direction(direction))  # create the user space HAL-pin
+   def set(self, v):
+      pass
 
    def _type_saturate(self, type, val):
       """ helper function to convert type read from xml to HAL-type """
@@ -162,6 +83,81 @@ class ComponentWrapper:
          retVal = hal.HAL_IN
       
       return retVal
+
+class InPin(Pin):
+   """ Specialization of Pin-class"""
+   def __init__(self, hal, name, type):
+      Pin.__init__(self, name, type)
+
+      hal.newpin(name, self._get_hal_type(type), self._get_hal_direction('in'))  # create the user space HAL-pin
+
+   def update_hal(self, hal):
+      self.val = hal[self.name]
+
+class OutPin(Pin):
+   """ Specialization of Pin-class"""
+   def __init__(self, hal, name, type):
+      Pin.__init__(self, name, type)
+
+      hal.newpin(name, self._get_hal_type(type), self._get_hal_direction('out'))  # create the user space HAL-pin
+
+   def update_hal(self, hal):
+      hal[self.name] = self.val
+
+   def set(self, v):
+      try:
+         self.val = self._type_saturate(self.type, int(v))
+      except ValueError:
+            print 'value error catched: ' + self.name
+
+class ComponentWrapper:   
+   def __init__(self, name):
+      self.pin_dict = {}       # dictionary used to map event to pin
+      self.hal = hal.component(name)  # instanciate the HAL-component
+         
+   def __repr__(self):
+      tmp_str = ''
+      for k in self.pin_dict:
+         tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
+      return tmp_str
+
+   def __getitem__(self, name):
+      if name in self.pin_dict:
+         return self.pin_dict[name].val
+
+   def __setitem__(self, name, val):
+      self.set_pin(name, val)
+
+   def add_pin(self, name, hal_name, type, direction = 'out'):
+      self.pin_dict[name] = self._createPin(hal_name, type, direction) 
+
+   def event_set_pin(self, event):
+      """ updates pin value with new data
+      input: pin name, set value' 
+      output: nothing. """
+      if event.name in self.pin_dict:
+         self.pin_dict[event.name].set(event.data)
+            
+   def set_pin(self, name, value):
+      """ updates pin value with new data
+      input: pin name, set value' 
+      output: nothing. """
+      if name in self.pin_dict:
+         self.pin_dict[name].set(value)
+            
+   def setReady(self):
+      self.hal.ready()
+            
+   def update_hal(self):
+      for key in self.pin_dict:
+         self.pin_dict[key].update_hal(self.hal)
+
+   def _createPin(self, name, type, direction):
+      """ factory function to create pin"""
+      if direction == 'in':
+         return InPin(self.hal, name, type)
+      if direction == 'out':
+         return OutPin(self.hal, name, type)
 
 class OptParser:
    def __init__(self, argv):
