@@ -86,13 +86,22 @@ class Pin:
 
 class InPin(Pin):
    """ Specialization of Pin-class"""
-   def __init__(self, hal, name, type):
+   def __init__(self, hal, name, type, notifier = None):
       Pin.__init__(self, name, type)
+
+      if notifier != None:
+         self.notify = notifier
 
       hal.newpin(name, self._get_hal_type(type), self._get_hal_direction('in'))  # create the user space HAL-pin
 
    def update_hal(self, hal):
-      self.val = hal[self.name]
+      if self.val != hal[self.name]:
+         self.val = hal[self.name]
+         self.notify(self.name, self.val)
+
+   def notify(self, name, val):
+      """to be overriden"""
+      pass
 
 class OutPin(Pin):
    """ Specialization of Pin-class"""
@@ -108,7 +117,7 @@ class OutPin(Pin):
       try:
          self.val = self._type_saturate(self.type, int(v))
       except ValueError:
-            print 'value error catched: ' + self.name
+            print 'OutPin::value error catched: ' + self.name
 
 class ComponentWrapper:   
    def __init__(self, name):
@@ -155,9 +164,12 @@ class ComponentWrapper:
    def _createPin(self, name, type, direction):
       """ factory function to create pin"""
       if direction == 'in':
-         return InPin(self.hal, name, type)
+         return InPin(self.hal, name, type, self.changeNotifier)
       if direction == 'out':
          return OutPin(self.hal, name, type)
+   
+   def changeNotifier(self, name, val):
+      pass
 
 class OptParser:
    def __init__(self, argv):

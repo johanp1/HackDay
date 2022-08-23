@@ -1,6 +1,19 @@
 #! /usr/bin/python
 import unittest
+import comms
 import serialEventHandler as eh
+
+class Observer:
+   def __init__(self):
+       self.reset()
+
+   def notify(self, name, val):
+      self.name = name
+      self.val = val
+
+   def reset(self):
+      self.name = ''
+      self.val = 0
 
 class TestComp(unittest.TestCase):
 
@@ -17,7 +30,10 @@ class TestComp(unittest.TestCase):
       
       self.assertTrue(self.local_c.hal.name == 'local_hal_comp')
       self.assertTrue(len(self.local_c.pin_dict) == 0)
-    
+   
+   def notify(self, name, val):
+      print name + ' has changed to ' + str(val)
+
    def test_setReady(self):
       self.assertFalse(self.c.hal.readyFlag)
       self.c.setReady()
@@ -60,7 +76,6 @@ class TestComp(unittest.TestCase):
 
       self.assertTrue(self.c.hal['apa_pin'] == 0)
       self.assertTrue(self.c.hal['bepa_pin'] == 0)
-   
    
    def test_eventHandler(self):
       self.assertTrue(self.c.hal['apa_pin'] == 0)
@@ -118,7 +133,10 @@ class TestComp(unittest.TestCase):
       self.c['bepa'] = 21
       self.assertTrue(self.c['bepa'] == 21)
 
-   def test_updateInputPin(self):     
+   def test_updateInputPin(self):
+      observer = Observer()
+      self.c.changeNotifier = observer.notify
+      #self.c.changeNotifier = self.notify
       self.c.add_pin('inpin', 'in-pin', 'u32', 'in')
       self.assertTrue(self.c.pin_dict['inpin'].name == 'in-pin')
       self.assertTrue(self.c.pin_dict['inpin'].val == 0)
@@ -135,6 +153,47 @@ class TestComp(unittest.TestCase):
       self.c.update_hal()
       #make sure the updated value is propagated to the componentWrapper-instance
       self.assertTrue(self.c.pin_dict['inpin'].val == 1)
+      self.assertTrue(observer.name == 'in-pin')
+      self.assertTrue(observer.val == 1)
+
+   def test_setInputPin(self):
+      self.c.add_pin('inpin', 'in-pin', 'u32', 'in')
+
+      self.c.set_pin('inpin', 100)
+      self.assertTrue(self.c.pin_dict['inpin'].val == 0)
+      self.c.update_hal()
+      # nothin changed, only hal can change value for InPin-type
+      self.assertTrue(self.c.pin_dict['inpin'].val == 0)
+      self.assertTrue(self.c.hal['in-pin'] == 0)
+      
+   def test_setNonInt(self):
+      self.c.set_pin('apa', 'hej')
+      self.c.set_pin('bepa', 'jeh')
+      
+      self.c.update_hal()
+
+      self.assertTrue(self.c.hal['apa_pin'] == 0)
+      self.assertTrue(self.c.hal['bepa_pin'] == 0)
+
+   def test_noNotificationIfSameValue(self):
+      observer = Observer()
+      self.c.changeNotifier = observer.notify
+      self.c.add_pin('inpin', 'in-pin', 'u32', 'in')
+      self.c.hal['in-pin'] = 1
+
+      self.c.update_hal()
+      #make sure the updated value is propagated to the componentWrapper-instance
+      self.assertTrue(observer.name == 'in-pin')
+      self.assertTrue(observer.val == 1)
+
+      # clear observer
+      observer.reset()
+      
+      self.c.update_hal()
+      #no update
+      self.assertTrue(observer.name == '')
+      self.assertTrue(observer.val == 0)
+
 
 if __name__ == '__main__':
    unittest.main()
