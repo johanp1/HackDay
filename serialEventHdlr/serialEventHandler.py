@@ -72,27 +72,18 @@ class Pin:
 
       return retVal 
 
-   def _get_hal_direction(self, direction):
-      """ helper function to convert pin-direction read from xml to HAL-direction """
-      retVal = ''
-
-      if direction == 'out':
-         retVal = hal.HAL_OUT
-
-      if direction == 'in':
-         retVal = hal.HAL_IN
-      
-      return retVal
-
 class InPin(Pin):
    """ Specialization of Pin-class"""
-   def __init__(self, hal, name, type, notifier = None):
+   def __init__(self, hal_ref, name, type, notifier = None):
       Pin.__init__(self, name, type)
 
       if notifier != None:
          self.notify = notifier
 
-      hal.newpin(name, self._get_hal_type(type), self._get_hal_direction('in'))  # create the user space HAL-pin
+      hal_ref.newpin(name, self._get_hal_type(type), hal.HAL_IN)  # create the user space HAL-pin
+
+   def __repr__(self):
+      return 'Input pin ' + Pin.__repr__(self)
 
    def update_hal(self, hal):
       if self.val != hal[self.name]:
@@ -105,10 +96,13 @@ class InPin(Pin):
 
 class OutPin(Pin):
    """ Specialization of Pin-class"""
-   def __init__(self, hal, name, type):
+   def __init__(self, hal_ref, name, type):
       Pin.__init__(self, name, type)
 
-      hal.newpin(name, self._get_hal_type(type), self._get_hal_direction('out'))  # create the user space HAL-pin
+      hal_ref.newpin(name, self._get_hal_type(type), hal.HAL_OUT)  # create the user space HAL-pin
+
+   def __repr__(self):
+      return 'Output pin ' + Pin.__repr__(self)
 
    def update_hal(self, hal):
       hal[self.name] = self.val
@@ -117,9 +111,9 @@ class OutPin(Pin):
       try:
          self.val = self._type_saturate(self.type, int(v))
       except ValueError:
-            print 'OutPin::value error catched: ' + self.name
+            print 'OutPin::set() value error catched on: ' + self.name
 
-class ComponentWrapper:   
+class HALComponentWrapper:   
    def __init__(self, name):
       self.pin_dict = {}       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
@@ -130,15 +124,15 @@ class ComponentWrapper:
          tmp_str += 'event: ' + k + '\t' + str(self.pin_dict[k]) + '\n'
       return tmp_str
 
-   def __getitem__(self, name):
-      if name in self.pin_dict:
-         return self.pin_dict[name].val
+   def __getitem__(self, key):
+      if key in self.pin_dict:
+         return self.pin_dict[key].val
 
-   def __setitem__(self, name, val):
-      self.set_pin(name, val)
+   def __setitem__(self, key, val):
+      self.set_pin(key, val)
 
-   def add_pin(self, name, hal_name, type, direction = 'out'):
-      self.pin_dict[name] = self._createPin(hal_name, type, direction) 
+   def add_pin(self, event_name, hal_name, type, direction = 'out'):
+      self.pin_dict[event_name] = self._createPin(hal_name, type, direction) 
 
    def event_set_pin(self, event):
       """ updates pin value with new data
@@ -147,12 +141,12 @@ class ComponentWrapper:
       if event.name in self.pin_dict:
          self.pin_dict[event.name].set(event.data)
             
-   def set_pin(self, name, value):
+   def set_pin(self, key, value):
       """ updates pin value with new data
-      input: pin name, set value' 
+      input: event name, set value' 
       output: nothing. """
-      if name in self.pin_dict:
-         self.pin_dict[name].set(value)
+      if key in self.pin_dict:
+         self.pin_dict[key].set(value)
             
    def setReady(self):
       self.hal.ready()
@@ -161,15 +155,22 @@ class ComponentWrapper:
       for key in self.pin_dict:
          self.pin_dict[key].update_hal(self.hal)
 
-   def _createPin(self, name, type, direction):
+   def _createPin(self, hal_name, type, direction):
       """ factory function to create pin"""
       if direction == 'in':
-         return InPin(self.hal, name, type, self.changeNotifier)
+         return InPin(self.hal, hal_name, type, self._changeNotifierInternal)
       if direction == 'out':
-         return OutPin(self.hal, name, type)
+         return OutPin(self.hal, hal_name, type)
    
-   def changeNotifier(self, name, val):
+   def changeNotifier(self, event_name, val):
+      """ input pin change notifier"""
       pass
+
+   def _changeNotifierInternal(self, hal_name, val):
+      # convert pin-name to event-name
+      for key in self.pin_dict:
+         if self.pin_dict[key].name == hal_name:
+            self.changeNotifier(key, val)
 
 class OptParser:
    def __init__(self, argv):
@@ -306,6 +307,14 @@ class EventBroker:
       if event.name in self.brokee_dict:            
          self.brokee_dict[event.name].handler(*self.brokee_dict[event.name].args)
 
+class Observer:
+   def __init__(self, comm_hdlr):
+       self.comm_hdlr = comm_hdlr
+
+   def notify(self, name, val):
+      self.comm_hdlr.writeMessage(comms.Message(name, val))
+
+
 ################################################
 def main():
    optParser = OptParser(sys.argv[1:])
@@ -317,14 +326,16 @@ def main():
       
    xmlParser = XmlParser(xmlFile)
 
-   c = ComponentWrapper(componentName) #HAL adaptor
+   c = HALComponentWrapper(componentName) #HAL adaptor
    eventBroker = EventBroker() #maps incomming events to the correct handler
    serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, watchdogEnable, 5, 1) #serial adaptor
+   observer = Observer(serialEventGenerator)
+   c.changeNotifier = observer.notify
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsed_data = xmlParser.get_parsed_data()
    for pin in parsed_data:
-      c.add_pin(pin.event, pin.name, pin.type)
+      c.add_pin(pin.event, pin.name, pin.type, pin.direction)
       eventBroker.attach_handler(pin.event, c.event_set_pin, args = (eventBroker.received_event,))
       # TODO eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
    

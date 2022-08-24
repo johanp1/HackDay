@@ -1,6 +1,5 @@
 #! /usr/bin/python
 import unittest
-import comms
 import serialEventHandler as eh
 
 class Observer:
@@ -10,6 +9,7 @@ class Observer:
    def notify(self, name, val):
       self.name = name
       self.val = val
+      #print 'value changed on pin ' + name + ' to ' + str(val)
 
    def reset(self):
       self.name = ''
@@ -18,7 +18,7 @@ class Observer:
 class TestComp(unittest.TestCase):
 
    def setUp(self):
-      self.c = eh.ComponentWrapper('hal_comp')
+      self.c = eh.HALComponentWrapper('hal_comp')
       self.c.add_pin('apa', 'apa_pin', 'u32')
       self.c.add_pin('bepa', 'bepa_pin', 's32')
 
@@ -26,7 +26,7 @@ class TestComp(unittest.TestCase):
       del self.c
 
    def test_init(self):
-      self.local_c = eh.ComponentWrapper('local_hal_comp')
+      self.local_c = eh.HALComponentWrapper('local_hal_comp')
       
       self.assertTrue(self.local_c.hal.name == 'local_hal_comp')
       self.assertTrue(len(self.local_c.pin_dict) == 0)
@@ -40,7 +40,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.c.hal.readyFlag)
       
    def test_addOutputPin(self):
-      self.local_c = eh.ComponentWrapper('local_hal_comp')
+      self.local_c = eh.HALComponentWrapper('local_hal_comp')
       
       self.local_c.add_pin('local_ev', 'local_pin', 'u32')
       
@@ -55,7 +55,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(self.local_c.hal.pinDict['local_pin'].dir == 'HAL_OUT')
          
    def test_addInputPin(self):
-      self.local_c = eh.ComponentWrapper('local_hal_comp')
+      self.local_c = eh.HALComponentWrapper('local_hal_comp')
       
       self.local_c.add_pin('local_ev', 'local_pin', 'u32', 'in')
       
@@ -135,9 +135,10 @@ class TestComp(unittest.TestCase):
 
    def test_updateInputPin(self):
       observer = Observer()
+
       self.c.changeNotifier = observer.notify
-      #self.c.changeNotifier = self.notify
       self.c.add_pin('inpin', 'in-pin', 'u32', 'in')
+
       self.assertTrue(self.c.pin_dict['inpin'].name == 'in-pin')
       self.assertTrue(self.c.pin_dict['inpin'].val == 0)
       self.assertTrue(self.c.pin_dict['inpin'].type == 'u32')
@@ -149,11 +150,11 @@ class TestComp(unittest.TestCase):
       
       #set a new value on the (mocked)hal-pin
       self.c.hal['in-pin'] = 1
-
       self.c.update_hal()
+
       #make sure the updated value is propagated to the componentWrapper-instance
       self.assertTrue(self.c.pin_dict['inpin'].val == 1)
-      self.assertTrue(observer.name == 'in-pin')
+      self.assertTrue(observer.name == 'inpin')
       self.assertTrue(observer.val == 1)
 
    def test_setInputPin(self):
@@ -183,7 +184,7 @@ class TestComp(unittest.TestCase):
 
       self.c.update_hal()
       #make sure the updated value is propagated to the componentWrapper-instance
-      self.assertTrue(observer.name == 'in-pin')
+      self.assertTrue(observer.name == 'inpin')
       self.assertTrue(observer.val == 1)
 
       # clear observer

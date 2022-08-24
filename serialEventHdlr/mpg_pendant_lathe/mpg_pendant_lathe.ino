@@ -16,7 +16,7 @@ constexpr auto cHeartbeatPeriod = 2000; //2000ms
 class UpdateXCommandHandler : public EventFunctor
 {
   public:
-    UpdateXCommandHandler(Model& model) : EventFunctor{String("x")}, model_(model) {};
+    UpdateXCommandHandler(Model& model) : EventFunctor{String("xpos")}, model_(model) {};
 
     void operator()(String& _parsedData)
     {
@@ -30,7 +30,7 @@ class UpdateXCommandHandler : public EventFunctor
 class UpdateYCommandHandler : public EventFunctor
 {
   public:
-    UpdateYCommandHandler(Model& model) : EventFunctor{String("y")}, model_(model) {};
+    UpdateYCommandHandler(Model& model) : EventFunctor{String("ypos")}, model_(model) {};
 
     void operator()(String& _parsedData)
     {
