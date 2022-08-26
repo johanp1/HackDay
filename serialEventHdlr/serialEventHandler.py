@@ -312,7 +312,12 @@ class Observer:
        self.comm_hdlr = comm_hdlr
 
    def notify(self, name, val):
-      self.comm_hdlr.writeMessage(comms.Message(name, val))
+      
+      try:
+         #print 'name: ' + name + ' val: ' + str(val)
+         self.comm_hdlr.writeMessage(comms.Message(name, str(val)))
+      except ValueError:
+         print 'Observer::notify() value error catched on: ' + self.name
 
 
 ################################################
