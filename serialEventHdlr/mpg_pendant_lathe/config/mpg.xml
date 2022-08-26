@@ -7,5 +7,5 @@
    <halpin>"func-btn"<event>func</event><type>bit</type></halpin>
    <halpin>"x-pos"<event>xpos</event><type>float</type><direction>in</direction></halpin>
    <halpin>"y-pos"<event>ypos</event><type>float</type><direction>in</direction></halpin>
-   <halpin>"spindle_speed"<event>ss</event><type>float</type><direction>in</direction></halpin>
+   <halpin>"spindle-speed"<event>ss</event><type>float</type><direction>in</direction></halpin>
 </mpg>
