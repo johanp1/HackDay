@@ -288,31 +288,12 @@ class XmlParser:
 
       return retVal 
 
-class BrokeeContainer:
-   def __init__(self, handler, args):
-      self.handler = handler
-      self.args = args
-
-class EventBroker:
-   def __init__(self):
-      self.brokee_dict = {}
-      self.received_event = comms.Message('')
-
-   def attach_handler(self, event_name, handler, args = ()):
-      self.brokee_dict[event_name] = BrokeeContainer(handler, args)
-
-   def handle_event(self, event):
-      self.received_event.copy(event)
-
-      if event.name in self.brokee_dict:            
-         self.brokee_dict[event.name].handler(*self.brokee_dict[event.name].args)
-
 class Observer:
+   """ container for notification-function """
    def __init__(self, comm_hdlr):
        self.comm_hdlr = comm_hdlr
 
    def notify(self, name, val):
-      
       try:
          #print 'name: ' + name + ' val: ' + str(val)
          self.comm_hdlr.writeMessage(comms.Message(name, str(val)))
@@ -326,14 +307,14 @@ def main():
    componentName = optParser.get_name()
    portName = optParser.get_port()
    xmlFile = optParser.get_XML_file()
-   watchdogEnable = optParser.get_watchdog_reset()
+   watchdogEnabled = optParser.get_watchdog_reset()
    print optParser
       
    xmlParser = XmlParser(xmlFile)
 
-   c = HALComponentWrapper(componentName) #HAL adaptor
-   eventBroker = EventBroker() #maps incomming events to the correct handler
-   serialEventGenerator = comms.instrument(portName, eventBroker.handle_event, watchdogEnable, 5, 1) #serial adaptor
+   c = HALComponentWrapper(componentName) #HAL adaptor, takes care of mapping incomming events to actual hal-pin
+   serialEventGenerator = comms.instrument(portName, c.event_set_pin, watchdogEnabled, 5, 1) #serial adaptor
+
    observer = Observer(serialEventGenerator)
    c.changeNotifier = observer.notify
 
@@ -341,9 +322,7 @@ def main():
    parsed_data = xmlParser.get_parsed_data()
    for pin in parsed_data:
       c.add_pin(pin.event, pin.name, pin.type, pin.direction)
-      eventBroker.attach_handler(pin.event, c.event_set_pin, args = (eventBroker.received_event,))
-      # TODO eventBroker.attach_handler(key, c.set_pin, args = (eventBroker.received_event.name, eventBroker.received_event.data))
-   
+      
    print c
 
    # ready signal to HAL, component and it's pins are ready created

@@ -49,3 +49,6 @@ out.txt
 
 \.vscode
 build/
+
+#drawio backups
+*.bkp
