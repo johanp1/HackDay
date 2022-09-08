@@ -140,6 +140,39 @@ TEST_F(SelectorTestFixture, stateTransitions)
   checkEvent(expected);
 }
 
+TEST_F(SelectorTestFixture, stateTransitionsUserDefinedVals)
+{
+  std::unique_ptr<Selector> s_userDefined;
+  unsigned int array[4] = {50u, 250u, 500u, 750u};
+  s_userDefined = std::make_unique<Selector>("test", PIN, 100, array);
+  s_userDefined->addEventListner(&evSpy);
+  
+  arduinoStub->SetAnalogPinVoltage(PIN, (5.0f*750)/1024); 
+  s_userDefined->scan();
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
+  s_userDefined->scan();
+  ASSERT_TRUE(3 == s_userDefined->getState());
+
+  arduinoStub->SetAnalogPinVoltage(PIN, (5.0f*500)/1024); 
+  s_userDefined->scan();
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
+  s_userDefined->scan();
+  ASSERT_TRUE(2 == s_userDefined->getState());
+
+  arduinoStub->SetAnalogPinVoltage(PIN, (5.0f*250)/1024); 
+  s_userDefined->scan();
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
+  s_userDefined->scan();
+  ASSERT_TRUE(1 == s_userDefined->getState());
+
+  arduinoStub->SetAnalogPinVoltage(PIN, (5.0f*50)/1024); 
+  s_userDefined->scan();
+  arduinoStub->IncTimeMs(101); //longer than debounce delay
+  s_userDefined->scan();
+  ASSERT_TRUE(0 == s_userDefined->getState());
+}
+
+
 TEST_F(SelectorTestFixture, undefVolt)
 {
   arduinoStub->SetAnalogPinVoltage(PIN, 2.83f);
