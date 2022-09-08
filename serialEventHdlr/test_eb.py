@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import unittest
-import serialEventHandler as eh  
+import eventBroker  
 import comms
 
 class EventHandlerSpy:
@@ -30,7 +30,7 @@ class EventHandlerSpyNoArgs(EventHandlerSpy):
 class TestEventBroker(unittest.TestCase):
     
     def setUp(self):
-        self.eb = eh.EventBroker()
+        self.eb = eventBroker.EventBroker()
         self.eh1 = EventHandlerSpy()
         self.eh2 = EventHandlerSpy()
       
