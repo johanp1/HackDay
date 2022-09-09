@@ -1,8 +1,7 @@
 #include "selector.h"
 
 #define LIMIT 60u
-#define NUM_STATES 4
-const unsigned int stateVals[NUM_STATES] = {255u, 340u, 512u, 1024u}; //analog voltage read from HW
+
 
 //   public:
 
@@ -16,6 +15,21 @@ Selector::Selector(const String& argName,
   time = 0;
 }
 
+Selector::Selector(const String& argName,
+		       const unsigned int argPin,
+		       const unsigned long argDebounceDelay,
+             const unsigned int stateVolts[numberOfStates_]) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
+{
+  state = 0;
+  prevState = state;
+  time = 0;
+
+  // copy new values
+  for (byte i = 0; i < numberOfStates_; i++)
+  {
+     stateVals_[i] = stateVolts[i];
+  }
+}
 
 // returns debounced selector state
 void Selector::scan(void)
@@ -50,9 +64,9 @@ byte Selector::volt2state(unsigned int volt)
    byte retVal = 0;
    bool found = 0;   
    
-   while((i < NUM_STATES) && !found)
+   while((i < numberOfStates_) && !found)
    {
-      if( (stateVals[i]-LIMIT < volt) && (volt < stateVals[i]+LIMIT) )
+      if( (stateVals_[i]-LIMIT < volt) && (volt < stateVals_[i]+LIMIT) )
       {
          found = 1;
          retVal = i;
