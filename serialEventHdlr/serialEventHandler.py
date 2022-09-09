@@ -20,13 +20,24 @@ from collections import namedtuple
 
 class Pin:
    """ General representation of a Pin and it's data"""
-   def __init__(self, name, type):
+   def __init__(self, name, type, observer = None):
       self.name = name  # HAL pin name
       self.val = 0    # current value of pin, e.g. 1 - on, 0 - off
       self.type = type  # type (string read from xml)
+      self.observer = None
+
+      if observer != None:
+         self.attach(observer)
 
    def __repr__(self):
       return 'pin name: ' + self.name + '\tval: ' + str(self.val) + '\ttype: ' + self.type
+
+   def attach(self, observer):
+      self.observer = observer
+
+   def _notify(self):
+      if self.observer != None:
+         self.observer.update(self.name, self.val)
 
    def update_hal(self, v):
       """ to be overriden in child-class"""
@@ -74,11 +85,8 @@ class Pin:
 
 class InPin(Pin):
    """ Specialization of Pin-class"""
-   def __init__(self, hal_ref, name, type, notifier = None):
-      Pin.__init__(self, name, type)
-
-      if notifier != None:
-         self.notify = notifier
+   def __init__(self, hal_ref, name, type, observer = None):
+      Pin.__init__(self, name, type, observer)
 
       hal_ref.newpin(name, self._get_hal_type(type), hal.HAL_IN)  # create the user space HAL-pin
 
@@ -88,16 +96,12 @@ class InPin(Pin):
    def update_hal(self, hal):
       if self.val != hal[self.name]:
          self.val = hal[self.name]
-         self.notify(self.name, self.val)
-
-   def notify(self, name, val):
-      """to be overriden"""
-      pass
+         self._notify()
 
 class OutPin(Pin):
    """ Specialization of Pin-class"""
-   def __init__(self, hal_ref, name, type):
-      Pin.__init__(self, name, type)
+   def __init__(self, hal_ref, name, type, observer = None):
+      Pin.__init__(self, name, type, observer)
 
       hal_ref.newpin(name, self._get_hal_type(type), hal.HAL_OUT)  # create the user space HAL-pin
 
@@ -113,11 +117,25 @@ class OutPin(Pin):
       except ValueError:
             print 'OutPin::set() value error catched on: ' + self.name
 
+class Observer:
+   """ container for notification-function """
+   def __init__(self, update_cb):
+      self.update_cb = update_cb
+
+   def update(self, name, val):
+      #pass
+      try:
+         #print 'observer::update name: ' + name + ' val: ' + str(val)
+         self.update_cb(name, val)
+      except ValueError:
+         print 'Observer::notify() value error catched on: ' + self.name
+
 class HALComponentWrapper:   
    def __init__(self, name):
       self.pin_dict = {}       # dictionary used to map event to pin
       self.hal = hal.component(name)  # instanciate the HAL-component
-         
+      self.observer = None
+
    def __repr__(self):
       tmp_str = ''
       for k in self.pin_dict:
@@ -155,22 +173,22 @@ class HALComponentWrapper:
       for key in self.pin_dict:
          self.pin_dict[key].update_hal(self.hal)
 
+   def attach(self, observer):
+      self.observer = observer
+
    def _createPin(self, hal_name, type, direction):
       """ factory function to create pin"""
       if direction == 'in':
-         return InPin(self.hal, hal_name, type, self._changeNotifierInternal)
+         return InPin(self.hal, hal_name, type, Observer(self.notify))
+
       if direction == 'out':
          return OutPin(self.hal, hal_name, type)
    
-   def changeNotifier(self, event_name, val):
-      """ input pin change notifier"""
-      pass
-
-   def _changeNotifierInternal(self, hal_name, val):
+   def notify(self, hal_name, val):
       # convert pin-name to event-name
       for key in self.pin_dict:
-         if self.pin_dict[key].name == hal_name:
-            self.changeNotifier(key, val)
+         if self.pin_dict[key].name == hal_name and self.observer != None:
+            self.observer.update(key, val)
 
 class OptParser:
    def __init__(self, argv):
@@ -288,19 +306,6 @@ class XmlParser:
 
       return retVal 
 
-class Observer:
-   """ container for notification-function """
-   def __init__(self, comm_hdlr):
-       self.comm_hdlr = comm_hdlr
-
-   def notify(self, name, val):
-      try:
-         #print 'name: ' + name + ' val: ' + str(val)
-         self.comm_hdlr.writeMessage(comms.Message(name, str(val)))
-      except ValueError:
-         print 'Observer::notify() value error catched on: ' + self.name
-
-
 ################################################
 def main():
    optParser = OptParser(sys.argv[1:])
@@ -314,9 +319,7 @@ def main():
 
    c = HALComponentWrapper(componentName) #HAL adaptor, takes care of mapping incomming events to actual hal-pin
    serialEventGenerator = comms.instrument(portName, c.event_set_pin, watchdogEnabled, 5, 1) #serial adaptor
-
-   observer = Observer(serialEventGenerator)
-   c.changeNotifier = observer.notify
+   c.attach(Observer(serialEventGenerator.writeMessage))
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsed_data = xmlParser.get_parsed_data()
