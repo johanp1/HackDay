@@ -1,34 +1,30 @@
 #include "selector.h"
 
-#define LIMIT 60u
-
-
 //   public:
-
-// constructor 
-Selector::Selector(const String& argName,
-		       const unsigned int argPin,
-		       const unsigned long argDebounceDelay) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
-{
-  state = 0;
-  prevState = state;
-  time = 0;
-}
-
 Selector::Selector(const String& argName,
 		       const unsigned int argPin,
 		       const unsigned long argDebounceDelay,
-             const unsigned int stateVolts[numberOfStates_]) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
+             const unsigned int stateVolts[],
+             const byte numberOfStates,
+             const byte stateValueUncertainty) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay), stateValueUncertainty_(stateValueUncertainty)
 {
-  state = 0;
-  prevState = state;
-  time = 0;
+   state = 0;
+   prevState = state;
+   time = 0;
 
-  // copy new values
-  for (byte i = 0; i < numberOfStates_; i++)
-  {
-     stateVals_[i] = stateVolts[i];
-  }
+   states_.numberOfStates = numberOfStates;
+   states_.stateADValues = new int[numberOfStates];
+
+   // copy new values
+   for (byte i = 0; i < states_.numberOfStates; i++)
+   {
+      states_.stateADValues[i]  = stateVolts[i];
+   }
+}
+
+Selector::~Selector()
+{
+   delete states_.stateADValues;
 }
 
 // returns debounced selector state
@@ -64,9 +60,9 @@ byte Selector::volt2state(unsigned int volt)
    byte retVal = 0;
    bool found = 0;   
    
-   while((i < numberOfStates_) && !found)
+   while((i < states_.numberOfStates) && !found)
    {
-      if( (stateVals_[i]-LIMIT < volt) && (volt < stateVals_[i]+LIMIT) )
+      if( (states_.stateADValues[i]-stateValueUncertainty_ < volt) && (volt < states_.stateADValues[i]+stateValueUncertainty_) )
       {
          found = 1;
          retVal = i;
