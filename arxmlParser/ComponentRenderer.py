@@ -25,7 +25,7 @@ class RPortVisitor:
 class ComponentRenderer:
    def __init__(self, ldc):
       self.ldc = ldc
-      self.f_out = open(ldc + '.xml', 'w')
+      self.f_out = open('out/' + ldc + '.xml', 'w')
 
       self.pport_visitor = PPortVisitor(self)
       self.rport_visitor = RPortVisitor(self)

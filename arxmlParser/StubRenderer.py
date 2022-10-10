@@ -39,8 +39,8 @@ class RPortVisitor:
 class StubRenderer:
    def __init__(self, module, ldc, swc):
       f_template = open('template/template.h', 'r')
-      self.f_header = open(module + '.h', 'w')
-      self.f_source = open(module + '.c', 'w')
+      self.f_header = open('out/' + module + '.h', 'w')
+      self.f_source = open('out/' + module + '.c', 'w')
 
       self.pport_visitor = PPortVisitor(self)
       self.rport_visitor = RPortVisitor(self)

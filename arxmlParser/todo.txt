@@ -1,4 +1,4 @@
-renderer skall jobba med idividuella portar.
+renderer skall jobba med individuella portar.
 sub-klassa port enligt UML-diagram
 
 sub-klassa renderer

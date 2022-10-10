@@ -31,7 +31,7 @@ class RPortVisitor:
 class RteRenderer:
    def __init__(self, module, ldc, swc):
       f_template = open('template/template.h', 'r')
-      self.f_out = open(module + '.h', 'w')
+      self.f_out = open('out/' + module + '.h', 'w')
 
       self.pport_visitor = PPortVisitor(self)
       self.rport_visitor = RPortVisitor(self)
