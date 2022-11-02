@@ -2,7 +2,7 @@
 #include "sender.h"
 #include "event_listner.h"
 #include "buffer.h"
-#include "selector2.h"
+#include "selector.h"
 #include "event_parser.h"
 #include "receiver.h"
 #include "mpg_pendant_lathe.h"
@@ -126,7 +126,7 @@ static Receiver receiver(String("rec"));
 
 static unsigned long heartbeatTimer = cHeartbeatPeriod;
 
-void setup() {
+void setup() {  
   AxisView<LiquidCrystal_PCF8574>* axisView = new AxisView<LiquidCrystal_PCF8574>(lcd, lcdModel);
   SpindleView<LiquidCrystal_PCF8574>* spindleView =new SpindleView<LiquidCrystal_PCF8574>(lcd, lcdModel);
 
@@ -158,15 +158,15 @@ void setup() {
   eventGenerators[3] = new Button("est", cEStopButtonPin, cButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
-  eventGenerators[4] = new Selector2("sela", cAxisSelectorPin1, cAxisSelectorPin2, cAxisSelectorPin3, cSelectorDebounceDelay);
+  eventGenerators[4] = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
   eventGenerators[4]->addEventListner(&sender);
 
   // register selector changes to the view's event handlers
   eventGenerators[4]->addEventListner(axisView->GetController());
   eventGenerators[4]->addEventListner(spindleView->GetController());
   
-  //  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, cSelectorDebounceDelay);
-  //  eventGenerators[5]->addEventListner(&sender);
+  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
+  eventGenerators[5]->addEventListner(&sender);
 
   // register serial events the view's event handlers
   receiver.addEventListner(axisView->GetController());
@@ -193,7 +193,7 @@ void loop() {
   eventGenerators[2]->scan();
   eventGenerators[3]->scan();
   eventGenerators[4]->scan();
-  //eventGenerators[5]->scan();
+  eventGenerators[5]->scan();
 
   //send heart-beat every <cHeartbeatPeriod> [ms]
   if (millis() > heartbeatTimer)
