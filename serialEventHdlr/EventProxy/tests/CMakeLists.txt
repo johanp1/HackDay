@@ -13,7 +13,6 @@ set(TEST_SOURCE
   event_parser_tests.cpp
   receiver_tests.cpp
   selector_tests.cpp
-  selector2_tests.cpp
   sender_tests.cpp
   event_generator_tests.cpp
   main.cpp)
