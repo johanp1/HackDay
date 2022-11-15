@@ -100,6 +100,9 @@ class instrument:
             self.watchdog_daemon.ping()
 
 
+   def generateEvent(self, name, data = ''):
+      self.writeMessage(Message(name, data))
+
    def writeMessage(self, m):
       self._write(m.name)
       if  m.data != '':

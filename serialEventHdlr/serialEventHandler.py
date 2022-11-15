@@ -319,7 +319,7 @@ def main():
 
    c = HALComponentWrapper(componentName) #HAL adaptor, takes care of mapping incomming events to actual hal-pin
    serialEventGenerator = comms.instrument(portName, c.event_set_pin, watchdogEnabled, 5, 1) #serial adaptor
-   c.attach(Observer(serialEventGenerator.writeMessage))
+   c.attach(Observer(serialEventGenerator.generateEvent))
 
    # add/create the HAL-pins from parsed xml and attach them to the adaptor event handler
    parsed_data = xmlParser.get_parsed_data()

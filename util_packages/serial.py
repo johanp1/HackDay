@@ -7,7 +7,7 @@ class SerialException(Exception):
 
 class Serial(threading.Thread):
 
-   def __init__(self, start_deamon = True):
+   def __init__(self, start_deamon = False):
       self.reset()
       threading.Thread.__init__(self)
       self.daemon=True
