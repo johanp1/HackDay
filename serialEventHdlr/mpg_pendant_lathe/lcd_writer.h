@@ -9,7 +9,7 @@ constexpr auto k_maxNbrOfObservers = 4;
 using Position = float;
 using Speed = int;
 using Row = byte;
-enum Axis {axis_x, axis_y};
+enum Axis {axis_x, axis_z};
 
 class Observer
 {
@@ -28,12 +28,12 @@ class Model
    void Detach(Observer* o);
 
    void SetX(Position p) {x_pos_ = p; Notify();};
-   void SetY(Position p) {y_pos_ = p; Notify();};
+   void SetZ(Position p) {z_pos_ = p; Notify();};
    void SetSpindleSpeed(Speed s) {spindle_speed_ = s; Notify();};
    void SetActiveAxis(Axis a) {active_axis_ = a;Notify();};
 
    Position GetX() {return x_pos_;};
-   Position GetY() {return y_pos_;};
+   Position GetZ() {return z_pos_;};
    Speed GetSpindleSpeed() {return spindle_speed_;};
    Axis GetActiveAxis() {return active_axis_;};
 
@@ -42,7 +42,7 @@ class Model
 
    private:
    Position x_pos_;
-   Position y_pos_;
+   Position z_pos_;
    Speed spindle_speed_;
    Axis active_axis_;
    Observer* registry[k_maxNbrOfObservers];
@@ -51,7 +51,7 @@ class Model
 Model::Model()
 {
    x_pos_ = 0.0f;
-   y_pos_ = 0.0f; 
+   z_pos_ = 0.0f; 
    spindle_speed_ = 0;
    active_axis_ = axis_x; 
 
@@ -178,17 +178,17 @@ void AxisView<Lcd>::Draw()
   if(this->enabled_)
   {
    String row1 = String(" x: ");
-   String row2 = String(" y: ");
+   String row2 = String(" z: ");
 
    row1.concat(this->myModel.GetX());
-   row2.concat(this->myModel.GetY());
+   row2.concat(this->myModel.GetZ());
    
    row1.concat("   "); //add some spaces to avoid doing clear between prints
    row2.concat("   ");
 
    // indicate the jogged/active axis with a  '*'
    row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
-   row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_y ? '*' : ' ');
+   row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_z ? '*' : ' ');
 
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);

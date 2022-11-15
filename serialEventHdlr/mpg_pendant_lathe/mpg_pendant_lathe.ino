@@ -30,11 +30,11 @@ class UpdateXCommandHandler : public EventFunctor
 class UpdateYCommandHandler : public EventFunctor
 {
   public:
-    UpdateYCommandHandler(Model& model) : EventFunctor{String("ypos")}, model_(model) {};
+    UpdateYCommandHandler(Model& model) : EventFunctor{String("zpos")}, model_(model) {};
 
     void operator()(String& _parsedData)
     {
-      model_.SetY(_parsedData.toFloat());
+      model_.SetZ(_parsedData.toFloat());
     };
 
   private:
@@ -62,7 +62,7 @@ class AxisViewCommandHandler : public EventFunctor
 
     void operator()(String& _parsedData)
     {
-      if((_parsedData.toInt() == 1) || (_parsedData.toInt() == 2))
+      if((_parsedData.toInt() == 0) || (_parsedData.toInt() == 1))
       {
         view_.SetEnabled(true);
       }
@@ -83,7 +83,7 @@ class SpindleViewCommandHandler : public EventFunctor
 
     void operator()(String& _parsedData)
     {
-      if(_parsedData.toInt() == 3)
+      if(_parsedData.toInt() == 2)
       {
         view_.SetEnabled(true);
       }
@@ -104,13 +104,13 @@ class ActiveAxisCommandHandler : public EventFunctor
 
     void operator()(String& _parsedData)
     {
-      if(_parsedData.toInt() == 1)
+      if(_parsedData.toInt() == 0)
       {
         model_.SetActiveAxis(axis_x);
       }
-      if(_parsedData.toInt() == 2)
+      if(_parsedData.toInt() == 1)
       {
-        model_.SetActiveAxis(axis_y);
+        model_.SetActiveAxis(axis_z);
       }
     };
 
@@ -180,6 +180,8 @@ void setup() {
   spindleView->GetController()->AddAcceptedHandler(*spindleViewCommandHandler);
 
   axisView->GetController()->AddAcceptedHandler(*activeAxisCommandHandler);
+  
+  delay(250); // add some grace time, waits 250ms
 }
 
 void loop() {
@@ -187,7 +189,7 @@ void loop() {
   byte i;
   C_Event e;
   byte dummy = 0;
-
+  
   eventGenerators[0]->scan();
   eventGenerators[1]->scan();
   eventGenerators[2]->scan();
@@ -204,7 +206,7 @@ void loop() {
     heartbeatTimer = millis() + cHeartbeatPeriod;
   }
 
-  delay(10); // waits 10ms
+  delay(50); // waits 50ms
 }
 
 void serialEvent()
