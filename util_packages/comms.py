@@ -27,7 +27,10 @@ class Message:
    """'container for messages. keeps two strings <message> and <value>"""
    def __init__(self, name = '', data = ''):
       self.name = name
-      self.data = str(data) #serialize, filter strange characters
+      try:
+         self.data = str(data).encode('ascii') #serialize, filter strange characters
+      except:
+         self.data = ''
 
    def __repr__(self):
       return 'msg: ' + self.name + ' val: ' + self.data
