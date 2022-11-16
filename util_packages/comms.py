@@ -27,8 +27,8 @@ class Message:
    """'container for messages. keeps two strings <message> and <value>"""
    def __init__(self, name = '', data = ''):
       self.name = name
-      self.data = data
-      
+      self.data = str(data) #serialize, filter strange characters
+
    def __repr__(self):
       return 'msg: ' + self.name + ' val: ' + self.data
 
@@ -105,19 +105,21 @@ class instrument:
 
    def writeMessage(self, m):
       self._write(m.name)
+
       if  m.data != '':
-         #self._write(m.data)
-         self._write('_' + m.data)
+         self._write('_')
+         self._write(m.data)
 
       self._write('\n')
 
    def enableWatchdog(self, enable):
       self.watchdog_daemon.setEnabled(enable)
 
-   def _write(self, str):
+   def _write(self, s):
       if self.portOpened == True:
          #serial expects a byte-array and not a string
-         self.serial.write(''.join(str).encode('utf-8', 'ignore'))
+         self.serial.write(''.join(s).encode('utf-8', 'ignore'))
+         
      
    def _read(self):
       """ returns string read from serial port """

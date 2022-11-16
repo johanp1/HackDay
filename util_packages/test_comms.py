@@ -99,8 +99,8 @@ class TestComms(unittest.TestCase):
       self.assertTrue(self.s.serial.writeBuf == '')
 
    def test_generateEvent(self):
-      self.s.generateEvent('apa', '123')
-      self.assertTrue(self.s.serial.writeBuf == 'apa_123\n')
+      self.s.generateEvent('apa', 129)
+      self.assertTrue(self.s.serial.writeBuf == 'apa_129\n')
 
    def test_generateEventNoPayload(self):
       self.s.generateEvent('bepa')
