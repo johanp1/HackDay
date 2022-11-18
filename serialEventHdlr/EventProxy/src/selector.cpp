@@ -8,7 +8,7 @@ Selector::Selector(const String& argName,
              const byte numberOfStates,
              const byte stateValueUncertainty) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay), stateValueUncertainty_(stateValueUncertainty)
 {
-   state = 0;
+   state = 255;
    prevState = state;
    time = 0;
 

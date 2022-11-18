@@ -137,6 +137,8 @@ void setup() {
   SpindleViewCommandHandler* spindleViewCommandHandler = new SpindleViewCommandHandler(*spindleView);
   ActiveAxisCommandHandler* activeAxisCommandHandler = new ActiveAxisCommandHandler(lcdModel);
   
+  Selector* axisSelector = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
+  
   Serial.begin(38400);
   Serial.setTimeout(500);
   Serial.println("mpgPendant::setup()");
@@ -158,7 +160,7 @@ void setup() {
   eventGenerators[3] = new Button("est", cEStopButtonPin, cButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
-  eventGenerators[4] = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
+  eventGenerators[4] = axisSelector;
   eventGenerators[4]->addEventListner(&sender);
 
   // register selector changes to the view's event handlers
@@ -181,7 +183,10 @@ void setup() {
 
   axisView->GetController()->AddAcceptedHandler(*activeAxisCommandHandler);
   
-  delay(250); // add some grace time, waits 250ms
+  // set the correct view
+  axisSelector->scan();
+  delay(cSelectorDebounceDelay); // add some time to make the state transition
+  axisSelector->scan();			 // this will force a axis-selector-event to generated
 }
 
 void loop() {
@@ -206,7 +211,7 @@ void loop() {
     heartbeatTimer = millis() + cHeartbeatPeriod;
   }
 
-  delay(50); // waits 50ms
+  delay(10); // waits 50ms
 }
 
 void serialEvent()

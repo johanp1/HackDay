@@ -196,6 +196,7 @@ class OptParser:
       self.name = 'my-mpg'       # default name of component in HAL
       self.port = '/dev/ttyUSB0' # default serial port to use
       self.watchdog_reset = False
+      self.periodicity = 0.1
 
       self._get_options(argv)
       
@@ -204,7 +205,7 @@ class OptParser:
       
    def _get_options(self, argv):
       try:
-         opts, args = getopt.getopt(argv, "hwp:c:", ["input=", "port="])
+         opts, args = getopt.getopt(argv, "hwp:c:", ["input=", "port=", "periodicity="])
       except getopt.GetoptError as err:
          # print help information and exit:
          print(err) # will print something like "option -a not recognized"
@@ -221,6 +222,8 @@ class OptParser:
             self.xml_file = a
          elif o in ("-p", "--port"):
             self.port = a
+         elif o == ("--periodicity"):
+            self.periodicity = a
          elif o == "-w":
             self.watchdog_reset = True
          else:
@@ -245,6 +248,9 @@ class OptParser:
    
    def get_watchdog_reset(self):
       return self.watchdog_reset
+
+   def get_periodicity(self):
+      return self.periodicity
 
    def _usage(self):
       """ print command line options """
@@ -313,6 +319,8 @@ def main():
    portName = optParser.get_port()
    xmlFile = optParser.get_XML_file()
    watchdogEnabled = optParser.get_watchdog_reset()
+   periodicity = optParser.get_periodicity()
+   
    print optParser
       
    xmlParser = XmlParser(xmlFile)
@@ -336,7 +344,7 @@ def main():
          serialEventGenerator.readMessages() #blocks until '\n' received or timeout
          c.update_hal()
 
-         time.sleep(0.1)
+         time.sleep(periodicity)
 
    except KeyboardInterrupt:
       raise SystemExit
