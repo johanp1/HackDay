@@ -1,0 +1,1306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModuleConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.volvo.com/gtt/adapt/ModuleConfig">
+    <Components>
+        <Component Name="ACC">
+            <SenderReceiverPorts>
+                <Port Name="ACC_Debug" Direction="Send" Signal="ACC_Debug">
+                    <Signals>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte1" Element="Debug_4_DACU_Byte1"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte2" Element="Debug_4_DACU_Byte2"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte3" Element="Debug_4_DACU_Byte3"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte4" Element="Debug_4_DACU_Byte4"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte5" Element="Debug_4_DACU_Byte5"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte6" Element="Debug_4_DACU_Byte6"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte7" Element="Debug_4_DACU_Byte7"/>
+                        <Signal Name="ACC_Debug_Debug_4_DACU_Byte8" Element="Debug_4_EgoPosition_OutDACU_Byte8"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte1" Element="Debug_5_DACU_Byte1"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte2" Element="Debug_5_DACU_Byte2"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte3" Element="Debug_5_DACU_Byte3"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte4" Element="Debug_5_DACU_Byte4"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte5" Element="Debug_5_DACU_Byte5"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte6" Element="Debug_5_DACU_Byte6"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte7" Element="Debug_5_DACU_Byte7"/>
+                        <Signal Name="ACC_Debug_Debug_5_DACU_Byte8" Element="Debug_5_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="ACC_Out" Direction="Send"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="TSM_Out" Direction="Receive" SenderComponent="TSM" SenderPort="TSM_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="CurvatureBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="CurvatureBuffer_Out"/>
+                <Port Name="EgoPosition_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="EgoPosition_Out"/>
+                <Port Name="RoadEventBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="RoadEventBuffer_Out"/>
+                <Port Name="SlopeBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="SlopeBuffer_Out"/>
+                <Port Name="SpeedLimitBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="SpeedLimitBuffer_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="CWEB">
+            <SenderReceiverPorts>
+                <Port Name="ACC_Out" Direction="Receive" SenderComponent="ACC" SenderPort="ACC_Out"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="TSM_Out" Direction="Receive" SenderComponent="TSM" SenderPort="TSM_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="CWEB_Debug" Direction="Send" Signal="CWEB_Debug">
+                    <Signals>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte1" Element="Debug_6_DACU_Byte1"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte2" Element="Debug_6_DACU_Byte2"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte3" Element="Debug_6_DACU_Byte3"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte4" Element="Debug_6_DACU_Byte4"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte5" Element="Debug_6_DACU_Byte5"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte6" Element="Debug_6_DACU_Byte6"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte7" Element="Debug_6_DACU_Byte7"/>
+                        <Signal Name="CWEB_Debug_Debug_6_DACU_Byte8" Element="Debug_6_DACU_Byte8"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte1" Element="Debug_7_DACU_Byte1"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte2" Element="Debug_7_DACU_Byte2"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte3" Element="Debug_7_DACU_Byte3"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte4" Element="Debug_7_DACU_Byte4"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte5" Element="Debug_7_DACU_Byte5"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte6" Element="Debug_7_DACU_Byte6"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte7" Element="Debug_7_DACU_Byte7"/>
+                        <Signal Name="CWEB_Debug_Debug_7_DACU_Byte8" Element="Debug_7_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="CWEB_Out" Direction="Send" Signal="CWEB_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="DVE">
+            <SenderReceiverPorts>
+                <Port Name="DVE_Debug" Direction="Send" Signal="DVE_Debug">
+                    <Signals>
+                        <Signal Name="DVE_Debug_Debug_8_DACU_Signal3" Element="Debug_8_DACU_Signal3"/>
+                        <Signal Name="DVE_Debug_Debug_8_DACU_Signal4" Element="Debug_8_DACU_Signal4"/>
+                        <Signal Name="DVE_Debug_Debug_9_DACU_Signal1" Element="Debug_9_DACU_Signal1"/>
+                        <Signal Name="DVE_Debug_Debug_9_DACU_Signal2" Element="Debug_9_DACU_Signal2"/>
+                        <Signal Name="DVE_Debug_Debug_9_DACU_Signal3" Element="Debug_9_DACU_Signal3"/>
+                        <Signal Name="DVE_Debug_Debug_9_DACU_Signal4" Element="Debug_9_DACU_Signal4"/>
+                    </Signals>
+                </Port>
+                <Port Name="DVE_Out" Direction="Send" Signal="DVE_Out">
+                    <Signals>
+                        <Signal Name="DVE_Out_DASApplicationStatus_1" Element="DASApplicationStatus_1"/>
+                        <Signal Name="DVE_Out_DriverImpairedDriverAlert_1" Element="DriverImpairedDriverAlert_1"/>
+                        <Signal Name="DVE_Out_DriverVigilanceLevel_1" Element="DriverVigilanceLevel_1"/>
+                    </Signals>
+                </Port>
+				<Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="EgoVehicleTrajectoryPlanner">
+            <SenderReceiverPorts>
+                <Port Name="FASControlMode" Direction="Receive" SenderComponent="TrafficSituationActionGate" SenderPort="FASControlMode"/>
+                <Port Name="MUM_Out" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Out"/>
+                <Port Name="NonDrivableRegionSituation_Out" Direction="Receive" SenderComponent="NonDrivableRegionSituation" SenderPort="NonDrivableRegionSituation_Out"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="EgoVehicleTrajectoryPlanner_Out" Direction="Send" Signal="EgoVehicleTrajectoryPlanner_Out">
+                    <Signals>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_EVTPStatus" Element="EVTPStatus"/>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_CurvatureRequest" Element="CurvatureRequest"/>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_MessageCounter" Element="MessageCounter"/>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_EgoTrajectoryDeviation" Element="EgoTrajectoryDeviation"/>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_FrontWheelAngleRqst" Element="FrontWheelAngleRqst"/>
+                        <Signal Name="EgoVehicleTrajectoryPlanner_Out_BBSteeringRqstActive" Element="BBSteeringRqstActive"/>
+                    </Signals>
+                </Port>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="ESI">
+            <SenderReceiverPorts>
+                <Port Name="sideObject" Direction="Send"/>
+                <Port Name="FrontFLRSensorObjects" Direction="Send"/>
+                <Port Name="FrontFLCSensorObjects" Direction="Send"/>
+                <Port Name="SideSensorObjects" Direction="Send"/>
+                <Port Name="SDF_Trigger" Direction="Send"/>
+                <Port Name="FLCSwVersion" Direction="Receive" Signal="FLCSwVersion"/>
+                <Port Name="FLRSwVersion" Direction="Receive" Signal="FLRSwVersion"/>
+				<Port Name="Brightspot00" Direction="Receive" Signal="Brightspot00" />
+				<Port Name="Brightspot01" Direction="Receive" Signal="Brightspot01" />
+				<Port Name="Brightspot02" Direction="Receive" Signal="Brightspot02" />
+				<Port Name="Brightspot03" Direction="Receive" Signal="Brightspot03" />
+				<Port Name="Brightspot04" Direction="Receive" Signal="Brightspot04" />
+				<Port Name="Brightspot05" Direction="Receive" Signal="Brightspot05" />
+				<Port Name="Brightspot06" Direction="Receive" Signal="Brightspot06" />
+				<Port Name="Brightspot07" Direction="Receive" Signal="Brightspot07" />
+				<Port Name="Brightspot08" Direction="Receive" Signal="Brightspot08" />
+				<Port Name="Clothoid00" Direction="Receive" Signal="Clothoid00" />
+				<Port Name="Clothoid01" Direction="Receive" Signal="Clothoid01" />
+				<Port Name="Clothoid02" Direction="Receive" Signal="Clothoid02" />
+				<Port Name="Clothoid03" Direction="Receive" Signal="Clothoid03" />
+				<Port Name="Clothoid04" Direction="Receive" Signal="Clothoid04" />
+				<Port Name="Clothoid05" Direction="Receive" Signal="Clothoid05" />
+				<Port Name="Clothoid06" Direction="Receive" Signal="Clothoid06" />
+				<Port Name="Clothoid07" Direction="Receive" Signal="Clothoid07" />
+				<Port Name="FLCEgoAssumption" Direction="Receive" Signal="FLCEgoAssumption" />
+				<Port Name="FLREgoAssumpt" Direction="Receive" Signal="FLREgoAssumpt" />
+				<Port Name="VisionProperties" Direction="Receive" Signal="VisionProperties" />
+				<Port Name="FLCObject00" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject01" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject02" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject03" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject04" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject05" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject06" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject07" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject08" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject09" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject10" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject11" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject12" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject13" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject14" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject15" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject16" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject17" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject18" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject19" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject20" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject21" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject22" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLCObject23" Direction="Receive" Signal="FLCObject" />
+				<Port Name="FLRObj00" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj01" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj02" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj03" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj04" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj05" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj06" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj07" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj08" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj09" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj10" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj11" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj12" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj13" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj14" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj15" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj16" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj17" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj18" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj19" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj20" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj21" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj22" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FLRObj23" Direction="Receive" Signal="FLRObject" />
+				<Port Name="FwdRadarStatus" Direction="Receive" Signal="RadarSensorStatus" />
+				<Port Name="FwdSensingCamStat" Direction="Receive" Signal="FwdSensingCamStat" />
+				<Port Name="FwdSensingRadarStat" Direction="Receive" Signal="FwdSensingRadarStat" />
+				<Port Name="LFSREgoAssumpt" Direction="Receive" Signal="EgoAssumpt" />
+				<Port Name="LRSREgoAssumpt" Direction="Receive" Signal="EgoAssumpt" />
+				<Port Name="RFSREgoAssumpt" Direction="Receive" Signal="EgoAssumpt" />
+				<Port Name="RRSREgoAssumpt" Direction="Receive" Signal="EgoAssumpt" />
+				<Port Name="LFSRRaisedEdge" Direction="Receive" Signal="RaisedEdge" />
+				<Port Name="LRSRRaisedEdge" Direction="Receive" Signal="RaisedEdge" />
+				<Port Name="RFSRRaisedEdge" Direction="Receive" Signal="RaisedEdge" />
+				<Port Name="RRSRRaisedEdge" Direction="Receive" Signal="RaisedEdge" />
+				<Port Name="LFSRSensingRadarStat" Direction="Receive" Signal="SideSensingRadarStat" />
+				<Port Name="LRSRSensingRadarStat" Direction="Receive" Signal="SideSensingRadarStat" />
+				<Port Name="RFSRSensingRadarStat" Direction="Receive" Signal="SideSensingRadarStat" />
+				<Port Name="RRSRSensingRadarStat" Direction="Receive" Signal="SideSensingRadarStat" />
+				<Port Name="TrafficSign00" Direction="Receive" Signal="TrafficSign00" />
+				<Port Name="TrafficSign01" Direction="Receive" Signal="TrafficSign01" />
+				<Port Name="TrafficSign02" Direction="Receive" Signal="TrafficSign02" />
+				<Port Name="TrafficSign03" Direction="Receive" Signal="TrafficSign03" />
+				<Port Name="TrafficSign04" Direction="Receive" Signal="TrafficSign04" />
+				<Port Name="TrafficSign05" Direction="Receive" Signal="TrafficSign05" />
+				<Port Name="TrafficSign06" Direction="Receive" Signal="TrafficSign06" />
+				<Port Name="TrafficSign07" Direction="Receive" Signal="TrafficSign07" />
+				<Port Name="TrafficSign08" Direction="Receive" Signal="TrafficSign08" />
+				<Port Name="TrafficSign09" Direction="Receive" Signal="TrafficSign09" />
+				<Port Name="TrafficSign10" Direction="Receive" Signal="TrafficSign10" />
+				<Port Name="TrafficSign11" Direction="Receive" Signal="TrafficSign11" />
+				<Port Name="LFSideSensorObj00" Direction="Receive" Signal="LFSideSensorObj00" />
+				<Port Name="LFSideSensorObj01" Direction="Receive" Signal="LFSideSensorObj01" />
+				<Port Name="LFSideSensorObj02" Direction="Receive" Signal="LFSideSensorObj02" />
+				<Port Name="LFSideSensorObj03" Direction="Receive" Signal="LFSideSensorObj03" />
+				<Port Name="LFSideSensorObj04" Direction="Receive" Signal="LFSideSensorObj04" />
+				<Port Name="LFSideSensorObj05" Direction="Receive" Signal="LFSideSensorObj05" />
+				<Port Name="LFSideSensorObj06" Direction="Receive" Signal="LFSideSensorObj06" />
+				<Port Name="LFSideSensorObj07" Direction="Receive" Signal="LFSideSensorObj07" />
+				<Port Name="LFSideSensorObj08" Direction="Receive" Signal="LFSideSensorObj08" />
+				<Port Name="LFSideSensorObj09" Direction="Receive" Signal="LFSideSensorObj09" />
+				<Port Name="LFSideSensorObj10" Direction="Receive" Signal="LFSideSensorObj10" />
+				<Port Name="LFSideSensorObj11" Direction="Receive" Signal="LFSideSensorObj11" />
+				<Port Name="LFSideSensorTrlrObj" Direction="Receive" Signal="LFSideSensorTrlrObj" />
+				<Port Name="LFSRSideSensorStatus" Direction="Receive" Signal="LFSRSideSensorStatus" />
+				<Port Name="LFSRSwVersion" Direction="Receive" Signal="LFSRSwVersion" />
+				<Port Name="LRSideSensorObj00" Direction="Receive" Signal="LRSideSensorObj00" />
+				<Port Name="LRSideSensorObj01" Direction="Receive" Signal="LRSideSensorObj01" />
+				<Port Name="LRSideSensorObj02" Direction="Receive" Signal="LRSideSensorObj02" />
+				<Port Name="LRSideSensorObj03" Direction="Receive" Signal="LRSideSensorObj03" />
+				<Port Name="LRSideSensorObj04" Direction="Receive" Signal="LRSideSensorObj04" />
+				<Port Name="LRSideSensorObj05" Direction="Receive" Signal="LRSideSensorObj05" />
+				<Port Name="LRSideSensorObj06" Direction="Receive" Signal="LRSideSensorObj06" />
+				<Port Name="LRSideSensorObj07" Direction="Receive" Signal="LRSideSensorObj07" />
+				<Port Name="LRSideSensorObj08" Direction="Receive" Signal="LRSideSensorObj08" />
+				<Port Name="LRSideSensorObj09" Direction="Receive" Signal="LRSideSensorObj09" />
+				<Port Name="LRSideSensorObj10" Direction="Receive" Signal="LRSideSensorObj10" />
+				<Port Name="LRSideSensorObj11" Direction="Receive" Signal="LRSideSensorObj11" />
+				<Port Name="LRSideSensorTrlrObj" Direction="Receive" Signal="LRSideSensorTrlrObj" />
+				<Port Name="LRSRSideSensorStatus" Direction="Receive" Signal="LRSRSideSensorStatus" />
+				<Port Name="LRSRSwVersion" Direction="Receive" Signal="LRSRSwVersion" />
+                <Port Name="SideObjectDetectedT2P" Direction="Receive" Signal="SideObjectDetectedT2P"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+				<Port Name="RFSideSensorObj00" Direction="Receive" Signal="RFSideSensorObj00" />
+				<Port Name="RFSideSensorObj01" Direction="Receive" Signal="RFSideSensorObj01" />
+				<Port Name="RFSideSensorObj02" Direction="Receive" Signal="RFSideSensorObj02" />
+				<Port Name="RFSideSensorObj03" Direction="Receive" Signal="RFSideSensorObj03" />
+				<Port Name="RFSideSensorObj04" Direction="Receive" Signal="RFSideSensorObj04" />
+				<Port Name="RFSideSensorObj05" Direction="Receive" Signal="RFSideSensorObj05" />
+				<Port Name="RFSideSensorObj06" Direction="Receive" Signal="RFSideSensorObj06" />
+				<Port Name="RFSideSensorObj07" Direction="Receive" Signal="RFSideSensorObj07" />
+				<Port Name="RFSideSensorObj08" Direction="Receive" Signal="RFSideSensorObj08" />
+				<Port Name="RFSideSensorObj09" Direction="Receive" Signal="RFSideSensorObj09" />
+				<Port Name="RFSideSensorObj10" Direction="Receive" Signal="RFSideSensorObj10" />
+				<Port Name="RFSideSensorObj11" Direction="Receive" Signal="RFSideSensorObj11" />
+				<Port Name="RFSideSensorTrlrObj" Direction="Receive" Signal="RFSideSensorTrlrObj" />
+				<Port Name="RFSRSideSensorStatus" Direction="Receive" Signal="RFSRSideSensorStatus" />
+				<Port Name="RFSRSwVersion" Direction="Receive" Signal="RFSRSwVersion" />
+				<Port Name="RRSideSensorObj00" Direction="Receive" Signal="RRSideSensorObj00" />
+				<Port Name="RRSideSensorObj01" Direction="Receive" Signal="RRSideSensorObj01" />
+				<Port Name="RRSideSensorObj02" Direction="Receive" Signal="RRSideSensorObj02" />
+				<Port Name="RRSideSensorObj03" Direction="Receive" Signal="RRSideSensorObj03" />
+				<Port Name="RRSideSensorObj04" Direction="Receive" Signal="RRSideSensorObj04" />
+				<Port Name="RRSideSensorObj05" Direction="Receive" Signal="RRSideSensorObj05" />
+				<Port Name="RRSideSensorObj06" Direction="Receive" Signal="RRSideSensorObj06" />
+				<Port Name="RRSideSensorObj07" Direction="Receive" Signal="RRSideSensorObj07" />
+				<Port Name="RRSideSensorObj08" Direction="Receive" Signal="RRSideSensorObj08" />
+				<Port Name="RRSideSensorObj09" Direction="Receive" Signal="RRSideSensorObj09" />
+				<Port Name="RRSideSensorObj10" Direction="Receive" Signal="RRSideSensorObj10" />
+				<Port Name="RRSideSensorObj11" Direction="Receive" Signal="RRSideSensorObj11" />
+				<Port Name="RRSideSensorTrlrObj" Direction="Receive" Signal="RRSideSensorTrlrObj" />
+				<Port Name="RRSRSideSensorStatus" Direction="Receive" Signal="RRSRSideSensorStatus" />
+				<Port Name="RRSRSwVersion" Direction="Receive" Signal="RRSRSwVersion" />
+				<Port Name="LeftRoadBoundary" Direction="Receive" Signal="LeftRoadBoundary" />
+				<Port Name="RightRoadBoundary" Direction="Receive" Signal="RightRoadBoundary" />
+				<Port Name="ForwardLookingCameraStatus2" Direction="Receive" Signal="ForwardLookingCameraStatus2" />
+                <Port Name="FLCVideoOutStatus" Direction="Receive" Signal="FLCVideoOutStatus" />
+                <Port Name="FwdCam" Direction="Receive" Signal="FwdCam" />
+                <Port Name="FwdRdr" Direction="Receive" Signal="FwdRdr" />
+                <Port Name="SideRadarLF" Direction="Receive" Signal="SideRadarLF" />
+                <Port Name="SideRadarLR" Direction="Receive" Signal="SideRadarLR" />
+                <Port Name="SideRadarRF" Direction="Receive" Signal="SideRadarRF" />
+                <Port Name="SideRadarRR" Direction="Receive" Signal="SideRadarRR" />
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="ESO">
+            <SenderReceiverPorts>
+				<Port Name="EgoMotionXYplane" Direction="Send" Signal="EgoMotionXYplane" />
+                <Port Name="MUM_Out" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Out"/>
+		<Port Name="BendingAngle" Direction="Send" Signal="BendingAngle"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>
+                <Port Name="HOA_Out" Direction="Receive" SenderComponent="HOA" SenderPort="HOA_Out"/>
+                <Port Name="TSR_Out" Direction="Receive" SenderComponent="TSR" SenderPort="TSR_Out"/>
+                <Port Name="VIN_DACU" Direction="Send" Signal="VIN_DACU">
+                    <Signals>
+                        <Signal Name="VIN_DACU_Byte00" Element="Byte00"/>
+                        <Signal Name="VIN_DACU_Byte01" Element="Byte01"/>
+                        <Signal Name="VIN_DACU_Byte02" Element="Byte02"/>
+                        <Signal Name="VIN_DACU_Byte03" Element="Byte03"/>
+                        <Signal Name="VIN_DACU_Byte04" Element="Byte04"/>
+                        <Signal Name="VIN_DACU_Byte05" Element="Byte05"/>
+                        <Signal Name="VIN_DACU_Byte06" Element="Byte06"/>
+                        <Signal Name="VIN_DACU_Byte07" Element="Byte07"/>
+                        <Signal Name="VIN_DACU_Byte08" Element="Byte08"/>
+                        <Signal Name="VIN_DACU_Byte09" Element="Byte09"/>
+                        <Signal Name="VIN_DACU_Byte10" Element="Byte10"/>
+                        <Signal Name="VIN_DACU_Byte11" Element="Byte11"/>
+                        <Signal Name="VIN_DACU_Byte12" Element="Byte12"/>
+                        <Signal Name="VIN_DACU_Byte13" Element="Byte13"/>
+                        <Signal Name="VIN_DACU_Byte14" Element="Byte14"/>
+                        <Signal Name="VIN_DACU_Byte15" Element="Byte15"/>
+                        <Signal Name="VIN_DACU_Byte16" Element="Byte16"/>
+                    </Signals>
+                </Port>
+                <Port Name="EgoMotionRaw" Direction="Send" Signal="EgoMotionRaw"/>
+                <Port Name="EgoPathPrediction" Direction="Send" Signal="EgoPathPrediction"/>
+                <Port Name="ShadowArea" Direction="Send" Signal="ShadowArea"/>
+				<Port Name="FrontCameraDynPitch" Direction="Send" Signal="FrontCameraDynPitch"/>
+				<Port Name="FrontCameraDynRoll" Direction="Send" Signal="FrontCameraDynRoll"/>
+				<Port Name="RegionCode" Direction="Send" Signal="RegionCode"/>
+				<Port Name="TimeSynchStat_DACU" Direction="Send" Signal="TimeSynchStat_DACU"/>
+				<Port Name="Trailer1Data" Direction="Send" Signal="Trailer1Data"/>
+				<Port Name="Trailer2Data" Direction="Send" Signal="Trailer2Data"/>
+				<Port Name="Trailer3Data" Direction="Send" Signal="Trailer3Data"/>
+				<Port Name="Trailer4Data" Direction="Send" Signal="Trailer4Data"/>
+				<Port Name="Trailer5Data" Direction="Send" Signal="Trailer5Data"/>
+                <Port Name="CameraLoggingTrigger" Direction="Send" Signal="CameraLoggingTrigger"/>
+				<Port Name="CountryCodeLocal" Direction="Send" Signal="CountryCodeLocal"/>
+				<Port Name="FRadarLoggingTrigger" Direction="Send" Signal="FRadarLoggingTrigger"/>
+				<Port Name="SRadarLoggingTrigger" Direction="Send" Signal="SRadarLoggingTrigger"/>
+			</SenderReceiverPorts>
+        </Component>
+        <Component Name="HOA">
+            <SenderReceiverPorts>
+                <Port Name="HOA_Out" Direction="Send"/>
+                <Port Name="MUM_Out" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Out"/>
+				<Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="LPS">
+            <SenderReceiverPorts>
+                <Port Name="LPS_Debug" Direction="Send" Signal="LPS_Debug">
+                    <Signals>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte1" Element="Debug_2_DACU_Byte1"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte2" Element="Debug_2_DACU_Byte2"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte3" Element="Debug_2_DACU_Byte3"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte4" Element="Debug_2_DACU_Byte4"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte5" Element="Debug_2_DACU_Byte5"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte6" Element="Debug_2_DACU_Byte6"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte7" Element="Debug_2_DACU_Byte7"/>
+                        <Signal Name="LPS_Debug_Debug_2_DACU_Byte8" Element="Debug_2_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="LPS_Out" Direction="Send" Signal="LPS_Out">
+                    <Signals>
+                        <Signal Name="LPS_Out_TTLConf_Right" Element="TTLConf_Right"/>
+                        <Signal Name="LPS_Out_TTLConf_Left" Element="TTLConf_Left"/>
+                        <Signal Name="LPS_Out_LaneDepartureFlag" Element="LaneDepartureFlag"/>
+                        <Signal Name="LPS_Out_MessageCounter" Element="MessageCounter"/>
+                        <Signal Name="LPS_Out_DistToLine_Left" Element="DistToLine_Left"/>
+                        <Signal Name="LPS_Out_DistToLine_Right" Element="DistToLine_Right"/>
+                        <Signal Name="LPS_Out_TimeToLine_Right" Element="TimeToLine_Right"/>
+                        <Signal Name="LPS_Out_TimeToLine_Left" Element="TimeToLine_Left"/>
+                        <Signal Name="LPS_Out_LPSStatus" Element="LPSStatus"/>
+                        <Signal Name="LPS_Out_LaneWidth" Element="LaneWidth"/>
+                        <Signal Name="LPS_Out_LineWidth_Right" Element="LineWidth_Right"/>
+                        <Signal Name="LPS_Out_LineWidth_Left" Element="LineWidth_Left"/>
+                        <Signal Name="LPS_Out_HMISpeed" Element="HMISpeed"/>
+                        <Signal Name="LPS_Out_HMISpeed_Status" Element="HMISpeed_Status"/>
+                    </Signals>
+                </Port>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="MUM">
+            <SenderReceiverPorts>
+                <Port Name="MUM_Debug" Direction="Send" Signal="MUM_Debug">
+                    <Signals>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte1" Element="Debug_8_DACU_Byte1"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte2" Element="Debug_8_DACU_Byte2"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte3" Element="Debug_8_DACU_Byte3"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte4" Element="Debug_8_DACU_Byte4"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte5" Element="Debug_8_DACU_Byte5"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte6" Element="Debug_8_DACU_Byte6"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte7" Element="Debug_8_DACU_Byte7"/>
+                        <Signal Name="MUM_Debug_Debug_8_DACU_Byte8" Element="Debug_8_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="MUM_Out" Direction="Send"/>
+                <Port Name="CWEB_Out" Direction="Receive" SenderComponent="CWEB" SenderPort="CWEB_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="NonDrivableRegionSituation">
+            <SenderReceiverPorts>
+                <Port Name="NonDrivableRegionSituation_Out" Direction="Send"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="SCS">
+            <SenderReceiverPorts>
+				<Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="SCS_Debug" Direction="Send" Signal="SCS_Debug">
+                    <Signals>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte1" Element="Debug_9_DACU_Byte1"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte2" Element="Debug_9_DACU_Byte2"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte3" Element="Debug_9_DACU_Byte3"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte4" Element="Debug_9_DACU_Byte4"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte5" Element="Debug_9_DACU_Byte5"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte6" Element="Debug_9_DACU_Byte6"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte7" Element="Debug_9_DACU_Byte7"/>
+                        <Signal Name="SCS_Debug_Debug_9_DACU_Byte8" Element="Debug_9_DACU_Byte8"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte1" Element="Debug_10_DACU_Byte1"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte2" Element="Debug_10_DACU_Byte2"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte3" Element="Debug_10_DACU_Byte3"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte4" Element="Debug_10_DACU_Byte4"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte5" Element="Debug_10_DACU_Byte5"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte6" Element="Debug_10_DACU_Byte6"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte7" Element="Debug_10_DACU_Byte7"/>
+                        <Signal Name="SCS_Debug_Debug_10_DACU_Byte8" Element="Debug_10_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="SCS_Out" Direction="Send" Signal="SCS_Out">
+                    <Signals>
+                        <Signal Name="SCS_Out_SCSStatus" Element="SCSStatus"/>
+                        <Signal Name="SCS_Out_TTC" Element="TTC"/>
+                        <Signal Name="SCS_Out_TTCConf" Element="TTCConf"/>
+                        <Signal Name="SCS_Out_DistToCollision" Element="DistToCollision"/>
+                    </Signals>
+                </Port>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="SDF">
+            <SenderReceiverPorts>
+                <Port Name="SDF_Debug" Direction="Send" Signal="SDF_Debug">
+                    <Signals>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte1" Element="Debug_3_DACU_Byte1"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte2" Element="Debug_3_DACU_Byte2"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte3" Element="Debug_3_DACU_Byte3"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte4" Element="Debug_3_DACU_Byte4"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte5" Element="Debug_3_DACU_Byte5"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte6" Element="Debug_3_DACU_Byte6"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte7" Element="Debug_3_DACU_Byte7"/>
+                        <Signal Name="SDF_Debug_Debug_3_DACU_Byte8" Element="Debug_3_DACU_Byte8"/>
+                    </Signals>
+                </Port>
+                <Port Name="SDF_Out" Direction="Send" Signal="SDF_Out"/>
+                <Port Name="NewSDF_Out" Direction="Send" Signal="NewSDF_Out"/>
+                <Port Name="MUM_Out" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Out"/>
+                <Port Name="sideObject" Direction="Receive" SenderComponent="ESI" SenderPort="sideObject"/>
+                <Port Name="FrontFLRSensorObjects" Direction="Receive" SenderComponent="ESI" SenderPort="FrontFLRSensorObjects"/>
+                <Port Name="FrontFLCSensorObjects" Direction="Receive" SenderComponent="ESI" SenderPort="FrontFLCSensorObjects"/>
+                <Port Name="SideSensorObjects" Direction="Receive" SenderComponent="ESI" SenderPort="SideSensorObjects"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+				<Port Name="SDF_Debug_Local" Direction="Send" Signal="SDF_Debug_Local"/>
+                <Port Name="SDF_Trigger" Direction="Receive" SenderComponent="ESI" SenderPort="SDF_Trigger"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="TrafficSituationActionGate">
+            <SenderReceiverPorts>
+                <Port Name="EgoVehicleTrajectoryPlanner_Out" Direction="Receive" SenderComponent="EgoVehicleTrajectoryPlanner" SenderPort="EgoVehicleTrajectoryPlanner_Out"/>
+                <Port Name="TrafficSit_XAR" Direction="Receive" SenderComponent="TSAM" SenderPort="TrafficSit_XAR"/>
+                <Port Name="TrafficSit_XBR" Direction="Receive" SenderComponent="TSAM" SenderPort="TrafficSit_XBR"/>
+                <Port Name="TrafficSit_XSR" Direction="Receive" SenderComponent="TSAM" SenderPort="TrafficSit_XSR"/>
+                <Port Name="TSM_Out" Direction="Receive" SenderComponent="TSM" SenderPort="TSM_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="FASControlMode" Direction="Send" Signal="FASControlMode"/>
+                <Port Name="FASCurvatureRequest" Direction="Send" Signal="FASCurvatureRequest"/>
+                <Port Name="FASExtCtrlMsgChecksum" Direction="Send" Signal="FASExtCtrlMsgChecksum"/>
+                <Port Name="FASExtCtrlMsgCounter" Direction="Send" Signal="FASExtCtrlMsgCounter"/>
+                <Port Name="FASRoadWheelAngleRequest" Direction="Send" Signal="FASRoadWheelAngleRequest"/>
+                <Port Name="ReferencePathCurvature" Direction="Send" Signal="ReferencePathCurvature"/>
+                <Port Name="XARDACU" Direction="Send" Signal="XARDACU">
+                    <Signals>
+                        <Signal Name="XARDACU_AccelDemand" Element="AccelDemand"/>
+                        <Signal Name="XARDACU_ControlMode" Element="ControlMode"/>
+                    </Signals>
+                </Port>
+                <Port Name="XBR_A_D_sg" Direction="Send" Signal="XBR_A_D_sg">
+                    <Signals>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_ControlMode" Element="XBR_A_D_ControlMode"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_ExternalAccelerationDemd" Element="XBR_A_D_ExternalAccelerationDemd"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_EBIMode" Element="XBR_A_D_EBIMode"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_Priority" Element="XBR_A_D_Priority"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_Urgency" Element="XBR_A_D_Urgency"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_MessageChecksum" Element="XBR_A_D_MessageChecksum"/>
+                        <Signal Name="XBR_A_D_sg_XBR_A_D_MessageCounter" Element="XBR_A_D_MessageCounter"/>
+                    </Signals>
+                </Port>
+                <Port Name="XBRDACU" Direction="Send" Signal="XBRDACU">
+                    <Signals>
+                        <Signal Name="XBRDACU_MsgChecksum" Element="MsgChecksum"/>
+                        <Signal Name="XBRDACU_MsgCounter" Element="MsgCounter"/>
+                        <Signal Name="XBRDACU_EBIMode" Element="EBIMode"/>
+                        <Signal Name="XBRDACU_Priority" Element="Priority"/>
+                        <Signal Name="XBRDACU_ControlMode" Element="ControlMode"/>
+                        <Signal Name="XBRDACU_Urgency" Element="Urgency"/>
+                        <Signal Name="XBRDACU_ExtAccelDemand" Element="ExtAccelDemand"/>
+                    </Signals>
+                </Port>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="TSAM">
+            <SenderReceiverPorts>
+                <Port Name="TSMEngineOnRecommended" Direction="Send" Signal="TSMEngineOnRecommended" />
+                <Port Name="ACC_Out" Direction="Receive" SenderComponent="ACC" SenderPort="ACC_Out"/>
+                <Port Name="CWEB_Out" Direction="Receive" SenderComponent="CWEB" SenderPort="CWEB_Out"/>
+                <Port Name="DVE_Out" Direction="Receive" SenderComponent="DVE" SenderPort="DVE_Out"/>
+                <Port Name="EgoVehicleTrajectoryPlanner_Out" Direction="Receive" SenderComponent="EgoVehicleTrajectoryPlanner" SenderPort="EgoVehicleTrajectoryPlanner_Out"/>
+                <Port Name="HOA_Out" Direction="Receive" SenderComponent="HOA" SenderPort="HOA_Out"/>
+                <Port Name="LPS_Out" Direction="Receive" SenderComponent="LPS" SenderPort="LPS_Out"/>
+                <Port Name="SCS_Out" Direction="Receive" SenderComponent="SCS" SenderPort="SCS_Out"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="TSM_Out" Direction="Receive" SenderComponent="TSM" SenderPort="TSM_Out"/>
+                <Port Name="TSR_Out" Direction="Receive" SenderComponent="TSR" SenderPort="TSR_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>                
+                <Port Name="LongitudinalPathPlanner_Out" Direction="Receive" SenderComponent="LongitudinalPathPlanner" SenderPort="LongitudinalPathPlanner_Out" />
+                <Port Name="ACC_SGO_Status" Direction="Send" Signal="ACC_SGO_Status"/>
+                <Port Name="ACC_SGOBrakeAlert" Direction="Send" Signal="ACC_SGOBrakeAlert"/>
+                <Port Name="ACC_SGOFaultCondStat" Direction="Send" Signal="ACC_SGOFaultCondStat">
+                    <Signals>
+                        <Signal Name="ACC_SGOFaultCondStat_Speed" Element="Speed"/>
+                        <Signal Name="ACC_SGOFaultCondStat_SeatBelt" Element="SeatBelt"/>
+                        <Signal Name="ACC_SGOFaultCondStat_Door" Element="Door"/>
+                        <Signal Name="ACC_SGOFaultCondStat_Target" Element="Target"/>
+                        <Signal Name="ACC_SGOFaultCondStat_Other" Element="Other"/>
+                        <Signal Name="ACC_SGOFaultCondStat_SigStat" Element="SigStat"/>
+                    </Signals>
+                </Port>
+                <Port Name="ACC_Status" Direction="Send" Signal="ACC_Status"/>
+                <Port Name="ACC_Status_BB1_X_D" Direction="Send" Signal="ACC_Status_BB1_X_D"/>
+                <Port Name="ACCBrakeCapacityWarning" Direction="Send" Signal="ACCBrakeCapacityWarning"/>
+                <Port Name="ACCBrakeCapacityWarning_MD" Direction="Send" Signal="ACCBrakeCapacityWarning_MD"/>
+                <Port Name="ACCBrakeRequestStatus" Direction="Send" Signal="ACCBrakeRequestStatus"/>
+                <Port Name="ACCForwardVehicleDistance" Direction="Send" Signal="ACCForwardVehicleDistance"/>
+                <Port Name="ACCForwardVehicleDistance_MD" Direction="Send" Signal="ACCForwardVehicleDistance_MD"/>
+                <Port Name="ACCForwardVehicleSpeed" Direction="Send" Signal="ACCForwardVehicleSpeed"/>
+                <Port Name="ACCForwardVehicleSpeed_MD" Direction="Send" Signal="ACCForwardVehicleSpeed_MD"/>
+                <Port Name="ACCHMIStatus" Direction="Send" Signal="ACCHMIStatus"/>
+                <Port Name="ACCHSARequest" Direction="Send" Signal="ACCHSARequest"/>
+                <Port Name="ACCiRollInhibit" Direction="Send" Signal="ACCiRollInhibit"/>
+                <Port Name="ACCiSeeDistanceGap" Direction="Send" Signal="ACCiSeeDistanceGap"/>
+                <Port Name="ACCTargetDetected" Direction="Send" Signal="ACCTargetDetected"/>
+                <Port Name="ACCTargetDetected_MD" Direction="Send" Signal="ACCTargetDetected_MD"/>
+                <Port Name="ACCTargetRelLongSpeed" Direction="Send" Signal="ACCTargetRelLongSpeed"/>
+                <Port Name="AdaptiveCruiseControlMode" Direction="Send" Signal="AdaptiveCruiseControlMode"/>
+                <Port Name="AdaptiveCruiseControlSetDistan" Direction="Send" Signal="AdaptiveCruiseControlSetDistan"/>
+                <Port Name="BB_XBR_RqstActive" Direction="Send" Signal="BB_XBR_RqstActive"/>
+                <Port Name="BBSteeringStatus" Direction="Send" Signal="BBSteeringStatus"/>
+                <Port Name="CACCStatus" Direction="Send" Signal="CACCStatus"/>
+                <Port Name="CM_DisengageDrivelineRequest" Direction="Send" Signal="CM_DisengageDrivelineRequest"/>
+                <Port Name="CM_Status" Direction="Send" Signal="CM_Status"/>
+                <Port Name="CMReducedAbilityStatus" Direction="Send" Signal="CMReducedAbilityStatus"/>
+                <Port Name="CMTargetID" Direction="Send" Signal="CMTargetID"/>
+                <Port Name="CollisionSituationAliveAck" Direction="Send" Signal="CollisionSituationAliveAck"/>
+                <Port Name="CollSituationHazardLightReq" Direction="Send" Signal="CollSituationHazardLightReq"/>
+                <Port Name="DASApplicationStatus" Direction="Send" Signal="DASApplicationStatus"/>
+                <Port Name="DASWarning_BB1_X_D" Direction="Send" Signal="DASWarning_BB1_X_D"/>
+                <Port Name="DisengageDrivelineRequest" Direction="Send" Signal="DisengageDrivelineRequest"/>
+				<Port Name="DriveAssistStatus" Direction="Send" Signal="DriveAssistStatus" />
+                <Port Name="DriverImpairedDriverAlert" Direction="Send" Signal="DriverImpairedDriverAlert"/>
+                <Port Name="DriverTakeControlRqst" Direction="Send" Signal="DriverTakeControlRqst" />
+				<Port Name="DriverVigilanceLevel" Direction="Send" Signal="DriverVigilanceLevel"/>
+                <Port Name="DriverVigilanceLevel_BB1_X_D" Direction="Send" Signal="DriverVigilanceLevel_BB1_X_D"/>
+                <Port Name="FASHapticFeedbackRequest" Direction="Send" Signal="FASHapticFeedbackRequest"/>
+                <Port Name="FCW_Status" Direction="Send" Signal="FCW_Status"/>
+                <Port Name="FrontalCollisionDriverAlert" Direction="Send" Signal="FrontalCollisionDriverAlert"/>
+                <Port Name="FrontCollisionDriverAlrt_BB1_X_D" Direction="Send" Signal="FrontCollisionDriverAlrt_BB1_X_D"/>
+                <Port Name="FrontRoadWheelAngleEstimate1" Direction="Send" Signal="FrontRoadWheelAngleEstimate1"/>
+                <Port Name="GlareFreeArea01" Direction="Send" Signal="GlareFreeArea01">
+                    <Signals>
+                        <Signal Name="GlareFreeArea01_LeftAngle" Element="LeftAngle"/>
+                        <Signal Name="GlareFreeArea01_RightAngle" Element="RightAngle"/>
+                        <Signal Name="GlareFreeArea01_Distance" Element="Distance"/>
+                    </Signals>
+                </Port>
+                <Port Name="GlareFreeArea02" Direction="Send" Signal="GlareFreeArea02">
+                    <Signals>
+                        <Signal Name="GlareFreeArea02_LeftAngle" Element="LeftAngle"/>
+                        <Signal Name="GlareFreeArea02_RightAngle" Element="RightAngle"/>
+                        <Signal Name="GlareFreeArea02_Distance" Element="Distance"/>
+                    </Signals>
+                </Port>
+                <Port Name="GlareFreeArea03" Direction="Send" Signal="GlareFreeArea03">
+                    <Signals>
+                        <Signal Name="GlareFreeArea03_LeftAngle" Element="LeftAngle"/>
+                        <Signal Name="GlareFreeArea03_RightAngle" Element="RightAngle"/>
+                        <Signal Name="GlareFreeArea03_Distance" Element="Distance"/>
+                    </Signals>
+                </Port>
+                <Port Name="LCS_WarningStatus" Direction="Send" Signal="LCS_WarningStatus"/>
+                <Port Name="LCSSoundSettingStatus" Direction="Send" Signal="LCSSoundSettingStatus"/>
+                <Port Name="LCSSystemStatus" Direction="Send" Signal="LCSSystemStatus"/>
+                <Port Name="LKS_DriverOverride" Direction="Send" Signal="LKS_DriverOverride"/>
+                <Port Name="LKSApplicationStatus" Direction="Send" Signal="LKSApplicationStatus"/>
+                <Port Name="LKSApplicationStatus_BB1_X_D" Direction="Send" Signal="LKSApplicationStatus_BB1_X_D"/>
+                <Port Name="LKSCorrectiveSteeringStatus" Direction="Send" Signal="LKSCorrectiveSteeringStatus"/>
+                <Port Name="LPOSBlocked" Direction="Send" Signal="LPOSBlocked"/>
+                <Port Name="LSMS_AngleMatch1" Direction="Send" Signal="LSMS_AngleMatch1"/>
+                <Port Name="LSMS_JackKnifeWarning1" Direction="Send" Signal="LSMS_JackKnifeWarning1"/>
+                <Port Name="LSMS_KnbSteerUAPreCon1" Direction="Send" Signal="LSMS_KnbSteerUAPreCon1"/>
+                <Port Name="LSMS_KnbSteerUASens1" Direction="Send" Signal="LSMS_KnbSteerUASens1"/>
+                <Port Name="LSMS_KnobAngle1" Direction="Send" Signal="LSMS_KnobAngle1"/>
+                <Port Name="LSMS_LED_IndicationCmd" Direction="Send" Signal="LSMS_LED_IndicationCmd"/>
+                <Port Name="LSMS_RecordedPathLeft1" Direction="Send" Signal="LSMS_RecordedPathLeft1"/>
+                <Port Name="LSMS_RevDirSupportUAPreCon1" Direction="Send" Signal="LSMS_RevDirSupportUAPreCon1"/>
+                <Port Name="LSMS_RevDirSupportUASens1" Direction="Send" Signal="LSMS_RevDirSupportUASens1"/>
+                <Port Name="LSMS_SpeedLimit" Direction="Send" Signal="LSMS_SpeedLimit"/>
+                <Port Name="LSMS_UndoUAPreCon1" Direction="Send" Signal="LSMS_UndoUAPreCon1"/>
+                <Port Name="LSMS_UndoUASens1" Direction="Send" Signal="LSMS_UndoUASens1"/>
+                <Port Name="ObserveRoadRestriction_OpCap" Direction="Send" Signal="ObserveRoadRestriction_OpCap"/>
+                <Port Name="ObserveRoadRestrictionStatus" Direction="Send" Signal="ObserveRoadRestrictionStatus"/>
+                <Port Name="PathDeviationDriverAlert" Direction="Send" Signal="PathDeviationDriverAlert"/>
+                <Port Name="PathDeviationDriverAlert_BB1_X_D" Direction="Send" Signal="PathDeviationDriverAlert_BB1_X_D"/>
+                <Port Name="PathDeviationSteeringStatus" Direction="Send" Signal="PathDeviationSteeringStatus"/>
+                <Port Name="RoadOvertakingRestriction" Direction="Send" Signal="RoadOvertakingRestriction"/>
+                <Port Name="RoadSpeedRestriction" Direction="Send" Signal="RoadSpeedRestriction"/>
+                <Port Name="RoadSpeedUnitType" Direction="Send" Signal="RoadSpeedUnitType"/>
+                <Port Name="RoadTypeSpeedRestriction" Direction="Send" Signal="RoadTypeSpeedRestriction"/>
+                <Port Name="TrafficSit_XAR" Direction="Send" Signal="TrafficSit_XAR">
+                    <Signals>
+                        <Signal Name="TrafficSit_XAR_AccelDemand" Element="AccelDemand"/>
+                        <Signal Name="TrafficSit_XAR_ControlMode" Element="ControlMode"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrafficSit_XBR" Direction="Send" Signal="TrafficSit_XBR">
+                    <Signals>
+                        <Signal Name="TrafficSit_XBR_EBIMode" Element="EBIMode"/>
+                        <Signal Name="TrafficSit_XBR_Priority" Element="Priority"/>
+                        <Signal Name="TrafficSit_XBR_ControlMode" Element="ControlMode"/>
+                        <Signal Name="TrafficSit_XBR_Urgency" Element="Urgency"/>
+                        <Signal Name="TrafficSit_XBR_ExtAccelDemand" Element="ExtAccelDemand"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrafficSit_XSR" Direction="Send" Signal="TrafficSit_XSR">
+                    <Signals>
+                        <Signal Name="TrafficSit_XSR_XSRControlMode" Element="XSRControlMode"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrafficSitOverspeedWarn" Direction="Send" Signal="TrafficSitOverspeedWarn" />
+		        <Port Name="TrafficSitPathInfo1" Direction="Send" Signal="TrafficSitPathInfo1" />
+                <Port Name="TrafficSitPathInfo2" Direction="Send" Signal="TrafficSitPathInfo2" />
+                <Port Name="TrafficSitPathInfo3" Direction="Send" Signal="TrafficSitPathInfo3" />
+		        <Port Name="TrafficSitSpeedNotify" Direction="Send" Signal="TrafficSitSpeedNotify" />
+		        <Port Name="UpcomingRoadSpeedRestriction" Direction="Send" Signal="UpcomingRoadSpeedRestriction" />
+                <Port Name="TrafficSituationCriticality" Direction="Send" Signal="TrafficSituationCriticality"/>
+                <Port Name="TSAMIntervntionCapabilityLeft" Direction="Send" Signal="TSAMIntervntionCapabilityLeft"/>
+                <Port Name="TSAMIntervntionCapabilityRight" Direction="Send" Signal="TSAMIntervntionCapabilityRight"/>
+                <Port Name="TSC1_E_D_sg" Direction="Send" Signal="TSC1_E_D_sg">
+                    <Signals>
+                        <Signal Name="TSC1_E_D_sg_OverrideControlModePriority" Element="OverrideControlModePriority"/>
+                        <Signal Name="TSC1_E_D_sg_RequestedTorquetorqueLimit" Element="RequestedTorquetorqueLimit"/>
+                        <Signal Name="TSC1_E_D_sg_RequestedSpeedspeedLimit" Element="RequestedSpeedspeedLimit"/>
+                        <Signal Name="TSC1_E_D_sg_RequestedSpeedControlConditions" Element="RequestedSpeedControlConditions"/>
+                        <Signal Name="TSC1_E_D_sg_OverrideControlModes" Element="OverrideControlModes"/>
+                    </Signals>
+                </Port>
+                <Port Name="TSC1EMSDACU" Direction="Send" Signal="TSC1EMSDACU">
+                    <Signals>
+                        <Signal Name="TSC1EMSDACU_EnRTrqTrqLm" Element="EnRTrqTrqLm"/>
+                        <Signal Name="TSC1EMSDACU_EnOvrdCtrlM" Element="EnOvrdCtrlM"/>
+                        <Signal Name="TSC1EMSDACU_EnRSpdCtrlC" Element="EnRSpdCtrlC"/>
+                        <Signal Name="TSC1EMSDACU_OvrdCtrlMPr" Element="OvrdCtrlMPr"/>
+                        <Signal Name="TSC1EMSDACU_EnRSpdSpdLm" Element="EnRSpdSpdLm"/>
+                    </Signals>
+                </Port>
+                <Port Name="VisionLight_stat" Direction="Send" Signal="VisionLight_stat"/>
+                <Port Name="XPRRequest_CM" Direction="Send" Signal="XPRRequest_CM"/>
+
+                <Port Name="PSC_DriverBrakingAllowed" Direction="Send" Signal="PSC_DriverBrakingAllowed"/>
+                <Port Name="PSC_RequestedPresetSpeed" Direction="Send" Signal="PSC_RequestedPresetSpeed"/>
+                <Port Name="PSC_SetSpeedChangeRqst" Direction="Send" Signal="PSC_SetSpeedChangeRqst"/>
+                <Port Name="TrafficSitPathEvent1" Direction="Send" Signal="TrafficSitPathEvent">
+                    <Signals>
+                        <Signal Name="TrafficSitPathEvent1_Type" Element="Type"/>
+                        <Signal Name="TrafficSitPathEvent1_Distance" Element="Distance"/>
+                        <Signal Name="TrafficSitPathEvent1_Speed" Element="Speed"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrafficSitPathEvent2" Direction="Send" Signal="TrafficSitPathEvent">
+                    <Signals>
+                        <Signal Name="TrafficSitPathEvent2_Type" Element="Type"/>
+                        <Signal Name="TrafficSitPathEvent2_Distance" Element="Distance"/>
+                        <Signal Name="TrafficSitPathEvent2_Speed" Element="Speed"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrafficSitSpdProfile" Direction="Send" Signal="TrafficSitSpdProfile">
+                    <Signals>
+                        <Signal Name="TrafficSitSpdProfile_PathIndex" Element="PathIndex"/>
+                        <Signal Name="TrafficSitSpdProfile_Offset" Element="Offset"/>
+                        <Signal Name="TrafficSitSpdProfile_MinSpd" Element="MinSpd"/>
+                        <Signal Name="TrafficSitSpdProfile_Speed" Element="Speed"/>
+                        <Signal Name="TrafficSitSpdProfile_MaxSpd" Element="MaxSpd"/>
+                        <Signal Name="TrafficSitSpdProfile_Type" Element="Type"/>
+                    </Signals>
+                </Port>
+                <Port Name="LPS_Debug" Direction="Receive" SenderComponent="LPS" SenderPort="LPS_Debug" />
+                <Port Name="SDF_Debug" Direction="Receive" SenderComponent="SDF" SenderPort="SDF_Debug" />
+                <Port Name="SDF_Debug_Local" Direction="Receive" SenderComponent="SDF" SenderPort="SDF_Debug_Local" />
+                <Port Name="ACC_Debug" Direction="Receive" SenderComponent="ACC" SenderPort="ACC_Debug" />
+                <Port Name="CWEB_Debug" Direction="Receive" SenderComponent="CWEB" SenderPort="CWEB_Debug" />
+                <Port Name="MUM_Debug" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Debug" />
+                <Port Name="SCS_Debug" Direction="Receive" SenderComponent="SCS" SenderPort="SCS_Debug" />
+                <Port Name="TSM_Debug" Direction="Receive" SenderComponent="TSM" SenderPort="TSM_Debug" />
+                <Port Name="DVE_Debug" Direction="Receive" SenderComponent="DVE" SenderPort="DVE_Debug" />
+                <Port Name="Debug_2_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_3_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_4_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_5_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_6_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_7_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_8_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_9_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_10_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="Debug_11_DACU" Direction="Send" Signal="FrameData" />
+                <Port Name="LCS_WarningStatusLeft" Direction="Send" Signal="LCS_WarningStatusLeft" />
+                <Port Name="LCS_WarningStatusRight" Direction="Send" Signal="LCS_WarningStatusRight" />
+                <Port Name="LeftRadarsCalibProgress" Direction="Send" Signal="LeftRadarsCalibProgress"/>
+                <Port Name="LeftRadarsCalibStatus" Direction="Send" Signal="LeftRadarsCalibStatus"/>
+                <Port Name="LeftSideRadarsStatus" Direction="Send" Signal="LeftSideRadarsStatus"/>
+                <Port Name="RightRadarsCalibProgress" Direction="Send" Signal="RightRadarsCalibProgress"/>
+                <Port Name="RightRadarsCalibStatus" Direction="Send" Signal="RightRadarsCalibStatus"/>
+                <Port Name="RightSideRadarsStatus" Direction="Send" Signal="RightSideRadarsStatus"/>
+                <Port Name="VideoOutConfFLC" Direction="Send" Signal="VideoOutConfFLC"/>
+                <Port Name="FrontRadarCalibStatus" Direction="Send" Signal="FrontRadarCalibStatus"/>
+                <Port Name="FrontCameraCalibStatus" Direction="Send" Signal="FrontCameraCalibStatus"/>
+                <Port Name="ForwardDistanceAlert" Direction="Send" Signal="ForwardDistanceAlert"/>
+                <Port Name="FrontRadarCalibProgress" Direction="Send" Signal="FrontRadarCalibProgress"/>
+                <Port Name="FrontCameraCalibProgress" Direction="Send" Signal="FrontCameraCalibProgress"/>
+                <Port Name="MOISDriverAlert" Direction="Send" Signal="MOISDriverAlert"/>
+                <Port Name="LightIntensity" Direction="Send" Signal="LightIntensity" />
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="TSM">
+            <SenderReceiverPorts>
+                <Port Name="ACC_Out" Direction="Receive" SenderComponent="ACC" SenderPort="ACC_Out"/>
+                <Port Name="BB_XBR_RqstActive" Direction="Receive" SenderComponent="TSAM" SenderPort="BB_XBR_RqstActive"/>
+                <Port Name="CWEB_Out" Direction="Receive" SenderComponent="CWEB" SenderPort="CWEB_Out"/>
+                <Port Name="FrontFLCSensorObjects" Direction="Receive" SenderComponent="ESI" SenderPort="FrontFLCSensorObjects"/>
+				<Port Name="FrontFLRSensorObjects" Direction="Receive" SenderComponent="ESI" SenderPort="FrontFLRSensorObjects"/>
+				<Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+				<Port Name="MUM_Out" Direction="Receive" SenderComponent="MUM" SenderPort="MUM_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Dynamic_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Dynamic_Out"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="XBRDACU" Direction="Receive" SenderComponent="TrafficSituationActionGate" SenderPort="XBRDACU"/>
+                <Port Name="TSM_Debug" Direction="Send" Signal="TSM_Debug">
+                    <Signals>
+                        <Signal Name="TSM_Debug_Debug_11_DACU_Byte1" Element="Debug_11_DACU_Byte1"/>
+                        <Signal Name="TSM_Debug_Debug_11_DACU_Byte2" Element="Debug_11_DACU_Byte2"/>
+                        <Signal Name="TSM_Debug_Debug_11_DACU_Byte3" Element="Debug_11_DACU_Byte3"/>
+                        <Signal Name="TSM_Debug_Debug_11_DACU_Byte4" Element="Debug_11_DACU_Byte4"/>
+                    </Signals>
+                </Port>
+                <Port Name="TSM_Out" Direction="Send" Signal="TSM_Out">
+                    <Signals>
+                        <Signal Name="TSM_Out_CollisionSituationBrakeAllowed" Element="CollisionSituationBrakeAllowed"/>
+                        <Signal Name="TSM_Out_CollisionSituationAliveAck" Element="CollisionSituationAliveAck"/>
+                        <Signal Name="TSM_Out_SetACCOffByMonitor" Element="SetACCOffByMonitor"/>
+                        <Signal Name="TSM_Out_SetCMOffByMonitor" Element="SetCMOffByMonitor"/>
+                    </Signals>
+                </Port>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="TSR">
+            <SenderReceiverPorts>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="EgoPosition_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="EgoPosition_Out" />
+                <Port Name="RoadEventBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="RoadEventBuffer_Out" />
+                <Port Name="SpeedLimitBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="SpeedLimitBuffer_Out" />
+                <Port Name="FormOfWayBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="FormOfWayBuffer_Out" />
+                <Port Name="TSR_Out" Direction="Send" Signal="TSR_Out">
+                    <Signals>
+                        <Signal Name="TSR_Out_ObserveRoadRestriction_OpCap" Element="ObserveRoadRestriction_OpCap"/>
+                        <Signal Name="TSR_Out_ObserveRoadRestrictionStatus" Element="ObserveRoadRestrictionStatus"/>
+                        <Signal Name="TSR_Out_RoadOvertakingRestriction" Element="RoadOvertakingRestriction"/>
+                        <Signal Name="TSR_Out_RoadSpeedRestriction" Element="RoadSpeedRestriction"/>
+                        <Signal Name="TSR_Out_RoadTypeSpeedRestriction" Element="RoadTypeSpeedRestriction"/>
+                        <Signal Name="TSR_Out_SpeedUnitType" Element="SpeedUnitType"/>
+                        <Signal Name="TSR_Out_UpcomingRoadSpeedRestriction" Element="UpcomingRoadSpeedRestriction"/>
+                        <Signal Name="TSR_Out_TrafficSituationPathInfo" Element="TrafficSituationPathInfo"/>
+                        <Signal Name="TSR_Out_CountryCode" Element="CountryCode"/>
+                        <Signal Name="TSR_Out_IsSignImplicit" Element="IsSignImplicit"/>
+                    </Signals>
+                </Port>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="VSI">
+            <SenderReceiverPorts>
+                <Port Name="VSI_Dynamic_Out" Direction="Send" Signal="VSI_Dynamic_Out"/>
+                <Port Name="VSI_Out" Direction="Send" Signal="VSI_Out"/>
+                <Port Name="ABSFullyOperational" Direction="Receive" Signal="ABSFullyOperational"/>
+                <Port Name="ACC_SGO_TransmissionStatus" Direction="Receive" Signal="ACC_SGO_TransmissionStatus"/>
+                <Port Name="AcceleratorPedalPosition1" Direction="Receive" Signal="AcceleratorPedalPosition1"/>
+                <Port Name="ACCEnableRqst" Direction="Receive" Signal="ACCEnableRqst"/>
+                <Port Name="ACCEnableRqst_BB1_X_D" Direction="Receive" Signal="ACCEnableRqst_BB1_X_D"/>
+                <Port Name="ACCstatus" Direction="Receive" Signal="ACCstatus"/>
+                <Port Name="ACCTimeGapRqst" Direction="Receive" Signal="ACCTimeGapRqst"/>
+                <Port Name="ACCTimeGapRqst_MD" Direction="Receive" Signal="ACCTimeGapRqst_MD"/>
+                <Port Name="AcctrPedalKickDownSw_stat" Direction="Receive" Signal="AcctrPedalKickDownSw_stat"/>
+                <Port Name="ActiveSafetySystemsDisableByRoutine" Direction="Receive" Signal="ActiveSafetySystemsDisableByRoutine"/>
+				<Port Name="ActualDrvlnRetdrPercentTorque" Direction="Receive" Signal="ActualDrvlnRetdrPercentTorque" />
+                <Port Name="ActualEnginePercentTorque" Direction="Receive" Signal="ActualEnginePercentTorque"/>
+				<Port Name="ActualEngineRetarderPercentTrq" Direction="Receive" Signal="ActualEngineRetarderPercentTrq" />
+				<Port Name="ActualMaxAvailDrvlnRetPrctTrq" Direction="Receive" Signal="ActualMaxAvailDrvlnRetPrctTrq" />
+				<Port Name="AmbientAirTemperature" Direction="Receive" Signal="AmbientAirTemperature" />
+                <Port Name="AntiLockBrakingActive" Direction="Receive" Signal="AntiLockBrakingActive"/>
+				<Port Name="ASRBrakeControlActive" Direction="Receive" Signal="ASRBrakeControlActive" />
+                <Port Name="AutomaticCMenableStatus" Direction="Receive" Signal="AutomaticCMenableStatus"/>
+                <Port Name="BlackOutandConvoyMode_rqst" Direction="Receive" Signal="BlackOutandConvoyMode_rqst"/>
+                <Port Name="BrakePedalPosition" Direction="Receive" Signal="BrakePedalPosition"/>
+                <Port Name="BrakeSwitch" Direction="Receive" Signal="BrakeSwitch"/>
+                <Port Name="BrakeTempWarningLevel" Direction="Receive" Signal="BrakeTempWarningLevel"/>
+                <Port Name="CCActive" Direction="Receive" Signal="CCActive"/>
+                <Port Name="CCBSetSpeed" Direction="Receive" Signal="CCBSetSpeed"/>
+                <Port Name="CCBSetSpeedApplied" Direction="Receive" Signal="CCBSetSpeedApplied"/>
+                <Port Name="CCDeactivationWarning" Direction="Receive" Signal="CCDeactivationWarning"/>
+                <Port Name="CCSetSpeed" Direction="Receive" Signal="CCSetSpeed"/>
+                <Port Name="CCSetSpeedApplied" Direction="Receive" Signal="CCSetSpeedApplied"/>
+                <Port Name="CMTelltale_stat" Direction="Receive" Signal="CMTelltale_stat"/>
+                <Port Name="CMTellTaleStatus" Direction="Receive" Signal="CMTellTaleStatus"/>
+                <Port Name="CollisionSituationAliveRequest" Direction="Receive" Signal="CollisionSituationAliveRequest"/>
+                <Port Name="CollisionSituationAliveStatus" Direction="Receive" Signal="CollisionSituationAliveStatus"/>
+                <Port Name="CruiseCtrlActive" Direction="Receive" Signal="CruiseCtrlActive"/>
+                <Port Name="CruiseCtrlSetSpeed" Direction="Receive" Signal="CruiseCtrlSetSpeed"/>
+                <Port Name="DASActivation_rqst" Direction="Receive" Signal="DASActivation_rqst"/>
+                <Port Name="DiffLockInteraxelStatus" Direction="Receive" Signal="DiffLockInteraxelStatus"/>
+                <Port Name="DiffLockWheelsInput1" Direction="Receive" Signal="DiffLockWheelsInput1"/>
+                <Port Name="DiffLockWheelsInput2" Direction="Receive" Signal="DiffLockWheelsInput2"/>
+                <Port Name="DoorsAjar_stat" Direction="Receive" Signal="DoorsAjar_stat"/>
+				<Port Name="DriveAssistEnableRqst" Direction="Receive" Signal="DriveAssistEnableRqst" />
+                <Port Name="DriveAxleLoad" Direction="Receive" Signal="DriveAxleLoad"/>
+                <Port Name="DrivelineRetarderLocation" Direction="Receive" Signal="DrivelineRetarderLocation"/>
+                <Port Name="DrivelineRetarderRefTorque" Direction="Receive" Signal="DrivelineRetarderRefTorque"/>
+                <Port Name="DriverCardDriver1" Direction="Receive" Signal="DriverCardDriver1"/>
+                <Port Name="DriverRetarderRequest" Direction="Receive" Signal="DriverRetarderRequest" />
+				<Port Name="DriverSeatBeltSwitch" Direction="Receive" Signal="DriverSeatBeltSwitch"/>
+                <Port Name="DriverSteeringTorqueEstimate" Direction="Receive" Signal="DriverSteeringTorqueEstimate"/>
+                <Port Name="DriverSteeringTqEstimateConf" Direction="Receive" Signal="DriverSteeringTqEstimateConf"/>
+                <Port Name="EBSXBRStatusInformation" Direction="Receive" Signal="EBSXBRStatusInformation"/>
+                <Port Name="EmergencyBrakingInhibition" Direction="Receive" Signal="EmergencyBrakingInhibition"/>
+                <Port Name="EngineReferenceTorque" Direction="Receive" Signal="EngineReferenceTorque"/>
+                <Port Name="EngineSpeed" Direction="Receive" Signal="EngineSpeed"/>
+                <Port Name="EngineTorqueMode" Direction="Receive" Signal="EngineTorqueMode"/>
+                <Port Name="ERC1ERActualEngineRetPercentTrq" Direction="Receive" Signal="ERC1ERActualEngineRetPercentTrq"/>
+                <Port Name="ERC1RActualRetarderPercentTorque" Direction="Receive" Signal="ERC1RActualRetarderPercentTorque"/>
+                <Port Name="ETC2_TransActualGearRatio" Direction="Receive" Signal="ETC2_TransActualGearRatio"/>
+                <Port Name="ETC2_TransCurrentGear" Direction="Receive" Signal="ETC2_TransCurrentGear"/>
+                <Port Name="FASFullyOperational" Direction="Receive" Signal="FASFullyOperational"/>
+                <Port Name="FASFunctionInControl" Direction="Receive" Signal="FASFunctionInControl"/>
+                <Port Name="FASSaturated" Direction="Receive" Signal="FASSaturated"/>
+                <Port Name="FCW_OpticalWarningStatus" Direction="Receive" Signal="FCW_OpticalWarningStatus"/>
+				<Port Name="FCW_OpticalWarningStatusHUA" Direction="Receive" Signal="FCW_OpticalWarningStatusHUA"/>
+				<Port Name="FogLight_Front_cmd" Direction="Receive" Signal="FogLight_Front_cmd" />
+                <Port Name="FoundationBrakeUse" Direction="Receive" Signal="FoundationBrakeUse"/>
+				<Port Name="FrAxleLtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleLtWhlBrakeApplPrsHiRng" />
+				<Port Name="FrAxleRtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleRtWhlBrakeApplPrsHiRng" />
+                <Port Name="FrontAxle1Load" Direction="Receive" Signal="FrontAxle1Load"/>
+                <Port Name="FrontAxle2Load" Direction="Receive" Signal="FrontAxle2Load"/>
+                <Port Name="FrontAxleLeftWheelSpeed" Direction="Receive" Signal="FrontAxleLeftWheelSpeed"/>
+                <Port Name="FrontAxleRightWheelSpeed" Direction="Receive" Signal="FrontAxleRightWheelSpeed"/>
+                <Port Name="FrontAxleSpeed" Direction="Receive" Signal="FrontAxleSpeed"/>
+                <Port Name="FrontRoadWheelAngleEstimate" Direction="Receive" Signal="FrontRoadWheelAngleEstimate"/>
+                <Port Name="FuncIndIlluminationLevel" Direction="Receive" Signal="FuncIndIlluminationLevel"/>
+                <Port Name="GrossCombinationVehicleWeight" Direction="Receive" Signal="GrossCombinationVehicleWeight"/>
+                <Port Name="HillHolderMode" Direction="Receive" Signal="HillHolderMode"/>
+                <Port Name="HSAState" Direction="Receive" Signal="HSAState"/>
+                <Port Name="KFactor" Direction="Receive" Signal="KFactor"/>
+                <Port Name="LaneChangeStatus" Direction="Receive" Signal="LaneChangeStatus"/>
+                <Port Name="LaneChangeStatus_RTEStat" Direction="Receive" Signal="LaneChangeStatus_RTEStat"/>
+                <Port Name="LateralAcceleration" Direction="Receive" Signal="LateralAcceleration"/>
+                <Port Name="LateralAccOffset_BB1_X_A" Direction="Receive" Signal="LateralAccOffset_BB1_X_A"/>
+                <Port Name="LCS_EnableSwitch_rqst" Direction="Receive" Signal="LCS_EnableSwitch_rqst"/>
+                <Port Name="LCSSoundSettingRequest" Direction="Receive" Signal="LCSSoundSettingRequest"/>
+                <Port Name="LeftFlash_Truck" Direction="Receive" Signal="LeftFlash_Truck"/>
+                <Port Name="LiftAxle1PositionStatus" Direction="Receive" Signal="LiftAxle1PositionStatus"/>
+                <Port Name="LKS_Enable" Direction="Receive" Signal="LKS_Enable"/>
+                <Port Name="LKSCSEnableSwitch_rqst" Direction="Receive" Signal="LKSCSEnableSwitch_rqst"/>
+                <Port Name="LKSEnableSwitch_rqst" Direction="Receive" Signal="LKSEnableSwitch_rqst"/>
+                <Port Name="LoadTruck" Direction="Receive" Signal="LoadTruck"/>
+				<Port Name="MainBeam_cmd" Direction="Receive" Signal="MainBeam_cmd" />
+                <Port Name="NominalFrictionPercentTorque" Direction="Receive" Signal="NominalFrictionPercentTorque"/>
+                <Port Name="ParkBrakeActuationStatus" Direction="Receive" Signal="ParkBrakeActuationStatus"/>
+                <Port Name="ParkingBrkSwitch" Direction="Receive" Signal="ParkingBrkSwitch"/>
+                <Port Name="PEMTimeGapRequest" Direction="Receive" Signal="PEMTimeGapRequest" />
+                <Port Name="PercentageOfBrakeTemperatureWa" Direction="Receive" Signal="PercentageOfBrakeTemperatureWa"/>
+                <Port Name="PloughLampModeStatus" Direction="Receive" Signal="PloughLampModeStatus"/>
+                <Port Name="PoweredVehicleWeight" Direction="Receive" Signal="PoweredVehicleWeight"/>
+                <Port Name="PusherAxleLoad" Direction="Receive" Signal="PusherAxleLoad"/>
+                <Port Name="RASstatus" Direction="Receive" Signal="RASstatus"/>
+                <Port Name="RCERReferenceRetarderTorque" Direction="Receive" Signal="RCERReferenceRetarderTorque"/>
+                <Port Name="RCRReferenceRetarderTorque" Direction="Receive" Signal="RCRReferenceRetarderTorque"/>
+                <Port Name="RCRRetarderLocation" Direction="Receive" Signal="RCRRetarderLocation"/>
+                <Port Name="RearAxleLeftWheelSpeed" Direction="Receive" Signal="RearAxleLeftWheelSpeed"/>
+                <Port Name="RearAxleRightWheelSpeed" Direction="Receive" Signal="RearAxleRightWheelSpeed"/>
+                <Port Name="RearAxleSteeringFunctionStatus" Direction="Receive" Signal="RearAxleSteeringFunctionStatus"/>
+                <Port Name="RearPropulsionStat" Direction="Receive" Signal="RearPropulsionStat">
+                    <Signals>
+                        <Signal Name="RearPropulsionStat_Rear1Axle" Element="Rear1Axle"/>
+                        <Signal Name="RearPropulsionStat_Rear2Axle" Element="Rear2Axle"/>
+                        <Signal Name="RearPropulsionStat_Rear3Axle" Element="Rear3Axle"/>
+                    </Signals>
+                </Port>
+                <Port Name="ReferenceEngineRetarderTorque" Direction="Receive" Signal="ReferenceEngineRetarderTorque"/>
+				<Port Name="RelativeLevelFrontAxleLeft" Direction="Receive" Signal="RelativeLevelFrontAxleLeft" />
+				<Port Name="RelativeLevelFrontAxleLeftRaw" Direction="Receive" Signal="RelativeLevelFrontAxleLeftRaw" />
+				<Port Name="RelativeLevelFrontAxleRight" Direction="Receive" Signal="RelativeLevelFrontAxleRight" />
+				<Port Name="RelativeLevelFrontAxleRightRaw" Direction="Receive" Signal="RelativeLevelFrontAxleRightRaw" />
+				<Port Name="RelativeLevelRearAxleLeft" Direction="Receive" Signal="RelativeLevelRearAxleLeft" />
+				<Port Name="RelativeLevelRearAxleRight" Direction="Receive" Signal="RelativeLevelRearAxleRight" />
+				<Port Name="RelativeSpdFrntAxleLeftWheel" Direction="Receive" Signal="RelativeSpdFrntAxleLeftWheel" />
+				<Port Name="RelativeSpdRearAxle1LeftWheel" Direction="Receive" Signal="RelativeSpdRearAxle1LeftWheel" />
+                <Port Name="RequestedACCDistanceMode" Direction="Receive" Signal="RequestedACCDistanceMode"/>
+                <Port Name="ResumeRequestForACC" Direction="Receive" Signal="ResumeRequestForACC"/>
+                <Port Name="RetarderStalkArmPosition" Direction="Receive" Signal="RetarderStalkArmPosition"/>
+                <Port Name="ReverseGearEngaged" Direction="Receive" Signal="ReverseGearEngaged"/>
+                <Port Name="ReverseGearStatus" Direction="Receive" Signal="ReverseGearStatus"/>
+                <Port Name="RightFlash_Truck" Direction="Receive" Signal="RightFlash_Truck"/>
+                <Port Name="RlativeSpdFrntAxleRightWheel" Direction="Receive" Signal="RlativeSpdFrntAxleRightWheel"/>
+                <Port Name="RlativeSpdRearAxle1RightWheel" Direction="Receive" Signal="RlativeSpdRearAxle1RightWheel"/>
+                <Port Name="RoadInclination" Direction="Receive" Signal="RoadInclination"/>
+                <Port Name="RoadInclinationVP15" Direction="Receive" Signal="RoadInclinationVP15"/>
+                <Port Name="RollerBenchModeStatus" Direction="Receive" Signal="RollerBenchModeStatus"/>
+                <Port Name="ROPBrakeControlActive" Direction="Receive" Signal="ROPBrakeControlActive"/>
+                <Port Name="ROPBrakeCtrlActive" Direction="Receive" Signal="ROPBrakeCtrlActive"/>
+				<Port Name="RrAxle1LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle1LtWhlBrakeApplPrsHiRng" />
+				<Port Name="RrAxle1RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle1RtWhlBrakeApplPrsHiRng" />
+				<Port Name="RrAxle2LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle2LtWhlBrakeApplPrsHiRng" />
+				<Port Name="RrAxle2RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle2RtWhlBrakeApplPrsHiRng" />
+				<Port Name="RrAxle3LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3LtWhlBrakeApplPrsHiRng" />
+				<Port Name="RrAxle3RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3RtWhlBrakeApplPrsHiRng" />
+                <Port Name="RSBBM" Direction="Receive" Signal="RSBBM">
+                    <Signals>
+                        <Signal Name="RSBBM_BBSystemFASAngleRequest" Element="BBSystemFASAngleRequest"/>
+                        <Signal Name="RSBBM_BBSystemFASReqControlMode" Element="BBSystemFASReqControlMode"/>
+                        <Signal Name="RSBBM_BBSystemCounter" Element="BBSystemCounter"/>
+                        <Signal Name="RSBBM_BBSystemChecksum" Element="BBSystemChecksum"/>
+                    </Signals>
+                </Port>
+				<Port Name="ScndRrDriveAxleLeftWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleLeftWheelSpeed" />
+				<Port Name="ScndRrDriveAxleRightWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleRightWheelSpeed" />
+                <Port Name="SCS_OpticalWarningStatus" Direction="Receive" Signal="SCS_OpticalWarningStatus" />
+                <Port Name="SecondaryDriveAxleLoad" Direction="Receive" Signal="SecondaryDriveAxleLoad"/>
+                <Port Name="SecondThrottle" Direction="Receive" Signal="SecondThrottle"/>
+                <Port Name="SelectedEcoCruiseLevel" Direction="Receive" Signal="SelectedEcoCruiseLevel"/>
+                <Port Name="SetCMOperation" Direction="Receive" Signal="SetCMOperation"/>
+                <Port Name="SetCMOperation_BP" Direction="Receive" Signal="SetCMOperation_BP"/>
+                <Port Name="SetFCWOperation" Direction="Receive" Signal="SetFCWOperation"/>
+                <Port Name="SetFCWOperation_BP" Direction="Receive" Signal="SetFCWOperation_BP"/>
+                <Port Name="SteeringWheelAngle" Direction="Receive" Signal="SteeringWheelAngle"/>
+                <Port Name="SteeringWheelAngle1" Direction="Receive" Signal="SteeringWheelAngle1"/>
+                <Port Name="SteeringWheelAngleOffset" Direction="Receive" Signal="SteeringWheelAngleOffset"/>
+				<Port Name="TachographLocalHourOffset" Direction="Receive" Signal="TachographLocalHourOffset" />
+				<Port Name="TachographLocalMinuteOffset" Direction="Receive" Signal="TachographLocalMinuteOffset" />
+				<Port Name="TachographVehicleSpeed" Direction="Receive" Signal="TachographVehicleSpeed" />
+                <Port Name="TagAxleLoad" Direction="Receive" Signal="TagAxleLoad"/>
+				<Port Name="TotalVehicleDistanceHighRes" Direction="Receive" Signal="TotalVehicleDistanceHighRes" />
+                <Port Name="TrailerABSStatus" Direction="Receive" Signal="TrailerABSStatus"/>
+                <Port Name="TrailerConnected" Direction="Receive" Signal="TrailerConnected"/>
+                <Port Name="TrailerWithoutABS" Direction="Receive" Signal="TrailerWithoutABS"/>
+                <Port Name="TrailerWoABS" Direction="Receive" Signal="TrailerWoABS"/>
+                <Port Name="TransmissionActualGearRatio" Direction="Receive" Signal="TransmissionActualGearRatio"/>
+                <Port Name="TransmissionDrivelineEngaged" Direction="Receive" Signal="TransmissionDrivelineEngaged"/>
+                <Port Name="TransmissionShiftInProcess" Direction="Receive" Signal="TransmissionShiftInProcess"/>
+                <Port Name="TransmOutputShaftSpeedSigned" Direction="Receive" Signal="TransmOutputShaftSpeedSigned"/>
+                <Port Name="VDCFullyOperational" Direction="Receive" Signal="VDCFullyOperational"/>
+                <Port Name="VehicleCalibratedLoad" Direction="Receive" Signal="VehicleCalibratedLoad"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="WheelBasedVehicleSpeed" Direction="Receive" Signal="WheelBasedVehicleSpeed"/>
+                <Port Name="VP40TrailerABSStatus" Direction="Receive" Signal="VP40TrailerABSStatus"/>
+                <Port Name="XARActiveControlMode" Direction="Receive" Signal="XARActiveControlMode"/>
+                <Port Name="XARSystemState" Direction="Receive" Signal="XARSystemState"/>
+                <Port Name="XBR_A_V_ControlMode" Direction="Receive" Signal="XBR_A_V_ControlMode"/>
+                <Port Name="XBRActiveControlMode" Direction="Receive" Signal="XBRActiveControlMode"/>
+                <Port Name="XBRBrakingCapacityTemperature" Direction="Receive" Signal="XBRBrakingCapacityTemperature"/>
+                <Port Name="XBRBrakingCapacityTime" Direction="Receive" Signal="XBRBrakingCapacityTime"/>
+                <Port Name="XBRSystemInformation" Direction="Receive" Signal="XBRSystemInformation"/>
+                <Port Name="XBRSystemState" Direction="Receive" Signal="XBRSystemState"/>
+                <Port Name="XPRsystemstate" Direction="Receive" Signal="XPRsystemstate"/>
+                <Port Name="YawRate" Direction="Receive" Signal="YawRate"/>
+                <Port Name="YawRateOffset" Direction="Receive" Signal="YawRateOffset"/>
+                <Port Name="YCBrakeControlActive" Direction="Receive" Signal="YCBrakeControlActive"/>
+		<Port Name="RelativeLevelRearAxleRightRaw" Direction="Receive" Signal="RelativeLevelRearAxleRightRaw"/>
+		<Port Name="RelativeLevelRearAxleLeftRaw" Direction="Receive" Signal="RelativeLevelRearAxleLeftRaw"/>
+                <Port Name="GPSData" Direction="Receive" Signal="GPSData">
+                    <Signals>
+                        <Signal Name="GPSData_Altitude" Element="Altitude"/>
+                        <Signal Name="GPSData_AntennaStat" Element="AntennaStat"/>
+                        <Signal Name="GPSData_Direction" Element="Direction"/>
+                        <Signal Name="GPSData_HDOP" Element="HDOP"/>
+                        <Signal Name="GPSData_Latitude" Element="Latitude"/>
+                        <Signal Name="GPSData_Longitude" Element="Longitude"/>
+                        <Signal Name="GPSData_Time" Element="Time"/>
+                        <Signal Name="GPSData_VehSpeed" Element="VehSpeed"/>
+                    </Signals>
+                </Port>
+                <Port Name="Trailer1GeometricData" Direction="Receive" Signal="Trailer1GeometricData">
+                    <Signals>
+                        <Signal Name="Trailer1GeometricData_Index" Element="Index"/>
+                        <Signal Name="Trailer1GeometricData_Content" Element="Content"/>
+                    </Signals>
+                </Port>
+                <Port Name="Trailer2GeometricData" Direction="Receive" Signal="Trailer2GeometricData">
+                    <Signals>
+                        <Signal Name="Trailer2GeometricData_Index" Element="Index"/>
+                        <Signal Name="Trailer2GeometricData_Content" Element="Content"/>
+                    </Signals>
+                </Port>
+                <Port Name="Trailer3GeometricData" Direction="Receive" Signal="Trailer3GeometricData">
+                    <Signals>
+                        <Signal Name="Trailer3GeometricData_Index" Element="Index"/>
+                        <Signal Name="Trailer3GeometricData_Content" Element="Content"/>
+                    </Signals>
+                </Port>
+                <Port Name="Trailer4GeometricData" Direction="Receive" Signal="Trailer4GeometricData">
+                    <Signals>
+                        <Signal Name="Trailer4GeometricData_Index" Element="Index"/>
+                        <Signal Name="Trailer4GeometricData_Content" Element="Content"/>
+                    </Signals>
+                </Port>
+                <Port Name="Trailer5GeometricData" Direction="Receive" Signal="Trailer5GeometricData">
+                    <Signals>
+                        <Signal Name="Trailer5GeometricData_Index" Element="Index"/>
+                        <Signal Name="Trailer5GeometricData_Content" Element="Content"/>
+                    </Signals>
+                </Port>
+                <Port Name="TrailersConnected" Direction="Receive" Signal="TrailersConnected"/>
+                <Port Name="TransmissionCurrentGear" Direction="Receive" Signal="TransmissionCurrentGear"/>
+                <Port Name="LSMS_KnobAngle" Direction="Receive" Signal="LSMS_KnobAngle"/>
+                <Port Name="LSMS_KnobButtonStatus" Direction="Receive" Signal="LSMS_KnobButtonStatus"/>
+                <Port Name="CACCSuitability" Direction="Receive" Signal="CACCSuitability"/>
+                <Port Name="CACCTimeGapRqst" Direction="Receive" Signal="CACCTimeGapRqst"/>
+                <Port Name="SpeedAdaptationLevelRqst" Direction="Receive" Signal="SpeedAdaptationLevelRqst"/>
+                <Port Name="SpeedAdaptEnableRqst" Direction="Receive" Signal="SpeedAdaptEnableRqst">
+                    <Signals>
+                        <Signal Name="SpeedAdaptEnableRqst_Curve" Element="Curve"/>
+                        <Signal Name="SpeedAdaptEnableRqst_SpeedLimit" Element="SpeedLimit"/>
+                        <Signal Name="SpeedAdaptEnableRqst_SlowTraffic" Element="SlowTraffic"/>
+                    </Signals>
+                </Port>
+                <Port Name="ISeeStatus" Direction="Receive" Signal="ISeeStatus"/>
+                <Port Name="TransmissionDrivingMode" Direction="Receive" Signal="TransmissionDrivingMode"/>
+                <Port Name="LKSCSActiveBoxStatus_GUIrqst" Direction="Receive" Signal="LKSCSActiveBoxStatus_GUIrqst"/>
+                <Port Name="DebugFrame_1" Direction="Receive" Signal="DebugFrame_1"/>
+
+                <Port Name="TrafficSitPathExecSta" Direction="Receive" Signal="TrafficSitPathEvent">
+                    <Signals>
+                        <Signal Name="TrafficSitPathExecSta_Type" Element="Type"/>
+                        <Signal Name="TrafficSitPathExecSta_Distance" Element="Distance"/>
+                        <Signal Name="TrafficSitPathExecSta_Speed" Element="Speed"/>
+                    </Signals>
+                </Port>
+                <Port Name="EngineActiveStatus" Direction="Receive" Signal="EngineActiveStatus"/>
+                <Port Name="CabLightIntensity_stat" Direction="Receive" Signal="CabLightIntensity_stat"/>
+                <Port Name="ABSAxle1Active" Direction="Receive" Signal="ABSAxle1Active"/>
+                <Port Name="ABSAxle2Active" Direction="Receive" Signal="ABSAxle2Active"/>
+                <Port Name="ABSAxle3Active" Direction="Receive" Signal="ABSAxle3Active"/>
+                <Port Name="ABSAxle4Active" Direction="Receive" Signal="ABSAxle4Active"/>
+                <Port Name="ABSAxle5Active" Direction="Receive" Signal="ABSAxle5Active"/>
+                <Port Name="ActualPusherWheelAngle" Direction="Receive" Signal="ActualPusherWheelAngle"/>
+                <Port Name="ActualTagWheelAngle" Direction="Receive" Signal="ActualTagWheelAngle"/>
+                <Port Name="ASREngineControlActive" Direction="Receive" Signal="ASREngineControlActive"/>
+                <Port Name="CountryCode" Direction="Receive" Signal="CountryCode"/>
+                <Port Name="LiftAxle2PositionStatus" Direction="Receive" Signal="LiftAxle2PositionStatus"/>
+                <Port Name="LongitudinalAcceleration" Direction="Receive" Signal="LongitudinalAcceleration"/>
+                <Port Name="PusherAxleLeftWheelSpeed" Direction="Receive" Signal="PusherAxleLeftWheelSpeed"/>
+                <Port Name="PusherAxleRightWheelSpeed" Direction="Receive" Signal="PusherAxleRightWheelSpeed"/>
+                <Port Name="ScndFrAxleLeftWheelSpeed" Direction="Receive" Signal="ScndFrAxleLeftWheelSpeed"/>
+                <Port Name="ScndFrAxleRightWheelSpeed" Direction="Receive" Signal="ScndFrAxleRightWheelSpeed"/>
+                <Port Name="TagAxleLeftWheelSpeed" Direction="Receive" Signal="TagAxleLeftWheelSpeed"/>
+                <Port Name="TagAxleRightWheelSpeed" Direction="Receive" Signal="TagAxleRightWheelSpeed"/>
+				<Port Name="WiperModeStatus" Direction="Receive" Signal="WiperModeStatus"/>
+                <Port Name="ActualEHPusherWheelAngle" Direction="Receive" Signal="ActualEHPusherWheelAngle"/>
+                <Port Name="ActualEHTagWheelAngle" Direction="Receive" Signal="ActualEHTagWheelAngle"/>
+                <Port Name="CentralRearDiffLock_stat" Direction="Receive" Signal="CentralRearDiffLock_stat"/>
+                <Port Name="DifferentialLockStateCentral" Direction="Receive" Signal="DifferentialLockStateCentral"/>
+                <Port Name="DifferentialLockStateCentral2" Direction="Receive" Signal="DifferentialLockStateCentral2"/>
+                <Port Name="DifferentialLockStateFrAxle1" Direction="Receive" Signal="DifferentialLockStateFrAxle1"/>
+                <Port Name="DifferentialLockStateFrAxle2" Direction="Receive" Signal="DifferentialLockStateFrAxle2"/>
+                <Port Name="EASActualPusherWheelAngle" Direction="Receive" Signal="EASActualPusherWheelAngle"/>
+                <Port Name="EASActualTagWheelAngle" Direction="Receive" Signal="EASActualTagWheelAngle"/>
+                <Port Name="EHERearAxleSteeringFuncStatus" Direction="Receive" Signal="EHERearAxleSteeringFuncStatus"/>
+                <Port Name="EHRearAxleSteeringFuncStatus" Direction="Receive" Signal="EHRearAxleSteeringFuncStatus"/>
+                <Port Name="ExtraAxleSteeringFunctionStat" Direction="Receive" Signal="ExtraAxleSteeringFunctionStat"/>
+                <Port Name="PitchAngle" Direction="Receive" Signal="PitchAngle"/>
+				<Port Name="PitchAngleRef" Direction="Receive" Signal="PitchAngleRef"/>
+                <Port Name="RearAxle1DiffLock_stat" Direction="Receive" Signal="RearAxle1DiffLock_stat"/>
+                <Port Name="RearAxle2DiffLock_stat" Direction="Receive" Signal="RearAxle2DiffLock_stat"/>
+                <Port Name="RearAxle3DiffLock_stat" Direction="Receive" Signal="RearAxle3DiffLock_stat"/>
+                <Port Name="WheelCircumference" Direction="Receive" Signal="WheelCircumference"/>
+                <Port Name="AntiLockBrakingActive_BB1_X_EBS" Direction="Receive" Signal="AntiLockBrakingActive_BB1_X_EBS"/>
+                <Port Name="ASRBrakeControlActive_BB1_X_EBS" Direction="Receive" Signal="ASRBrakeControlActive_BB1_X_EBS"/>
+                <Port Name="AxleLocation" Direction="Receive" Signal="AxleLocation"/>
+                <Port Name="AxleWeight" Direction="Receive" Signal="AxleWeight"/>
+                <Port Name="BrkApplPressHiRaFrAxleL" Direction="Receive" Signal="BrkApplPressHiRaFrAxleL"/>
+                <Port Name="BrkApplPressHiRaFrAxleR" Direction="Receive" Signal="BrkApplPressHiRaFrAxleR"/>
+                <Port Name="BrkApplPressHiRaRearAxle1L" Direction="Receive" Signal="BrkApplPressHiRaRearAxle1L"/>
+                <Port Name="BrkApplPressHiRaRearAxle1R" Direction="Receive" Signal="BrkApplPressHiRaRearAxle1R"/>
+                <Port Name="BrkApplPressHiRaRearAxle2L" Direction="Receive" Signal="BrkApplPressHiRaRearAxle2L"/>
+                <Port Name="BrkApplPressHiRaRearAxle2R" Direction="Receive" Signal="BrkApplPressHiRaRearAxle2R"/>
+				<Port Name="BrkApplPressHiRaRearAxle3L" Direction="Receive" Signal="BrkApplPressHiRaRearAxle3L"/>
+                <Port Name="BrkApplPressHiRaRearAxle3R" Direction="Receive" Signal="BrkApplPressHiRaRearAxle3R"/>
+                <Port Name="LiftAxle1Pos" Direction="Receive" Signal="LiftAxle1Pos"/>
+                <Port Name="LiftAxle2Pos" Direction="Receive" Signal="LiftAxle2Pos"/>
+                <Port Name="ReferenceEngineTorque" Direction="Receive" Signal="ReferenceEngineTorque"/>
+                <Port Name="RelativeSpeedRearAxle2LeftWheel" Direction="Receive" Signal="RelativeSpeedRearAxle2LeftWheel"/>
+				<Port Name="RlativeSpeedRearAxle2RightWheel" Direction="Receive" Signal="RlativeSpeedRearAxle2RightWheel"/>
+                <Port Name="WheelBasedVehicleSpeed_BB1_X_V" Direction="Receive" Signal="WheelBasedVehicleSpeed_BB1_X_V"/>
+                <Port Name="YCBrakeControlActive_BB1_X_EBS" Direction="Receive" Signal="YCBrakeControlActive_BB1_X_EBS"/>
+                <Port Name="TERoadinclination_BB1_X_V" Direction="Receive" Signal="TERoadinclination_BB1_X_V"/>
+                <Port Name="LongitudinalAcceleration_BP" Direction="Receive" Signal="LongitudinalAcceleration_BP"/>
+                <Port Name="TransOutputShaftSpdSignd_BB1_X_T" Direction="Receive" Signal="TransOutputShaftSpdSignd_BB1_X_T"/>
+                <Port Name="SideCollSituationEnableRqst" Direction="Receive" Signal="SideCollSituationEnableRqst"/>
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="MapDataReconstructor">
+            <SenderReceiverPorts>
+                <Port Name="AdasisMapData" Direction="Receive" Signal="AdasisMapData" />
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out" />
+                <Port Name="CurvatureBuffer_Out" Direction="Send" Signal="CurvatureBuffer_Out" />
+                <Port Name="EgoPosition_Out" Direction="Send" Signal="EgoPosition_Out" />
+                <Port Name="RoadEventBuffer_Out" Direction="Send" Signal="RoadEventBuffer_Out" />
+                <Port Name="SlopeBuffer_Out" Direction="Send" Signal="SlopeBuffer_Out" />
+                <Port Name="SpeedLimitBuffer_Out" Direction="Send" Signal="SpeedLimitBuffer_Out" />
+                <Port Name="FormOfWayBuffer_Out" Direction="Send" Signal="FormOfWayBuffer_Out" />
+            </SenderReceiverPorts>
+        </Component>
+        <Component Name="LongitudinalPathPlanner">
+            <SenderReceiverPorts>
+                <Port Name="CurvatureBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="CurvatureBuffer_Out"/>
+                <Port Name="EgoPosition_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="EgoPosition_Out"/>
+                <Port Name="RoadEventBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="RoadEventBuffer_Out"/>
+                <Port Name="NewSDF_Out" Direction="Receive" SenderComponent="SDF" SenderPort="NewSDF_Out"/>
+                <Port Name="SlopeBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="SlopeBuffer_Out"/>
+                <Port Name="SpeedLimitBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor" SenderPort="SpeedLimitBuffer_Out"/>
+                <Port Name="FormOfWayBuffer_Out" Direction="Receive" SenderComponent="MapDataReconstructor"  SenderPort="FormOfWayBuffer_Out"/>
+                <Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode"/>
+                <Port Name="VSI_Out" Direction="Receive" SenderComponent="VSI" SenderPort="VSI_Out"/>
+                <Port Name="LongitudinalPathPlanner_Out" Direction="Send" Signal="LongitudinalPathPlanner_Out" />
+            </SenderReceiverPorts>
+        </Component>
+    </Components>
+    <Parameters>
+        <Parameter Name="P1AXM" Value="0"/>
+        <Parameter Name="P1BEX" Value="0"/>
+        <Parameter Name="P1BGI" Value="0"/>
+        <Parameter Name="P1BGV" Value="72"/>
+        <Parameter Name="P1ESI" Value="-2560"/>
+        <Parameter Name="P1IJ3" Value="4500"/>
+        <Parameter Name="P1L1L" Value="4"/>
+        <Parameter Name="P1MGF" Value="0"/>
+        <Parameter Name="P1NYO" Value="0"/>
+        <Parameter Name="X1B07" Value="0"/>
+        <Parameter Name="P1BGI" Value="0"/>
+        <Parameter Name="P1BGV" Value="72"/>
+        <Parameter Name="P1E50" Value="2334"/>
+        <Parameter Name="P1ESD" Value="1"/>
+        <Parameter Name="P1II3" Value="1"/>
+        <Parameter Name="P1JVN" Value="-8192"/>
+        <Parameter Name="P1L1L" Value="4"/>
+        <Parameter Name="P1QVI" Value="-3072"/>
+        <Parameter Name="X1B08" Value="0"/>
+        <Parameter Name="X1BK8" Value="1"/>
+        <Parameter Name="X1BQY" Value="0"/>
+        <Parameter Name="X1BSH" Value="5"/>
+        <Parameter Name="P1RPH" Value="0"/>
+        <Parameter Name="P1CTM" Value="0"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1L1L" Value="4"/>
+        <Parameter Name="P1TNL" Value="0"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1KJ7" Value="2334"/>
+        <Parameter Name="P1PT9" Value="2"/>
+        <Parameter Name="P1RV4" Value="3"/>
+        <Parameter Name="X1B5T" Value="3 0 3 0"/>
+        <Parameter Name="X1B5U" Value="0 0"/>
+        <Parameter Name="X1B5V" Value="500"/>
+        <Parameter Name="X1BS0" Value="1"/>
+        <Parameter Name="X1BS1" Value="1"/>
+        <Parameter Name="X1BS2" Value="0.4"/>
+        <Parameter Name="X1BS3" Value="0.75"/>
+        <Parameter Name="X1BS4" Value="0.2"/>
+        <Parameter Name="X1BS5" Value="0"/>
+        <Parameter Name="X1BS6" Value="1.591549431"/>
+        <Parameter Name="X1BS7" Value="1.75"/>
+        <Parameter Name="X1BS8" Value="100"/>
+        <Parameter Name="X1BS9" Value="30"/>
+        <Parameter Name="X1BTA" Value="0"/>
+        <Parameter Name="X1BTB" Value="0"/>
+        <Parameter Name="X1BTC" Value="0.4"/>
+        <Parameter Name="X1BTD" Value="0.2"/>
+        <Parameter Name="X1BTE" Value="0.9"/>
+        <Parameter Name="P1R9L" Value="1"/>
+        <Parameter Name="X1B1G" Value="0"/>
+        <Parameter Name="X1BMZ" Value="1"/>
+        <Parameter Name="X1BZP" Value="1 1"/>
+        <Parameter Name="P1OSG" Value="0"/>
+        <Parameter Name="X1BZI" Value="0 30 0 0 1067 640 213 135 1 20 100 3158 -3165 3"/>
+        <Parameter Name="P1BGV" Value="72"/>
+        <Parameter Name="P1CE3" Value="60"/>
+        <Parameter Name="P1CE4" Value="55"/>
+        <Parameter Name="P1CXT" Value="422 358"/>
+        <Parameter Name="P1CXU" Value="0 20"/>
+        <Parameter Name="P1CXV" Value="20 0"/>
+        <Parameter Name="P1CXW" Value="0 20"/>
+        <Parameter Name="P1CXX" Value="0"/>
+        <Parameter Name="P1CYE" Value="18384 16909"/>
+        <Parameter Name="P1CYF" Value="15859 14384"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1KJ7" Value="2334"/>
+        <Parameter Name="P1PT8" Value="1"/>
+        <Parameter Name="P1PT9" Value="2"/>
+        <Parameter Name="X1BTH" Value="31"/>
+        <Parameter Name="P1BGV" Value="72"/>
+        <Parameter Name="P1E50" Value="2334"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1KJ7" Value="2334"/>
+        <Parameter Name="P1M6I" Value="60000"/>
+        <Parameter Name="X1BWH" Value="1"/>
+        <Parameter Name="JPU" Value="0"/>
+        <Parameter Name="P1B2I" Value="34"/>
+        <Parameter Name="P1B2M" Value="33"/>
+        <Parameter Name="P1B38" Value="0"/>
+        <Parameter Name="P1BGV" Value="72"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1L1L" Value="4"/>
+        <Parameter Name="P1Q4Y" Value="90 120"/>
+        <Parameter Name="P1QGL" Value="0"/>
+        <Parameter Name="P1RPH" Value="0"/>
+        <Parameter Name="X1B1F" Value="0"/>
+        <Parameter Name="X1B2X" Value="1 1 0 1 1 500 0 1 0 0"/>
+        <Parameter Name="X1BMZ" Value="1"/>
+        <Parameter Name="X1BYK" Value="10 5"/>
+        <Parameter Name="P1QPR" Value="0"/>
+        <Parameter Name="JPU" Value="0"/>
+        <Parameter Name="P1B2I" Value="34"/>
+        <Parameter Name="P1B2M" Value="33"/>
+        <Parameter Name="P1B2N" Value="10"/>
+        <Parameter Name="P1B2O" Value="50"/>
+        <Parameter Name="P1CE3" Value="60"/>
+        <Parameter Name="P1CE4" Value="55"/>
+        <Parameter Name="P1CTL" Value="0"/>
+        <Parameter Name="P1CTM" Value="0"/>
+        <Parameter Name="P1CXS" Value="52"/>
+        <Parameter Name="P1ESK" Value="35 30 25 20 15"/>
+        <Parameter Name="P1KJ7" Value="2334"/>
+        <Parameter Name="P1MN2" Value="0"/>
+        <Parameter Name="P1NYO" Value="0"/>
+        <Parameter Name="P1OSG" Value="0"/>
+        <Parameter Name="P1PF1" Value="0"/>
+        <Parameter Name="P1PT8" Value="1"/>
+        <Parameter Name="P1PT9" Value="2"/>
+        <Parameter Name="P1PUA" Value="0"/>
+        <Parameter Name="P1Q44" Value="0"/>
+        <Parameter Name="P1Q45" Value="0"/>
+        <Parameter Name="P1QPR" Value="0"/>
+        <Parameter Name="P1RDQ" Value="-2560"/>
+        <Parameter Name="P1TUA" Value="0"/>
+        <Parameter Name="X1B50" Value="0"/>
+        <Parameter Name="X1B5W" Value="0"/>
+        <Parameter Name="X1B5X" Value="0"/>
+        <Parameter Name="X1B5Y" Value="0"/>
+        <Parameter Name="X1B5Z" Value="0"/>
+        <Parameter Name="X1BXH" Value="0"/>
+        <Parameter Name="P1BGI" Value="0"/>
+        <Parameter Name="P1E50" Value="2334"/>
+        <Parameter Name="P1QPR" Value="0"/>
+        <Parameter Name="P1RPH" Value="0"/>
+        <Parameter Name="X1BV2" Value="0"/>
+        <Parameter Name="P1RT0" Value="0"/>
+        <Parameter Name="P1E5Z" Value="1000"/>
+        <Parameter Name="P1ESL" Value="2"/>
+        <Parameter Name="P1HLW" Value="4 3 2 1 0"/>
+        <Parameter Name="P1HPK" Value="1"/>
+        <Parameter Name="P1L1L" Value="4"/>
+        <Parameter Name="P1MN1" Value="1"/>
+        <Parameter Name="P1MN2" Value="0"/>
+        <Parameter Name="P1OY7" Value="255"/>
+        <Parameter Name="P1RPH" Value="0"/>
+        <Parameter Name="X1CHP" Value="0"/>
+        <Parameter Name="X1BKN" Value="0"/>
+        <Parameter Name="X1C2H" Value="0"/>
+        <Parameter Name="P1ZJW" Value="0"/>
+        <Parameter Name="P1IKJ" Value="0"/>		
+    </Parameters>
+</ModuleConfig>

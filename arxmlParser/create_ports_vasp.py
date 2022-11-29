@@ -1,17 +1,16 @@
 #! /usr/bin/python
 
-import DbcParser
+#import DbcParser
 import ArxmlParser
-import RteRenderer
-from SignalVisitor import SignalVisitor
-import StubRenderer
+#import RteRenderer
+#from SignalVisitor import SignalVisitor
+#import StubRenderer
 import ComponentRenderer
-import SignalVisitor
+#import SignalVisitor
 
 """ main script """
 def main():
    ldc_name = 'DacuVaspApp'
-   #swc_name = 'StateEstimation'
 
    ap = ArxmlParser.ArxmlParser()
    ap.parse('http://autosar.org/schema/r4.0', \

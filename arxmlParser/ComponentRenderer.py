@@ -57,7 +57,7 @@ class ComponentRenderer:
       self.f_out.write(s)
 
    def render_struct_signal(self, port_name, direction, signal):
-      s = '\t\t<Port Name="' + port_name + '" Direction="' + direction + '" Stub="true" >\n'
+      s = '\t\t<Port Name="' + port_name + '" Direction="' + direction + '" Signal="' + signal.name +  '" Stub="true" >\n'
       s += '\t\t\t<Signals>\n'
 
       for element in signal.element_array:
