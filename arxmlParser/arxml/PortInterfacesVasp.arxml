@@ -9411,7 +9411,7 @@ This file was saved with a tool from Vector Informatik GmbH
                       </SW-DATA-DEF-PROPS-CONDITIONAL>
                     </SW-DATA-DEF-PROPS-VARIANTS>
                   </SW-DATA-DEF-PROPS>
-                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/ACC_SGO_TransmissionStatus_ADT</TYPE-TREF>
+                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/ACC_SGO_TransmissionStat_BB1_X_T_ADT</TYPE-TREF>
                 </VARIABLE-DATA-PROTOTYPE>
               </DATA-ELEMENTS>
             </SENDER-RECEIVER-INTERFACE>
@@ -10075,6 +10075,74 @@ This file was saved with a tool from Vector Informatik GmbH
                     </SW-DATA-DEF-PROPS-VARIANTS>
                   </SW-DATA-DEF-PROPS>
                   <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/InactiveActive_ADT</TYPE-TREF>
+                </VARIABLE-DATA-PROTOTYPE>
+              </DATA-ELEMENTS>
+            </SENDER-RECEIVER-INTERFACE>
+            <SENDER-RECEIVER-INTERFACE UUID="E2DB04C4-73E7-460D-920E-8ECD927EC0E2">
+              <SHORT-NAME>IlluminationBrightnessPercent_SL_I</SHORT-NAME>
+              <IS-SERVICE>false</IS-SERVICE>
+              <DATA-ELEMENTS>
+                <VARIABLE-DATA-PROTOTYPE UUID="3160B738-D078-4882-8F0F-DF1AAA2E0890">
+                  <SHORT-NAME>IlluminationBrightnessPercent_SLCM08</SHORT-NAME>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/IlluminationBrightnessPercent_SL_ADT</TYPE-TREF>
+                </VARIABLE-DATA-PROTOTYPE>
+              </DATA-ELEMENTS>
+            </SENDER-RECEIVER-INTERFACE>
+            <SENDER-RECEIVER-INTERFACE UUID="49E2C316-6438-4EE2-9AB7-B3531C66BED7">
+              <SHORT-NAME>NightOrDay_BB1_X_LCM_I</SHORT-NAME>
+              <IS-SERVICE>false</IS-SERVICE>
+              <DATA-ELEMENTS>
+                <VARIABLE-DATA-PROTOTYPE UUID="01A12FD1-A7FF-4F80-B45F-27DC0A3BC56B">
+                  <SHORT-NAME>NightOrDay_BB1_X_LCM</SHORT-NAME>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/NightOrDay_BB1_X_LCM_ADT</TYPE-TREF>
+                </VARIABLE-DATA-PROTOTYPE>
+              </DATA-ELEMENTS>
+            </SENDER-RECEIVER-INTERFACE>
+            <SENDER-RECEIVER-INTERFACE UUID="5DDA5287-0555-4C51-8E6A-AA49BA61C4D9">
+              <SHORT-NAME>LongitudinalAcceleration_8b_I</SHORT-NAME>
+              <IS-SERVICE>false</IS-SERVICE>
+              <DATA-ELEMENTS>
+                <VARIABLE-DATA-PROTOTYPE UUID="6BE17105-A364-4D69-B73D-24784A2CF2DA">
+                  <SHORT-NAME>LongitudinalAcceleration_8b</SHORT-NAME>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/LongitudinalAcceleration_8b_ADT</TYPE-TREF>
+                </VARIABLE-DATA-PROTOTYPE>
+              </DATA-ELEMENTS>
+            </SENDER-RECEIVER-INTERFACE>
+            <SENDER-RECEIVER-INTERFACE UUID="76D7A012-82D9-4000-8589-E7FFF98E9C94">
+              <SHORT-NAME>FuncIndIlluminationLevel_I</SHORT-NAME>
+              <IS-SERVICE>false</IS-SERVICE>
+              <DATA-ELEMENTS>
+                <VARIABLE-DATA-PROTOTYPE UUID="17FE69D5-B220-4C50-AE6E-34BA82D62FEA">
+                  <SHORT-NAME>FuncIndIlluminationLevel</SHORT-NAME>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                  <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/FuncIndIlluminationLevel_ADT</TYPE-TREF>
                 </VARIABLE-DATA-PROTOTYPE>
               </DATA-ELEMENTS>
             </SENDER-RECEIVER-INTERFACE>

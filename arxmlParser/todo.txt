@@ -1,9 +1,6 @@
-renderer skall jobba med individuella portar.
-sub-klassa port enligt UML-diagram
-
-sub-klassa renderer
-
-
+componentRenderer skall plocka Signal från dbc, inte port'en
+lägg till can-signal-namn i port klassen
+tilldela i signalVisitor'n...
 
 inte jätteviktigt:
 printf förutsätter int med %d, funkar inte för float
