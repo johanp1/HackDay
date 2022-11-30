@@ -136,11 +136,7 @@ void setup() {
   AxisViewCommandHandler* axisViewCommandHandler = new AxisViewCommandHandler(*axisView);
   SpindleViewCommandHandler* spindleViewCommandHandler = new SpindleViewCommandHandler(*spindleView);
   ActiveAxisCommandHandler* activeAxisCommandHandler = new ActiveAxisCommandHandler(lcdModel);
-<<<<<<< Updated upstream
 
-=======
-    
->>>>>>> Stashed changes
   Serial.begin(38400);
   Serial.setTimeout(500);
   Serial.println("mpgPendant::setup()");
@@ -162,11 +158,8 @@ void setup() {
   eventGenerators[3] = new Button("est", cEStopButtonPin, cButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
-<<<<<<< Updated upstream
-  eventGenerators[4] = axisSelector = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
-=======
+
   eventGenerators[4] = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
->>>>>>> Stashed changes
   eventGenerators[4]->addEventListner(&sender);
 
   // register selector changes to the view's event handlers
