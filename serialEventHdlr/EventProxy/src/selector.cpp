@@ -8,7 +8,7 @@ Selector::Selector(const String& argName,
              const byte numberOfStates,
              const byte stateValueUncertainty) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay), stateValueUncertainty_(stateValueUncertainty)
 {
-   state = 255;
+   state = kUndefinedState;
    prevState = state;
    time = 0;
 
@@ -30,21 +30,21 @@ Selector::~Selector()
 // returns debounced selector state
 void Selector::scan(void)
 {
-  byte currState = volt2state((unsigned int)analogRead((int)pin)); // read pin
-  if (currState != prevState)
-  {
-    // reset the debouncing timer
-    time = millis();
-  }
-  
-  if ((millis() - time) > debounceTime) {
-  // take the new reading since debounce timer elapsed
-    if (currState != state) 
-    {
-      state = currState;
-      generateEvent(state);
-    }
-  }
+   byte currState = volt2state((unsigned int)analogRead((int)pin)); // read pin
+   if (currState != prevState)
+   {
+      // reset the debouncing timer
+      time = millis();
+   }
+
+   if ((millis() - time) > debounceTime) {
+      // take the new reading since debounce timer elapsed
+      if (currState != state) 
+      {
+         state = currState;
+         generateEvent(state);
+      }
+   }
       
   prevState = currState;
 }

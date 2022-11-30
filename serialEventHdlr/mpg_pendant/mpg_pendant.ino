@@ -11,7 +11,7 @@ constexpr auto kHeartbeatPeriod = 2000; //2000ms
 
 static void myISR(void);
 
-//static IsrFunctionoid isrFunct;
+static IsrFunctionoid isrFunct;
 static Sender sender;
 static Buffer buffer;
 static EventGenerator* eventGenerators[kNbrOfEventGenerators];
@@ -76,5 +76,6 @@ void loop() {
 
 static void myISR(void)
 {
+  std::cout << "isr" << std::endl;
   isrFunct.execute();
 }

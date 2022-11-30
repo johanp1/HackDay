@@ -4,9 +4,10 @@
 #include <Arduino.h>
 #include "event_generator.h"
 
-constexpr int limit = 60u;
-constexpr byte defaultNumberOfStates = 4;
-constexpr unsigned int defaultStateVals[4] = {255u, 340u, 512u, 1024u};
+constexpr int kDefaultLimit = 60u;
+constexpr byte kDefaultNumberOfStates = 4;
+constexpr unsigned int kDefaultStateVals[4] = {255u, 340u, 512u, 1024u};
+constexpr byte kUndefinedState = 255;
 
 struct SelectorStatesType
 {
@@ -22,9 +23,9 @@ class Selector : public EventGenerator {
    Selector(const String& argName,
 		       const unsigned int argPin,
 		       const unsigned long argDebounceDelay,
-             const unsigned int stateVolts[] = defaultStateVals,
-             const byte numberOfStates = defaultNumberOfStates,
-             const byte stateValueUncertainty = limit);
+             const unsigned int stateVolts[] = kDefaultStateVals,
+             const byte numberOfStates = kDefaultNumberOfStates,
+             const byte stateValueUncertainty = kDefaultLimit);
    ~Selector();
 
    void scan(void);
