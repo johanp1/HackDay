@@ -6,12 +6,11 @@
 #include "selector.h"
 #include "mpg_pendant.h"
 
-constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 1/*kNbrOfRotaryEncoders*/;
-constexpr auto kHeartbeatPeriod = 2000; //2000ms
+constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 1;
 
 static void myISR(void);
 
-static IsrFunctionoid isrFunct;
+static IsrFunctor isrFunctor;
 static Sender sender;
 static Buffer buffer;
 static EventGenerator* eventGenerators[kNbrOfEventGenerators];
@@ -39,7 +38,7 @@ void setup() {
 
   eventGenerators[5] = new RotaryEncoder("jog", kEncoderClockPin, kEncoderDirectionPin);
   eventGenerators[5]->addEventListner(&buffer);
-  isrFunct.addEventGenerator(eventGenerators[5]);
+  isrFunctor.addEventGenerator(eventGenerators[5]);
   attachInterrupt(digitalPinToInterrupt(kEncoderClockPin), myISR, RISING);
 }
 
@@ -56,7 +55,7 @@ void loop() {
   // we don't need to "eventGenerators[5]->scan();" since it is connected to an interrupt instead.
   // Also the implementation of RotaryEncoder::scan() currently only works for interrupts. If it is pulled
   // continously it will update its position every iteration
-
+  
   while (buffer.get(e))
   {
     sender.HandleEvent(e);
@@ -76,6 +75,5 @@ void loop() {
 
 static void myISR(void)
 {
-  std::cout << "isr" << std::endl;
-  isrFunct.execute();
+  isrFunctor();
 }

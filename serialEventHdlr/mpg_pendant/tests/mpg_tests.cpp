@@ -1,39 +1,14 @@
 #include <gtest/gtest.h>
-//#include "button.h"
 #include "Arduino.h"
-#include "mpg_pendant.ino"
+#include "mpg_pendant.h"
 
 namespace {
-/*class EventListnerSpy : public EventListner{
-public:
-   void enventListnerSpy()
-   {
-      reset();
-   };
-    
-   void HandleEvent(C_Event& e)
-   {
-      newData = true;
-      serializedEvent = e.serialize();
-   };
-
-   void reset()
-   {
-      serializedEvent = "";
-      newData = false;
-   }
-    
-   String serializedEvent;
-   bool newData;
-};
-*/
 
 // find str2 in str1
 bool SubstringFind(const std::string& str1, const std::string& str2)
 {
    auto retVal = false;
-   std::cout << "string1 " << str1 << std::endl;
-   std::cout << "string2 " << str2 << std::endl;
+   
    if (str1.find(str2) != string::npos)
    {
       retVal = true; //.. found.
@@ -110,12 +85,19 @@ TEST_F(MpgTestFixture, CWJogTest)
 {
    setup();
 
-   // rotate jog wheel
+   // CW rotate jog wheel
    arduinoStub->SetDigitalRead(kEncoderDirectionPin, HIGH);
    arduinoStub->InvokeInterrupt(HIGH); // puts event in buffer
    ASSERT_FALSE(hasBeenSent("jog_1\n"));
    loop();                             // pop buffer, send event   
    ASSERT_TRUE(hasBeenSent("jog_1\n"));
+
+   // CCW rotate jog wheel
+   arduinoStub->SetDigitalRead(kEncoderDirectionPin, LOW);
+   arduinoStub->InvokeInterrupt(HIGH); // puts event in buffer
+   ASSERT_FALSE(hasBeenSent("jog_0\n"));
+   loop();                             // pop buffer, send event   
+   ASSERT_TRUE(hasBeenSent("jog_0\n"));
 }
 
 }

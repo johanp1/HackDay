@@ -5,6 +5,14 @@ enable_language(CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_BUILD_TYPE Debug)
 
+# Force the .ino file to be treated as C++
+set_source_files_properties(mpg_pendant.ino
+    PROPERTIES LANGUAGE CXX
+)
+set_source_files_properties(mpg_pendant.ino
+    PROPERTIES COMPILE_FLAGS "-x c++"
+)
+
 add_library(mpgPendant
   mpg_pendant.ino)
   
