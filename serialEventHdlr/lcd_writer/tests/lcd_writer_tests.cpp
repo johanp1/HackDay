@@ -176,7 +176,7 @@ TEST(LcdWriterTestGroup, axis_view_set_x)
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String("*x: 1.1   ")));
-   EXPECT_CALL(mock_lcd, print(String(" y: 0   ")));
+   EXPECT_CALL(mock_lcd, print(String(" z: 0   ")));
    lcdModel.SetX(1.1f);
 }
 
@@ -190,7 +190,7 @@ TEST(LcdWriterTestGroup, axis_view_set_y)
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String("*x: 0   ")));
-   EXPECT_CALL(mock_lcd, print(String(" y: 99.99   ")));
+   EXPECT_CALL(mock_lcd, print(String(" z: 99.99   ")));
    lcdModel.SetY(99.99f);
 }
 
@@ -204,7 +204,7 @@ TEST(LcdWriterTestGroup, axis_view_set_active_axis)
    EXPECT_CALL(mock_lcd, setCursor(0, 0));
    EXPECT_CALL(mock_lcd, setCursor(0, 1));
    EXPECT_CALL(mock_lcd, print(String(" x: 0   ")));
-   EXPECT_CALL(mock_lcd, print(String("*y: 0   ")));
+   EXPECT_CALL(mock_lcd, print(String("*z: 0   ")));
    lcdModel.SetActiveAxis(axis_y);
 }
 

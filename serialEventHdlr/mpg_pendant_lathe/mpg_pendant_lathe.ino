@@ -8,10 +8,8 @@
 #include "mpg_pendant_lathe.h"
 #include "lcd_writer.h"
 #include <LiquidCrystal_PCF8574.h>
-#include <Wire.h>
 
-constexpr auto cNbrOfEventGenerators = cNbrOfButtons + cNbrOfSelectors;
-constexpr auto cHeartbeatPeriod = 2000; //2000ms
+constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors;
 
 class UpdateXCommandHandler : public EventFunctor
 {
@@ -121,10 +119,10 @@ class ActiveAxisCommandHandler : public EventFunctor
 static LiquidCrystal_PCF8574 lcd(0x27); // set the LCD address to 0x27
 Model lcdModel;
 static Sender sender;
-static EventGenerator* eventGenerators[cNbrOfEventGenerators];
+static EventGenerator* eventGenerators[kNbrOfEventGenerators];
 static Receiver receiver(String("rec"));
 
-static unsigned long heartbeatTimer = cHeartbeatPeriod;
+static unsigned long heartbeatTimer = kHeartbeatPeriod;
 
 void setup() {  
   AxisView<LiquidCrystal_PCF8574>* axisView = new AxisView<LiquidCrystal_PCF8574>(lcd, lcdModel);
@@ -146,27 +144,27 @@ void setup() {
   lcd.clear();
   lcd.setBacklight(200);
 
-  eventGenerators[0] = new Button("func", cFuncButtonPin, cButtonDebounceDelay);
+  eventGenerators[0] = new Button("func", kFuncButtonPin, kButtonDebounceDelay);
   eventGenerators[0]->addEventListner(&sender);
 
-  eventGenerators[1] = new Button("jpos", cJogNegButtonPin, cButtonDebounceDelay);
+  eventGenerators[1] = new Button("jpos", kJogPosButtonPin, kButtonDebounceDelay);
   eventGenerators[1]->addEventListner(&sender);
 
-  eventGenerators[2] = new Button("jneg", cJogPosButtonPin, cButtonDebounceDelay);
+  eventGenerators[2] = new Button("jneg", kJogNegButtonPin, kButtonDebounceDelay);
   eventGenerators[2]->addEventListner(&sender);
 
-  eventGenerators[3] = new Button("est", cEStopButtonPin, cButtonDebounceDelay);
+  eventGenerators[3] = new Button("est", kEStopButtonPin, kButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
 
-  eventGenerators[4] = new Selector("sela", cAxisSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
+  eventGenerators[4] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);
   eventGenerators[4]->addEventListner(&sender);
 
   // register selector changes to the view's event handlers
   eventGenerators[4]->addEventListner(axisView->GetController());
   eventGenerators[4]->addEventListner(spindleView->GetController());
   
-  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, cSelectorDebounceDelay, cSelectorStateVolts, cNbrOfSelectorStates, cSelectorStateValueUncertainty);
+  eventGenerators[5] = new Selector("sels", cScaleSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);
   eventGenerators[5]->addEventListner(&sender);
 
   // register serial events the view's event handlers
@@ -196,16 +194,16 @@ void loop() {
   eventGenerators[4]->scan();
   eventGenerators[5]->scan();
 
-  //send heart-beat every <cHeartbeatPeriod> [ms]
+  //send heart-beat every <kHeartbeatPeriod> [ms]
   if (millis() > heartbeatTimer)
   {
     String tmpStr = "hb";
-    C_Event hb_ev = C_Event(tmpStr, "");
+    C_Event hb_ev = C_Event(tmpStr, 1);
     sender.HandleEvent(hb_ev);
-    heartbeatTimer = millis() + cHeartbeatPeriod;
+    heartbeatTimer = millis() + kHeartbeatPeriod;
   }
 
-  delay(10); // waits 50ms
+  delay(kLoopDelayTime);
 }
 
 void serialEvent()

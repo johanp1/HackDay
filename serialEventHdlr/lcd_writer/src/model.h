@@ -6,7 +6,7 @@ constexpr auto k_maxNbrOfObservers = 4;
 using Position = float;
 using Speed = int;
 //using Row = byte;
-enum Axis {axis_x, axis_y};
+enum Axis {axis_x, axis_z};
 
 class Observer
 {
@@ -30,7 +30,7 @@ class Model
    void SetActiveAxis(Axis a) {active_axis_ = a;Notify();};
 
    Position GetX() {return x_pos_;};
-   Position GetY() {return y_pos_;};
+   Position GetZ() {return z_pos_;};
    Speed GetSpindleSpeed() {return spindle_speed_;};
    Axis GetActiveAxis() {return active_axis_;};
 
@@ -39,7 +39,7 @@ class Model
 
    private:
    Position x_pos_;
-   Position y_pos_;
+   Position z_pos_;
    Speed spindle_speed_;
    Axis active_axis_;
    Observer* registry_[k_maxNbrOfObservers];
