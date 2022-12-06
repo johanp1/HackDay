@@ -7,6 +7,7 @@ class Port:
       self.port_name = port_name
       self.port_if = port_if
       self.signal_array = []
+      self.stubbed = True
         
    def __repr__(self):
       return 'port name: ' + self.port_name + ', port if: ' + self.port_if + '\n'

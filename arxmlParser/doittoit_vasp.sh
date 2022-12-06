@@ -8,6 +8,7 @@ cp out/DacuVaspApp.xml out/refDacuVaspApp.xml
 python3 patcher.py out/DacuVaspApp.xml arxml/Module.xml out/temp.xml
 python3 patcher.py out/temp.xml arxml/Vcm.xml out/temp2.xml
 
+
 mv out/temp2.xml out/DacuVaspApp.xml
 cp out/DacuVaspApp.xml ../../comp_vasp/Adapt2/.
 rm out/temp*

@@ -26,26 +26,25 @@ def patch(port, ref_tree):
       port_tag = '{' + ns['default_ns']+ '}' + 'Port'
       for ref_port in ref_component.iter(port_tag):
          if _matching_name(ref_port, port):
-            if ref_port.attrib['Direction'] == port.attrib['Direction']:
-               _unstub(ref_port, port)
-
-               #if signal name differ, take the reference's signal name
-               if 'Signal' in ref_port.attrib and 'Signal' in port.attrib:
-                  if ref_port.attrib['Signal'] != port.attrib['Signal']:
-                     port.attrib['Signal'] = ref_port.attrib['Signal']
+            #if signal name differ, take the reference's signal name
+            if 'Signal' in ref_port.attrib and 'Signal' in port.attrib and ref_port.attrib['Direction'] == port.attrib['Direction']:
+               if ref_port.attrib['Signal'] != port.attrib['Signal']:
+                  print(ref_port.attrib['Name'] + ' different signal names: ' + ref_port.attrib['Signal'] + ' ' + port.attrib['Signal'])
+                  #port.attrib['Signal'] = ref_port.attrib['Signal']
             
-               if ref_port.attrib['Direction'] == 'Receive' and port.attrib['Direction'] == 'Receive':
-                  # if the reference contains SenderComponent, lets steal it
-                  if 'SenderComponent' in ref_port.attrib:
-                     port.attrib['SenderComponent'] = ref_port.attrib['SenderComponent']
-                     port.attrib['SenderPort'] = ref_port.attrib['SenderPort']         
+            if ref_port.attrib['Direction'] == 'Receive' and port.attrib['Direction'] == 'Receive':
+               # if the reference contains SenderComponent, lets steal it
+               if 'SenderComponent' in ref_port.attrib:
+                  port.attrib['SenderComponent'] = ref_port.attrib['SenderComponent']
+                  port.attrib['SenderPort'] = ref_port.attrib['SenderPort']         
 
             # if DAVA component receives from reference component/port
             if ref_port.attrib['Direction'] == 'Send' and port.attrib['Direction'] == 'Receive':
                port.attrib['SenderComponent'] = ref_component.attrib['Name']
                port.attrib['SenderPort'] = ref_port.attrib['Name']  
 
-               _unstub(ref_port, port)
+            #port found in ref, un-stub
+            _unstub(ref_port, port)
 
 def main():
    ref_tree = ET.parse(sys.argv[2])
@@ -55,8 +54,8 @@ def main():
 
    root = tree.getroot()
 
-   for port in root.iter('Port'):   
-      patch(port, ref_tree)
+   for port in root.iter('Port'):
+         patch(port, ref_tree)
 
    tree.write(sys.argv[3])
 
