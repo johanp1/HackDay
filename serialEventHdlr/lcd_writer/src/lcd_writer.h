@@ -77,17 +77,17 @@ void AxisView<Lcd>::Draw()
   if(this->enabled_)
   {
    String row1 = String(" x: ");
-   String row2 = String(" y: ");
+   String row2 = String(" z: ");
 
    row1.concat(this->myModel.GetX());
-   row2.concat(this->myModel.GetY());
+   row2.concat(this->myModel.GetZ());
    
    row1.concat("   "); //add some spaces to avoid doing clear between prints
    row2.concat("   ");
 
    // indicate the jogged/active axis with a  '*'
    row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
-   row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_y ? '*' : ' ');
+   row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_z ? '*' : ' ');
 
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
