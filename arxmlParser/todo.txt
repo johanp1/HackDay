@@ -1,6 +1,9 @@
-componentRenderer skall plocka Signal från dbc, inte port'en
-lägg till can-signal-namn i port klassen
-tilldela i signalVisitor'n...
+KLAR componentRenderer skall plocka Signal från dbc, inte port'en
+KLAR lägg till can-signal-namn i port klassen
+
+P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
+
+pylint
 
 inte jätteviktigt:
 printf förutsätter int med %d, funkar inte för float

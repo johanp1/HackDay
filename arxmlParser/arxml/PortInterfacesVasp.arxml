@@ -2442,7 +2442,7 @@ This file was saved with a tool from Vector Informatik GmbH
                       </SW-DATA-DEF-PROPS-CONDITIONAL>
                     </SW-DATA-DEF-PROPS-VARIANTS>
                   </SW-DATA-DEF-PROPS>
-                  <TYPE-TREF DEST="IMPLEMENTATION-DATA-TYPE">/Simulink_VASP/DataTypes/MUM_Out_bus</TYPE-TREF>
+                  <TYPE-TREF DEST="APPLICATION-RECORD-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/MUM_Out_bus</TYPE-TREF>
                 </VARIABLE-DATA-PROTOTYPE>
               </DATA-ELEMENTS>
             </SENDER-RECEIVER-INTERFACE>
@@ -10143,6 +10143,23 @@ This file was saved with a tool from Vector Informatik GmbH
                     </SW-DATA-DEF-PROPS-VARIANTS>
                   </SW-DATA-DEF-PROPS>
                   <TYPE-TREF DEST="APPLICATION-PRIMITIVE-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/FuncIndIlluminationLevel_ADT</TYPE-TREF>
+                </VARIABLE-DATA-PROTOTYPE>
+              </DATA-ELEMENTS>
+            </SENDER-RECEIVER-INTERFACE>
+            <SENDER-RECEIVER-INTERFACE UUID="14FEABA9-DC8B-49AA-8656-9779F5FD8A55">
+              <SHORT-NAME>NewSDF_Out_Clone_I</SHORT-NAME>
+              <IS-SERVICE>false</IS-SERVICE>
+              <DATA-ELEMENTS>
+                <VARIABLE-DATA-PROTOTYPE UUID="79132B68-C038-47C0-84F5-7000590EA3F9">
+                  <SHORT-NAME>NewSDF_Out</SHORT-NAME>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                  <TYPE-TREF DEST="APPLICATION-RECORD-DATA-TYPE">/Simulink_VASP/DataTypes/ApplDataTypes/NewFusionOutputInterface_bus</TYPE-TREF>
                 </VARIABLE-DATA-PROTOTYPE>
               </DATA-ELEMENTS>
             </SENDER-RECEIVER-INTERFACE>

@@ -20898,6 +20898,17 @@ This file was saved with a tool from Vector Informatik GmbH
                   </ADMIN-DATA>
                   <TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE">/Simulink_VASP/ComponentTypes/LongitudinalPathPlanner</TYPE-TREF>
                 </SW-COMPONENT-PROTOTYPE>
+                <SW-COMPONENT-PROTOTYPE UUID="4FF1EC17-CF30-4540-9E71-F983AFAE68EA">
+                  <SHORT-NAME>CoreTransferSDF</SHORT-NAME>
+                  <ADMIN-DATA>
+                    <SDGS>
+                      <SDG GID="DV:DEV">
+                        <SD GID="DV:ImportModePreset">Keep</SD>
+                      </SDG>
+                    </SDGS>
+                  </ADMIN-DATA>
+                  <TYPE-TREF DEST="APPLICATION-SW-COMPONENT-TYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF</TYPE-TREF>
+                </SW-COMPONENT-PROTOTYPE>
               </COMPONENTS>
               <CONNECTORS>
                 <ASSEMBLY-SW-CONNECTOR UUID="D43AEA1D-A589-41F9-B231-29907019043C">
@@ -24850,50 +24861,6 @@ This file was saved with a tool from Vector Informatik GmbH
                     <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/FrontFLRSensorObjects</TARGET-R-PORT-REF>
                   </REQUESTER-IREF>
                 </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="9186904C-65DF-409B-9AD6-9D895FD9D53A">
-                  <SHORT-NAME>SDF_NewSDF_Out_NonDrivableRegionSituation_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/NonDrivableRegionSituation</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/NonDrivableRegionSituation/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="7ACA6941-95AE-42FC-909F-ADEC8397B912">
-                  <SHORT-NAME>SDF_NewSDF_Out_CWEB_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CWEB</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CWEB/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="28777817-809A-41F4-A2E0-7CF1F10580F3">
-                  <SHORT-NAME>SDF_NewSDF_Out_LPS_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/LPS</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/LPS/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="616DBE1C-20DB-4B5C-B418-E98F64B0E728">
-                  <SHORT-NAME>SDF_NewSDF_Out_EgoVehicleTrajectoryPlanner_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/EgoVehicleTrajectoryPlanner</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/EgoVehicleTrajectoryPlanner/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
                 <DELEGATION-SW-CONNECTOR UUID="D2DD89C1-3705-404B-9877-97C3EBAB8F43">
                   <SHORT-NAME>ActualPusherWheelAngle_VSI_ActualPusherWheelAngle</SHORT-NAME>
                   <INNER-PORT-IREF>
@@ -25074,17 +25041,6 @@ This file was saved with a tool from Vector Informatik GmbH
                   </INNER-PORT-IREF>
                   <OUTER-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/ScndFrAxleLeftWheelSpeed</OUTER-PORT-REF>
                 </DELEGATION-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="3E34309B-8C33-4DA0-A0E7-E765D41BA556">
-                  <SHORT-NAME>SDF_NewSDF_Out_ACC_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/ACC</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/ACC/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
                 <DELEGATION-SW-CONNECTOR UUID="DA89648F-569A-4B71-9891-5C5087739D72">
                   <SHORT-NAME>RRSRSwVersion_ESI_RRSRSwVersion</SHORT-NAME>
                   <INNER-PORT-IREF>
@@ -25345,28 +25301,6 @@ This file was saved with a tool from Vector Informatik GmbH
                   </INNER-PORT-IREF>
                   <OUTER-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/EgoPathPrediction</OUTER-PORT-REF>
                 </DELEGATION-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="64BAE330-0465-4CDB-AF23-688455B59718">
-                  <SHORT-NAME>SDF_NewSDF_Out_TSAM_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSAM</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSAM/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="19A9EE4A-2501-4288-8A0F-84E001ED0C7A">
-                  <SHORT-NAME>SDF_NewSDF_Out_TSR_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSR</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSR/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
                 <DELEGATION-SW-CONNECTOR UUID="66786110-1C8A-4614-AF11-A74F245C8F00">
                   <SHORT-NAME>FLRObj05_ESI_FLRObj05</SHORT-NAME>
                   <INNER-PORT-IREF>
@@ -26618,17 +26552,6 @@ This file was saved with a tool from Vector Informatik GmbH
                     <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSM/FrontFLCSensorObjects</TARGET-R-PORT-REF>
                   </REQUESTER-IREF>
                 </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="08AF4A68-49B6-4935-95DE-9812E6311A32">
-                  <SHORT-NAME>SDF_NewSDF_Out_TSM_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSM</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSM/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
                 <ASSEMBLY-SW-CONNECTOR UUID="624E3BCC-E210-4B83-8BD0-B2A00815F93D">
                   <SHORT-NAME>ESI_FrontFLRSensorObjects_TSM_FrontFLRSensorObjects</SHORT-NAME>
                   <PROVIDER-IREF>
@@ -26638,61 +26561,6 @@ This file was saved with a tool from Vector Informatik GmbH
                   <REQUESTER-IREF>
                     <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSM</CONTEXT-COMPONENT-REF>
                     <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSM/FrontFLRSensorObjects</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="F7A2DAA5-D9EC-4831-ABEA-1CD401D65826">
-                  <SHORT-NAME>SDF_SDF_Out_SCS_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SCS</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SCS/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="FE1B8EB8-36D9-4DA5-878E-8A873DA49DB4">
-                  <SHORT-NAME>SDF_SDF_Out_DVE_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/DVE</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DVE/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="B8EF3DE0-FE29-4356-BF70-5603A98D0433">
-                  <SHORT-NAME>SDF_NewSDF_Out_HOA_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/HOA</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/HOA/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="4C6F8428-DA2D-49D1-9824-673D3EE2689A">
-                  <SHORT-NAME>SDF_NewSDF_Out_LongitudinalPathPlanner_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/LongitudinalPathPlanner</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/LongitudinalPathPlanner/NewSDF_Out</TARGET-R-PORT-REF>
-                  </REQUESTER-IREF>
-                </ASSEMBLY-SW-CONNECTOR>
-                <ASSEMBLY-SW-CONNECTOR UUID="83818109-F413-4881-929A-436339230CAC">
-                  <SHORT-NAME>SDF_NewSDF_Out_MapDataReconstructor_NewSDF_Out</SHORT-NAME>
-                  <PROVIDER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
-                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
-                  </PROVIDER-IREF>
-                  <REQUESTER-IREF>
-                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/MapDataReconstructor</CONTEXT-COMPONENT-REF>
-                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/MapDataReconstructor/NewSDF_Out</TARGET-R-PORT-REF>
                   </REQUESTER-IREF>
                 </ASSEMBLY-SW-CONNECTOR>
                 <DELEGATION-SW-CONNECTOR UUID="91B3FE9B-12B1-41A7-AA78-83CCCDD3E54D">
@@ -28249,6 +28117,160 @@ This file was saved with a tool from Vector Informatik GmbH
                   </INNER-PORT-IREF>
                   <OUTER-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF_Debug_Local</OUTER-PORT-REF>
                 </DELEGATION-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="C421F6DA-1B5A-4ADB-AB7F-1487DB79BB11">
+                  <SHORT-NAME>SDF_NewSDF_Out_CoreTransferSDF_NewSDF_Out_In</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SDF/NewSDF_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_In</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="00721758-BA0A-4B5A-88F4-E575DFDB1480">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_ACC_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/ACC</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/ACC/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="89C3DE9C-4DED-42FB-B813-19ACD932D43F">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_CWEB_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CWEB</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CWEB/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="FE77F79F-2ED2-4409-B030-C46E81A22897">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_DVE_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/DVE</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DVE/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="CD21F831-2FDE-4FF5-A09F-B0DD67C76EB5">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_EgoVehicleTrajectoryPlanner_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/EgoVehicleTrajectoryPlanner</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/EgoVehicleTrajectoryPlanner/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="17159750-1D1D-4225-AEC2-D22033234515">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_HOA_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/HOA</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/HOA/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="1E5C6D08-7755-41BD-858C-91FF6E86D072">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_LongitudinalPathPlanner_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/LongitudinalPathPlanner</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/LongitudinalPathPlanner/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="9E86073C-8643-454B-99FD-488F6357D72E">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_LPS_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/LPS</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/LPS/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="8D9DA65D-2486-4C56-88B7-CFE141CA7CCA">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_MapDataReconstructor_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/MapDataReconstructor</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/MapDataReconstructor/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="9CC593B1-D8BD-4457-BA07-4862667AAB45">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_NonDrivableRegionSituation_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/NonDrivableRegionSituation</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/NonDrivableRegionSituation/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="2CB01CD2-4EDE-4349-810B-4AEDA0F54F21">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_SCS_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/SCS</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/SCS/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="6CAC31E2-C53F-4715-B78A-DB5D05D1771E">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_TSAM_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSAM</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSAM/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="5A8CA946-2F86-4F0E-8B03-F091630D395F">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_TSM_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSM</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSM/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
+                <ASSEMBLY-SW-CONNECTOR UUID="249BF4D4-AFE4-4B09-AACA-FBA63E74EA9A">
+                  <SHORT-NAME>CoreTransferSDF_NewSDF_Out_Out_TSR_NewSDF_Out</SHORT-NAME>
+                  <PROVIDER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/CoreTransferSDF</CONTEXT-COMPONENT-REF>
+                    <TARGET-P-PORT-REF DEST="P-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/CoreTransferSDF/NewSDF_Out_Out</TARGET-P-PORT-REF>
+                  </PROVIDER-IREF>
+                  <REQUESTER-IREF>
+                    <CONTEXT-COMPONENT-REF DEST="SW-COMPONENT-PROTOTYPE">/Simulink_VASP/ComponentTypes/DacuVaspApp/TSR</CONTEXT-COMPONENT-REF>
+                    <TARGET-R-PORT-REF DEST="R-PORT-PROTOTYPE">/Simulink_VASP/ComponentTypes/TSR/NewSDF_Out</TARGET-R-PORT-REF>
+                  </REQUESTER-IREF>
+                </ASSEMBLY-SW-CONNECTOR>
               </CONNECTORS>
               <DATA-TYPE-MAPPING-REFS>
                 <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
@@ -35854,6 +35876,32 @@ This file was saved with a tool from Vector Informatik GmbH
                 <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
                 <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
                 <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TrafficSituationActionGate_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TrafficSituationActionGate_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TrafficSituationActionGate_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TrafficSituationActionGate_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/MUM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESO_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TrafficSituationActionGate_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/VSI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/TSAM_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
+                <DATA-TYPE-MAPPING-REF DEST="DATA-TYPE-MAPPING-SET">/Simulink_VASP/DataTypes/DataTypeMappings/ESI_SLModel_DTMS</DATA-TYPE-MAPPING-REF>
               </DATA-TYPE-MAPPING-REFS>
             </COMPOSITION-SW-COMPONENT-TYPE>
           </ELEMENTS>
