@@ -20,15 +20,15 @@
  * @ingroup      SWC_VehicleMotionManager
  * @{
  *
- * @file  Se_rteData.h
+ * @file  rte_data.h
  * @brief 
  *
  ****************************************************************************/
-#ifndef __C_SE_RTEDATA_H__
-#define __C_SE_RTEDATA_H__
+#ifndef __C_RTE_DATA_H__
+#define __C_RTE_DATA_H__
 #include "Rte_StateEstimation.h"
 
-void Se_rteData(void)
+void rte_data(void)
 {
 	{PassiveActive2_T aSREngineControlActive;
 	(void)Rte_Read_ASREngineControlActive_ASREngineControlActive(&aSREngineControlActive);
@@ -40,11 +40,11 @@ void Se_rteData(void)
 
 	{Percent8bit125NegOffset_T actualEnginePercentTorque;
 	(void)Rte_Read_ActualEnginePercentTorque_ActualEnginePercentTorque(&actualEnginePercentTorque);
-	/*dummy*/ rx->actualEnginePercentTorque = actualEnginePercentTorque;}
+	/*dummy*/ rx->actualEnginePercentTorque = actualEnginePercentTorque + (-125);}
 
 	{Percent8bit125NegOffset_T actualDrvlnRetdrPercentTorque;
 	(void)Rte_Read_ActualDrvlnRetdrPercentTorque_ActualDrvlnRetdrPercentTorque(&actualDrvlnRetdrPercentTorque);
-	/*dummy*/ rx->actualDrvlnRetdrPercentTorque = actualDrvlnRetdrPercentTorque;}
+	/*dummy*/ rx->actualDrvlnRetdrPercentTorque = actualDrvlnRetdrPercentTorque + (-125);}
 
 	{Torque16bit_T engineReferenceTorque;
 	(void)Rte_Read_EngineReferenceTorque_EngineReferenceTorque(&engineReferenceTorque);
@@ -52,7 +52,7 @@ void Se_rteData(void)
 
 	{TransmissionActualGearRatio_T transmissionActualGearRatio;
 	(void)Rte_Read_TransmissionActualGearRatio_TransmissionActualGearRatio(&transmissionActualGearRatio);
-	/*dummy*/ rx->transmissionActualGearRatio = transmissionActualGearRatio;}
+	/*dummy*/ rx->transmissionActualGearRatio = 0.001*transmissionActualGearRatio;}
 
 	{TransmissionShiftInProcess_T transmissionShiftInProcess;
 	(void)Rte_Read_TransmissionShiftInProcess_TransmissionShiftInProcess(&transmissionShiftInProcess);
@@ -64,7 +64,7 @@ void Se_rteData(void)
 
 	{TransmissionGear_T transmissionCurrentGear;
 	(void)Rte_Read_TransmissionCurrentGear_TransmissionCurrentGear(&transmissionCurrentGear);
-	/*dummy*/ rx->transmissionCurrentGear = transmissionCurrentGear;}
+	/*dummy*/ rx->transmissionCurrentGear = transmissionCurrentGear + (-125);}
 
 	{ACC_SGO_Status_T aCC_SGO_Status;
 	(void)Rte_Read_ACC_SGO_Status_ACC_SGO_Status(&aCC_SGO_Status);
@@ -108,7 +108,7 @@ void Se_rteData(void)
 
 	{ActualTagWheelAngle_T actualTagWheelAngle;
 	(void)Rte_Read_ActualTagWheelAngle_ActualTagWheelAngle(&actualTagWheelAngle);
-	/*dummy*/ rx->actualTagWheelAngle = actualTagWheelAngle;}
+	/*dummy*/ rx->actualTagWheelAngle = 0.01*actualTagWheelAngle + (-50);}
 
 	{AxleLoad_T axleLoad;
 	(void)Rte_Read_DriveAxleLoad_AxleLoad(&axleLoad);
@@ -120,11 +120,11 @@ void Se_rteData(void)
 
 	{PressureFactor5_T frAxleLtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_FrAxleLtWhlBrakeApplPrsHiRng_FrAxleLtWhlBrakeApplPrsHiRng(&frAxleLtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->frAxleLtWhlBrakeApplPrsHiRng = frAxleLtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->frAxleLtWhlBrakeApplPrsHiRng = 5*frAxleLtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T frAxleRtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_FrAxleRtWhlBrakeApplPrsHiRng_FrAxleRtWhlBrakeApplPrsHiRng(&frAxleRtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->frAxleRtWhlBrakeApplPrsHiRng = frAxleRtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->frAxleRtWhlBrakeApplPrsHiRng = 5*frAxleRtWhlBrakeApplPrsHiRng;}
 
 	{AxleLoad_T axleLoad;
 	(void)Rte_Read_FrontAxle1Load_AxleLoad(&axleLoad);
@@ -136,15 +136,15 @@ void Se_rteData(void)
 
 	{Speed16bit_T frontAxleLeftWheelSpeed;
 	(void)Rte_Read_FrontAxleLeftWheelSpeed_FrontAxleLeftWheelSpeed(&frontAxleLeftWheelSpeed);
-	/*dummy*/ rx->frontAxleLeftWheelSpeed = frontAxleLeftWheelSpeed;}
+	/*dummy*/ rx->frontAxleLeftWheelSpeed = 0.00390625*frontAxleLeftWheelSpeed;}
 
 	{Speed16bit_T frontAxleRightWheelSpeed;
 	(void)Rte_Read_FrontAxleRightWheelSpeed_FrontAxleRightWheelSpeed(&frontAxleRightWheelSpeed);
-	/*dummy*/ rx->frontAxleRightWheelSpeed = frontAxleRightWheelSpeed;}
+	/*dummy*/ rx->frontAxleRightWheelSpeed = 0.00390625*frontAxleRightWheelSpeed;}
 
 	{RoadWheelAngle_T frontRoadWheelAngleEstimate;
 	(void)Rte_Read_FrontRoadWheelAngleEstimate_FrontRoadWheelAngleEstimate(&frontRoadWheelAngleEstimate);
-	/*dummy*/ rx->frontRoadWheelAngleEstimate = frontRoadWheelAngleEstimate;}
+	/*dummy*/ rx->frontRoadWheelAngleEstimate = 5E-005*frontRoadWheelAngleEstimate + (-1.6);}
 
 	{KFactor_T kFactor;
 	(void)Rte_Read_KFactor_KFactor(&kFactor);
@@ -160,11 +160,11 @@ void Se_rteData(void)
 
 	{Acceleration16bit_T longitudinalAcceleration;
 	(void)Rte_Read_LongitudinalAcceleration_LongitudinalAcceleration(&longitudinalAcceleration);
-	/*dummy*/ rx->longitudinalAcceleration = longitudinalAcceleration;}
+	/*dummy*/ rx->longitudinalAcceleration = 0.00048828125*longitudinalAcceleration + (-15.687);}
 
 	{Speed16bit_T pusherAxleLeftWheelSpeed;
 	(void)Rte_Read_PusherAxleLeftWheelSpeed_PusherAxleLeftWheelSpeed(&pusherAxleLeftWheelSpeed);
-	/*dummy*/ rx->pusherAxleLeftWheelSpeed = pusherAxleLeftWheelSpeed;}
+	/*dummy*/ rx->pusherAxleLeftWheelSpeed = 0.00390625*pusherAxleLeftWheelSpeed;}
 
 	{AxleLoad_T axleLoad;
 	(void)Rte_Read_PusherAxleLoad_AxleLoad(&axleLoad);
@@ -172,15 +172,15 @@ void Se_rteData(void)
 
 	{Speed16bit_T pusherAxleRightWheelSpeed;
 	(void)Rte_Read_PusherAxleRightWheelSpeed_PusherAxleRightWheelSpeed(&pusherAxleRightWheelSpeed);
-	/*dummy*/ rx->pusherAxleRightWheelSpeed = pusherAxleRightWheelSpeed;}
+	/*dummy*/ rx->pusherAxleRightWheelSpeed = 0.00390625*pusherAxleRightWheelSpeed;}
 
 	{Speed16bit_T rearAxleLeftWheelSpeed;
 	(void)Rte_Read_RearAxleLeftWheelSpeed_RearAxleLeftWheelSpeed(&rearAxleLeftWheelSpeed);
-	/*dummy*/ rx->rearAxleLeftWheelSpeed = rearAxleLeftWheelSpeed;}
+	/*dummy*/ rx->rearAxleLeftWheelSpeed = 0.00390625*rearAxleLeftWheelSpeed;}
 
 	{Speed16bit_T rearAxleRightWheelSpeed;
 	(void)Rte_Read_RearAxleRightWheelSpeed_RearAxleRightWheelSpeed(&rearAxleRightWheelSpeed);
-	/*dummy*/ rx->rearAxleRightWheelSpeed = rearAxleRightWheelSpeed;}
+	/*dummy*/ rx->rearAxleRightWheelSpeed = 0.00390625*rearAxleRightWheelSpeed;}
 
 	{RearAxleSteeringFunctionStatus_T rearAxleSteeringFunctionStatus;
 	(void)Rte_Read_RearAxleSteeringFunctionStatus_RearAxleSteeringFunctionStatus(&rearAxleSteeringFunctionStatus);
@@ -188,35 +188,35 @@ void Se_rteData(void)
 
 	{PressureFactor5_T rrAxle1LtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle1LtWhlBrakeApplPrsHiRng_RrAxle1LtWhlBrakeApplPrsHiRng(&rrAxle1LtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle1LtWhlBrakeApplPrsHiRng = rrAxle1LtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle1LtWhlBrakeApplPrsHiRng = 5*rrAxle1LtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T rrAxle1RtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle1RtWhlBrakeApplPrsHiRng_RrAxle1RtWhlBrakeApplPrsHiRng(&rrAxle1RtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle1RtWhlBrakeApplPrsHiRng = rrAxle1RtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle1RtWhlBrakeApplPrsHiRng = 5*rrAxle1RtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T rrAxle2LtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle2LtWhlBrakeApplPrsHiRng_RrAxle2LtWhlBrakeApplPrsHiRng(&rrAxle2LtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle2LtWhlBrakeApplPrsHiRng = rrAxle2LtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle2LtWhlBrakeApplPrsHiRng = 5*rrAxle2LtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T rrAxle2RtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle2RtWhlBrakeApplPrsHiRng_RrAxle2RtWhlBrakeApplPrsHiRng(&rrAxle2RtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle2RtWhlBrakeApplPrsHiRng = rrAxle2RtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle2RtWhlBrakeApplPrsHiRng = 5*rrAxle2RtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T rrAxle3LtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle3LtWhlBrakeApplPrsHiRng_RrAxle3LtWhlBrakeApplPrsHiRng(&rrAxle3LtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle3LtWhlBrakeApplPrsHiRng = rrAxle3LtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle3LtWhlBrakeApplPrsHiRng = 5*rrAxle3LtWhlBrakeApplPrsHiRng;}
 
 	{PressureFactor5_T rrAxle3RtWhlBrakeApplPrsHiRng;
 	(void)Rte_Read_RrAxle3RtWhlBrakeApplPrsHiRng_RrAxle3RtWhlBrakeApplPrsHiRng(&rrAxle3RtWhlBrakeApplPrsHiRng);
-	/*dummy*/ rx->rrAxle3RtWhlBrakeApplPrsHiRng = rrAxle3RtWhlBrakeApplPrsHiRng;}
+	/*dummy*/ rx->rrAxle3RtWhlBrakeApplPrsHiRng = 5*rrAxle3RtWhlBrakeApplPrsHiRng;}
 
 	{Speed16bit_T scndFrAxleLeftWheelSpeed;
 	(void)Rte_Read_ScndFrAxleLeftWheelSpeed_ScndFrAxleLeftWheelSpeed(&scndFrAxleLeftWheelSpeed);
-	/*dummy*/ rx->scndFrAxleLeftWheelSpeed = scndFrAxleLeftWheelSpeed;}
+	/*dummy*/ rx->scndFrAxleLeftWheelSpeed = 0.00390625*scndFrAxleLeftWheelSpeed;}
 
 	{Speed16bit_T scndFrAxleRightWheelSpeed;
 	(void)Rte_Read_ScndFrAxleRightWheelSpeed_ScndFrAxleRightWheelSpeed(&scndFrAxleRightWheelSpeed);
-	/*dummy*/ rx->scndFrAxleRightWheelSpeed = scndFrAxleRightWheelSpeed;}
+	/*dummy*/ rx->scndFrAxleRightWheelSpeed = 0.00390625*scndFrAxleRightWheelSpeed;}
 
 	{AxleLoad_T axleLoad;
 	(void)Rte_Read_SecondaryDriveAxleLoad_AxleLoad(&axleLoad);
@@ -224,11 +224,11 @@ void Se_rteData(void)
 
 	{SteeringWheelAngle_T steeringWheelAngle;
 	(void)Rte_Read_SteeringWheelAngle_SteeringWheelAngle(&steeringWheelAngle);
-	/*dummy*/ rx->steeringWheelAngle = steeringWheelAngle;}
+	/*dummy*/ rx->steeringWheelAngle = 0.0009765625*steeringWheelAngle + (-31.374);}
 
 	{Speed16bit_T tagAxleLeftWheelSpeed;
 	(void)Rte_Read_TagAxleLeftWheelSpeed_TagAxleLeftWheelSpeed(&tagAxleLeftWheelSpeed);
-	/*dummy*/ rx->tagAxleLeftWheelSpeed = tagAxleLeftWheelSpeed;}
+	/*dummy*/ rx->tagAxleLeftWheelSpeed = 0.00390625*tagAxleLeftWheelSpeed;}
 
 	{AxleLoad_T axleLoad;
 	(void)Rte_Read_TagAxleLoad_AxleLoad(&axleLoad);
@@ -236,11 +236,11 @@ void Se_rteData(void)
 
 	{Speed16bit_T tagAxleRightWheelSpeed;
 	(void)Rte_Read_TagAxleRightWheelSpeed_TagAxleRightWheelSpeed(&tagAxleRightWheelSpeed);
-	/*dummy*/ rx->tagAxleRightWheelSpeed = tagAxleRightWheelSpeed;}
+	/*dummy*/ rx->tagAxleRightWheelSpeed = 0.00390625*tagAxleRightWheelSpeed;}
 
 	{SpeedRpm16bitMinus4000_T transmOutputShaftSpeedSigned;
 	(void)Rte_Read_TransmOutputShaftSpeedSigned_TransmOutputShaftSpeedSigned(&transmOutputShaftSpeedSigned);
-	/*dummy*/ rx->transmOutputShaftSpeedSigned = transmOutputShaftSpeedSigned;}
+	/*dummy*/ rx->transmOutputShaftSpeedSigned = 0.125*transmOutputShaftSpeedSigned + (-4000);}
 
 	{XPRsystemstate_T xPRsystemstate;
 	(void)Rte_Read_XPRsystemstate_XPRsystemstate(&xPRsystemstate);
@@ -248,7 +248,7 @@ void Se_rteData(void)
 
 	{uint16 yawRate;
 	(void)Rte_Read_YawRate_YawRate(&yawRate);
-	/*dummy*/ rx->yawRate = yawRate;}
+	/*dummy*/ rx->yawRate = 0.000122*yawRate + (-3.92);}
 
 	{VehicleMode_T vehicleMode;
 	(void)Rte_Read_VehicleMode_VehicleMode(&vehicleMode);
@@ -256,15 +256,15 @@ void Se_rteData(void)
 
 	{Speed16bit_T scndRrDriveAxleLeftWheelSpeed;
 	(void)Rte_Read_ScndRrDriveAxleLeftWheelSpeed_ScndRrDriveAxleLeftWheelSpeed(&scndRrDriveAxleLeftWheelSpeed);
-	/*dummy*/ rx->scndRrDriveAxleLeftWheelSpeed = scndRrDriveAxleLeftWheelSpeed;}
+	/*dummy*/ rx->scndRrDriveAxleLeftWheelSpeed = 0.00390625*scndRrDriveAxleLeftWheelSpeed;}
 
 	{Speed16bit_T scndRrDriveAxleRightWheelSpeed;
 	(void)Rte_Read_ScndRrDriveAxleRightWheelSpeed_ScndRrDriveAxleRightWheelSpeed(&scndRrDriveAxleRightWheelSpeed);
-	/*dummy*/ rx->scndRrDriveAxleRightWheelSpeed = scndRrDriveAxleRightWheelSpeed;}
+	/*dummy*/ rx->scndRrDriveAxleRightWheelSpeed = 0.00390625*scndRrDriveAxleRightWheelSpeed;}
 
 	{Speed16bit_T frontAxleSpeed;
 	(void)Rte_Read_FrontAxleSpeed_FrontAxleSpeed(&frontAxleSpeed);
-	/*dummy*/ rx->frontAxleSpeed = frontAxleSpeed;}
+	/*dummy*/ rx->frontAxleSpeed = 0.00390625*frontAxleSpeed;}
 
 	{FullyOperational_T aBSFullyOperational;
 	(void)Rte_Read_ABSFullyOperational_ABSFullyOperational(&aBSFullyOperational);

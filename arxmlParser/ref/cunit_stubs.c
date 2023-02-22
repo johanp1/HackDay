@@ -1,6 +1,6 @@
 #define DISABLE_RTE_PTR2ARRAYBASETYPE_PASSING
 
-#include "cunit_se_stubs.h"
+#include "cunit_stubs.h"
 
 StubSignals_Type p;
 

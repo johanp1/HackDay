@@ -20,12 +20,12 @@
  * @ingroup      SWC_VehicleMotionManager
  * @{
  *
- * @file  cunit_se_stubs.h
+ * @file  cunit_stubs.h
  * @brief 
  *
  ****************************************************************************/
-#ifndef __C_CUNIT_SE_STUBS_H__
-#define __C_CUNIT_SE_STUBS_H__
+#ifndef __C_CUNIT_STUBS_H__
+#define __C_CUNIT_STUBS_H__
 #include "Rte_StateEstimation.h"
 #include <CUnit/CUnit.h>
 
