@@ -53,4 +53,34 @@ TEST(StepGenTestGroup, test_two_steps)
    arduinoStub->IncTimeMs(5);
    s.Update();
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(0) == PinState_Low);
+
+   // make check no new step is started
+   arduinoStub->IncTimeMs(5);
+   s.Update();
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(0) == PinState_Low);
+}
+
+// test step returns busy if current step is not done
+TEST(StepGenTestGroup, test_busy)
+{
+   StepGen s;
+
+   // precondition, start a step, inc time 4 ms
+   ASSERT_TRUE(s.Step() == ok);  
+   arduinoStub->IncTimeMs(4);
+   s.Update();
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(0) == PinState_High);
+
+   // test, try to request a new step when the last requested step is still beeing produced
+   ASSERT_TRUE(s.Step() == busy); 
+
+   arduinoStub->IncTimeMs(4);
+   s.Update();
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(0) == PinState_Low);
+   ASSERT_TRUE(s.Step() == busy); 
+
+   // the step should be done now, i.e. not busy anymore
+   arduinoStub->IncTimeMs(4);
+   s.Update();
+   ASSERT_TRUE(s.IsBusy() == false); 
 }

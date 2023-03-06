@@ -1,15 +1,12 @@
 #include "step_gen.h"
 #include <iostream>
 
-enum State2 { inactive, busy_on, busy_off };
-
 StepGen::StepGen(milli_sec t_on, milli_sec t_off)
 {
    pinMode(0, OUTPUT);
 
    t_on_ = t_on;
    t_off_ = t_off;
-   curr_state_ = inactive;
    curr_steps_ = 0;
    state_ = new StateInactive(this);
 }
@@ -19,48 +16,38 @@ StepGen::~StepGen()
    delete state_;
 }
 
-void StepGen::Step(uint8_t steps)
+ stepRetVal StepGen::Step(uint8_t steps)
 {
-   digitalWrite(0, HIGH);
-   t_start_ = millis();
-   curr_steps_ = steps;
+   if (!IsBusy())
+   {
+      curr_steps_ = steps;
+      StartStep();
+      return ok;
+   }
+   else
+   {
+      return busy;
+   }
+}
 
-   TransitionTo(new StateOn(this));
-   curr_state_ = busy_on;
+void StepGen::StartStep()
+{
+   if (curr_steps_ > 0)
+   {
+      t_start_ = millis();
+      curr_steps_--;
+      TransitionTo(new StateOn(this));
+   }
+   else
+   {
+      // all steps requested done, transition to inactive state
+      TransitionTo(new StateInactive(this));
+   }
 }
 
 void StepGen::Update()
 {
-   unsigned long ms = millis();
-
    state_->Update();
-
-   if (curr_state_ == busy_on)
-   {
-      if (ms - t_start_ >= t_on_)
-      {
-         // toggle output
-         digitalWrite(0, LOW);
-         curr_state_ = busy_off;
-      }
-   }
-
-   if (curr_state_ == busy_off)
-   {
-      if (ms - t_start_ >= t_on_ + t_off_)
-      {
-         curr_state_ = inactive;
-         digitalWrite(0, LOW);
-
-         if (curr_steps_ > 0)
-         {
-            curr_steps_--;
-            t_start_ = ms;
-            curr_state_ = busy_on;
-            digitalWrite(0, HIGH);
-         }
-      }
-   }
 }
 
 void StepGen::TransitionTo(State *state) 
@@ -71,37 +58,43 @@ void StepGen::TransitionTo(State *state)
    this->state_ = state;
 }
 
-bool StepGen::IsHighStepDone()
+// is the "on"/high part of the full step done
+bool StepGen::IsHighDone()
 {
    return millis() - t_start_ >= t_on_;
 }
 
-bool StepGen::IsLowStepDone()
+// is the "off"/low part of the full step done
+bool StepGen::IsLowDone()
 {
    return millis() - t_start_ >= t_on_ + t_off_;
 }
 
-bool StepGen::IsDone()
+// still busy with generating the step()-request, or ready for new request
+bool StepGen::IsBusy()
 {
-   return curr_steps_ > 0;
+   return state_->IsBusy();
 }
+
 
 void StateOn::Update()
 {
-   if (stepGen_->IsHighStepDone())
+   if (stepGen_->IsHighDone())
    {
-      // toggle output
       digitalWrite(0, LOW);
       stepGen_->TransitionTo(new StateOff(stepGen_));
    }
 }
 
+
 void StateOff::Update()
 {
-   if (stepGen_->IsLowStepDone())
+   if (stepGen_->IsLowDone())
    {
-      stepGen_->IsDone() ? stepGen_->TransitionTo(new StateInactive(stepGen_)) : stepGen_->TransitionTo(new StateOn(stepGen_));
+      // start next step, or stop if all steps done
+      stepGen_->StartStep();
    }
 }
+
 
 void StateInactive::Update(){}
