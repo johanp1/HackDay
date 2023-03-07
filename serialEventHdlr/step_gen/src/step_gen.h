@@ -4,54 +4,19 @@
 #include <Arduino.h>
 
 using milli_sec = uint16_t;
+using Pin = byte;
+
 enum stepRetVal { ok, busy };
 
 constexpr milli_sec default_t_on = 5; //5ms
 constexpr milli_sec default_t_off = 5; //5ms
 
-class StepGen;
-
-// virtual state base class
-class State 
-{
-   protected:
-   StepGen *stepGen_;
-
-   public:
-   State(StepGen *stepGen) : stepGen_(stepGen){};
-   virtual ~State(){};
-
-   virtual bool IsBusy() {return false;};
-   virtual void Update() = 0;
-};
-
-class StateOn : public State 
-{
-   public:
-   StateOn(StepGen *stepGen) : State(stepGen){digitalWrite(0, HIGH);};
-   bool IsBusy() override {return true;};
-   void Update() override;
-};
-
-class StateOff : public State 
-{
-   public:
-   StateOff(StepGen *stepGen) : State(stepGen){digitalWrite(0, LOW);};
-   bool IsBusy() override {return true;};
-   void Update() override;
-};
-
-class StateInactive : public State 
-{
-   public:   
-   StateInactive(StepGen *stepGen) : State(stepGen){digitalWrite(0, LOW);};
-   void Update() override;
-};
+class State;
 
 class StepGen
 {
    public:
-   StepGen(milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
+   StepGen(Pin pin = 0, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
    virtual ~StepGen();
 
    virtual void Update();
@@ -70,11 +35,54 @@ class StepGen
    milli_sec t_start_; // start time of current step
    uint16_t curr_steps_; // number of steps left untill done with step()
    State *state_;
+   Pin pin_;
 
    // Friendship is not inherited to children of State. All freindships need to be explicit...
    friend class StateOn;
    friend class StateOff;
    friend class StateInactive;
 };
+
+// virtual state base class
+class State 
+{
+   protected:
+   StepGen *stepGen_;
+
+   public:
+   State(StepGen *stepGen) : stepGen_(stepGen){};
+   virtual ~State(){};
+
+   virtual bool IsBusy() {return false;};
+   virtual void Update() = 0;
+   virtual PinState GetOutput() = 0;
+};
+
+class StateOn : public State 
+{
+   public:
+   StateOn(StepGen *stepGen) : State(stepGen){};
+   bool IsBusy() override {return true;};
+   void Update() override;
+   PinState GetOutput() override {return PinState_High;};
+};
+
+class StateOff : public State 
+{
+   public:
+   StateOff(StepGen *stepGen) : State(stepGen){};
+   bool IsBusy() override {return true;};
+   void Update() override;
+   PinState GetOutput() override {return PinState_Low;};
+};
+
+class StateInactive : public State 
+{
+   public:   
+   StateInactive(StepGen *stepGen) : State(stepGen){};
+   void Update() override;
+   PinState GetOutput() override {return PinState_Low;};
+};
+
 
 #endif

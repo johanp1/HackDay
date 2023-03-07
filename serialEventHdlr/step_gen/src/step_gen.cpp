@@ -1,14 +1,12 @@
 #include "step_gen.h"
 #include <iostream>
 
-StepGen::StepGen(milli_sec t_on, milli_sec t_off)
+StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), pin_(pin)
 {
-   pinMode(0, OUTPUT);
-
-   t_on_ = t_on;
-   t_off_ = t_off;
+   pinMode(pin, OUTPUT);
    curr_steps_ = 0;
    state_ = new StateInactive(this);
+   digitalWrite(_, state_->GetOutput());
 }
 
 StepGen::~StepGen()
@@ -56,6 +54,8 @@ void StepGen::TransitionTo(State *state)
       delete this->state_;
       
    this->state_ = state;
+
+   digitalWrite(pin_, state_->GetOutput());
 }
 
 // is the "on"/high part of the full step done
