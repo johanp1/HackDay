@@ -1,12 +1,11 @@
 #include "step_gen.h"
-#include <iostream>
 
 StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), pin_(pin)
 {
    pinMode(pin, OUTPUT);
    curr_steps_ = 0;
    state_ = new StateInactive(this);
-   digitalWrite(_, state_->GetOutput());
+   digitalWrite(pin_, state_->GetOutput());
 }
 
 StepGen::~StepGen()
@@ -14,7 +13,7 @@ StepGen::~StepGen()
    delete state_;
 }
 
- stepRetVal StepGen::Step(uint8_t steps)
+ stepRetVal StepGen::Step(uint16_t steps)
 {
    if (!IsBusy())
    {

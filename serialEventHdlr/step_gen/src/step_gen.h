@@ -20,7 +20,7 @@ class StepGen
    virtual ~StepGen();
 
    virtual void Update();
-   virtual stepRetVal Step(uint8_t steps = 1);
+   virtual stepRetVal Step(uint16_t steps = 1);
    bool IsBusy(); // busy with generating the step()-request
 
    private:
@@ -55,7 +55,7 @@ class State
 
    virtual bool IsBusy() {return false;};
    virtual void Update() = 0;
-   virtual PinState GetOutput() = 0;
+   virtual byte GetOutput() = 0;
 };
 
 class StateOn : public State 
@@ -64,7 +64,7 @@ class StateOn : public State
    StateOn(StepGen *stepGen) : State(stepGen){};
    bool IsBusy() override {return true;};
    void Update() override;
-   PinState GetOutput() override {return PinState_High;};
+   byte GetOutput() override {return HIGH;};
 };
 
 class StateOff : public State 
@@ -73,7 +73,7 @@ class StateOff : public State
    StateOff(StepGen *stepGen) : State(stepGen){};
    bool IsBusy() override {return true;};
    void Update() override;
-   PinState GetOutput() override {return PinState_Low;};
+   byte GetOutput() override {return LOW;};
 };
 
 class StateInactive : public State 
@@ -81,7 +81,7 @@ class StateInactive : public State
    public:   
    StateInactive(StepGen *stepGen) : State(stepGen){};
    void Update() override;
-   PinState GetOutput() override {return PinState_Low;};
+   byte GetOutput() override {return LOW;};
 };
 
 
