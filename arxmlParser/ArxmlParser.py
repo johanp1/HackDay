@@ -102,14 +102,19 @@ class ArxmlParser:
         self.port_array = []
         self.signal_dict = {}
         self.type_dict = {}
+        self._ns = ''
 
     def parse(self, namespace, swc_arxml, port_arxml, types_arxml):
         """Parse arxml files"""
-        self._get_r_ports(namespace, swc_arxml)
-        self._get_p_ports(namespace, swc_arxml)
-        self._get_signals(namespace, port_arxml)
-        self._get_impl_types(namespace, types_arxml)
-        self._get_appl_types(namespace, types_arxml)
+        ET.register_namespace('', namespace)
+        #ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+
+        self._ns = {'default_ns':namespace}
+        self._get_r_ports(swc_arxml)
+        self._get_p_ports(swc_arxml)
+        self._get_signals(port_arxml)
+        self._get_impl_types(types_arxml)
+        self._get_appl_types(types_arxml)
 
         for port in self.port_array:
             if port.port_if in self.signal_dict:
@@ -127,17 +132,16 @@ class ArxmlParser:
                 except KeyError:
                     print("type: " + type_key + " not found in type_dict")
 
-    def _get_r_ports(self, namespace, swc_arxml):
+    def _get_r_ports(self, swc_arxml):
         tree = ET.parse(swc_arxml)
         root = tree.getroot()
-        ns = {'default_ns':namespace}
         f_log = open('./logs/rport_log.txt', 'w', encoding="utf-8")
 
-        tag = '{' + ns['default_ns']+ '}' + 'R-PORT-PROTOTYPE'
+        tag = '{{{}}}{}'.format(self._ns['default_ns'], 'R-PORT-PROTOTYPE')
         for required_port in root.iter(tag):
-            name = required_port.find('default_ns:SHORT-NAME', ns).text
+            name = required_port.find('default_ns:SHORT-NAME', self._ns).text
 
-            if_tref = required_port.find('default_ns:REQUIRED-INTERFACE-TREF', ns)
+            if_tref = required_port.find('default_ns:REQUIRED-INTERFACE-TREF', self._ns)
             if if_tref.attrib['DEST'] == 'SENDER-RECEIVER-INTERFACE':
                 port_if = if_tref.text.split('/')[-1]
                 self.port_array.append(RPort(name, port_if))
@@ -145,37 +149,35 @@ class ArxmlParser:
 
         f_log.close()
 
-    def _get_p_ports(self, namespace, swc_arxml):
+    def _get_p_ports(self, swc_arxml):
 
         tree = ET.parse(swc_arxml)
         root = tree.getroot()
-        ns = {'default_ns':namespace}
         f_log = open('./logs/pport_log.txt', 'w', encoding="utf-8")
 
-        tag = '{' + ns['default_ns']+ '}' + 'P-PORT-PROTOTYPE'
+        tag = '{{{}}}{}'.format(self._ns['default_ns'], 'P-PORT-PROTOTYPE')
         for provided_port in root.iter(tag):
-            name = provided_port.find('default_ns:SHORT-NAME', ns).text
-            port_if = provided_port.find('default_ns:PROVIDED-INTERFACE-TREF', ns).text.split('/')[-1]
+            name = provided_port.find('default_ns:SHORT-NAME', self._ns).text
+            port_if = provided_port.find('default_ns:PROVIDED-INTERFACE-TREF', self._ns).text.split('/')[-1]
             self.port_array.append(PPort(name, port_if))
             f_log.write('port name: ' + name + ' port-if: ' + port_if + '\n')
 
         f_log.close()
 
-    def _get_signals(self, namespace, port_arxml):
+    def _get_signals(self, port_arxml):
         tree = ET.parse(port_arxml)
         root = tree.getroot()
-        ns = {'default_ns':namespace}
         f_log = open('./logs/port_type.txt', 'w', encoding="utf-8")
 
-        tag = '{' + ns['default_ns']+ '}' + 'SENDER-RECEIVER-INTERFACE'
+        tag = '{{{}}}{}'.format(self._ns['default_ns'], 'SENDER-RECEIVER-INTERFACE')
         for port_if in root.iter(tag):
-            port_if_name = port_if.find('default_ns:SHORT-NAME', ns).text # get port_if name
-            data_elements = port_if.find('default_ns:DATA-ELEMENTS', ns)
-            variable_data_prototype = data_elements.find('default_ns:VARIABLE-DATA-PROTOTYPE', ns)
+            port_if_name = port_if.find('default_ns:SHORT-NAME', self._ns).text # get port_if name
+            data_elements = port_if.find('default_ns:DATA-ELEMENTS', self._ns)
+            variable_data_prototype = data_elements.find('default_ns:VARIABLE-DATA-PROTOTYPE', self._ns)
 
             # get port_if name
-            signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', ns).text 
-            signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', ns).text.split('/')[-1]
+            signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', self._ns).text 
+            signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
 
             SignalTuple = namedtuple("Signal", ["name", "type"])
             self.signal_dict[port_if_name] = SignalTuple(signal_name, signal_type)
@@ -184,25 +186,24 @@ class ArxmlParser:
 
         f_log.close()
 
-    def _get_impl_types(self, namespace, types_arxml):
+    def _get_impl_types(self, types_arxml):
         tree = ET.parse(types_arxml)
         root = tree.getroot()
-        ns = {'default_ns':namespace}
         f_log = open('./logs/types.txt', 'w', encoding="utf-8")
 
-        tag = '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE'
+        tag = '{' + self._ns['default_ns'] + '}' + 'IMPLEMENTATION-DATA-TYPE'
         for data_type in root.iter(tag):
-            data_type_name = data_type.find('default_ns:SHORT-NAME', ns).text
-            data_type_category = data_type.find('default_ns:CATEGORY', ns).text # find out if it is a struct data type or a value
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+            data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
 
             self.type_dict[data_type_name] = []
          
             if data_type_category == 'STRUCTURE':
-                struct_tag =  '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
+                struct_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
                 for struct_data_type in data_type.iter(struct_tag):
-                    element_name = struct_data_type.find('default_ns:SHORT-NAME', ns).text # get struct element name
+                    element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
 
-                    type_ref_tag =  '{' + ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-REF'
+                    type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-REF'
                     for data_def_props in struct_data_type.iter(type_ref_tag):
                         element_type = data_def_props.text.split('/')[-1]
 
@@ -213,31 +214,30 @@ class ArxmlParser:
 
         f_log.close()
 
-    def _get_appl_types(self, namespace, types_arxml):
+    def _get_appl_types(self, types_arxml):
         tree = ET.parse(types_arxml)
         root = tree.getroot()
-        ns = {'default_ns':namespace}
         f_log = open('./logs/appl_types.txt', 'w', encoding="utf-8")
 
         #first pick out the "value" data types
-        tag = '{' + ns['default_ns']+ '}' + 'APPLICATION-PRIMITIVE-DATA-TYPE'
+        tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-PRIMITIVE-DATA-TYPE'
         for data_type in root.iter(tag):
-            data_type_name = data_type.find('default_ns:SHORT-NAME', ns).text
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
             self.type_dict[data_type_name] = []
 
         #pick out the "struct" data types
-        tag = '{' + ns['default_ns']+ '}' + 'APPLICATION-RECORD-DATA-TYPE'
+        tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
         for data_type in root.iter(tag):
-            data_type_name = data_type.find('default_ns:SHORT-NAME', ns).text
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
             self.type_dict[data_type_name] = []
 
-            struct_tag =  '{' + ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
+            struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
             for struct_data_type in data_type.iter(struct_tag):
-                element_name = struct_data_type.find('default_ns:SHORT-NAME', ns).text # get struct element name
+                element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
 
-                type_ref_tag =  '{' + ns['default_ns']+ '}' + 'TYPE-TREF'
+                type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
                 for data_def_props in struct_data_type.iter(type_ref_tag):
                     element_type = data_def_props.text.split('/')[-1]
 
