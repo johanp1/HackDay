@@ -22,7 +22,7 @@ class StepGenTestFixture : public testing::Test
    void SetUp()
    {
       arduinoStub->Reset();
-      stepGen = std::make_unique<StepGen>(test_pin);
+      stepGen = std::make_unique<StepGen>(test_pin, 5, 5);
    }
    
    void TearDown()
@@ -50,7 +50,7 @@ TEST(StepGenTestGroup, test_init)
 // output: |"""5ms"""|___5ms___
 TEST(StepGenTestGroup, test_one_step)
 {
-   StepGen s(test_pin);
+   StepGen s(test_pin, 5, 5);
 
    s.Step();
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
@@ -68,7 +68,7 @@ TEST(StepGenTestGroup, test_one_step)
 // output: |"""5ms"""|___5ms___|"""5ms"""|___5ms___
 TEST(StepGenTestGroup, test_two_steps)
 {
-   StepGen s(test_pin);
+   StepGen s(test_pin, 5, 5);
 
    s.Step(2);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
@@ -98,7 +98,7 @@ TEST(StepGenTestGroup, test_two_steps)
 // test step returns busy if current step is not done
 TEST(StepGenTestGroup, test_busy)
 {
-   StepGen s(test_pin);
+   StepGen s(test_pin, 5, 5);
 
    // precondition, start a step, inc time 4 ms
    ASSERT_TRUE(s.Step() == ok);  
@@ -144,19 +144,34 @@ TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
    ASSERT_TRUE(s.IsBusy() == false); 
 }
 
-// test generating one step with inc speed
-TEST_F(StepGenTestFixture, test_step_with_speed_ramp_up)
-{
-   stepGen->Step(1, true);
-   incTime(34);
-   ASSERT_TRUE(stepGen->IsBusy());
+// test generating one step with specified speed
 
-   incTime(6);
+TEST_F(StepGenTestFixture, test_step_with_set_speed)
+{
+   stepGen->Step(1, 50); // with 50 steps per sec, one pulse is 20ms
+   incTime(1);
+   ASSERT_TRUE(stepGen->IsBusy());
+   incTime(18);
+   ASSERT_TRUE(stepGen->IsBusy());
+   incTime(1);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
-// test generating one step with inc speed
-// after 40 ms, first step is done, check nex step done after 39 ms
+// test generating one step with specified speed
+// stepGen is set up to have max speed of 100 steps / sec
+TEST_F(StepGenTestFixture, test_step_with_to_high_speed)
+{
+   // given t_on + t_off, highest possibler speed is 100 pps
+   // test speed saturated if above
+   stepGen->Step(1, 150);
+   incTime(1);
+   ASSERT_TRUE(stepGen->IsBusy());
+   incTime(8);
+   ASSERT_TRUE(stepGen->IsBusy());
+   incTime(1);
+   ASSERT_FALSE(stepGen->IsBusy());
+}
+/*
 TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
 {
    stepGen->Step(2, true);
@@ -174,5 +189,7 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
    ASSERT_FALSE(stepGen->IsBusy());
+  
 }
+ */
 }

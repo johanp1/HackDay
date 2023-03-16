@@ -6,8 +6,8 @@ StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_
    pinMode(pin, OUTPUT);
 
    curr_steps_ = 0;
-   t_off_accel_ = 0;
-
+   max_steps_per_sec_ = 1000 / (t_on_ + t_off_);
+   t_off_speed_ = 0;
    state_ = new StateInactive(this);
    digitalWrite(pin_, state_->GetOutput());
 }
@@ -17,14 +17,23 @@ StepGen::~StepGen()
    delete state_;
 }
 
- stepRetVal StepGen::Step(uint16_t steps, bool use_speed_ramp_up)
+ stepRetVal StepGen::Step(uint16_t steps, uint16_t steps_per_sec)
 {
    if (!IsBusy())
    {
       // if use_speed_ramp_up is used:
       // set t_off_accel_ = n+1, will get decresed to n before 
       // step is started in StartStep
-      use_speed_ramp_up ? t_off_accel_ = 30+1 : t_off_accel_ = 0;
+      //use_speed_ramp_up ? t_off_accel_ = 30+1 : t_off_accel_ = 0;
+
+      if ((steps_per_sec != 0) && (steps_per_sec < max_steps_per_sec_))
+      { 
+         t_off_speed_ = 1000/steps_per_sec - t_on_ - t_off_;
+      }
+      else
+      {
+         t_off_speed_ = 0; // use max speed
+      }
 
       curr_steps_ = steps;
       StartStep();
@@ -42,7 +51,6 @@ void StepGen::StartStep()
    {
       t_start_ = millis();
       curr_steps_--;
-      t_off_accel_ > 0 ? t_off_accel_-- :t_off_accel_ = 0;
 
       TransitionTo(new StateOn(this));
    }
@@ -77,7 +85,7 @@ bool StepGen::IsHighDone()
 // is the "off"/low part of the full step done
 bool StepGen::IsLowDone()
 {
-   return millis() - t_start_ >= t_on_ + t_off_ + t_off_accel_;
+   return millis() - t_start_ >= t_on_ + t_off_ + t_off_speed_;
 }
 
 // still busy with generating the step()-request, or ready for new request
