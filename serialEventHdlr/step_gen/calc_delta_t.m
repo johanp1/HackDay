@@ -10,11 +10,12 @@ fprintf("shortest possible step period: %f\n", T_min)
 
 % acceleration
 a_max = v_max/tn; %max acceleration [rev/s^2] 
-fprintf("acceleration = %.2d, given v_max = %.2f, tn = %.2f\n", a_max, v_max, tn)
+fprintf("acceleration = %.2f, given v_max = %.2f, tn = %.2f\n", a_max, v_max, tn)
 
 %delta_t beräkningar
 %hitta på antal uppdateringar av v under 0:tn
 n = 40; % 40 speed-updates mellan 0 och tn, helt påhittat
+fprintf("number of speed updates during tn, n = %d \n", n)
 sum_n = sum(1:n);
 
 delta_t = (tn - n*T_min)/sum_n;
