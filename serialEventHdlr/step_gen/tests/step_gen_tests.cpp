@@ -171,11 +171,12 @@ TEST_F(StepGenTestFixture, test_step_with_to_high_speed)
    incTime(1);
    ASSERT_FALSE(stepGen->IsBusy());
 }
-/*
+
+
 TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
 {
-   stepGen->Step(2, true);
-   incTime(39);
+   stepGen->Step(2, 100, true);
+   incTime(67);
 
    // still working on the off part of the first step
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
@@ -185,11 +186,10 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
 
    // first step took 40 ms to finish, 2nd should be done in 39
-   incTime(39);
+   incTime(67);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
    ASSERT_FALSE(stepGen->IsBusy());
   
 }
- */
 }

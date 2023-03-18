@@ -20,7 +20,7 @@ class StepGen
    virtual ~StepGen();
 
    virtual void Update();
-   virtual stepRetVal Step(uint16_t steps = 1, uint16_t steps_per_sec = 0);
+   virtual stepRetVal Step(uint16_t steps = 1, uint16_t steps_per_sec = 0, bool use_speed_ramp_up = false);
    bool IsBusy(); // busy with generating the step()-request
 
    private:
@@ -34,6 +34,7 @@ class StepGen
    milli_sec t_off_; // the step's "off" length
    uint16_t max_steps_per_sec_;
    milli_sec t_off_speed_; // the step's "off" length offset when using "set speed"
+   milli_sec t_off_ramp_; // the step's "off" length offset when ramping up speed
    milli_sec t_start_; // start time of current step
    uint16_t curr_steps_; // number of steps left untill done with step()
    State *state_;
