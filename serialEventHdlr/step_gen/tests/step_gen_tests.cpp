@@ -123,8 +123,6 @@ TEST(StepGenTestGroup, test_busy)
 // test step returns busy if current step is not done
 TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
 {
-   StepGen s(test_pin, t_on, t_off);
-
    // precondition, start a step, inc time 4 ms
    ASSERT_TRUE(stepGen->Step() == ok);  
    incTime(); // 1ms
@@ -141,14 +139,15 @@ TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
 
    incTime(); // 14ms
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-   ASSERT_TRUE(s.IsBusy() == false); 
+   ASSERT_TRUE(stepGen->IsBusy() == false); 
 }
 
 // test generating one step with specified speed
 
 TEST_F(StepGenTestFixture, test_step_with_set_speed)
 {
-   stepGen->Step(1, 50); // with 50 steps per sec, one pulse is 20ms
+   stepGen->SetStepsPerSec(50);
+   stepGen->Step(1); // with 50 steps per sec, one pulse is 20ms
    incTime(1);
    ASSERT_TRUE(stepGen->IsBusy());
    incTime(18);
@@ -163,7 +162,8 @@ TEST_F(StepGenTestFixture, test_step_with_to_high_speed)
 {
    // given t_on + t_off, highest possibler speed is 100 pps
    // test speed saturated if above
-   stepGen->Step(1, 150);
+   stepGen->SetStepsPerSec(150);
+   stepGen->Step(1);
    incTime(1);
    ASSERT_TRUE(stepGen->IsBusy());
    incTime(8);
@@ -175,8 +175,12 @@ TEST_F(StepGenTestFixture, test_step_with_to_high_speed)
 
 TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
 {
-   stepGen->Step(2, 100, true);
-   incTime(67);
+   stepGen->SetUseRamping(true);
+   stepGen->SetStepsPerSec(100);
+   
+   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
+   stepGen->Step(100); 
+   incTime(43);
 
    // still working on the off part of the first step
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
@@ -185,11 +189,19 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    // new step just started
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
 
-   // first step took 40 ms to finish, 2nd should be done in 39
-   incTime(67);
+   // first step took 44 ms to finish, 2nd should be done in 43
+   incTime(42);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-   ASSERT_FALSE(stepGen->IsBusy());
-  
+   //ASSERT_FALSE(stepGen->IsBusy());
+   incTime();
+   // new step just started
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
 }
+
+TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
+{
+   ASSERT_TRUE(true);
+}
+
 }

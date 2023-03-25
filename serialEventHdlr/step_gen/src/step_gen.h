@@ -8,9 +8,11 @@ using Pin = byte;
 
 enum stepRetVal { ok, busy };
 
-constexpr milli_sec default_t_on = 5; //5ms
-constexpr milli_sec default_t_off = 5; //5ms
-
+constexpr milli_sec default_t_on = 2; //5ms
+constexpr milli_sec default_t_off = 3; //5ms
+constexpr uint8_t default_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
+constexpr uint8_t default_number_of_ramp_up_steps = default_number_of_ramp_steps;
+constexpr uint8_t default_number_of_ramp_down_steps = default_number_of_ramp_steps;
 class State;
 
 class StepGen
@@ -20,23 +22,28 @@ class StepGen
    virtual ~StepGen();
 
    virtual void Update();
-   virtual stepRetVal Step(uint16_t steps = 1, uint16_t steps_per_sec = 0, bool use_speed_ramp_up = false);
+   virtual stepRetVal Step(uint16_t steps = 1);
    bool IsBusy(); // busy with generating the step()-request
+   void SetStepsPerSec(uint8_t steps_per_sec);
+   void SetUseRamping(bool use_ramping);
 
    private:
    void StartStep(); // start one step
    void TransitionTo(State *state);
-
+   milli_sec calculateRampTimeOffset(); // calculate t_off_ramp_
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
 
-   milli_sec t_on_; // the step's "on" length
-   milli_sec t_off_; // the step's "off" length
+   milli_sec t_on_; // the step's "on-time" length
+   milli_sec t_off_; // the step's "off-time"
    uint16_t max_steps_per_sec_;
-   milli_sec t_off_speed_; // the step's "off" length offset when using "set speed"
-   milli_sec t_off_ramp_; // the step's "off" length offset when ramping up speed
+   milli_sec t_off_speed_; // the step's "off-time" offset when using "set speed"
+   milli_sec t_off_ramp_; // the step's "off-time" offset when ramping speed
    milli_sec t_start_; // start time of current step
-   uint16_t curr_steps_; // number of steps left untill done with step()
+   uint16_t curr_steps_; // number of steps left untill done with step request
+   uint16_t ramp_steps_;
+   bool use_ramping_;
+
    State *state_;
    Pin pin_;
 
