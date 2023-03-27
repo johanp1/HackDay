@@ -3,11 +3,17 @@
 #include "step_gen.h"
 #include <Arduino.h>
 #include <memory>
+#include <iostream>
+#include <sstream>
 
 namespace {
 constexpr byte test_pin = 1;
 constexpr milli_sec t_on = 4;
 constexpr milli_sec t_off = 10;
+
+constexpr milli_sec t_on_test = 5;
+constexpr milli_sec t_off_test = 5;
+
 
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
@@ -22,7 +28,7 @@ class StepGenTestFixture : public testing::Test
    void SetUp()
    {
       arduinoStub->Reset();
-      stepGen = std::make_unique<StepGen>(test_pin, 5, 5);
+      stepGen = std::make_unique<StepGen>(test_pin, t_on_test, t_off_test);
    }
    
    void TearDown()
@@ -38,61 +44,58 @@ class StepGenTestFixture : public testing::Test
          stepGen->Update();
       }
    }
+
+   
+   bool checkStep(milli_sec t_on, milli_sec t_off)
+   {
+      bool retVal = true;
+      // check step is on for t_on ms
+      for (milli_sec i = 0; i < t_on; i++)
+      {
+         retVal = retVal & (arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
+         incTime();
+
+         //if (!retVal) cout << "checking step is high at pos " << i << " failed\n";
+      }
+
+      // check step is off for t_off ms
+      for (milli_sec i = 0; i < t_off; i++)
+      {
+         retVal = retVal & (arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
+         incTime();
+
+        //if (!retVal) cout << "checking step is low at pos " << i + t_on << " failed\n";
+      }
+
+      return retVal;
+   }
 };
 
 TEST(StepGenTestGroup, test_init)
 {
    StepGen s(test_pin);
    ASSERT_TRUE(arduinoStub->GetMode(test_pin) == OUTPUT);
+   ASSERT_FALSE(s.IsBusy());
 }
 
 // test generating one step 
 // output: |"""5ms"""|___5ms___
-TEST(StepGenTestGroup, test_one_step)
+TEST_F(StepGenTestFixture, test_one_step)
 {
-   StepGen s(test_pin, 5, 5);
-
-   s.Step();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
-
-   arduinoStub->IncTimeMs(3);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
-
-   arduinoStub->IncTimeMs(3);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
+   stepGen->Step();
+   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+   ASSERT_FALSE(stepGen->IsBusy());
 }
 
 // test generating two steps 
 // output: |"""5ms"""|___5ms___|"""5ms"""|___5ms___
-TEST(StepGenTestGroup, test_two_steps)
+TEST_F(StepGenTestFixture, test_two_steps)
 {
-   StepGen s(test_pin, 5, 5);
-
-   s.Step(2);
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
-   
-   arduinoStub->IncTimeMs(5);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-
-   arduinoStub->IncTimeMs(3);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-
-   arduinoStub->IncTimeMs(2);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
-   
-   arduinoStub->IncTimeMs(5);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-
-   // make check no new step is started
-   arduinoStub->IncTimeMs(5);
-   s.Update();
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
+   stepGen->Step(2);
+   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+   ASSERT_TRUE(stepGen->IsBusy());
+   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+   ASSERT_FALSE(stepGen->IsBusy());
 }
 
 // test step returns busy if current step is not done
@@ -177,7 +180,7 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
 {
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
-   
+ 
    // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
    incTime(43);
@@ -197,11 +200,60 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    incTime();
    // new step just started
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
+
+   // 3nd should be done in 42
+   incTime(41);
+   // all requested steps done
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
+   //ASSERT_FALSE(stepGen->IsBusy());
+   incTime();
+   // new step just started
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_High);
+}
+
+TEST_F(StepGenTestFixture, test_decresing_step)
+{
+   stepGen->SetUseRamping(true);
+   stepGen->SetStepsPerSec(100);
+   
+   milli_sec t_ramp = t_delta * default_number_of_ramp_steps;
+
+   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
+   stepGen->Step(100); 
+
+   for (int8_t i = t_ramp; i != 0; i--)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + i));
+   }
 }
 
 TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
 {
-   ASSERT_TRUE(true);
+   stepGen->SetUseRamping(true);
+   stepGen->SetStepsPerSec(100);
+   
+   milli_sec t_ramp = t_delta * default_number_of_ramp_steps;
+
+   // set nbr of steps to get full ramp up, one steady state step then full ramp down
+   stepGen->Step(2 * default_number_of_ramp_steps + 1); 
+
+   // ramping up
+   for (int8_t i = 0; i < t_ramp; i += t_delta)
+   {
+      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (t_ramp-i)) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (t_ramp-i)));
+   }
+
+   // one max speed step
+   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+   //cout << "checking steady state step " << (checkStep(t_on_test, t_off_test) ? "OK":"fail") << "\n";
+
+   // ramping down
+   for (int8_t i = 1; i < t_ramp; i += t_delta)
+   {
+      //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + i) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + i));
+   }
 }
 
 }

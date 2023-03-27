@@ -1,9 +1,6 @@
 #include "step_gen.h"
 //#include <iostream>
-
-
-constexpr milli_sec t_delta = 1;
-constexpr milli_sec default_t_off_ramp = default_number_of_ramp_steps * t_delta; 
+//#include <sstream>
 
 StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), pin_(pin)
 {
@@ -28,18 +25,21 @@ StepGen::~StepGen()
    if (!IsBusy())
    {
       // if use_ramping_ is used:
-      // set use_ramping_ = t_delta*(n+1), will get decresed to n before 
+      // set t_off_ramp_ = t_delta*(n+1), will get decresed to n before 
       // step is started in StartStep
       if (use_ramping_)
       {
          t_off_ramp_ = default_t_off_ramp + t_delta;
 
-         if (steps < 2*default_number_of_ramp_steps)
+         // can ramping up and down fit in the number of requested steps?
+         if (steps < 2 * default_number_of_ramp_steps)
          {
+            // no, ramp upp as far as possible, will not reach max speed, then ramp down
             ramp_steps_ = steps / 2;
          }
          else
          {
+            // yes, full ramp-up to max speed, then ramp down when appropriate
             ramp_steps_ = default_number_of_ramp_steps;
          }
       }
@@ -67,10 +67,10 @@ void StepGen::StartStep()
       
       if (use_ramping_)
       {
-         t_off_ramp_ = calculateRampTimeOffset();
+         t_off_ramp_ = CalcRampTimeOffset();
       }
-
       TransitionTo(new StateOn(this));
+      //cout << "starting step " << to_string(curr_steps_) << ", t_on " << t_on_ << ", t_off " << t_off_ + t_off_ramp_ << "\n";
    }
    else
    {
@@ -94,11 +94,11 @@ void StepGen::TransitionTo(State *state)
    digitalWrite(pin_, state_->GetOutput());
 }
 
-milli_sec StepGen::calculateRampTimeOffset()
+milli_sec StepGen::CalcRampTimeOffset()
 {
    milli_sec retVal = t_off_ramp_;
 
-   if (curr_steps_ <= ramp_steps_)
+   if (curr_steps_ < ramp_steps_)
    {  // ramp down
       t_off_ramp_ <= default_t_off_ramp ? retVal = t_off_ramp_ + t_delta : retVal = default_t_off_ramp;
    }
@@ -118,7 +118,7 @@ bool StepGen::IsHighDone()
 // is the "off"/low part of the full step done
 bool StepGen::IsLowDone()
 {
-   return millis() - t_start_ >= t_on_ + t_off_ + t_off_speed_ + t_off_ramp_;
+   return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
 
 // still busy with generating the step()-request, or ready for new request
@@ -131,11 +131,11 @@ void StepGen::SetStepsPerSec(uint8_t steps_per_sec)
 {
    if ((steps_per_sec != 0) && (steps_per_sec < max_steps_per_sec_))
    { 
-      t_off_speed_ = 1000/steps_per_sec - t_on_ - t_off_;
+      t_off_sps_ = 1000/steps_per_sec - t_on_ - t_off_;
    }
    else
    {
-      t_off_speed_ = 0;
+      t_off_sps_ = 0;
    }
 }
 
@@ -143,7 +143,6 @@ void StepGen::SetUseRamping(bool use_ramping)
 {
    use_ramping_ = use_ramping;
 }
-
 
 void StateOn::Update()
 {
