@@ -12,7 +12,7 @@ constexpr milli_sec default_t_on = 2; //5ms
 constexpr milli_sec default_t_off = 3; //5ms
 constexpr uint8_t default_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
 constexpr milli_sec t_delta = 1;
-constexpr milli_sec default_t_off_ramp = default_number_of_ramp_steps * t_delta; 
+constexpr milli_sec init_t_off_ramp = default_number_of_ramp_steps * t_delta; 
 
 class State;
 

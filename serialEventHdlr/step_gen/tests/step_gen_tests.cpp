@@ -64,7 +64,7 @@ class StepGenTestFixture : public testing::Test
          retVal = retVal & (arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
          incTime();
 
-        //if (!retVal) cout << "checking step is low at pos " << i + t_on << " failed\n";
+         //if (!retVal) cout << "checking step is low at pos " << i + t_on << " failed\n";
       }
 
       return retVal;
@@ -216,12 +216,12 @@ TEST_F(StepGenTestFixture, test_decresing_step)
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
    
-   milli_sec t_ramp = t_delta * default_number_of_ramp_steps;
+   milli_sec ramp_steps = t_delta * default_number_of_ramp_steps;
 
    // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
 
-   for (int8_t i = t_ramp; i != 0; i--)
+   for (int8_t i = ramp_steps; i != 0; i--)
    {
       ASSERT_TRUE(checkStep(t_on_test, t_off_test + i));
    }
@@ -232,27 +232,53 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
    
-   milli_sec t_ramp = t_delta * default_number_of_ramp_steps;
+   milli_sec ramp_steps = default_number_of_ramp_steps;
 
    // set nbr of steps to get full ramp up, one steady state step then full ramp down
    stepGen->Step(2 * default_number_of_ramp_steps + 1); 
 
    // ramping up
-   for (int8_t i = 0; i < t_ramp; i += t_delta)
+   for (int8_t i = 0; i < ramp_steps; i += t_delta)
    {
-      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (t_ramp-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (t_ramp-i)));
+      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (ramp_steps-i)) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (ramp_steps-i)));
    }
 
    // one max speed step
-   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
    //cout << "checking steady state step " << (checkStep(t_on_test, t_off_test) ? "OK":"fail") << "\n";
+   ASSERT_TRUE(checkStep(t_on_test, t_off_test));
 
    // ramping down
-   for (int8_t i = 1; i < t_ramp; i += t_delta)
+   for (int8_t i = 1; i < ramp_steps; i += t_delta)
    {
       //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + i) ? "OK":"fail") << "\n";
       ASSERT_TRUE(checkStep(t_on_test, t_off_test + i));
+   }
+}
+
+TEST_F(StepGenTestFixture, test_incomlpete_ramping)
+{
+   stepGen->SetUseRamping(true);
+   stepGen->SetStepsPerSec(100);
+   
+   milli_sec ramp_steps = 20; // made up number
+
+   // set nbr of steps to get incomplete ramp up, straight in to incomplete ramp down
+   // never reaching full speed
+   stepGen->Step(2*ramp_steps);  // hopefully this gives 20 ramp up, 20 ramp down
+
+   // ramping up
+   for (int8_t i = 0; i < ramp_steps; i += t_delta)
+   {
+      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (ramp_steps-i)) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (default_number_of_ramp_steps-i)));
+   }
+
+   // ramping down
+   for (int8_t i = 1; i < ramp_steps; i += t_delta)
+   {
+      //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + default_number_of_ramp_steps-(ramp_steps-1) + i) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test,  t_off_test + default_number_of_ramp_steps - (ramp_steps-1) + i));
    }
 }
 

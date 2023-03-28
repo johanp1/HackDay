@@ -20,16 +20,15 @@ StepGen::~StepGen()
    delete state_;
 }
 
- stepRetVal StepGen::Step(uint16_t steps)
+stepRetVal StepGen::Step(uint16_t steps)
 {
    if (!IsBusy())
    {
-      // if use_ramping_ is used:
-      // set t_off_ramp_ = t_delta*(n+1), will get decresed to n before 
-      // step is started in StartStep
       if (use_ramping_)
       {
-         t_off_ramp_ = default_t_off_ramp + t_delta;
+         // set t_off_ramp_ = t_delta*(n+1), will get decresed to n before 
+         // step is started in StartStep
+         t_off_ramp_ = init_t_off_ramp + t_delta;
 
          // can ramping up and down fit in the number of requested steps?
          if (steps < 2 * default_number_of_ramp_steps)
@@ -100,7 +99,7 @@ milli_sec StepGen::CalcRampTimeOffset()
 
    if (curr_steps_ < ramp_steps_)
    {  // ramp down
-      t_off_ramp_ <= default_t_off_ramp ? retVal = t_off_ramp_ + t_delta : retVal = default_t_off_ramp;
+      t_off_ramp_ <= init_t_off_ramp ? retVal = t_off_ramp_ + t_delta : retVal = init_t_off_ramp;
    }
    else
    {  // ramp up
