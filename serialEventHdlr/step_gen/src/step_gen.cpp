@@ -29,13 +29,11 @@ stepRetVal StepGen::Step(uint16_t steps)
 {
    if (!IsBusy())
    {
-      curr_step_ = steps;
+      curr_step_ = steps-1; // current step is the step index [(n-1)..0]
 
       if (use_ramping_)
       {
-         // set t_off_ramp_ = t_delta*(n+1), will get decresed to n before 
-         // step is started in CalcRampTimeOffset
-         t_off_ramp_ = max_t_off_ramp + t_delta; // first ramp step time offset
+         t_off_ramp_ = max_t_off_ramp; // initialize the first ramp step's time offset
          ramp_steps_ = CalcNbrOfRampSteps();
       }
       else
@@ -43,7 +41,8 @@ stepRetVal StepGen::Step(uint16_t steps)
           t_off_ramp_ = 0;
       }
 
-      StartStep();
+      t_start_ = millis();
+      TransitionTo(new StateOn(this));
       return ok;
    }
    else
@@ -75,26 +74,16 @@ void StepGen::SetUseRamping(bool use_ramping)
    use_ramping_ = use_ramping;
 }
 
-
-void StepGen::StartStep()
+void StepGen::StartNextStep()
 {
-   if (curr_step_ > 0)
+   t_start_ = millis();
+   curr_step_--;
+
+   if (use_ramping_)
    {
-      t_start_ = millis();
-      curr_step_--;
-      
-      if (use_ramping_)
-      {
-         t_off_ramp_ = CalcRampTimeOffset();
-      }
-      TransitionTo(new StateOn(this));
-      //cout << "starting step " << to_string(curr_step_) << ", t_on " << t_on_ << ", t_off " << t_off_ + t_off_ramp_ << "\n";
+      t_off_ramp_ = CalcRampTimeOffset();
    }
-   else
-   {
-      // all steps requested are done, transition to inactive state
-      TransitionTo(new StateInactive(this));
-   }
+   TransitionTo(new StateOn(this));
 }
 
 void StepGen::TransitionTo(State *state) 
@@ -166,11 +155,15 @@ void StateOff::Update()
 {
    if (stepGen_->IsLowDone())
    {
-      // start next step, or stop if all steps done
-      stepGen_->StartStep();
-
-      if (stepGen_->curr_step_ == 0)
-      {}
+      if (stepGen_->curr_step_ > 0)
+      {
+         // start next step, or stop if all steps done
+         stepGen_->StartNextStep();
+      }
+      else
+      {
+         stepGen_->TransitionTo(new StateInactive(stepGen_));
+      }
    }
 }
 

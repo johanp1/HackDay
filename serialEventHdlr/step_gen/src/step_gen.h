@@ -29,7 +29,7 @@ class StepGen
    void SetUseRamping(bool use_ramping);
    
    private:
-   void StartStep(); // start one step
+   void StartNextStep(); // start one step
    void TransitionTo(State *state);
    milli_sec CalcRampTimeOffset(); // calculate t_off_ramp_
    uint16_t CalcNbrOfRampSteps(); // calculate how many ramping up/down steps we can squeez in
