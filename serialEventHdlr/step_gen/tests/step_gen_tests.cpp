@@ -181,7 +181,7 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
  
-   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
+   // set nbr of steps >> max_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
    incTime(43);
 
@@ -216,9 +216,9 @@ TEST_F(StepGenTestFixture, test_decresing_step)
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
    
-   milli_sec ramp_steps = t_delta * default_number_of_ramp_steps;
+   milli_sec ramp_steps = t_delta * max_number_of_ramp_steps;
 
-   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
+   // set nbr of steps >> max_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
 
    for (int8_t i = ramp_steps; i != 0; i--)
@@ -232,10 +232,10 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    stepGen->SetUseRamping(true);
    stepGen->SetStepsPerSec(100);
    
-   milli_sec ramp_steps = default_number_of_ramp_steps;
+   milli_sec ramp_steps = max_number_of_ramp_steps;
 
    // set nbr of steps to get full ramp up, one steady state step then full ramp down
-   stepGen->Step(2 * default_number_of_ramp_steps + 1); 
+   stepGen->Step(2 * max_number_of_ramp_steps + 1); 
 
    // ramping up
    for (int8_t i = 0; i < ramp_steps; i += t_delta)
@@ -262,23 +262,26 @@ TEST_F(StepGenTestFixture, test_incomlpete_ramping)
    stepGen->SetStepsPerSec(100);
    
    milli_sec ramp_steps = 20; // made up number
+   uint16_t requested_steps = 2 * ramp_steps;
 
    // set nbr of steps to get incomplete ramp up, straight in to incomplete ramp down
    // never reaching full speed
-   stepGen->Step(2*ramp_steps);  // hopefully this gives 20 ramp up, 20 ramp down
+   stepGen->Step(requested_steps);  // hopefully this gives 20 ramp up, 20 ramp down
 
    // ramping up
    for (int8_t i = 0; i < ramp_steps; i += t_delta)
    {
-      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (ramp_steps-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (default_number_of_ramp_steps-i)));
+      // cout << "checking ramp up step " << to_string(requested_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-i) << "\n";
+      // cout << (checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-i)) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-i)));
    }
 
    // ramping down
-   for (int8_t i = 1; i < ramp_steps; i += t_delta)
+   for (int8_t i = 0; i < ramp_steps; i += t_delta)
    {
-      //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + default_number_of_ramp_steps-(ramp_steps-1) + i) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test,  t_off_test + default_number_of_ramp_steps - (ramp_steps-1) + i));
+      // cout << "checking ramp down step " << to_string(ramp_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-ramp_steps) + i << "\n";
+      // cout << (checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-ramp_steps) + i) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test,  t_off_test + max_number_of_ramp_steps - ramp_steps + i));
    }
 }
 

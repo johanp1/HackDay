@@ -10,9 +10,9 @@ enum stepRetVal { ok, busy };
 
 constexpr milli_sec default_t_on = 2; //5ms
 constexpr milli_sec default_t_off = 3; //5ms
-constexpr uint8_t default_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
+constexpr uint8_t max_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
 constexpr milli_sec t_delta = 1;
-constexpr milli_sec init_t_off_ramp = default_number_of_ramp_steps * t_delta; 
+constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta; 
 
 class State;
 
@@ -29,9 +29,10 @@ class StepGen
    void SetUseRamping(bool use_ramping);
    
    private:
-   void StartStep(); // start one step
+   void StartNextStep(); // start one step
    void TransitionTo(State *state);
    milli_sec CalcRampTimeOffset(); // calculate t_off_ramp_
+   uint16_t CalcNbrOfRampSteps(); // calculate how many ramping up/down steps we can squeez in
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
 
@@ -41,7 +42,7 @@ class StepGen
    milli_sec t_off_sps_; // the step's "off-time" offset when using setting "Steps Per Sec"
    milli_sec t_off_ramp_; // the step's "off-time" offset when ramping speed
    milli_sec t_start_; // start time of current step
-   uint16_t curr_steps_; // number of steps left untill done with step request
+   uint16_t curr_step_; // number of steps left untill done with step request
    uint16_t ramp_steps_;
    bool use_ramping_;
 
