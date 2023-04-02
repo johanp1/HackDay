@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "Arduino.h"
 #include "mpg_pendant_lathe.h"
+#include <iostream>
 
 namespace {
 
@@ -84,5 +85,16 @@ TEST_F(MpgTestFixture, PressPlusButtonTest)
    loop();
    ASSERT_TRUE(hasBeenSent("jpos_0\n"));
 }
+
+TEST_F(MpgTestFixture, axisSelectorEventTest)
+{
+   setup();
+   arduinoStub->SetAnalogPinVoltage(kAxisSelectorPin, 2.6);
+   loop();
+   arduinoStub->IncTimeMs(kSelectorDebounceDelay + 1);
+   loop();
+   ASSERT_TRUE(hasBeenSent("sela_2\n"));
+}
+
 
 }

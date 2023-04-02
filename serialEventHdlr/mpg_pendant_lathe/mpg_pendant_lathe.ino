@@ -116,6 +116,20 @@ class ActiveAxisCommandHandler : public EventFunctor
     Model& model_;
 };
 
+template<typename F>
+class ControllerEventHandler : public EventFunctor
+{
+  public:
+    ControllerEventHandler(F f, String const &event_name) : EventFunctor{event_name}, f_(f) {};
+
+    void operator()(String& _parsedData)
+    {
+      f_(_parsedData);
+    };
+    
+    F f_;
+};
+
 static LiquidCrystal_PCF8574 lcd(0x27); // set the LCD address to 0x27
 Model lcdModel;
 static Sender sender;

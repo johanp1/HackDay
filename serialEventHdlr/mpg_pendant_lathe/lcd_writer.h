@@ -12,13 +12,13 @@ template <class Lcd>
 class LcdView : public Observer
 {
    public:
-   LcdView(Lcd& lcd, Model& model) : myLcd(lcd), myModel(model)
+   LcdView(Lcd& lcd, Model& model) : myLcd(lcd), model_(model)
    {
-      myModel.Attach(this); 
+      model_.Attach(this); 
       enabled_ = false;
       myController = MakeController();
    };
-   virtual ~LcdView(){myModel.Detach(this); if (myController != nullptr){delete myController;}};
+   virtual ~LcdView(){model_.Detach(this); if (myController != nullptr){delete myController;}};
    virtual void Update(){this->Draw();};
    virtual void Draw();
    //virtual void Initialize(){myController = MakeController();};
@@ -29,7 +29,7 @@ class LcdView : public Observer
    virtual void SetEnabled(bool enabled);
    bool GetEnable(){return enabled_;}
    Controller<Lcd>* GetController(){return myController;};
-   Model& myModel;
+   Model& model_;
 
    protected:
    Lcd& myLcd;
@@ -79,15 +79,15 @@ void AxisView<Lcd>::Draw()
    String row1 = String(" x: ");
    String row2 = String(" z: ");
 
-   row1.concat(this->myModel.GetX());
-   row2.concat(this->myModel.GetZ());
+   row1.concat(this->model_.GetX());
+   row2.concat(this->model_.GetZ());
    
    row1.concat("   "); //add some spaces to avoid doing clear between prints
    row2.concat("   ");
 
    // indicate the jogged/active axis with a  '*'
-   row1.setCharAt(0, this->myModel.GetActiveAxis() == axis_x ? '*' : ' ');
-   row2.setCharAt(0, this->myModel.GetActiveAxis() == axis_z ? '*' : ' ');
+   row1.setCharAt(0, this->model_.GetActiveAxis() == axis_x ? '*' : ' ');
+   row2.setCharAt(0, this->model_.GetActiveAxis() == axis_z ? '*' : ' ');
 
    this->myLcd.setCursor(0, 0);
    this->myLcd.print(row1);
@@ -129,7 +129,7 @@ void SpindleView<Lcd>::Draw()
    {
     String row2 = String(" ");
    
-    row2.concat(this->myModel.GetSpindleSpeed());
+    row2.concat(this->model_.GetSpindleSpeed());
     row2.concat(String(" rpm    "));
 
     this->myLcd.setCursor(0, 1);
@@ -142,16 +142,16 @@ template <class Lcd>
 class Controller : public EventParser
 {
    public:
-   Controller(LcdView<Lcd>* view) : myView(view)
+   Controller(LcdView<Lcd>* view) : view_(view)
    {
-      myModel = &myView->myModel;
+      model_ = &view_->model_;
    };
    virtual ~Controller(){};
-   void AddEvent(EventFunctor &h){AddAcceptedHandler(h);};
+   void AddEventHandler(EventFunctor &h){AddAcceptedHandler(h);};
 
    private:
-   Model* myModel;
-   LcdView<Lcd>* myView;
+   Model* model_;
+   LcdView<Lcd>* view_;
 };
 
 #endif // __C_LCD_WRITER_H__
