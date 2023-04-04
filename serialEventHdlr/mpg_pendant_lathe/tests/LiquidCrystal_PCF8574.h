@@ -13,7 +13,7 @@ class LiquidCrystal_PCF8574
    void setCursor(uint8_t col, uint8_t row) {current_row_ = row;};
    void setBacklight(uint8_t brightness) {};
    
-   String& getRow(uint8_t row) {return printBuffer[current_row_];};
+   String& getRow(uint8_t row) {return printBuffer[row];};
 
    private:
    uint8_t i2cAddr_;

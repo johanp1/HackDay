@@ -11,126 +11,28 @@
 
 constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors;
 
-class UpdateXCommandHandler : public EventFunctor
-{
-  public:
-    UpdateXCommandHandler(Model& model) : EventFunctor{String("xpos")}, model_(model) {};
-
-    void operator()(String& _parsedData)
-    {
-      model_.SetX(_parsedData.toFloat());
-    };
-
-  private:
-    Model& model_;
-};
-
-class UpdateYCommandHandler : public EventFunctor
-{
-  public:
-    UpdateYCommandHandler(Model& model) : EventFunctor{String("zpos")}, model_(model) {};
-
-    void operator()(String& _parsedData)
-    {
-      model_.SetZ(_parsedData.toFloat());
-    };
-
-  private:
-    Model& model_;
-};
-
-class UpdateSpindleSpeedCommandHandler : public EventFunctor
-{
-  public:
-    UpdateSpindleSpeedCommandHandler(Model& model) : EventFunctor{String("ss")}, model_(model) {};
-
-    void operator()(String& _parsedData)
-    {
-      model_.SetSpindleSpeed(_parsedData.toFloat());
-    };
-
-  private:
-    Model& model_;
-};
-
-class AxisViewCommandHandler : public EventFunctor
-{
-  public:
-    AxisViewCommandHandler(LcdView<LiquidCrystal_PCF8574>& view) : EventFunctor{String("sela")}, view_(view) {};
-
-    void operator()(String& _parsedData)
-    {
-      if((_parsedData.toInt() == 0) || (_parsedData.toInt() == 1))
-      {
-        view_.SetEnabled(true);
-      }
-      else
-      {
-        view_.SetEnabled(false);
-      }
-    };
-
-  private:
-    LcdView<LiquidCrystal_PCF8574>& view_;
-};
-
-class SpindleViewCommandHandler : public EventFunctor
-{
-  public:
-    SpindleViewCommandHandler(LcdView<LiquidCrystal_PCF8574>& view) : EventFunctor{String("sela")}, view_(view) {};
-
-    void operator()(String& _parsedData)
-    {
-      if(_parsedData.toInt() == 2)
-      {
-        view_.SetEnabled(true);
-      }
-      else
-      {
-        view_.SetEnabled(false);
-      }
-    };
-
-  private:
-    LcdView<LiquidCrystal_PCF8574>& view_;
-};
-
-class ActiveAxisCommandHandler : public EventFunctor
-{
-  public:
-    ActiveAxisCommandHandler(Model& model) : EventFunctor{String("sela")}, model_(model) {};
-
-    void operator()(String& _parsedData)
-    {
-      if(_parsedData.toInt() == 0)
-      {
-        model_.SetActiveAxis(axis_x);
-      }
-      if(_parsedData.toInt() == 1)
-      {
-        model_.SetActiveAxis(axis_z);
-      }
-    };
-
-  private:
-    Model& model_;
-};
-
-template<typename F>
+template<typename F, typename O>
 class ControllerEventHandler : public EventFunctor
 {
   public:
-    ControllerEventHandler(F f, String const &event_name) : EventFunctor{event_name}, f_(f) {};
+    ControllerEventHandler(String const &event_name, F f, O* o) : EventFunctor{event_name}, f_(f), o_(o) {};
 
-    void operator()(String& _parsedData)
+    void operator()(String& parsed_data)
     {
-      f_(_parsedData);
+      f_(parsed_data, o_);
     };
     
+    O* o_;
     F f_;
 };
 
-static LiquidCrystal_PCF8574 lcd(0x27); // set the LCD address to 0x27
+static void setSpindleSpeedWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c);
+static void enableSpindleViewWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c);
+static void setXPosWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c);
+static void setZPosWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c);
+static void enableAxisViewWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c);
+
+LiquidCrystal_PCF8574 lcd(0x27); // set the LCD address to 0x27
 Model lcdModel;
 static Sender sender;
 static EventGenerator* eventGenerators[kNbrOfEventGenerators];
@@ -141,13 +43,6 @@ static unsigned long heartbeatTimer = kHeartbeatPeriod;
 void setup() {  
   AxisView<LiquidCrystal_PCF8574>* axisView = new AxisView<LiquidCrystal_PCF8574>(lcd, lcdModel);
   SpindleView<LiquidCrystal_PCF8574>* spindleView =new SpindleView<LiquidCrystal_PCF8574>(lcd, lcdModel);
-
-  UpdateXCommandHandler* updateXCommandHandler = new UpdateXCommandHandler(lcdModel);
-  UpdateYCommandHandler* updateYCommandHandler = new UpdateYCommandHandler(lcdModel);
-  UpdateSpindleSpeedCommandHandler* updateSpindleCommandHandler = new UpdateSpindleSpeedCommandHandler(lcdModel);
-  AxisViewCommandHandler* axisViewCommandHandler = new AxisViewCommandHandler(*axisView);
-  SpindleViewCommandHandler* spindleViewCommandHandler = new SpindleViewCommandHandler(*spindleView);
-  ActiveAxisCommandHandler* activeAxisCommandHandler = new ActiveAxisCommandHandler(lcdModel);
 
   Serial.begin(38400);
   Serial.setTimeout(500);
@@ -185,14 +80,12 @@ void setup() {
   receiver.addEventListner(axisView->GetController());
   receiver.addEventListner(spindleView->GetController());
 
-  axisView->GetController()->AddAcceptedHandler(*updateXCommandHandler);
-  axisView->GetController()->AddAcceptedHandler(*updateYCommandHandler);
-  spindleView->GetController()->AddAcceptedHandler(*updateSpindleCommandHandler);
+  axisView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"xpos"}, setXPosWrapper, axisView->GetController())));
+  axisView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"zpos"}, setZPosWrapper, axisView->GetController())));
+  spindleView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"ss"}, setSpindleSpeedWrapper, spindleView->GetController())));
 
-  axisView->GetController()->AddAcceptedHandler(*axisViewCommandHandler);
-  spindleView->GetController()->AddAcceptedHandler(*spindleViewCommandHandler);
-
-  axisView->GetController()->AddAcceptedHandler(*activeAxisCommandHandler);
+  axisView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"sela"}, enableAxisViewWrapper, axisView->GetController())));
+  spindleView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"sela"}, enableSpindleViewWrapper, spindleView->GetController())));
 }
 
 void loop() {
@@ -223,4 +116,49 @@ void loop() {
 void serialEvent()
 {
   receiver.scan();
+}
+
+static void setSpindleSpeedWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c)
+{
+  c->model_->SetSpindleSpeed(s.toInt());
+}
+
+static void enableSpindleViewWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c)
+{
+  if (s.toInt() == 2)
+  {
+    c->view_->SetEnabled(true);
+  }
+  else 
+  {
+    c->view_->SetEnabled(false);
+  }
+}
+
+static void enableAxisViewWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c)
+{
+  if (s.toInt() == axis_x)
+  {
+    c->view_->SetEnabled(true);
+    c->model_->SetActiveAxis(axis_x);
+  }
+  else if (s.toInt() == axis_z)
+  {
+    c->view_->SetEnabled(true);
+    c->model_->SetActiveAxis(axis_z);
+  }
+  else
+  {
+    c->view_->SetEnabled(false);
+  }
+}
+
+static void setXPosWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c)
+{
+  c->model_->SetX(s.toFloat());
+}
+
+static void setZPosWrapper(String& s, Controller<LiquidCrystal_PCF8574>* c)
+{
+  c->model_->SetZ(s.toFloat());
 }

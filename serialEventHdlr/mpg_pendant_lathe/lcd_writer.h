@@ -149,7 +149,7 @@ class Controller : public EventParser
    virtual ~Controller(){};
    void AddEventHandler(EventFunctor &h){AddAcceptedHandler(h);};
 
-   private:
+   //private:
    Model* model_;
    LcdView<Lcd>* view_;
 };
