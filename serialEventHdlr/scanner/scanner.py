@@ -6,14 +6,16 @@ from serial.tools.list_ports import comports
 
 def increase():
     """button press callback"""
-    serial_port.write(''.join('dir1_0').encode('utf-8', 'ignore'))
-    serial_port.write(''.join('step1_10').encode('utf-8', 'ignore'))
+    if serial_port.is_open:
+        serial_port.write(''.join('dir1_0').encode('utf-8', 'ignore'))
+        serial_port.write(''.join('step1_10').encode('utf-8', 'ignore'))
     print('+')
 
 def decrease():
     """button press callback"""
-    serial_port.write(''.join('dir1_1').encode('utf-8', 'ignore'))
-    serial_port.write(''.join('step1_10').encode('utf-8', 'ignore'))
+    if serial_port.is_open:
+        serial_port.write(''.join('dir1_1').encode('utf-8', 'ignore'))
+        serial_port.write(''.join('step1_10').encode('utf-8', 'ignore'))
     print('-')
 
 def open_port(selected_port):
@@ -28,7 +30,6 @@ def open_port(selected_port):
 
     try:
         serial_port.open()
-        print('opening port')
     except serial.SerialException:
         print('unable to open port...')
 
@@ -56,21 +57,54 @@ def main():
 
     window = tk.Tk()
 
-    window.rowconfigure([0, 1], minsize=50, weight=1)
-    window.columnconfigure([0, 1], minsize=50, weight=1)
+    vertical_ctrl_frame = tk.Frame(window, relief=tk.GROOVE, borderwidth=3)
+    vertical_ctrl_frame.grid(row=0, column=0, padx=5, pady=5)
 
-    btn_decrease = tk.Button(master=window, text="jog-", command=decrease)
-    btn_decrease.grid(row=0, column=0, sticky="nsew")
+    horizontal_ctrl_frame = tk.Frame(window, relief=tk.GROOVE, borderwidth=3)
+    horizontal_ctrl_frame.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
-    btn_increase = tk.Button(master=window, text="jog+", command=increase)
-    btn_increase.grid(row=0, column=1, sticky="nsew")
+    ctrl_frame = tk.Frame(window, relief=tk.GROOVE, borderwidth=3)
+    ctrl_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+
+    cfg_frame = tk.Frame(window, relief=tk.GROOVE, borderwidth=3)
+    cfg_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+
+    tk.Label(vertical_ctrl_frame, text="Vertical control:").grid(row=0, column=0, padx=5, pady=5)
+
+    btn_jog_up = tk.Button(master=vertical_ctrl_frame, text="jog up", padx=5, pady=5, command=increase)
+    btn_jog_up.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+
+    btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=decrease)
+    btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+
+    tk.Label(horizontal_ctrl_frame, text="Horizontal control:").grid(row=0, column=0, padx=5, pady=5)
+
+    btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="jog ccw", padx=5, pady=5)
+    btn_jog_ccw.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+
+    btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5)
+    btn_jog_cw.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+
+    btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5)
+    btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
+
+    btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5)
+    btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
     current_port = tk.StringVar()
-    current_port.set(available_ports[0])
-    port_option_menu = tk.OptionMenu(window, current_port, *available_ports, command = set_selected_port)
-    port_option_menu.grid(row=1, column=0, sticky="nsew")
 
-    open_port(current_port.get())
+    if available_ports:
+        current_port.set(available_ports[0])
+    else:
+        current_port.set('N/A')
+
+    tk.Label(cfg_frame, text="File name:").grid(row=0, column=0, padx=5, pady=5)
+    tk.Label(cfg_frame, text="Com port:").grid(row=1, column=0, padx=5, pady=5)
+    port_option_menu = tk.OptionMenu(master = cfg_frame, variable = current_port, value = current_port.get(), *available_ports, command = set_selected_port)
+    port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+
+    if current_port.get() in available_ports:
+        open_port(current_port.get())
 
     window.mainloop()
 
