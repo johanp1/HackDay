@@ -42,14 +42,15 @@ class WatchDogDaemon(threading.Thread):
       self.wd.ping()
 
    def run(self):
-      print "Starting watchdog deamon..."
-      while(self.enabled):
-         time.sleep(self.periodicity)
+      if self.enabled:
+         print "Starting watchdog deamon..."
+         while(self.enabled):
+            time.sleep(self.periodicity)
 
-         if not self.wd.insideMargin():
-            self.reset()
+            if not self.wd.insideMargin():
+               self.reset()
 
-      print "stopping watchdog deamon..."
+         print "stopping watchdog deamon..."
 
    def setEnabled(self, enabled):
       if self.enabled == False and enabled == True:

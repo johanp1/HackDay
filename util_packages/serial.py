@@ -38,13 +38,17 @@ class Serial(threading.Thread):
       self.msgs = ['']
       self.nbr_msgs = 0
       self.writeBuf = ''
+      self.is_open = False
 
    def open(self):
+      self.is_open = True
+      
       if self.port == 'fail':
+         self.is_open = False
          raise SerialException
 
    def close(self):
-      pass
+      self.is_open = False
 
    def flush(self):
       pass

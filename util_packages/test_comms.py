@@ -14,9 +14,9 @@ class TestComms(unittest.TestCase):
       self.assertTrue(self.s.serial.port == '/dev/ttyS0')
    
    def test_closePort(self):
-      self.assertTrue(self.s.portOpened)
+      self.assertTrue(self.s.is_open())
       self.s.close()
-      self.assertFalse(self.s.portOpened)
+      self.assertFalse(self.s.is_open())
 
    def test_readMessage_noData(self):
       self.s.serial.stub_set_read(['']) #no data in buffer
@@ -75,7 +75,7 @@ class TestComms(unittest.TestCase):
 
    def test_faildOpenPort(self):
       self.s = comms.instrument('fail', self._messageHandler)
-      self.assertFalse(self.s.portOpened)
+      self.assertFalse(self.s.is_open())
       
    def test_readFailedPort(self):
       self.s = comms.instrument('fail', self._messageHandler)

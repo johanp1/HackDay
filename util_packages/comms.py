@@ -56,11 +56,10 @@ class instrument:
       self.serial.stopbits = STOPBITS
       self.serial.xonxoff = False       # disable software flow control
       self.serial.timeout = TIMEOUT
-      self.portOpened = False
       self.msg_hdlr = msg_handler
 
       self.watchdog_daemon = watchdog.WatchDogDaemon(watchdog_timeout,
-                                                     watchdog_timeout,
+                                                     watchdog_periodicity,
                                                      watchdog_enabled)
       self.watchdog_daemon.reset = self._watchdogClose #register watchdog reset function
       self.closed_by_watchdog = False
@@ -70,19 +69,16 @@ class instrument:
    def open(self):
       try:
          self.serial.open()
-         self.portOpened = True
-         print 'comms::opening port'
+         #print 'comms::opening port'
       except serial.SerialException:
-         self.portOpened = False
          print 'unable to open port...'
 
    def close(self):
       self.serial.close()
-      self.portOpened = False
-      print 'comms::closeing port'
+      #print 'comms::closing port'
 
    def dataReady(self):
-      if self.portOpened:
+      if self.is_open():
          return self.serial.in_waiting     
       else:
          return False
@@ -118,8 +114,11 @@ class instrument:
    def enableWatchdog(self, enable):
       self.watchdog_daemon.setEnabled(enable)
 
+   def is_open(self):
+      return self.serial.is_open
+
    def _write(self, s):
-      if self.portOpened == True:
+      if self.is_open() == True:
          #serial expects a byte-array and not a string
          self.serial.write(''.join(s).encode('utf-8', 'ignore'))
          
@@ -127,7 +126,7 @@ class instrument:
    def _read(self):
       """ returns string read from serial port """
       b = ''
-      if self.portOpened == True:
+      if self.is_open() == True:
          b = self.serial.read_until() #blocks until '\n' received or timeout
          
       return b.decode('utf-8', 'ignore')        #convert byte array to string
