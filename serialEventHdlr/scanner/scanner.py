@@ -68,7 +68,7 @@ class Comms(threading.Thread):
             self.msg_hdlr(msg_str)
 
     def write_message(self, s):
-        self._write(s)
+        self._write(s + '\n')
 
     def is_open(self):
         return self.serial.is_open
@@ -108,12 +108,12 @@ class Controller:
         self._comm_hdlr.write_message('step1_10')
 
     def vertical_jog_up(self):
-        self._comm_hdlr.write_message('dir1_0')
-        self._comm_hdlr.write_message('step1_10')
+        self._comm_hdlr.write_message('dir2_0')
+        self._comm_hdlr.write_message('step2_10')
 
     def vertical_jog_down(self):
-        self._comm_hdlr.write_message('dir1_1')
-        self._comm_hdlr.write_message('step1_10')
+        self._comm_hdlr.write_message('dir2_1')
+        self._comm_hdlr.write_message('step2_10')
 
     def set_selected_port(self, selected_port):
         print(selected_port)
@@ -166,6 +166,12 @@ class View:
 
         btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
         btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+
+        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5)#, command=self._controller.vertical_jog_up)
+        btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
+
+        btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5)#, command=self._controller.vertical_jog_down)
+        btn_set_lower.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
         tk.Label(horizontal_ctrl_frame, text="Horizontal control:").grid(row=0, column=0, padx=5, pady=5)
