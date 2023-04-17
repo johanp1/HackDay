@@ -26,7 +26,14 @@ class DbcParser:
     def parse(self, dbc_file, net_name, ecu):
         """Parse input file appending internal dictionary"""
         f_dbc = open(dbc_file, 'r', encoding="utf-8")
-        dbc_line = f_dbc.readline()
+        
+        try:
+            dbc_line = f_dbc.readline()
+            print(dbc_line)
+        except UnicodeDecodeError:
+            print("can't decode")
+            dbc_line = ''
+                    
         frame_name = ''
         while dbc_line:
             # pick out frame

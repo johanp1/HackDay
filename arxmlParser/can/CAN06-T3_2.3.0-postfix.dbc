@@ -1,0 +1,1569 @@
+VERSION "0.0.1"
+
+
+NS_ :
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: BBM MCIOM MPDC VCM
+
+
+BO_ 138 VCM_04P_C06: 8 VCM
+ SG_ DRL_cmd_ISig_6 : 0|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ PositionLight_cmd_ISig_6 : 2|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ MarkerInterrupt_cmd : 4|2@1+ (1,0) [0|0] ""  MPDC
+
+BO_ 213 MCIOM_P02_C06: 8 MCIOM
+ SG_ AccPedalSensorPW1 : 0|8@1+ (0.4,0) [0|102] "Percent"  VCM
+ SG_ AccPedalSensorPW2 : 8|8@1+ (0.4,0) [0|102] "Percent"  VCM
+ SG_ AccPedalSensorState1 : 16|3@1+ (1,0) [0|0] ""  VCM
+ SG_ AccPedalSensorState2 : 19|3@1+ (1,0) [0|0] ""  VCM
+
+BO_ 384 VCM_05P_C06: 8 VCM
+ SG_ SlprLwrAmbLightIntensity_Cmd : 0|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ SlprMaxLightIntensity_Cmd : 8|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ SlprUprAmbLightIntensity_Cmd : 16|8@1+ (1,0) [0|255] "%"  MPDC
+
+BO_ 421 MCIOM_P01_C06: 8 MCIOM
+ SG_ IgnKeySwitchStatusA : 0|2@1+ (1,0) [0|0] ""  VCM
+ SG_ IgnKeySwitchStatusB : 2|2@1+ (1,0) [0|0] ""  VCM
+ SG_ IgnKeySwitchStatusC : 4|2@1+ (1,0) [0|0] ""  VCM
+ SG_ IgnKeySwitchStatusIO : 6|2@1+ (1,0) [0|0] ""  VCM
+ SG_ CabTiltLock_stat : 8|2@1+ (1,0) [0|0] ""  VCM
+ SG_ Hazard_ButtonStatus : 10|2@1+ (1,0) [0|0] ""  VCM
+
+BO_ 439 MPDC_02P_C06: 8 MPDC
+ SG_ GearLeverStatus_5 : 0|3@1+ (1,0) [0|0] ""  VCM
+ SG_ GearShiftInputStatus_5 : 3|3@1+ (1,0) [0|0] ""  VCM
+ SG_ EconomyPower_ButtonStatus_5 : 6|2@1+ (1,0) [0|0] ""  VCM
+ SG_ GearShiftInputStatus_3 : 8|3@1+ (1,0) [0|0] ""  VCM
+ SG_ GLULSwitchAStatus : 11|3@1+ (1,0) [0|0] ""  VCM
+ SG_ GLULButtonNStatus : 14|2@1+ (1,0) [0|0] ""  VCM
+ SG_ GLULButtonRStatus : 16|2@1+ (1,0) [0|0] ""  VCM
+ SG_ DirInd_StalkStatus_1 : 18|3@1+ (1,0) [0|0] ""  VCM
+ SG_ MainBeam_StalkStatus_1 : 21|3@1+ (1,0) [0|0] ""  VCM
+ SG_ RS_Mode : 24|2@1+ (1,0) [0|0] ""  VCM
+ SG_ RS_Wiping_rqst : 26|3@1+ (1,0) [0|0] ""  VCM
+ SG_ TrailerBrakeInputStatus : 29|3@1+ (1,0) [0|0] ""  VCM
+ SG_ AutoHeadlightSwitching_rqst : 32|2@1+ (1,0) [0|0] ""  VCM
+ SG_ BrakeProgramButtonStatus : 34|2@1+ (1,0) [0|0] ""  VCM
+ SG_ RetarderStalkPosition_1 : 36|4@1+ (1,0) [0|0] ""  VCM
+ SG_ WiperStalkStat_1 : 40|3@1+ (1,0) [0|0] ""  VCM
+ SG_ WiperAdjustStatus_1 : 43|3@1+ (1,0) [0|0] ""  VCM
+ SG_ WiperParkStatus : 46|2@1+ (1,0) [0|0] ""  VCM
+ SG_ Rainsensor_ButtonStatus : 48|2@1+ (1,0) [0|0] ""  VCM
+ SG_ Washing_Status_1 : 50|2@1+ (1,0) [0|0] ""  VCM
+ SG_ WiperActiveStatus : 52|1@1+ (1,0) [0|0] ""  VCM
+ SG_ TrailerBrakeStalkPosition : 53|3@1+ (1,0) [0|7] ""  VCM
+
+BO_ 451 VCM_02P_C06: 8 VCM
+ SG_ RS_Activation_rqst : 0|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ GLULA_DeviceIndication : 2|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ RS_WasherStatus : 4|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ RS_WiperParkStatus : 6|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ GLULH_DeviceIndication : 8|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ GLULN_DeviceIndication : 10|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ GLULR_DeviceIndication : 12|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ RS_Sensitivity_rqst : 14|4@1+ (1,0) [0|0] ""  MPDC
+ SG_ DirectionIndicatorLights_cmd_ISig_6 : 18|3@1+ (1,0) [0|0] ""  MPDC
+ SG_ HazardTellTale_Indication_Cmd : 21|3@1+ (1,0) [0|0] ""  MCIOM
+ SG_ Hazard_cmd : 24|2@1+ (1,0) [0|0] ""  MCIOM
+ SG_ Rainsensor_Indication_ISig_6 : 26|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ Wiping_cmd : 28|3@1+ (1,0) [0|0] ""  MPDC
+ SG_ MirrorHeat_cmd : 32|8@1+ (0.4,0) [0|102] "Percent"  MPDC
+ SG_ Wiping_HMI_rqst : 40|3@1+ (1,0) [0|0] ""  MPDC
+
+BO_ 471 MCIOM_P03_C06: 8 MCIOM
+ SG_ PulseCounter : 0|32@1+ (1,0) [0|4294967295] "Count"  VCM
+ SG_ IntegrTimeRC_stat : 32|32@1+ (0.001,0) [0|4294967.295] "ms"  VCM
+
+BO_ 474 VCM_03P_C06: 8 VCM
+ SG_ BacklightCmd_ISig_6 : 0|5@1+ (1,0) [0|0] ""  MCIOM
+ SG_ FuncIndIlluminationLevel_ISig_6 : 5|3@1+ (1,0) [0|0] ""  MCIOM
+ SG_ LCP_Status_ISig_6 : 8|3@1+ (1,0) [0|0] ""  MPDC
+ SG_ CabLwrAmbLightIntensity_Cmd : 11|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ CabMaxLightIntensity_Cmd : 19|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ CabUprAmbLightIntensity_Cmd : 27|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ MaxLightIntensity_cmd : 35|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ NightLightIntensity_cmd : 43|8@1+ (1,0) [0|255] "%"  MPDC
+ SG_ RestingLightIntensity_cmd : 51|8@1+ (1,0) [0|255] "%"  MPDC
+
+BO_ 775 MPDC_01P_C06: 8 MPDC
+ SG_ EMSRelayStatus : 0|2@1+ (1,0) [0|0] ""  VCM
+ SG_ DirInd_FrontSide_Status : 2|3@1+ (1,0) [0|0] ""  VCM
+ SG_ DirIndSideLamp2_stat : 5|3@1+ (1,0) [0|0] ""  VCM
+ SG_ WiperMotorFeedback : 8|2@1+ (1,0) [0|0] ""  VCM
+ SG_ SensorCleaningPumpStatus_ISig_6 : 10|2@1+ (1,0) [0|3] ""  VCM
+ SG_ AmbientLight_stat_ISig_6 : 48|16@1+ (1,0) [0|65535] "lx"  VCM
+
+BO_ 778 VCM_01P_C06: 8 VCM
+ SG_ AccessoriesSignal_cmd : 0|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ AccessorySupply_cmd : 2|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ BBIgnitionSupply_cmd : 4|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ ElectricalMainRelay_cmd : 6|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ EMS_Power_supply_Cmd : 8|1@1+ (1,0) [0|0] ""  MPDC
+ SG_ EpsECUenable_cmd : 9|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ IgnitionSignal : 11|1@1+ (1,0) [0|0] ""  MPDC
+ SG_ IgnitionSupply_cmd : 12|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ PS_Relay2_cmd : 14|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ PS_Relay3_cmd : 16|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ PS_Relay4_cmd : 18|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ RefrigeratorRelay_cmd : 20|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ TECU_SupplyOutputCmd : 22|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ VMCUPowerFeed_rqst : 24|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ VehicleMode_ISig_6 : 26|4@1+ (1,0) [0|0] ""  MCIOM,MPDC
+ SG_ CabTiltMotor_cmd : 30|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ WheelBasedVehicleSpeedLowRes : 32|8@1+ (1,0) [0|255] "Km_per_h"  MPDC
+ SG_ RS_VehicleType : 40|4@1+ (1,0) [0|0] ""  MPDC
+ SG_ RS_WindScreenType : 44|4@1+ (1,0) [0|0] ""  MPDC
+ SG_ RS_Mode_rqst : 48|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ HL_Cleaning_cmd : 50|2@1+ (1,0) [0|0] ""  MPDC
+ SG_ SensorCleaningPumpAct_cmd : 52|2@1+ (1,0) [0|3] ""  MPDC
+
+BO_ 1721 AnmMsg_VCM_C06: 8 VCM
+ SG_ AnmSig_VCM_CAN06 : 0|32@1+ (1,0) [0|0] ""  MCIOM,BBM,MPDC
+
+BO_ 1722 AnmMsg_MCIOM_C06: 8 MCIOM
+ SG_ AnmSig_MCIOM_CAN06 : 0|32@1+ (1,0) [0|0] ""  BBM,VCM,MPDC
+
+BO_ 1723 AnmMsg_MPDC_C06: 8 MPDC
+ SG_ AnmSig_MPDC_CAN06 : 0|32@1+ (1,0) [0|0] ""  VCM,MCIOM,BBM
+
+BO_ 1724 AnmMsg_BBM_C06: 8 BBM
+ SG_ AnmSig_BBM_CAN06 : 0|32@1+ (1,0) [0|0] ""  MCIOM,MPDC,VCM
+
+BO_ 1791 VCM_NetVer_C06: 8 VCM
+ SG_ VCMNetVer_C06_NetID : 0|8@1+ (1,0) [0|255] "NotApplicable"  Vector__XXX
+ SG_ VCMNetVer_C06_Major : 8|16@1+ (1,0) [0|65535] "Not Applicable"  Vector__XXX
+ SG_ VCMNetVer_C06_Minor : 24|16@1+ (1,0) [0|65535] "Not Applicable"  Vector__XXX
+ SG_ VCMNetVer_C06_Patch : 40|16@1+ (1,0) [0|65535] "Not Applicable"  Vector__XXX
+ SG_ VCMNetVer_C06_Dirty : 56|8@1+ (1,0) [0|255] "NotApplicable"  Vector__XXX
+
+BO_ 1904 DebugTx01_MCIOM: 8 MCIOM
+ SG_ DebugTx01_MCIOM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1905 DebugTx02_MCIOM_Platform: 8 MCIOM
+ SG_ DebugTx02_MCIOM_Platform : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1914 DebugRx01_MCIOM: 8 Vector__XXX
+ SG_ DebugRx01_MCIOM : 0|64@1+ (1,0) [0|0] ""  MCIOM
+
+BO_ 1920 DebugTx01_MPDC: 8 MPDC
+ SG_ DebugTx01_MPDC : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1921 DebugTx02_MPDC_Platform: 8 MPDC
+ SG_ DebugTx02_MPDC_Platform : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1930 DebugRx01_MPDC: 8 Vector__XXX
+ SG_ DebugRx01_MPDC : 0|64@1+ (1,0) [0|0] ""  MPDC
+
+BO_ 1936 DebugTx01_VCM: 8 VCM
+ SG_ DebugTx01_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1937 DebugTx02_VCM: 8 VCM
+ SG_ DebugTx02_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1938 DebugTx03_VCM: 8 VCM
+ SG_ DebugTx03_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1939 DebugTx04_VCM: 8 VCM
+ SG_ DebugTx04_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1940 DebugTx05_VCM: 8 VCM
+ SG_ DebugTx05_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1941 DebugTx06_VCM: 8 VCM
+ SG_ DebugTx06_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1942 DebugTx07_VCM: 8 VCM
+ SG_ DebugTx07_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1943 DebugTx08_VCM: 8 VCM
+ SG_ DebugTx08_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1944 DebugTx09_VCM: 8 VCM
+ SG_ DebugTx09_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1945 DebugTx10_VCM: 8 VCM
+ SG_ DebugTx10_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1946 DebugRx01_VCM: 8 Vector__XXX
+ SG_ DebugRx01_VCM : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 1947 DebugTx11_VCM: 8 VCM
+ SG_ DebugTx11_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1948 DebugTx12_VCM: 8 VCM
+ SG_ DebugTx12_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1949 DebugTx13_VCM: 8 VCM
+ SG_ DebugTx13_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1950 DebugTx14_VCM: 8 VCM
+ SG_ DebugTx14_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1951 DebugTx15_VCM: 8 VCM
+ SG_ DebugTx15_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1952 DebugTx16_VCM: 8 VCM
+ SG_ DebugTx16_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1953 DebugTx17_VCM: 8 VCM
+ SG_ DebugTx17_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1954 DebugTx18_VCM: 8 VCM
+ SG_ DebugTx18_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1955 DebugTx19_VCM: 8 VCM
+ SG_ DebugTx19_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1956 DebugTx20_VCM: 8 VCM
+ SG_ DebugTx20_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1957 DebugTx21_VCM: 8 VCM
+ SG_ DebugTx21_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1958 DebugTx22_VCM: 8 VCM
+ SG_ DebugTx22_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1959 DebugTx23_VCM: 8 VCM
+ SG_ DebugTx23_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1960 DebugTx24_VCM: 8 VCM
+ SG_ DebugTx24_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1961 DebugTx25_VCM: 8 VCM
+ SG_ DebugTx25_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1962 DebugTx26_VCM: 8 VCM
+ SG_ DebugTx26_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1963 DebugTx27_VCM: 8 VCM
+ SG_ DebugTx27_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1964 DebugTx28_VCM: 8 VCM
+ SG_ DebugTx28_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1965 DebugTx29_VCM: 8 VCM
+ SG_ DebugTx29_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 1966 DebugTx30_VCM: 8 VCM
+ SG_ DebugTx30_VCM : 0|64@1+ (1,0) [0|0] ""  Vector__XXX
+
+BO_ 2633990180 NmAsr_VCM_C06: 1 VCM
+BO_ 2633990197 NmAsr_MCIOM_C06: 1 MCIOM
+BO_ 2633990267 NmAsr_MPDC_C06: 1 MPDC
+BO_ 2633990374 NmAsr_BBM_C06: 1 BBM
+BO_ 2671785458 PhysDiagReqMsg_35_F2_C06: 8 VCM
+ SG_ PhysDiagReqSig_35_F2_ISig_6 : 0|64@1+ (1,0) [0|0] ""  MCIOM
+
+BO_ 2671785460 DiagReqMsgOfIntTest_35_F4_C06: 8 VCM
+ SG_ InternalTesterDiagSig_35_F4 : 0|64@1+ (1,0) [0|0] ""  MCIOM
+
+BO_ 2671803378 PhysDiagReqMsg_7B_F2_C06: 8 VCM
+ SG_ PhysDiagReqSig_7B_F2_ISig_6 : 0|64@1+ (1,0) [0|0] ""  MPDC
+
+BO_ 2671803380 DiagReqMsgOfIntTest_7B_F4_C06: 8 VCM
+ SG_ InternalTesterDiagSig_7B_F4 : 0|64@1+ (1,0) [0|0] ""  MPDC
+
+BO_ 2671830770 PhysDiagReqMsg_E6_F2_C06: 8 VCM
+ SG_ PhysDiagReqSig_E6_F2_ISig_6 : 0|64@1+ (1,0) [0|0] ""  BBM
+
+BO_ 2671830772 DiagReqMsgOfIntTest_E6_F4_C06: 8 VCM
+ SG_ InternalTesterDiagSig_E6_F4 : 0|64@1+ (1,0) [0|0] ""  BBM
+
+BO_ 2671833653 PhysDiagRespMsg_F2_35_C06: 8 MCIOM
+ SG_ PhysDiagRespSig_F2_35_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671833723 PhysDiagRespMsg_F2_7B_C06: 8 MPDC
+ SG_ PhysDiagRespSig_F2_7B_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671833830 PhysDiagRespMsg_F2_E6_C06: 8 BBM
+ SG_ PhysDiagRespSig_F2_E6_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671834165 DiagRespMsgForIntTest_F4_35_C06: 8 MCIOM
+ SG_ InternalTesterDiagSig_F4_35 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671834235 DiagRespMsgForIntTest_F4_7B_C06: 8 MPDC
+ SG_ InternalTesterDiagSig_F4_7B : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671834342 DiagRespMsgOfIntTest_F4_E6_C06: 8 BBM
+ SG_ InternalTesterDiagSig_F4_E6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671902706 TesterFuncDiagMsg_C06: 8 VCM
+ SG_ FuncDiagDataTester_ISig_6 : 0|64@1+ (1,0) [0|0] ""  BBM,MCIOM,MPDC
+
+BO_ 2671902708 TesterFuncDiagMsgF4_C06: 8 VCM
+ SG_ FuncDiagDataIntTesterF4_ISig_6 : 0|64@1+ (1,0) [0|0] ""  MCIOM,MPDC,BBM
+
+BO_ 2671964725 DiagUUDTRespMsg1_F2_35_C06: 8 MCIOM
+ SG_ DiagUUDTRespSig_F2_35_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671964795 DiagUUDTRespMsg1_F2_7B_C06: 8 MPDC
+ SG_ DiagUUDTRespSig_F2_7B_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+BO_ 2671964902 DiagUUDTRespMsg1_F2_E6_C06: 8 BBM
+ SG_ DiagUUDTRespSig_F2_E6_ISig_6 : 0|64@1+ (1,0) [0|0] ""  VCM
+
+
+
+CM_ "COM_MATRIX_T3_2.3.0";
+CM_ BU_ BBM "Body Builder Module";
+CM_ BU_ MCIOM "Main Cab Input Output Module";
+CM_ BU_ MPDC "Main Power Distribution Center";
+CM_ BU_ VCM "Vehicle Control Module ";
+CM_ SG_ 384 SlprLwrAmbLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 384 SlprMaxLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 384 SlprUprAmbLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 CabLwrAmbLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 CabMaxLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 CabUprAmbLightIntensity_Cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 MaxLightIntensity_cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 NightLightIntensity_cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+CM_ SG_ 474 RestingLightIntensity_cmd "101-253 Spare values ; 254 Error ; 255 Not available";
+BA_DEF_  "Baudrate" INT 0 1000000;
+BA_DEF_  "NmType" STRING ;
+BA_DEF_  "Manufacturer" STRING ;
+BA_DEF_  "VersionYear" INT 0 99;
+BA_DEF_  "VersionNumber" INT 0 99;
+BA_DEF_  "VersionMonth" INT 1 12;
+BA_DEF_  "VersionDay" INT 1 31;
+BA_DEF_ BO_  "VFrameFormat" ENUM  "StandardCAN","ExtendedCAN","reserved","J1939PG","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","StandardCAN_FD","ExtendedCAN_FD";
+BA_DEF_ BU_  "TpOwnSystemEcuNumber" HEX 0 255;
+BA_DEF_ BO_  "TpJ1939VarDlc" ENUM  "No","Yes";
+BA_DEF_ SG_  "SigType" ENUM  "Default","Range","RangeSigned","ASCII","Discrete","Control","ReferencePGN","DTC","StringDelimiter","StringLength","StringLengthControl";
+BA_DEF_ SG_  "SeToolVersion_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolUniqueID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolOwnerSigGroup_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolOwnerSigGroupID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolName_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolItemID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SeToolAncestorID_SIGNAL" STRING ;
+BA_DEF_ SG_  "SPN" INT 0 524287;
+BA_DEF_ SG_  "GenSigStartValue" INT 0 0;
+BA_DEF_ BU_  "ReRoutJ1939ToCom" ENUM  "No","Yes";
+BA_DEF_  "ProtocolType" STRING ;
+BA_DEF_ SG_  "Platform_Vivis2_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_Vivis1_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_VMCU1_Sig" ENUM  "No","Yes";
+BA_DEF_ SG_  "Platform_FactoryIf_Sig" ENUM  "No","Yes";
+BA_DEF_ BU_  "NodeLayerModules" STRING ;
+BA_DEF_ BU_  "NmStationAddress" INT 0 255;
+BA_DEF_ BO_  "NmMessage" ENUM  "no","yes";
+BA_DEF_ BU_  "NmJ1939SystemInstance" INT 0 15;
+BA_DEF_ BU_  "NmJ1939System" INT 0 127;
+BA_DEF_ BU_  "NmJ1939ManufacturerCode" INT 0 2047;
+BA_DEF_ BU_  "NmJ1939IndustryGroup" INT 0 7;
+BA_DEF_ BU_  "NmJ1939IdentityNumber" INT 0 2097151;
+BA_DEF_ BU_  "NmJ1939FunctionInstance" INT 0 7;
+BA_DEF_ BU_  "NmJ1939Function" INT 0 255;
+BA_DEF_ BU_  "NmJ1939ECUInstance" INT 0 3;
+BA_DEF_ BU_  "NmJ1939AAC" INT 0 1;
+BA_DEF_  "NmAsrWaitBusSleepTime" INT 0 65535;
+BA_DEF_  "NmAsrTimeoutTime" INT 0 65535;
+BA_DEF_  "NmAsrRepeatMessageTime" INT 0 65535;
+BA_DEF_ BU_  "NmAsrNodeIdentifier" HEX 0 253;
+BA_DEF_ BU_  "NmAsrNode" ENUM  "No","Yes";
+BA_DEF_  "NmAsrMessageCount" INT 1 256;
+BA_DEF_ BO_  "NmAsrMessage" ENUM  "No","Yes";
+BA_DEF_  "NmAsrCanMsgCycleTime" INT 0 65535;
+BA_DEF_ BU_  "NmAsrCanMsgCycleOffset" INT 0 65535;
+BA_DEF_  "NmAsrBaseAddress" HEX 0 536870911;
+BA_DEF_  "NetworkExportIndices_1" STRING ;
+BA_DEF_  "NetworkExportIndices_0" STRING ;
+BA_DEF_  "NetworkExportIndices" STRING ;
+BA_DEF_ SG_  "NeedsUpdateBit" ENUM  "No","Yes";
+BA_DEF_ SG_  "MmAnSignal" ENUM  "No","Yes";
+BA_DEF_ BU_  "MmAnMaster" ENUM  "No","Yes";
+BA_DEF_ BU_  "IsOBDrelevant" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigMaxLatency" INT 0 65535;
+BA_DEF_ SG_  "GenSigILSupport" ENUM  "Yes","No";
+BA_DEF_ BO_  "GenMsgStartDelayTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgDelayTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgNrOfRepetition" INT 0 0;
+BA_DEF_ BO_  "GenMsgCycleTimeFast" INT 0 0;
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 0;
+BA_DEF_ BO_  "GenMsgSendType" ENUM  "Cyclic","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed","IfActive","NoMsgSendType","NotUsed";
+BA_DEF_ BO_  "GenMsgRequestable" INT 0 1;
+BA_DEF_ BO_  "GenMsgILSupport" ENUM  "No","Yes";
+BA_DEF_ SG_  "GenSigInactiveValue" INT 0 0;
+BA_DEF_ SG_  "GenSigCycleTimeActive" INT 0 0;
+BA_DEF_ SG_  "GenSigCycleTime" INT 0 0;
+BA_DEF_ SG_  "GenSigSendType" ENUM  "Cyclic","OnWrite","OnWriteWithRepetition","OnChange","OnChangeWithRepetition","IfActive","IfActiveWithRepetition","NoSigSendType","NotUsed","NotUsed","NotUsed","NotUsed","NotUsed";
+BA_DEF_ BU_  "ECU" STRING ;
+BA_DEF_ SG_  "E2EProfile" STRING ;
+BA_DEF_  "E2EP05WindowSize" INT 0 65535;
+BA_DEF_  "E2EP05UpperHeaderBitsToShift" INT 0 65535;
+BA_DEF_  "E2EP05ProfileName" STRING ;
+BA_DEF_  "E2EP05Offset" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateValid" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP05MinOkStateInit" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateValid" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP05MaxErrorStateInit" INT 0 65535;
+BA_DEF_  "E2EP05MaxDeltaCounter" INT 0 65535;
+BA_DEF_  "E2EP01WindowSize" INT 0 65535;
+BA_DEF_  "E2EP01UpperHeaderBitsToShift" INT 0 65535;
+BA_DEF_  "E2EP01SyncCounterInit" INT 0 65535;
+BA_DEF_  "E2EP01ProfileName" STRING ;
+BA_DEF_  "E2EP01MinOkStateValid" INT 0 65535;
+BA_DEF_  "E2EP01MinOkStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP01MinOkStateInit" INT 0 65535;
+BA_DEF_  "E2EP01MaxNoNewOrRepeatedData" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateValid" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateInvalid" INT 0 65535;
+BA_DEF_  "E2EP01MaxErrorStateInit" INT 0 65535;
+BA_DEF_  "E2EP01MaxDeltaCounter" INT 0 65535;
+BA_DEF_  "E2EP01DataIdMode" ENUM  "all16Bit","alternating8Bit","lower12Bit","lower8Bit";
+BA_DEF_  "E2EP01CrcOffset" INT 0 65535;
+BA_DEF_  "E2EP01CounterOffset" INT 0 65535;
+BA_DEF_ SG_  "E2EDataLength" INT 0 65535;
+BA_DEF_ SG_  "E2EDataId" INT 0 65535;
+BA_DEF_ BU_  "DiagnosticClientAddress" HEX 0 255;
+BA_DEF_ BO_  "DiagUUDTResponse" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagState" ENUM  "No","Yes";
+BA_DEF_  "DiagRoutingPriority" INT 0 0;
+BA_DEF_ BU_  "DiagRole" ENUM  "None","OBDTester","ExternalTester","InternalTester";
+BA_DEF_ BO_  "DiagResponse" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagRequest" ENUM  "No","Yes";
+BA_DEF_ BO_  "DiagConnection" HEX 0 65535;
+BA_DEF_  "DBName" STRING ;
+BA_DEF_ BO_  "CanTpSTmin" INT 0 255;
+BA_DEF_ BO_  "CanTpFcFrameId" HEX 0 2147483647;
+BA_DEF_ BO_  "CanTpBs" INT 0 255;
+BA_DEF_ BO_  "CANFD_BRS" ENUM  "0","1";
+BA_DEF_  "BusType" STRING ;
+BA_DEF_  "BaudrateCANFD" INT 0 5000000;
+BA_DEF_REL_ BU_SG_REL_  "GenSigTimeoutTime" INT 0 65535;
+BA_DEF_REL_ BU_SG_REL_  "GenSigFirstTimeoutTime" INT 0 65535;
+BA_DEF_DEF_  "Baudrate" 500000;
+BA_DEF_DEF_  "NmType" "";
+BA_DEF_DEF_  "Manufacturer" "";
+BA_DEF_DEF_  "VersionYear" 23;
+BA_DEF_DEF_  "VersionNumber" 1;
+BA_DEF_DEF_  "VersionMonth" 2;
+BA_DEF_DEF_  "VersionDay" 28;
+BA_DEF_DEF_  "VFrameFormat" "ExtendedCAN";
+BA_DEF_DEF_  "TpOwnSystemEcuNumber" 0;
+BA_DEF_DEF_  "TpJ1939VarDlc" "No";
+BA_DEF_DEF_  "SigType" "Default";
+BA_DEF_DEF_  "SeToolVersion_SIGNAL" "";
+BA_DEF_DEF_  "SeToolUniqueID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolOwnerSigGroup_SIGNAL" "";
+BA_DEF_DEF_  "SeToolOwnerSigGroupID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolName_SIGNAL" "";
+BA_DEF_DEF_  "SeToolItemID_SIGNAL" "";
+BA_DEF_DEF_  "SeToolAncestorID_SIGNAL" "";
+BA_DEF_DEF_  "SPN" 0;
+BA_DEF_DEF_  "GenSigStartValue" 0;
+BA_DEF_DEF_  "ReRoutJ1939ToCom" "No";
+BA_DEF_DEF_  "ProtocolType" "";
+BA_DEF_DEF_  "Platform_Vivis2_Sig" "No";
+BA_DEF_DEF_  "Platform_Vivis1_Sig" "No";
+BA_DEF_DEF_  "Platform_VMCU1_Sig" "No";
+BA_DEF_DEF_  "Platform_FactoryIf_Sig" "No";
+BA_DEF_DEF_  "NodeLayerModules" "";
+BA_DEF_DEF_  "NmStationAddress" 254;
+BA_DEF_DEF_  "NmMessage" "no";
+BA_DEF_DEF_  "NmJ1939SystemInstance" 0;
+BA_DEF_DEF_  "NmJ1939System" 0;
+BA_DEF_DEF_  "NmJ1939ManufacturerCode" 0;
+BA_DEF_DEF_  "NmJ1939IndustryGroup" 0;
+BA_DEF_DEF_  "NmJ1939IdentityNumber" 0;
+BA_DEF_DEF_  "NmJ1939FunctionInstance" 0;
+BA_DEF_DEF_  "NmJ1939Function" 0;
+BA_DEF_DEF_  "NmJ1939ECUInstance" 0;
+BA_DEF_DEF_  "NmJ1939AAC" 0;
+BA_DEF_DEF_  "NmAsrWaitBusSleepTime" 750;
+BA_DEF_DEF_  "NmAsrTimeoutTime" 5000;
+BA_DEF_DEF_  "NmAsrRepeatMessageTime" 300;
+BA_DEF_DEF_  "NmAsrNodeIdentifier" 0;
+BA_DEF_DEF_  "NmAsrNode" "Yes";
+BA_DEF_DEF_  "NmAsrMessageCount" 256;
+BA_DEF_DEF_  "NmAsrMessage" "No";
+BA_DEF_DEF_  "NmAsrCanMsgCycleTime" 200;
+BA_DEF_DEF_  "NmAsrCanMsgCycleOffset" 0;
+BA_DEF_DEF_  "NmAsrBaseAddress" 486506496;
+BA_DEF_DEF_  "NetworkExportIndices_1" "";
+BA_DEF_DEF_  "NetworkExportIndices_0" "";
+BA_DEF_DEF_  "NetworkExportIndices" "";
+BA_DEF_DEF_  "NeedsUpdateBit" "No";
+BA_DEF_DEF_  "MmAnSignal" "No";
+BA_DEF_DEF_  "MmAnMaster" "No";
+BA_DEF_DEF_  "IsOBDrelevant" "No";
+BA_DEF_DEF_  "GenSigMaxLatency" 0;
+BA_DEF_DEF_  "GenSigILSupport" "Yes";
+BA_DEF_DEF_  "GenMsgStartDelayTime" 0;
+BA_DEF_DEF_  "GenMsgDelayTime" 0;
+BA_DEF_DEF_  "GenMsgNrOfRepetition" 0;
+BA_DEF_DEF_  "GenMsgCycleTimeFast" 0;
+BA_DEF_DEF_  "GenMsgCycleTime" 0;
+BA_DEF_DEF_  "GenMsgSendType" "Cyclic";
+BA_DEF_DEF_  "GenMsgRequestable" 0;
+BA_DEF_DEF_  "GenMsgILSupport" "Yes";
+BA_DEF_DEF_  "GenSigInactiveValue" 0;
+BA_DEF_DEF_  "GenSigCycleTimeActive" 0;
+BA_DEF_DEF_  "GenSigCycleTime" 0;
+BA_DEF_DEF_  "GenSigSendType" "Cyclic";
+BA_DEF_DEF_  "ECU" "";
+BA_DEF_DEF_  "E2EProfile" "none";
+BA_DEF_DEF_  "E2EP05WindowSize" 5;
+BA_DEF_DEF_  "E2EP05UpperHeaderBitsToShift" 0;
+BA_DEF_DEF_  "E2EP05ProfileName" "PROFILE_05";
+BA_DEF_DEF_  "E2EP05Offset" 0;
+BA_DEF_DEF_  "E2EP05MinOkStateValid" 1;
+BA_DEF_DEF_  "E2EP05MinOkStateInvalid" 3;
+BA_DEF_DEF_  "E2EP05MinOkStateInit" 1;
+BA_DEF_DEF_  "E2EP05MaxErrorStateValid" 3;
+BA_DEF_DEF_  "E2EP05MaxErrorStateInvalid" 1;
+BA_DEF_DEF_  "E2EP05MaxErrorStateInit" 2;
+BA_DEF_DEF_  "E2EP05MaxDeltaCounter" 1;
+BA_DEF_DEF_  "E2EP01WindowSize" 5;
+BA_DEF_DEF_  "E2EP01UpperHeaderBitsToShift" 0;
+BA_DEF_DEF_  "E2EP01SyncCounterInit" 1;
+BA_DEF_DEF_  "E2EP01ProfileName" "PROFILE_01";
+BA_DEF_DEF_  "E2EP01MinOkStateValid" 1;
+BA_DEF_DEF_  "E2EP01MinOkStateInvalid" 3;
+BA_DEF_DEF_  "E2EP01MinOkStateInit" 1;
+BA_DEF_DEF_  "E2EP01MaxNoNewOrRepeatedData" 5;
+BA_DEF_DEF_  "E2EP01MaxErrorStateValid" 3;
+BA_DEF_DEF_  "E2EP01MaxErrorStateInvalid" 1;
+BA_DEF_DEF_  "E2EP01MaxErrorStateInit" 2;
+BA_DEF_DEF_  "E2EP01MaxDeltaCounter" 1;
+BA_DEF_DEF_  "E2EP01DataIdMode" "all16Bit";
+BA_DEF_DEF_  "E2EP01CrcOffset" 0;
+BA_DEF_DEF_  "E2EP01CounterOffset" 8;
+BA_DEF_DEF_  "E2EDataLength" 0;
+BA_DEF_DEF_  "E2EDataId" 0;
+BA_DEF_DEF_  "DiagnosticClientAddress" 0;
+BA_DEF_DEF_  "DiagUUDTResponse" "No";
+BA_DEF_DEF_  "DiagState" "No";
+BA_DEF_DEF_  "DiagRoutingPriority" 0;
+BA_DEF_DEF_  "DiagRole" "None";
+BA_DEF_DEF_  "DiagResponse" "No";
+BA_DEF_DEF_  "DiagRequest" "No";
+BA_DEF_DEF_  "DiagConnection" 0;
+BA_DEF_DEF_  "DBName" "";
+BA_DEF_DEF_  "CanTpSTmin" 0;
+BA_DEF_DEF_  "CanTpFcFrameId" 2147483647;
+BA_DEF_DEF_  "CanTpBs" 255;
+BA_DEF_DEF_  "CANFD_BRS" "0";
+BA_DEF_DEF_  "BusType" "";
+BA_DEF_DEF_  "BaudrateCANFD" 0;
+BA_DEF_DEF_REL_ "GenSigTimeoutTime" 0;
+BA_DEF_DEF_REL_ "GenSigFirstTimeoutTime" 0;
+BA_ "Manufacturer" "VOLVO_AB";
+BA_ "NmType" "NmAsr";
+BA_ "BusType" "CAN";
+BA_ "Baudrate" 500000;
+BA_ "DBName" "CAN06";
+BA_ "TpOwnSystemEcuNumber" BU_ BBM 230;
+BA_ "NmAsrNodeIdentifier" BU_ BBM 230;
+BA_ "NmAsrNode" BU_ BBM 1;
+BA_ "TpOwnSystemEcuNumber" BU_ MCIOM 53;
+BA_ "NmAsrNodeIdentifier" BU_ MCIOM 53;
+BA_ "NmAsrNode" BU_ MCIOM 1;
+BA_ "TpOwnSystemEcuNumber" BU_ MPDC 123;
+BA_ "NmAsrNodeIdentifier" BU_ MPDC 123;
+BA_ "NmAsrNode" BU_ MPDC 1;
+BA_ "TpOwnSystemEcuNumber" BU_ VCM 36;
+BA_ "NmAsrNodeIdentifier" BU_ VCM 36;
+BA_ "NmAsrNode" BU_ VCM 1;
+BA_ "GenMsgSendType" BO_ 138 0;
+BA_ "GenMsgCycleTime" BO_ 138 10;
+BA_ "VFrameFormat" BO_ 138 0;
+BA_ "GenMsgSendType" BO_ 213 0;
+BA_ "GenMsgCycleTime" BO_ 213 10;
+BA_ "VFrameFormat" BO_ 213 0;
+BA_ "GenMsgILSupport" BO_ 384 1;
+BA_ "GenMsgSendType" BO_ 384 0;
+BA_ "GenMsgCycleTime" BO_ 384 50;
+BA_ "VFrameFormat" BO_ 384 0;
+BA_ "GenMsgSendType" BO_ 421 0;
+BA_ "GenMsgCycleTime" BO_ 421 20;
+BA_ "VFrameFormat" BO_ 421 0;
+BA_ "GenMsgSendType" BO_ 439 0;
+BA_ "GenMsgCycleTime" BO_ 439 20;
+BA_ "VFrameFormat" BO_ 439 0;
+BA_ "GenMsgSendType" BO_ 451 0;
+BA_ "GenMsgCycleTime" BO_ 451 20;
+BA_ "VFrameFormat" BO_ 451 0;
+BA_ "GenMsgSendType" BO_ 471 0;
+BA_ "GenMsgCycleTime" BO_ 471 50;
+BA_ "VFrameFormat" BO_ 471 0;
+BA_ "GenMsgSendType" BO_ 474 0;
+BA_ "GenMsgCycleTime" BO_ 474 50;
+BA_ "VFrameFormat" BO_ 474 0;
+BA_ "GenMsgSendType" BO_ 775 0;
+BA_ "GenMsgCycleTime" BO_ 775 100;
+BA_ "VFrameFormat" BO_ 775 0;
+BA_ "GenMsgSendType" BO_ 778 0;
+BA_ "GenMsgCycleTime" BO_ 778 100;
+BA_ "GenMsgDelayTime" BO_ 778 10;
+BA_ "GenMsgStartDelayTime" BO_ 778 5;
+BA_ "VFrameFormat" BO_ 778 0;
+BA_ "GenMsgILSupport" BO_ 1721 1;
+BA_ "GenMsgSendType" BO_ 1721 0;
+BA_ "GenMsgCycleTime" BO_ 1721 100;
+BA_ "VFrameFormat" BO_ 1721 0;
+BA_ "GenMsgILSupport" BO_ 1722 1;
+BA_ "GenMsgSendType" BO_ 1722 0;
+BA_ "GenMsgCycleTime" BO_ 1722 100;
+BA_ "VFrameFormat" BO_ 1722 0;
+BA_ "GenMsgILSupport" BO_ 1723 1;
+BA_ "GenMsgSendType" BO_ 1723 0;
+BA_ "GenMsgCycleTime" BO_ 1723 100;
+BA_ "VFrameFormat" BO_ 1723 0;
+BA_ "GenMsgSendType" BO_ 1724 0;
+BA_ "GenMsgCycleTime" BO_ 1724 100;
+BA_ "VFrameFormat" BO_ 1724 0;
+BA_ "GenMsgSendType" BO_ 1791 0;
+BA_ "GenMsgCycleTime" BO_ 1791 1000;
+BA_ "VFrameFormat" BO_ 1791 0;
+BA_ "GenMsgSendType" BO_ 1904 8;
+BA_ "VFrameFormat" BO_ 1904 0;
+BA_ "GenMsgSendType" BO_ 1905 8;
+BA_ "VFrameFormat" BO_ 1905 0;
+BA_ "VFrameFormat" BO_ 1914 0;
+BA_ "GenMsgSendType" BO_ 1920 8;
+BA_ "VFrameFormat" BO_ 1920 0;
+BA_ "GenMsgSendType" BO_ 1921 8;
+BA_ "VFrameFormat" BO_ 1921 0;
+BA_ "VFrameFormat" BO_ 1930 0;
+BA_ "GenMsgSendType" BO_ 1936 8;
+BA_ "VFrameFormat" BO_ 1936 0;
+BA_ "GenMsgSendType" BO_ 1937 8;
+BA_ "VFrameFormat" BO_ 1937 0;
+BA_ "GenMsgSendType" BO_ 1938 8;
+BA_ "VFrameFormat" BO_ 1938 0;
+BA_ "GenMsgSendType" BO_ 1939 8;
+BA_ "VFrameFormat" BO_ 1939 0;
+BA_ "GenMsgSendType" BO_ 1940 8;
+BA_ "VFrameFormat" BO_ 1940 0;
+BA_ "GenMsgSendType" BO_ 1941 8;
+BA_ "VFrameFormat" BO_ 1941 0;
+BA_ "GenMsgSendType" BO_ 1942 8;
+BA_ "VFrameFormat" BO_ 1942 0;
+BA_ "GenMsgSendType" BO_ 1943 8;
+BA_ "VFrameFormat" BO_ 1943 0;
+BA_ "GenMsgSendType" BO_ 1944 8;
+BA_ "VFrameFormat" BO_ 1944 0;
+BA_ "GenMsgSendType" BO_ 1945 8;
+BA_ "VFrameFormat" BO_ 1945 0;
+BA_ "VFrameFormat" BO_ 1946 0;
+BA_ "GenMsgSendType" BO_ 1947 8;
+BA_ "VFrameFormat" BO_ 1947 0;
+BA_ "GenMsgSendType" BO_ 1948 8;
+BA_ "VFrameFormat" BO_ 1948 0;
+BA_ "GenMsgSendType" BO_ 1949 8;
+BA_ "VFrameFormat" BO_ 1949 0;
+BA_ "GenMsgSendType" BO_ 1950 8;
+BA_ "VFrameFormat" BO_ 1950 0;
+BA_ "GenMsgSendType" BO_ 1951 8;
+BA_ "VFrameFormat" BO_ 1951 0;
+BA_ "GenMsgSendType" BO_ 1952 8;
+BA_ "VFrameFormat" BO_ 1952 0;
+BA_ "GenMsgSendType" BO_ 1953 8;
+BA_ "VFrameFormat" BO_ 1953 0;
+BA_ "GenMsgSendType" BO_ 1954 8;
+BA_ "VFrameFormat" BO_ 1954 0;
+BA_ "GenMsgSendType" BO_ 1955 8;
+BA_ "VFrameFormat" BO_ 1955 0;
+BA_ "GenMsgSendType" BO_ 1956 8;
+BA_ "VFrameFormat" BO_ 1956 0;
+BA_ "GenMsgSendType" BO_ 1957 8;
+BA_ "VFrameFormat" BO_ 1957 0;
+BA_ "GenMsgSendType" BO_ 1958 8;
+BA_ "VFrameFormat" BO_ 1958 0;
+BA_ "GenMsgSendType" BO_ 1959 8;
+BA_ "VFrameFormat" BO_ 1959 0;
+BA_ "GenMsgSendType" BO_ 1960 8;
+BA_ "VFrameFormat" BO_ 1960 0;
+BA_ "GenMsgSendType" BO_ 1961 8;
+BA_ "VFrameFormat" BO_ 1961 0;
+BA_ "GenMsgSendType" BO_ 1962 8;
+BA_ "VFrameFormat" BO_ 1962 0;
+BA_ "GenMsgSendType" BO_ 1963 8;
+BA_ "VFrameFormat" BO_ 1963 0;
+BA_ "GenMsgSendType" BO_ 1964 8;
+BA_ "VFrameFormat" BO_ 1964 0;
+BA_ "GenMsgSendType" BO_ 1965 8;
+BA_ "VFrameFormat" BO_ 1965 0;
+BA_ "GenMsgSendType" BO_ 1966 8;
+BA_ "VFrameFormat" BO_ 1966 0;
+BA_ "GenMsgILSupport" BO_ 2633990180 0;
+BA_ "GenMsgSendType" BO_ 2633990180 8;
+BA_ "VFrameFormat" BO_ 2633990180 1;
+BA_ "GenMsgILSupport" BO_ 2633990197 0;
+BA_ "GenMsgSendType" BO_ 2633990197 8;
+BA_ "VFrameFormat" BO_ 2633990197 1;
+BA_ "GenMsgILSupport" BO_ 2633990267 0;
+BA_ "GenMsgSendType" BO_ 2633990267 8;
+BA_ "VFrameFormat" BO_ 2633990267 1;
+BA_ "GenMsgILSupport" BO_ 2633990374 0;
+BA_ "GenMsgSendType" BO_ 2633990374 8;
+BA_ "VFrameFormat" BO_ 2633990374 1;
+BA_ "GenMsgILSupport" BO_ 2671785458 0;
+BA_ "GenMsgSendType" BO_ 2671785458 8;
+BA_ "VFrameFormat" BO_ 2671785458 1;
+BA_ "GenMsgILSupport" BO_ 2671785460 0;
+BA_ "GenMsgSendType" BO_ 2671785460 8;
+BA_ "VFrameFormat" BO_ 2671785460 1;
+BA_ "GenMsgILSupport" BO_ 2671803378 0;
+BA_ "GenMsgSendType" BO_ 2671803378 8;
+BA_ "VFrameFormat" BO_ 2671803378 1;
+BA_ "GenMsgILSupport" BO_ 2671803380 0;
+BA_ "GenMsgSendType" BO_ 2671803380 8;
+BA_ "VFrameFormat" BO_ 2671803380 1;
+BA_ "GenMsgILSupport" BO_ 2671830770 0;
+BA_ "GenMsgSendType" BO_ 2671830770 8;
+BA_ "VFrameFormat" BO_ 2671830770 1;
+BA_ "GenMsgILSupport" BO_ 2671830772 0;
+BA_ "GenMsgSendType" BO_ 2671830772 8;
+BA_ "VFrameFormat" BO_ 2671830772 1;
+BA_ "GenMsgILSupport" BO_ 2671833653 0;
+BA_ "GenMsgSendType" BO_ 2671833653 8;
+BA_ "VFrameFormat" BO_ 2671833653 1;
+BA_ "GenMsgILSupport" BO_ 2671833723 0;
+BA_ "GenMsgSendType" BO_ 2671833723 8;
+BA_ "VFrameFormat" BO_ 2671833723 1;
+BA_ "GenMsgILSupport" BO_ 2671833830 0;
+BA_ "GenMsgSendType" BO_ 2671833830 8;
+BA_ "VFrameFormat" BO_ 2671833830 1;
+BA_ "GenMsgILSupport" BO_ 2671834165 0;
+BA_ "GenMsgSendType" BO_ 2671834165 8;
+BA_ "VFrameFormat" BO_ 2671834165 1;
+BA_ "GenMsgILSupport" BO_ 2671834235 0;
+BA_ "GenMsgSendType" BO_ 2671834235 8;
+BA_ "VFrameFormat" BO_ 2671834235 1;
+BA_ "GenMsgILSupport" BO_ 2671834342 0;
+BA_ "GenMsgSendType" BO_ 2671834342 8;
+BA_ "VFrameFormat" BO_ 2671834342 1;
+BA_ "GenMsgILSupport" BO_ 2671902706 0;
+BA_ "GenMsgSendType" BO_ 2671902706 8;
+BA_ "VFrameFormat" BO_ 2671902706 1;
+BA_ "GenMsgILSupport" BO_ 2671902708 0;
+BA_ "GenMsgSendType" BO_ 2671902708 8;
+BA_ "VFrameFormat" BO_ 2671902708 1;
+BA_ "GenMsgILSupport" BO_ 2671964725 0;
+BA_ "GenMsgSendType" BO_ 2671964725 8;
+BA_ "VFrameFormat" BO_ 2671964725 1;
+BA_ "GenMsgILSupport" BO_ 2671964795 0;
+BA_ "GenMsgSendType" BO_ 2671964795 8;
+BA_ "VFrameFormat" BO_ 2671964795 1;
+BA_ "GenMsgILSupport" BO_ 2671964902 0;
+BA_ "GenMsgSendType" BO_ 2671964902 8;
+BA_ "VFrameFormat" BO_ 2671964902 1;
+BA_ "GenSigSendType" SG_ 138 DRL_cmd_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 138 DRL_cmd_ISig_6 10;
+BA_ "GenSigCycleTimeActive" SG_ 138 DRL_cmd_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 138 DRL_cmd_ISig_6 3;
+BA_ "GenSigSendType" SG_ 138 PositionLight_cmd_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 138 PositionLight_cmd_ISig_6 10;
+BA_ "GenSigCycleTimeActive" SG_ 138 PositionLight_cmd_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 138 PositionLight_cmd_ISig_6 3;
+BA_ "GenSigSendType" SG_ 138 MarkerInterrupt_cmd 0;
+BA_ "GenSigCycleTime" SG_ 138 MarkerInterrupt_cmd 10;
+BA_ "GenSigCycleTimeActive" SG_ 138 MarkerInterrupt_cmd 100;
+BA_ "GenSigStartValue" SG_ 138 MarkerInterrupt_cmd 3;
+BA_ "GenSigSendType" SG_ 213 AccPedalSensorPW1 0;
+BA_ "GenSigCycleTime" SG_ 213 AccPedalSensorPW1 10;
+BA_ "GenSigCycleTimeActive" SG_ 213 AccPedalSensorPW1 100;
+BA_ "GenSigStartValue" SG_ 213 AccPedalSensorPW1 255;
+BA_ "GenSigSendType" SG_ 213 AccPedalSensorPW2 0;
+BA_ "GenSigCycleTime" SG_ 213 AccPedalSensorPW2 10;
+BA_ "GenSigCycleTimeActive" SG_ 213 AccPedalSensorPW2 100;
+BA_ "GenSigStartValue" SG_ 213 AccPedalSensorPW2 255;
+BA_ "GenSigSendType" SG_ 213 AccPedalSensorState1 0;
+BA_ "GenSigCycleTime" SG_ 213 AccPedalSensorState1 10;
+BA_ "GenSigCycleTimeActive" SG_ 213 AccPedalSensorState1 100;
+BA_ "GenSigStartValue" SG_ 213 AccPedalSensorState1 7;
+BA_ "GenSigSendType" SG_ 213 AccPedalSensorState2 0;
+BA_ "GenSigCycleTime" SG_ 213 AccPedalSensorState2 10;
+BA_ "GenSigCycleTimeActive" SG_ 213 AccPedalSensorState2 100;
+BA_ "GenSigStartValue" SG_ 213 AccPedalSensorState2 7;
+BA_ "GenSigSendType" SG_ 384 SlprLwrAmbLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 384 SlprLwrAmbLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 384 SlprLwrAmbLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 384 SlprMaxLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 384 SlprMaxLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 384 SlprMaxLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 384 SlprUprAmbLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 384 SlprUprAmbLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 384 SlprUprAmbLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 421 IgnKeySwitchStatusA 0;
+BA_ "GenSigCycleTime" SG_ 421 IgnKeySwitchStatusA 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 IgnKeySwitchStatusA 100;
+BA_ "GenSigStartValue" SG_ 421 IgnKeySwitchStatusA 3;
+BA_ "GenSigMaxLatency" SG_ 421 IgnKeySwitchStatusA 20;
+BA_ "GenSigSendType" SG_ 421 IgnKeySwitchStatusB 0;
+BA_ "GenSigCycleTime" SG_ 421 IgnKeySwitchStatusB 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 IgnKeySwitchStatusB 100;
+BA_ "GenSigStartValue" SG_ 421 IgnKeySwitchStatusB 3;
+BA_ "GenSigMaxLatency" SG_ 421 IgnKeySwitchStatusB 20;
+BA_ "GenSigSendType" SG_ 421 IgnKeySwitchStatusC 0;
+BA_ "GenSigCycleTime" SG_ 421 IgnKeySwitchStatusC 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 IgnKeySwitchStatusC 100;
+BA_ "GenSigStartValue" SG_ 421 IgnKeySwitchStatusC 3;
+BA_ "GenSigMaxLatency" SG_ 421 IgnKeySwitchStatusC 20;
+BA_ "GenSigSendType" SG_ 421 IgnKeySwitchStatusIO 0;
+BA_ "GenSigCycleTime" SG_ 421 IgnKeySwitchStatusIO 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 IgnKeySwitchStatusIO 100;
+BA_ "GenSigStartValue" SG_ 421 IgnKeySwitchStatusIO 3;
+BA_ "GenSigMaxLatency" SG_ 421 IgnKeySwitchStatusIO 20;
+BA_ "GenSigSendType" SG_ 421 CabTiltLock_stat 0;
+BA_ "GenSigCycleTime" SG_ 421 CabTiltLock_stat 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 CabTiltLock_stat 100;
+BA_ "GenSigStartValue" SG_ 421 CabTiltLock_stat 3;
+BA_ "GenSigSendType" SG_ 421 Hazard_ButtonStatus 0;
+BA_ "GenSigCycleTime" SG_ 421 Hazard_ButtonStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 421 Hazard_ButtonStatus 100;
+BA_ "GenSigStartValue" SG_ 421 Hazard_ButtonStatus 3;
+BA_ "GenSigSendType" SG_ 439 GearLeverStatus_5 0;
+BA_ "GenSigCycleTime" SG_ 439 GearLeverStatus_5 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GearLeverStatus_5 100;
+BA_ "GenSigStartValue" SG_ 439 GearLeverStatus_5 7;
+BA_ "GenSigMaxLatency" SG_ 439 GearLeverStatus_5 20;
+BA_ "GenSigSendType" SG_ 439 GearShiftInputStatus_5 0;
+BA_ "GenSigCycleTime" SG_ 439 GearShiftInputStatus_5 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GearShiftInputStatus_5 100;
+BA_ "GenSigStartValue" SG_ 439 GearShiftInputStatus_5 7;
+BA_ "GenSigMaxLatency" SG_ 439 GearShiftInputStatus_5 20;
+BA_ "GenSigSendType" SG_ 439 EconomyPower_ButtonStatus_5 0;
+BA_ "GenSigCycleTime" SG_ 439 EconomyPower_ButtonStatus_5 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 EconomyPower_ButtonStatus_5 100;
+BA_ "GenSigStartValue" SG_ 439 EconomyPower_ButtonStatus_5 3;
+BA_ "GenSigMaxLatency" SG_ 439 EconomyPower_ButtonStatus_5 20;
+BA_ "GenSigSendType" SG_ 439 GearShiftInputStatus_3 0;
+BA_ "GenSigCycleTime" SG_ 439 GearShiftInputStatus_3 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GearShiftInputStatus_3 100;
+BA_ "GenSigStartValue" SG_ 439 GearShiftInputStatus_3 7;
+BA_ "GenSigMaxLatency" SG_ 439 GearShiftInputStatus_3 20;
+BA_ "GenSigSendType" SG_ 439 GLULSwitchAStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 GLULSwitchAStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GLULSwitchAStatus 100;
+BA_ "GenSigStartValue" SG_ 439 GLULSwitchAStatus 7;
+BA_ "GenSigMaxLatency" SG_ 439 GLULSwitchAStatus 20;
+BA_ "GenSigSendType" SG_ 439 GLULButtonNStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 GLULButtonNStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GLULButtonNStatus 100;
+BA_ "GenSigStartValue" SG_ 439 GLULButtonNStatus 3;
+BA_ "GenSigMaxLatency" SG_ 439 GLULButtonNStatus 20;
+BA_ "GenSigSendType" SG_ 439 GLULButtonRStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 GLULButtonRStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 GLULButtonRStatus 100;
+BA_ "GenSigStartValue" SG_ 439 GLULButtonRStatus 3;
+BA_ "GenSigMaxLatency" SG_ 439 GLULButtonRStatus 20;
+BA_ "GenSigSendType" SG_ 439 DirInd_StalkStatus_1 0;
+BA_ "GenSigCycleTime" SG_ 439 DirInd_StalkStatus_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 DirInd_StalkStatus_1 100;
+BA_ "GenSigStartValue" SG_ 439 DirInd_StalkStatus_1 7;
+BA_ "GenSigSendType" SG_ 439 MainBeam_StalkStatus_1 0;
+BA_ "GenSigCycleTime" SG_ 439 MainBeam_StalkStatus_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 MainBeam_StalkStatus_1 100;
+BA_ "GenSigStartValue" SG_ 439 MainBeam_StalkStatus_1 7;
+BA_ "GenSigSendType" SG_ 439 RS_Mode 0;
+BA_ "GenSigCycleTime" SG_ 439 RS_Mode 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 RS_Mode 100;
+BA_ "GenSigStartValue" SG_ 439 RS_Mode 3;
+BA_ "GenSigSendType" SG_ 439 RS_Wiping_rqst 0;
+BA_ "GenSigCycleTime" SG_ 439 RS_Wiping_rqst 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 RS_Wiping_rqst 100;
+BA_ "GenSigStartValue" SG_ 439 RS_Wiping_rqst 7;
+BA_ "GenSigSendType" SG_ 439 TrailerBrakeInputStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 TrailerBrakeInputStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 TrailerBrakeInputStatus 100;
+BA_ "GenSigStartValue" SG_ 439 TrailerBrakeInputStatus 7;
+BA_ "GenSigSendType" SG_ 439 AutoHeadlightSwitching_rqst 0;
+BA_ "GenSigCycleTime" SG_ 439 AutoHeadlightSwitching_rqst 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 AutoHeadlightSwitching_rqst 100;
+BA_ "GenSigStartValue" SG_ 439 AutoHeadlightSwitching_rqst 3;
+BA_ "GenSigSendType" SG_ 439 BrakeProgramButtonStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 BrakeProgramButtonStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 BrakeProgramButtonStatus 100;
+BA_ "GenSigStartValue" SG_ 439 BrakeProgramButtonStatus 3;
+BA_ "GenSigSendType" SG_ 439 RetarderStalkPosition_1 0;
+BA_ "GenSigCycleTime" SG_ 439 RetarderStalkPosition_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 RetarderStalkPosition_1 100;
+BA_ "GenSigStartValue" SG_ 439 RetarderStalkPosition_1 15;
+BA_ "GenSigSendType" SG_ 439 WiperStalkStat_1 0;
+BA_ "GenSigCycleTime" SG_ 439 WiperStalkStat_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 WiperStalkStat_1 100;
+BA_ "GenSigStartValue" SG_ 439 WiperStalkStat_1 7;
+BA_ "GenSigSendType" SG_ 439 WiperAdjustStatus_1 0;
+BA_ "GenSigCycleTime" SG_ 439 WiperAdjustStatus_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 WiperAdjustStatus_1 100;
+BA_ "GenSigStartValue" SG_ 439 WiperAdjustStatus_1 7;
+BA_ "GenSigSendType" SG_ 439 WiperParkStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 WiperParkStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 WiperParkStatus 100;
+BA_ "GenSigStartValue" SG_ 439 WiperParkStatus 3;
+BA_ "GenSigSendType" SG_ 439 Rainsensor_ButtonStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 Rainsensor_ButtonStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 Rainsensor_ButtonStatus 100;
+BA_ "GenSigStartValue" SG_ 439 Rainsensor_ButtonStatus 3;
+BA_ "GenSigSendType" SG_ 439 Washing_Status_1 0;
+BA_ "GenSigCycleTime" SG_ 439 Washing_Status_1 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 Washing_Status_1 100;
+BA_ "GenSigStartValue" SG_ 439 Washing_Status_1 3;
+BA_ "GenSigSendType" SG_ 439 WiperActiveStatus 0;
+BA_ "GenSigCycleTime" SG_ 439 WiperActiveStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 439 WiperActiveStatus 100;
+BA_ "GenSigSendType" SG_ 439 TrailerBrakeStalkPosition 0;
+BA_ "GenSigCycleTime" SG_ 439 TrailerBrakeStalkPosition 20;
+BA_ "GenSigStartValue" SG_ 439 TrailerBrakeStalkPosition 7;
+BA_ "GenSigSendType" SG_ 451 RS_Activation_rqst 0;
+BA_ "GenSigCycleTime" SG_ 451 RS_Activation_rqst 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 RS_Activation_rqst 100;
+BA_ "GenSigStartValue" SG_ 451 RS_Activation_rqst 3;
+BA_ "GenSigMaxLatency" SG_ 451 RS_Activation_rqst 20;
+BA_ "GenSigSendType" SG_ 451 GLULA_DeviceIndication 0;
+BA_ "GenSigCycleTime" SG_ 451 GLULA_DeviceIndication 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 GLULA_DeviceIndication 100;
+BA_ "GenSigStartValue" SG_ 451 GLULA_DeviceIndication 3;
+BA_ "GenSigMaxLatency" SG_ 451 GLULA_DeviceIndication 20;
+BA_ "GenSigSendType" SG_ 451 RS_WasherStatus 0;
+BA_ "GenSigCycleTime" SG_ 451 RS_WasherStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 RS_WasherStatus 100;
+BA_ "GenSigStartValue" SG_ 451 RS_WasherStatus 3;
+BA_ "GenSigMaxLatency" SG_ 451 RS_WasherStatus 20;
+BA_ "GenSigSendType" SG_ 451 RS_WiperParkStatus 0;
+BA_ "GenSigCycleTime" SG_ 451 RS_WiperParkStatus 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 RS_WiperParkStatus 100;
+BA_ "GenSigStartValue" SG_ 451 RS_WiperParkStatus 3;
+BA_ "GenSigMaxLatency" SG_ 451 RS_WiperParkStatus 20;
+BA_ "GenSigSendType" SG_ 451 GLULH_DeviceIndication 0;
+BA_ "GenSigCycleTime" SG_ 451 GLULH_DeviceIndication 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 GLULH_DeviceIndication 100;
+BA_ "GenSigStartValue" SG_ 451 GLULH_DeviceIndication 3;
+BA_ "GenSigMaxLatency" SG_ 451 GLULH_DeviceIndication 20;
+BA_ "GenSigSendType" SG_ 451 GLULN_DeviceIndication 0;
+BA_ "GenSigCycleTime" SG_ 451 GLULN_DeviceIndication 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 GLULN_DeviceIndication 100;
+BA_ "GenSigStartValue" SG_ 451 GLULN_DeviceIndication 3;
+BA_ "GenSigMaxLatency" SG_ 451 GLULN_DeviceIndication 20;
+BA_ "GenSigSendType" SG_ 451 GLULR_DeviceIndication 0;
+BA_ "GenSigCycleTime" SG_ 451 GLULR_DeviceIndication 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 GLULR_DeviceIndication 100;
+BA_ "GenSigStartValue" SG_ 451 GLULR_DeviceIndication 3;
+BA_ "GenSigMaxLatency" SG_ 451 GLULR_DeviceIndication 20;
+BA_ "GenSigSendType" SG_ 451 RS_Sensitivity_rqst 0;
+BA_ "GenSigCycleTime" SG_ 451 RS_Sensitivity_rqst 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 RS_Sensitivity_rqst 100;
+BA_ "GenSigStartValue" SG_ 451 RS_Sensitivity_rqst 15;
+BA_ "GenSigMaxLatency" SG_ 451 RS_Sensitivity_rqst 20;
+BA_ "GenSigSendType" SG_ 451 DirectionIndicatorLights_cmd_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 451 DirectionIndicatorLights_cmd_ISig_6 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 DirectionIndicatorLights_cmd_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 451 DirectionIndicatorLights_cmd_ISig_6 7;
+BA_ "GenSigSendType" SG_ 451 HazardTellTale_Indication_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 451 HazardTellTale_Indication_Cmd 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 HazardTellTale_Indication_Cmd 100;
+BA_ "GenSigStartValue" SG_ 451 HazardTellTale_Indication_Cmd 7;
+BA_ "GenSigSendType" SG_ 451 Hazard_cmd 0;
+BA_ "GenSigCycleTime" SG_ 451 Hazard_cmd 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 Hazard_cmd 100;
+BA_ "GenSigStartValue" SG_ 451 Hazard_cmd 3;
+BA_ "GenSigSendType" SG_ 451 Rainsensor_Indication_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 451 Rainsensor_Indication_ISig_6 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 Rainsensor_Indication_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 451 Rainsensor_Indication_ISig_6 3;
+BA_ "GenSigSendType" SG_ 451 Wiping_cmd 0;
+BA_ "GenSigCycleTime" SG_ 451 Wiping_cmd 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 Wiping_cmd 100;
+BA_ "GenSigStartValue" SG_ 451 Wiping_cmd 7;
+BA_ "GenSigSendType" SG_ 451 MirrorHeat_cmd 0;
+BA_ "GenSigCycleTime" SG_ 451 MirrorHeat_cmd 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 MirrorHeat_cmd 100;
+BA_ "GenSigStartValue" SG_ 451 MirrorHeat_cmd 255;
+BA_ "GenSigSendType" SG_ 451 Wiping_HMI_rqst 0;
+BA_ "GenSigCycleTime" SG_ 451 Wiping_HMI_rqst 20;
+BA_ "GenSigCycleTimeActive" SG_ 451 Wiping_HMI_rqst 100;
+BA_ "GenSigStartValue" SG_ 451 Wiping_HMI_rqst 7;
+BA_ "GenSigSendType" SG_ 471 PulseCounter 0;
+BA_ "GenSigCycleTime" SG_ 471 PulseCounter 50;
+BA_ "GenSigCycleTimeActive" SG_ 471 PulseCounter 100;
+BA_ "GenSigStartValue" SG_ 471 PulseCounter 4294967295;
+BA_ "GenSigSendType" SG_ 471 IntegrTimeRC_stat 0;
+BA_ "GenSigCycleTime" SG_ 471 IntegrTimeRC_stat 50;
+BA_ "GenSigCycleTimeActive" SG_ 471 IntegrTimeRC_stat 100;
+BA_ "GenSigStartValue" SG_ 471 IntegrTimeRC_stat 4294967295;
+BA_ "GenSigSendType" SG_ 474 BacklightCmd_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 474 BacklightCmd_ISig_6 50;
+BA_ "GenSigCycleTimeActive" SG_ 474 BacklightCmd_ISig_6 100;
+BA_ "GenSigSendType" SG_ 474 FuncIndIlluminationLevel_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 474 FuncIndIlluminationLevel_ISig_6 50;
+BA_ "GenSigCycleTimeActive" SG_ 474 FuncIndIlluminationLevel_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 474 FuncIndIlluminationLevel_ISig_6 1;
+BA_ "GenSigSendType" SG_ 474 LCP_Status_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 474 LCP_Status_ISig_6 50;
+BA_ "GenSigCycleTimeActive" SG_ 474 LCP_Status_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 474 LCP_Status_ISig_6 7;
+BA_ "GenSigSendType" SG_ 474 CabLwrAmbLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 CabLwrAmbLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 474 CabLwrAmbLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 474 CabMaxLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 CabMaxLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 474 CabMaxLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 474 CabUprAmbLightIntensity_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 CabUprAmbLightIntensity_Cmd 50;
+BA_ "GenSigStartValue" SG_ 474 CabUprAmbLightIntensity_Cmd 255;
+BA_ "GenSigSendType" SG_ 474 MaxLightIntensity_cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 MaxLightIntensity_cmd 50;
+BA_ "GenSigStartValue" SG_ 474 MaxLightIntensity_cmd 255;
+BA_ "GenSigSendType" SG_ 474 NightLightIntensity_cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 NightLightIntensity_cmd 50;
+BA_ "GenSigStartValue" SG_ 474 NightLightIntensity_cmd 255;
+BA_ "GenSigSendType" SG_ 474 RestingLightIntensity_cmd 0;
+BA_ "GenSigCycleTime" SG_ 474 RestingLightIntensity_cmd 50;
+BA_ "GenSigStartValue" SG_ 474 RestingLightIntensity_cmd 255;
+BA_ "GenSigSendType" SG_ 775 EMSRelayStatus 0;
+BA_ "GenSigCycleTime" SG_ 775 EMSRelayStatus 100;
+BA_ "GenSigCycleTimeActive" SG_ 775 EMSRelayStatus 100;
+BA_ "GenSigStartValue" SG_ 775 EMSRelayStatus 3;
+BA_ "GenSigSendType" SG_ 775 DirInd_FrontSide_Status 0;
+BA_ "GenSigCycleTime" SG_ 775 DirInd_FrontSide_Status 100;
+BA_ "GenSigCycleTimeActive" SG_ 775 DirInd_FrontSide_Status 100;
+BA_ "GenSigStartValue" SG_ 775 DirInd_FrontSide_Status 7;
+BA_ "GenSigSendType" SG_ 775 DirIndSideLamp2_stat 0;
+BA_ "GenSigCycleTime" SG_ 775 DirIndSideLamp2_stat 100;
+BA_ "GenSigCycleTimeActive" SG_ 775 DirIndSideLamp2_stat 100;
+BA_ "GenSigStartValue" SG_ 775 DirIndSideLamp2_stat 7;
+BA_ "GenSigSendType" SG_ 775 WiperMotorFeedback 0;
+BA_ "GenSigCycleTime" SG_ 775 WiperMotorFeedback 100;
+BA_ "GenSigCycleTimeActive" SG_ 775 WiperMotorFeedback 100;
+BA_ "GenSigStartValue" SG_ 775 WiperMotorFeedback 3;
+BA_ "GenSigSendType" SG_ 775 SensorCleaningPumpStatus_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 775 SensorCleaningPumpStatus_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 775 SensorCleaningPumpStatus_ISig_6 3;
+BA_ "GenSigSendType" SG_ 775 AmbientLight_stat_ISig_6 0;
+BA_ "GenSigCycleTime" SG_ 775 AmbientLight_stat_ISig_6 100;
+BA_ "GenSigCycleTimeActive" SG_ 775 AmbientLight_stat_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 775 AmbientLight_stat_ISig_6 65535;
+BA_ "GenSigSendType" SG_ 778 AccessoriesSignal_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 AccessoriesSignal_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 AccessoriesSignal_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 AccessoriesSignal_cmd 3;
+BA_ "GenSigSendType" SG_ 778 AccessorySupply_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 AccessorySupply_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 AccessorySupply_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 AccessorySupply_cmd 3;
+BA_ "GenSigSendType" SG_ 778 BBIgnitionSupply_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 BBIgnitionSupply_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 BBIgnitionSupply_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 BBIgnitionSupply_cmd 3;
+BA_ "GenSigSendType" SG_ 778 ElectricalMainRelay_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 ElectricalMainRelay_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 ElectricalMainRelay_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 ElectricalMainRelay_cmd 3;
+BA_ "GenSigSendType" SG_ 778 EMS_Power_supply_Cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 EMS_Power_supply_Cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 EMS_Power_supply_Cmd 100;
+BA_ "GenSigSendType" SG_ 778 EpsECUenable_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 EpsECUenable_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 EpsECUenable_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 EpsECUenable_cmd 3;
+BA_ "GenSigSendType" SG_ 778 IgnitionSignal 0;
+BA_ "GenSigCycleTime" SG_ 778 IgnitionSignal 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 IgnitionSignal 100;
+BA_ "GenSigSendType" SG_ 778 IgnitionSupply_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 IgnitionSupply_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 IgnitionSupply_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 IgnitionSupply_cmd 3;
+BA_ "GenSigSendType" SG_ 778 PS_Relay2_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 PS_Relay2_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 PS_Relay2_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 PS_Relay2_cmd 3;
+BA_ "GenSigSendType" SG_ 778 PS_Relay3_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 PS_Relay3_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 PS_Relay3_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 PS_Relay3_cmd 3;
+BA_ "GenSigSendType" SG_ 778 PS_Relay4_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 PS_Relay4_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 PS_Relay4_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 PS_Relay4_cmd 3;
+BA_ "GenSigSendType" SG_ 778 RefrigeratorRelay_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 RefrigeratorRelay_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 RefrigeratorRelay_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 RefrigeratorRelay_cmd 3;
+BA_ "GenSigSendType" SG_ 778 TECU_SupplyOutputCmd 0;
+BA_ "GenSigCycleTime" SG_ 778 TECU_SupplyOutputCmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 TECU_SupplyOutputCmd 100;
+BA_ "GenSigStartValue" SG_ 778 TECU_SupplyOutputCmd 3;
+BA_ "GenSigSendType" SG_ 778 VMCUPowerFeed_rqst 0;
+BA_ "GenSigCycleTime" SG_ 778 VMCUPowerFeed_rqst 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 VMCUPowerFeed_rqst 100;
+BA_ "GenSigStartValue" SG_ 778 VMCUPowerFeed_rqst 3;
+BA_ "GenSigSendType" SG_ 778 VehicleMode_ISig_6 3;
+BA_ "GenSigCycleTime" SG_ 778 VehicleMode_ISig_6 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 VehicleMode_ISig_6 100;
+BA_ "GenSigStartValue" SG_ 778 VehicleMode_ISig_6 15;
+BA_ "GenSigSendType" SG_ 778 CabTiltMotor_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 CabTiltMotor_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 CabTiltMotor_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 CabTiltMotor_cmd 3;
+BA_ "GenSigSendType" SG_ 778 WheelBasedVehicleSpeedLowRes 0;
+BA_ "GenSigCycleTime" SG_ 778 WheelBasedVehicleSpeedLowRes 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 WheelBasedVehicleSpeedLowRes 100;
+BA_ "GenSigStartValue" SG_ 778 WheelBasedVehicleSpeedLowRes 255;
+BA_ "GenSigSendType" SG_ 778 RS_VehicleType 0;
+BA_ "GenSigCycleTime" SG_ 778 RS_VehicleType 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 RS_VehicleType 100;
+BA_ "GenSigStartValue" SG_ 778 RS_VehicleType 15;
+BA_ "GenSigSendType" SG_ 778 RS_WindScreenType 0;
+BA_ "GenSigCycleTime" SG_ 778 RS_WindScreenType 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 RS_WindScreenType 100;
+BA_ "GenSigStartValue" SG_ 778 RS_WindScreenType 15;
+BA_ "GenSigSendType" SG_ 778 RS_Mode_rqst 0;
+BA_ "GenSigCycleTime" SG_ 778 RS_Mode_rqst 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 RS_Mode_rqst 100;
+BA_ "GenSigStartValue" SG_ 778 RS_Mode_rqst 3;
+BA_ "GenSigSendType" SG_ 778 HL_Cleaning_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 HL_Cleaning_cmd 100;
+BA_ "GenSigCycleTimeActive" SG_ 778 HL_Cleaning_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 HL_Cleaning_cmd 3;
+BA_ "GenSigSendType" SG_ 778 SensorCleaningPumpAct_cmd 0;
+BA_ "GenSigCycleTime" SG_ 778 SensorCleaningPumpAct_cmd 100;
+BA_ "GenSigStartValue" SG_ 778 SensorCleaningPumpAct_cmd 3;
+BA_ "GenSigSendType" SG_ 1721 AnmSig_VCM_CAN06 1;
+BA_ "GenSigCycleTime" SG_ 1721 AnmSig_VCM_CAN06 100;
+BA_ "GenSigCycleTimeActive" SG_ 1721 AnmSig_VCM_CAN06 100;
+BA_ "MmAnSignal" SG_ 1721 AnmSig_VCM_CAN06 1;
+BA_ "GenSigSendType" SG_ 1722 AnmSig_MCIOM_CAN06 1;
+BA_ "GenSigCycleTime" SG_ 1722 AnmSig_MCIOM_CAN06 100;
+BA_ "GenSigCycleTimeActive" SG_ 1722 AnmSig_MCIOM_CAN06 100;
+BA_ "MmAnSignal" SG_ 1722 AnmSig_MCIOM_CAN06 1;
+BA_ "GenSigSendType" SG_ 1723 AnmSig_MPDC_CAN06 1;
+BA_ "GenSigCycleTime" SG_ 1723 AnmSig_MPDC_CAN06 100;
+BA_ "GenSigCycleTimeActive" SG_ 1723 AnmSig_MPDC_CAN06 100;
+BA_ "MmAnSignal" SG_ 1723 AnmSig_MPDC_CAN06 1;
+BA_ "GenSigSendType" SG_ 1724 AnmSig_BBM_CAN06 1;
+BA_ "GenSigCycleTime" SG_ 1724 AnmSig_BBM_CAN06 100;
+BA_ "GenSigCycleTimeActive" SG_ 1724 AnmSig_BBM_CAN06 100;
+BA_ "MmAnSignal" SG_ 1724 AnmSig_BBM_CAN06 1;
+BA_ "GenSigSendType" SG_ 1791 VCMNetVer_C06_NetID 0;
+BA_ "GenSigCycleTime" SG_ 1791 VCMNetVer_C06_NetID 100;
+BA_ "GenSigCycleTimeActive" SG_ 1791 VCMNetVer_C06_NetID 100;
+BA_ "GenSigStartValue" SG_ 1791 VCMNetVer_C06_NetID 6;
+BA_ "GenSigSendType" SG_ 1791 VCMNetVer_C06_Major 0;
+BA_ "GenSigCycleTime" SG_ 1791 VCMNetVer_C06_Major 100;
+BA_ "GenSigCycleTimeActive" SG_ 1791 VCMNetVer_C06_Major 100;
+BA_ "GenSigStartValue" SG_ 1791 VCMNetVer_C06_Major 2;
+BA_ "GenSigSendType" SG_ 1791 VCMNetVer_C06_Minor 0;
+BA_ "GenSigCycleTime" SG_ 1791 VCMNetVer_C06_Minor 100;
+BA_ "GenSigCycleTimeActive" SG_ 1791 VCMNetVer_C06_Minor 100;
+BA_ "GenSigStartValue" SG_ 1791 VCMNetVer_C06_Minor 3;
+BA_ "GenSigSendType" SG_ 1791 VCMNetVer_C06_Patch 0;
+BA_ "GenSigCycleTime" SG_ 1791 VCMNetVer_C06_Patch 100;
+BA_ "GenSigCycleTimeActive" SG_ 1791 VCMNetVer_C06_Patch 100;
+BA_ "GenSigStartValue" SG_ 1791 VCMNetVer_C06_Patch 1;
+BA_ "GenSigSendType" SG_ 1791 VCMNetVer_C06_Dirty 0;
+BA_ "GenSigCycleTime" SG_ 1791 VCMNetVer_C06_Dirty 100;
+BA_ "GenSigCycleTimeActive" SG_ 1791 VCMNetVer_C06_Dirty 100;
+BA_ "GenSigSendType" SG_ 1904 DebugTx01_MCIOM 1;
+BA_ "GenSigSendType" SG_ 1905 DebugTx02_MCIOM_Platform 1;
+BA_ "GenSigSendType" SG_ 1914 DebugRx01_MCIOM 1;
+BA_ "GenSigSendType" SG_ 1920 DebugTx01_MPDC 1;
+BA_ "GenSigSendType" SG_ 1921 DebugTx02_MPDC_Platform 1;
+BA_ "GenSigSendType" SG_ 1930 DebugRx01_MPDC 1;
+BA_ "GenSigSendType" SG_ 1936 DebugTx01_VCM 1;
+BA_ "GenSigSendType" SG_ 1937 DebugTx02_VCM 1;
+BA_ "GenSigSendType" SG_ 1938 DebugTx03_VCM 1;
+BA_ "GenSigSendType" SG_ 1939 DebugTx04_VCM 1;
+BA_ "GenSigSendType" SG_ 1940 DebugTx05_VCM 1;
+BA_ "GenSigSendType" SG_ 1941 DebugTx06_VCM 1;
+BA_ "GenSigSendType" SG_ 1942 DebugTx07_VCM 1;
+BA_ "GenSigSendType" SG_ 1943 DebugTx08_VCM 1;
+BA_ "GenSigSendType" SG_ 1944 DebugTx09_VCM 1;
+BA_ "GenSigSendType" SG_ 1945 DebugTx10_VCM 1;
+BA_ "GenSigSendType" SG_ 1946 DebugRx01_VCM 1;
+BA_ "GenSigSendType" SG_ 1947 DebugTx11_VCM 1;
+BA_ "GenSigSendType" SG_ 1948 DebugTx12_VCM 1;
+BA_ "GenSigSendType" SG_ 1949 DebugTx13_VCM 1;
+BA_ "GenSigSendType" SG_ 1950 DebugTx14_VCM 1;
+BA_ "GenSigSendType" SG_ 1951 DebugTx15_VCM 1;
+BA_ "GenSigSendType" SG_ 1952 DebugTx16_VCM 1;
+BA_ "GenSigSendType" SG_ 1953 DebugTx17_VCM 1;
+BA_ "GenSigSendType" SG_ 1954 DebugTx18_VCM 1;
+BA_ "GenSigSendType" SG_ 1955 DebugTx19_VCM 1;
+BA_ "GenSigSendType" SG_ 1956 DebugTx20_VCM 1;
+BA_ "GenSigSendType" SG_ 1957 DebugTx21_VCM 1;
+BA_ "GenSigSendType" SG_ 1958 DebugTx22_VCM 1;
+BA_ "GenSigSendType" SG_ 1959 DebugTx23_VCM 1;
+BA_ "GenSigSendType" SG_ 1960 DebugTx24_VCM 1;
+BA_ "GenSigSendType" SG_ 1961 DebugTx25_VCM 1;
+BA_ "GenSigSendType" SG_ 1962 DebugTx26_VCM 1;
+BA_ "GenSigSendType" SG_ 1963 DebugTx27_VCM 1;
+BA_ "GenSigSendType" SG_ 1964 DebugTx28_VCM 1;
+BA_ "GenSigSendType" SG_ 1965 DebugTx29_VCM 1;
+BA_ "GenSigSendType" SG_ 1966 DebugTx30_VCM 1;
+BA_ "GenSigSendType" SG_ 2671785458 PhysDiagReqSig_35_F2_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671785460 InternalTesterDiagSig_35_F4 7;
+BA_ "GenSigSendType" SG_ 2671803378 PhysDiagReqSig_7B_F2_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671803380 InternalTesterDiagSig_7B_F4 7;
+BA_ "GenSigSendType" SG_ 2671830770 PhysDiagReqSig_E6_F2_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671830772 InternalTesterDiagSig_E6_F4 7;
+BA_ "GenSigSendType" SG_ 2671833653 PhysDiagRespSig_F2_35_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671833723 PhysDiagRespSig_F2_7B_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671833830 PhysDiagRespSig_F2_E6_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671834165 InternalTesterDiagSig_F4_35 7;
+BA_ "GenSigSendType" SG_ 2671834235 InternalTesterDiagSig_F4_7B 7;
+BA_ "GenSigSendType" SG_ 2671834342 InternalTesterDiagSig_F4_E6 7;
+BA_ "GenSigSendType" SG_ 2671902706 FuncDiagDataTester_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671902708 FuncDiagDataIntTesterF4_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671964725 DiagUUDTRespSig_F2_35_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671964795 DiagUUDTRespSig_F2_7B_ISig_6 7;
+BA_ "GenSigSendType" SG_ 2671964902 DiagUUDTRespSig_F2_E6_ISig_6 7;
+BA_ "NmAsrMessage" BO_ 2633990180 1;
+BA_ "NmAsrMessage" BO_ 2633990197 1;
+BA_ "NmAsrMessage" BO_ 2633990267 1;
+BA_ "NmAsrMessage" BO_ 2633990374 1;
+BA_ "DiagConnection" BO_ 2671785458 62005;
+BA_ "DiagRequest" BO_ 2671785458 1;
+BA_ "DiagConnection" BO_ 2671785460 62517;
+BA_ "DiagRequest" BO_ 2671785460 1;
+BA_ "DiagConnection" BO_ 2671803378 62075;
+BA_ "DiagRequest" BO_ 2671803378 1;
+BA_ "DiagConnection" BO_ 2671803380 62587;
+BA_ "DiagRequest" BO_ 2671803380 1;
+BA_ "DiagConnection" BO_ 2671830770 62182;
+BA_ "DiagRequest" BO_ 2671830770 1;
+BA_ "DiagConnection" BO_ 2671830772 62694;
+BA_ "DiagRequest" BO_ 2671830772 1;
+BA_ "DiagConnection" BO_ 2671833653 62005;
+BA_ "DiagResponse" BO_ 2671833653 1;
+BA_ "DiagConnection" BO_ 2671833723 62075;
+BA_ "DiagResponse" BO_ 2671833723 1;
+BA_ "DiagConnection" BO_ 2671833830 62182;
+BA_ "DiagResponse" BO_ 2671833830 1;
+BA_ "DiagConnection" BO_ 2671834165 62517;
+BA_ "DiagResponse" BO_ 2671834165 1;
+BA_ "DiagConnection" BO_ 2671834235 62587;
+BA_ "DiagResponse" BO_ 2671834235 1;
+BA_ "DiagConnection" BO_ 2671834342 62694;
+BA_ "DiagResponse" BO_ 2671834342 1;
+BA_ "DiagConnection" BO_ 2671902706 62075;
+BA_ "DiagState" BO_ 2671902706 1;
+BA_ "DiagConnection" BO_ 2671902708 62719;
+BA_ "DiagState" BO_ 2671902708 1;
+BA_ "DiagConnection" BO_ 2671964725 62005;
+BA_ "DiagUUDTResponse" BO_ 2671964725 1;
+BA_ "DiagConnection" BO_ 2671964795 62075;
+BA_ "DiagUUDTResponse" BO_ 2671964795 1;
+BA_ "DiagConnection" BO_ 2671964902 62182;
+BA_ "DiagUUDTResponse" BO_ 2671964902 1;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 138 DRL_cmd_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 138 DRL_cmd_ISig_6 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 138 PositionLight_cmd_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 138 PositionLight_cmd_ISig_6 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 138 MarkerInterrupt_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 138 MarkerInterrupt_cmd 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorPW1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorPW1 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorPW2 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorPW2 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorState1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorState1 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorState2 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 213 AccPedalSensorState2 60;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprLwrAmbLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprLwrAmbLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprMaxLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprMaxLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprUprAmbLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 384 SlprUprAmbLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusA 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusA 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusB 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusB 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusC 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusC 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusIO 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 IgnKeySwitchStatusIO 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 CabTiltLock_stat 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 CabTiltLock_stat 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 421 Hazard_ButtonStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 421 Hazard_ButtonStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearLeverStatus_5 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearLeverStatus_5 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearShiftInputStatus_5 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearShiftInputStatus_5 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 EconomyPower_ButtonStatus_5 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 EconomyPower_ButtonStatus_5 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearShiftInputStatus_3 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GearShiftInputStatus_3 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULSwitchAStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULSwitchAStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULButtonNStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULButtonNStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULButtonRStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 GLULButtonRStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 DirInd_StalkStatus_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 DirInd_StalkStatus_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 MainBeam_StalkStatus_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 MainBeam_StalkStatus_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 RS_Mode 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 RS_Mode 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 RS_Wiping_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 RS_Wiping_rqst 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 TrailerBrakeInputStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 TrailerBrakeInputStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 AutoHeadlightSwitching_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 AutoHeadlightSwitching_rqst 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 BrakeProgramButtonStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 BrakeProgramButtonStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 RetarderStalkPosition_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 RetarderStalkPosition_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperStalkStat_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperStalkStat_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperAdjustStatus_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperAdjustStatus_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperParkStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperParkStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 Rainsensor_ButtonStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 Rainsensor_ButtonStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 Washing_Status_1 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 Washing_Status_1 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperActiveStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 WiperActiveStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 439 TrailerBrakeStalkPosition 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 439 TrailerBrakeStalkPosition 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_Activation_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_Activation_rqst 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULA_DeviceIndication 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULA_DeviceIndication 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_WasherStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_WasherStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_WiperParkStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_WiperParkStatus 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULH_DeviceIndication 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULH_DeviceIndication 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULN_DeviceIndication 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULN_DeviceIndication 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULR_DeviceIndication 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 GLULR_DeviceIndication 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_Sensitivity_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 RS_Sensitivity_rqst 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 DirectionIndicatorLights_cmd_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 DirectionIndicatorLights_cmd_ISig_6 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 451 HazardTellTale_Indication_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 451 HazardTellTale_Indication_Cmd 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 451 Hazard_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 451 Hazard_cmd 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Rainsensor_Indication_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Rainsensor_Indication_ISig_6 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Wiping_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Wiping_cmd 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 MirrorHeat_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 MirrorHeat_cmd 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Wiping_HMI_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 451 Wiping_HMI_rqst 120;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 471 PulseCounter 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 471 PulseCounter 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 471 IntegrTimeRC_stat 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 471 IntegrTimeRC_stat 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 474 BacklightCmd_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 474 BacklightCmd_ISig_6 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 474 FuncIndIlluminationLevel_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 474 FuncIndIlluminationLevel_ISig_6 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 LCP_Status_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 LCP_Status_ISig_6 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabLwrAmbLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabLwrAmbLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabMaxLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabMaxLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabUprAmbLightIntensity_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 CabUprAmbLightIntensity_Cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 MaxLightIntensity_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 MaxLightIntensity_cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 NightLightIntensity_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 NightLightIntensity_cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 474 RestingLightIntensity_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 474 RestingLightIntensity_cmd 300;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 EMSRelayStatus 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 EMSRelayStatus 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 DirInd_FrontSide_Status 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 DirInd_FrontSide_Status 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 DirIndSideLamp2_stat 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 DirIndSideLamp2_stat 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 WiperMotorFeedback 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 WiperMotorFeedback 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 SensorCleaningPumpStatus_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 SensorCleaningPumpStatus_ISig_6 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 775 AmbientLight_stat_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 775 AmbientLight_stat_ISig_6 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 AccessoriesSignal_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 AccessoriesSignal_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 AccessorySupply_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 AccessorySupply_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 BBIgnitionSupply_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 BBIgnitionSupply_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 ElectricalMainRelay_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 ElectricalMainRelay_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 EMS_Power_supply_Cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 EMS_Power_supply_Cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 EpsECUenable_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 EpsECUenable_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 IgnitionSignal 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 IgnitionSignal 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 IgnitionSupply_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 IgnitionSupply_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay2_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay2_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay3_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay3_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay4_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 PS_Relay4_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RefrigeratorRelay_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RefrigeratorRelay_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 TECU_SupplyOutputCmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 TECU_SupplyOutputCmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 VMCUPowerFeed_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 VMCUPowerFeed_rqst 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 778 VehicleMode_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 778 VehicleMode_ISig_6 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 VehicleMode_ISig_6 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 VehicleMode_ISig_6 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 CabTiltMotor_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 CabTiltMotor_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 WheelBasedVehicleSpeedLowRes 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 WheelBasedVehicleSpeedLowRes 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_VehicleType 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_VehicleType 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_WindScreenType 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_WindScreenType 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_Mode_rqst 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 RS_Mode_rqst 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 HL_Cleaning_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 HL_Cleaning_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 778 SensorCleaningPumpAct_cmd 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 778 SensorCleaningPumpAct_cmd 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 1721 AnmSig_VCM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 1721 AnmSig_VCM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ BBM SG_ 1721 AnmSig_VCM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ BBM SG_ 1721 AnmSig_VCM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 1721 AnmSig_VCM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 1721 AnmSig_VCM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ BBM SG_ 1722 AnmSig_MCIOM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ BBM SG_ 1722 AnmSig_MCIOM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1722 AnmSig_MCIOM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1722 AnmSig_MCIOM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 1722 AnmSig_MCIOM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 1722 AnmSig_MCIOM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1723 AnmSig_MPDC_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1723 AnmSig_MPDC_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 1723 AnmSig_MPDC_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 1723 AnmSig_MPDC_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ BBM SG_ 1723 AnmSig_MPDC_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ BBM SG_ 1723 AnmSig_MPDC_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MCIOM SG_ 1724 AnmSig_BBM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MCIOM SG_ 1724 AnmSig_BBM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ MPDC SG_ 1724 AnmSig_BBM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ MPDC SG_ 1724 AnmSig_BBM_CAN06 600;
+BA_REL_ "GenSigFirstTimeoutTime" BU_SG_REL_ VCM SG_ 1724 AnmSig_BBM_CAN06 3000;
+BA_REL_ "GenSigTimeoutTime" BU_SG_REL_ VCM SG_ 1724 AnmSig_BBM_CAN06 600;
+VAL_ 138 DRL_cmd_ISig_6 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 138 PositionLight_cmd_ISig_6 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 138 MarkerInterrupt_cmd 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 213 AccPedalSensorState1 7 "AccPedalSensorState_NotAvailable" 6 "AccPedalSensorState_Error" 5 "AccPedalSensorState_Spare2" 4 "AccPedalSensorState_Spare1" 3 "AccPedalSensorState_Pending" 2 "AccPedalSensorState_Restart" 1 "AccPedalSensorState_Active" 0 "AccPedalSensorState_Init" ;
+VAL_ 213 AccPedalSensorState2 7 "AccPedalSensorState_NotAvailable" 6 "AccPedalSensorState_Error" 5 "AccPedalSensorState_Spare2" 4 "AccPedalSensorState_Spare1" 3 "AccPedalSensorState_Pending" 2 "AccPedalSensorState_Restart" 1 "AccPedalSensorState_Active" 0 "AccPedalSensorState_Init" ;
+VAL_ 421 IgnKeySwitchStatusA 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 421 IgnKeySwitchStatusB 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 421 IgnKeySwitchStatusC 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 421 IgnKeySwitchStatusIO 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 421 CabTiltLock_stat 3 "ClosedOpen_NotAvailable" 2 "ClosedOpen_Error" 1 "ClosedOpen_Open" 0 "ClosedOpen_Closed" ;
+VAL_ 421 Hazard_ButtonStatus 3 "PushButtonStatus_NotAvailable" 2 "PushButtonStatus_Error" 1 "PushButtonStatus_Pushed" 0 "PushButtonStatus_Neutral" ;
+VAL_ 439 GearLeverStatus_5 7 "GearLeverStatus_NotAvailable" 6 "GearLeverStatus_Error" 5 "GearLeverStatus_Spare_01" 4 "GearLeverStatus_Spare" 3 "GearLeverStatus_Manual" 2 "GearLeverStatus_Auto" 1 "GearLeverStatus_Neutral" 0 "GearLeverStatus_Reverse" ;
+VAL_ 439 GearShiftInputStatus_5 7 "GearShiftInputStatus_NotAvailable" 6 "GearShiftInputStatus_Error" 5 "GearShiftInputStatus_Spare_02" 4 "GearShiftInputStatus_Spare_01" 3 "GearShiftInputStatus_Spare" 2 "GearShiftInputStatus_RequestGearShiftDownOneStep" 1 "GearShiftInputStatus_RequestGearShiftUpOneStep" 0 "GearShiftInputStatus_NoAction" ;
+VAL_ 439 EconomyPower_ButtonStatus_5 3 "PushButtonStatus_NotAvailable" 2 "PushButtonStatus_Error" 1 "PushButtonStatus_Pushed" 0 "PushButtonStatus_Neutral" ;
+VAL_ 439 GearShiftInputStatus_3 7 "GearShiftInputStatus_NotAvailable" 6 "GearShiftInputStatus_Error" 5 "GearShiftInputStatus_Spare_02" 4 "GearShiftInputStatus_Spare_01" 3 "GearShiftInputStatus_Spare" 2 "GearShiftInputStatus_RequestGearShiftDownOneStep" 1 "GearShiftInputStatus_RequestGearShiftUpOneStep" 0 "GearShiftInputStatus_NoAction" ;
+VAL_ 439 GLULSwitchAStatus 7 "A3PosSwitchStatus_NotAvailable" 6 "A3PosSwitchStatus_Error" 5 "A3PosSwitchStatus_Spare_02" 4 "A3PosSwitchStatus_Spare_01" 3 "A3PosSwitchStatus_Spare" 2 "A3PosSwitchStatus_Upper" 1 "A3PosSwitchStatus_Lower" 0 "A3PosSwitchStatus_Middle" ;
+VAL_ 439 GLULButtonNStatus 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 439 GLULButtonRStatus 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 439 DirInd_StalkStatus_1 7 "DirInd_StalkStatus_NotAvailable" 6 "DirInd_StalkStatus_Error" 5 "DirInd_StalkStatus_Spare" 4 "DirInd_StalkStatus_RightTemporaryTurningIndication" 3 "DirInd_StalkStatus_LeftTemporaryTurningIndication" 2 "DirInd_StalkStatus_RightTurningIndication" 1 "DirInd_StalkStatus_LeftTurningIndication" 0 "DirInd_StalkStatus_NeutralRestingPositon" ;
+VAL_ 439 MainBeam_StalkStatus_1 7 "MainBeam_StalkStatus_NotAvailable" 6 "MainBeam_StalkStatus_Error" 5 "MainBeam_StalkStatus_Spare_02" 4 "MainBeam_StalkStatus_Spare_01" 3 "MainBeam_StalkStatus_Spare" 2 "MainBeam_StalkStatus_ToggleMainBeam" 1 "MainBeam_StalkStatus_FlashToPass" 0 "MainBeam_StalkStatus_NeutralRestingPosition" ;
+VAL_ 439 RS_Mode 3 "RS_Mode_NotAvailable" 2 "RS_Mode_ErrorIndicator" 1 "RS_Mode_CalibrationMode" 0 "RS_Mode_NormalMode" ;
+VAL_ 439 RS_Wiping_rqst 7 "RS_Wiping_rqst_NotAvailable" 6 "RS_Wiping_rqst_Error" 5 "RS_Wiping_rqst_SpareValue_02" 4 "RS_Wiping_rqst_SpareValue_01" 3 "RS_Wiping_rqst_SpareValue" 2 "RS_Wiping_rqst_CONTINUOUSHIGH" 1 "RS_Wiping_rqst_CONTINUOUSLOW" 0 "RS_Wiping_rqst_NOWIPE" ;
+VAL_ 439 TrailerBrakeInputStatus 7 "TrailerBrakeInputStatus_NotAvailable" 6 "TrailerBrakeInputStatus_Error" 5 "TrailerBrakeInputStatus_Spare_02" 4 "TrailerBrakeInputStatus_Spare_01" 3 "TrailerBrakeInputStatus_Spare" 2 "TrailerBrakeInputStatus_Step2" 1 "TrailerBrakeInputStatus_Step1" 0 "TrailerBrakeInputStatus_NoRequest_Step0" ;
+VAL_ 439 AutoHeadlightSwitching_rqst 3 "AutoHeadlightSwitching_rqst_NotAvailable" 2 "AutoHeadlightSwitching_rqst_ErrorIndicator" 1 "AutoHeadlightSwitching_rqst_DaytimeRunningLights" 0 "AutoHeadlightSwitching_rqst_DippedBeam" ;
+VAL_ 439 BrakeProgramButtonStatus 3 "PushButtonStatus_NotAvailable" 2 "PushButtonStatus_Error" 1 "PushButtonStatus_Pushed" 0 "PushButtonStatus_Neutral" ;
+VAL_ 439 RetarderStalkPosition_1 15 "RetarderStalkPosition_NotAvailable" 14 "RetarderStalkPosition_Error" 13 "RetarderStalkPosition_Spare05" 12 "RetarderStalkPosition_Spare04" 11 "RetarderStalkPosition_Spare03" 10 "RetarderStalkPosition_Spare02" 9 "RetarderStalkPosition_Spare01" 8 "RetarderStalkPosition_Spare" 7 "RetarderStalkPosition_PositionAAuto" 6 "RetarderStalkPosition_PositionBBrakeProgram" 5 "RetarderStalkPosition_Position5" 4 "RetarderStalkPosition_Position4" 3 "RetarderStalkPosition_Position3" 2 "RetarderStalkPosition_Position2" 1 "RetarderStalkPosition_Position1" 0 "RetarderStalkPosition_Position0Inactive" ;
+VAL_ 439 WiperStalkStat_1 7 "WiperStalkStat_NotAvailable" 6 "WiperStalkStat_Error" 5 "WiperStalkStat_SpareValue" 4 "WiperStalkStat_FastPosition" 3 "WiperStalkStat_NormalPosition" 2 "WiperStalkStat_IntermittentPosition" 1 "WiperStalkStat_SingleWipePosition" 0 "WiperStalkStat_IdleRainsensorPosition" ;
+VAL_ 439 WiperAdjustStatus_1 7 "WiperAdjustStatus_NotAvailable" 6 "WiperAdjustStatus_Error" 5 "WiperAdjustStatus_Spare_01" 4 "WiperAdjustStatus_Spare" 3 "WiperAdjustStatus_WiperAdjust3" 2 "WiperAdjustStatus_WiperAdjust2" 1 "WiperAdjustStatus_WiperAdjust1" 0 "WiperAdjustStatus_WiperAdjust0" ;
+VAL_ 439 WiperParkStatus 3 "WiperParkStatus_NotAvailable" 2 "WiperParkStatus_ErrorIndicator" 1 "WiperParkStatus_WiperNotParked" 0 "WiperParkStatus_WiperParked" ;
+VAL_ 439 Rainsensor_ButtonStatus 3 "PushButtonStatus_NotAvailable" 2 "PushButtonStatus_Error" 1 "PushButtonStatus_Pushed" 0 "PushButtonStatus_Neutral" ;
+VAL_ 439 Washing_Status_1 3 "A2PosSwitchStatus_NotAvailable" 2 "A2PosSwitchStatus_Error" 1 "A2PosSwitchStatus_On" 0 "A2PosSwitchStatus_Off" ;
+VAL_ 439 TrailerBrakeStalkPosition 0 "NOREQUESTSTEP0" 1 "STEP1" 2 "STEP2" 3 "SPARE1" 4 "SPARE2" 5 "SPARE3" 6 "ERROR" 7 "NOT_AVAILABLE" ;
+VAL_ 451 RS_Activation_rqst 3 "RS_Activation_rqst_NotAvailable" 2 "RS_Activation_rqst_ErrorIndicator" 1 "RS_Activation_rqst_AutomaticWipingActive" 0 "RS_Activation_rqst_AutomaticWipingInactive" ;
+VAL_ 451 GLULA_DeviceIndication 3 "DeviceIndication_SpareValue" 2 "DeviceIndication_Blink" 1 "DeviceIndication_On" 0 "DeviceIndication_Off" ;
+VAL_ 451 RS_WasherStatus 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 451 RS_WiperParkStatus 3 "RS_WiperParkStatus_NotAvailable" 2 "RS_WiperParkStatus_ErrorIndicator" 1 "RS_WiperParkStatus_WiperInParkedPosition" 0 "RS_WiperParkStatus_WiperNotInParkedPosition" ;
+VAL_ 451 GLULH_DeviceIndication 3 "DeviceIndication_SpareValue" 2 "DeviceIndication_Blink" 1 "DeviceIndication_On" 0 "DeviceIndication_Off" ;
+VAL_ 451 GLULN_DeviceIndication 3 "DeviceIndication_SpareValue" 2 "DeviceIndication_Blink" 1 "DeviceIndication_On" 0 "DeviceIndication_Off" ;
+VAL_ 451 GLULR_DeviceIndication 3 "DeviceIndication_SpareValue" 2 "DeviceIndication_Blink" 1 "DeviceIndication_On" 0 "DeviceIndication_Off" ;
+VAL_ 451 RS_Sensitivity_rqst 15 "RS_Sensitivity_rqst_NotAvailable" 14 "RS_Sensitivity_rqst_ErrorIndicator" 13 "RS_Sensitivity_rqst_Reserved_04" 12 "RS_Sensitivity_rqst_Reserved_03" 11 "RS_Sensitivity_rqst_Reserved_02" 10 "RS_Sensitivity_rqst_Reserved_01" 9 "RS_Sensitivity_rqst_Reserved" 8 "RS_Sensitivity_rqst_Sensitivity8" 7 "RS_Sensitivity_rqst_Sensitivity7" 6 "RS_Sensitivity_rqst_Sensitivity6" 5 "RS_Sensitivity_rqst_Sensitivity5" 4 "RS_Sensitivity_rqst_Sensitivity4" 3 "RS_Sensitivity_rqst_Sensitivity3" 2 "RS_Sensitivity_rqst_Sensitivity2" 1 "RS_Sensitivity_rqst_Sensitivity1" 0 "RS_Sensitivity_rqst_Sensitivity0" ;
+VAL_ 451 DirectionIndicatorLights_cmd_ISig_6 7 "DirectionIndicatorLights_cmd_NotAvailable" 6 "DirectionIndicatorLights_cmd_SpareValue_02" 5 "DirectionIndicatorLights_cmd_SpareValue_01" 4 "DirectionIndicatorLights_cmd_SpareValue" 3 "DirectionIndicatorLights_cmd_RightAndLeftActiveHazard" 2 "DirectionIndicatorLights_cmd_RightDirectionIndicatorActive" 1 "DirectionIndicatorLights_cmd_LeftDirectionIndicatorActive" 0 "DirectionIndicatorLights_cmd_NotActive" ;
+VAL_ 451 HazardTellTale_Indication_Cmd 7 "HazardTellTale_Indication_Cmd_NotAvailable" 6 "HazardTellTale_Indication_Cmd_Error" 5 "HazardTellTale_Indication_Cmd_Spare_03" 4 "HazardTellTale_Indication_Cmd_Spare_02" 3 "HazardTellTale_Indication_Cmd_Spare_01" 2 "HazardTellTale_Indication_Cmd_HazardActiveHigh" 1 "HazardTellTale_Indication_Cmd_HazardActiveLow" 0 "HazardTellTale_Indication_Cmd_HazardInactive" ;
+VAL_ 451 Hazard_cmd 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 451 Rainsensor_Indication_ISig_6 3 "DeviceIndication_SpareValue" 2 "DeviceIndication_Blink" 1 "DeviceIndication_On" 0 "DeviceIndication_Off" ;
+VAL_ 451 Wiping_cmd 7 "Wiping_cmd_NotAvailable" 6 "Wiping_cmd_ErrorIndicator" 5 "Wiping_cmd_SpareValue_02" 4 "Wiping_cmd_SpareValue_01" 3 "Wiping_cmd_OffImmediately" 2 "Wiping_cmd_HighSpeedWiping" 1 "Wiping_cmd_LowSpeedWiping" 0 "Wiping_cmd_OffAtParked" ;
+VAL_ 451 Wiping_HMI_rqst 7 "Wiping_HMI_rqst_NotAvailable" 6 "Wiping_HMI_rqst_ErrorIndicator" 5 "Wiping_HMI_rqst_SpareValue" 4 "Wiping_HMI_rqst_HighSpeedWiping" 3 "Wiping_HMI_rqst_LowSpeedWiping" 2 "Wiping_HMI_rqst_Intermittent" 1 "Wiping_HMI_rqst_SingleSweep" 0 "Wiping_HMI_rqst_WipingOFF" ;
+VAL_ 474 BacklightCmd_ISig_6 31 "BacklightCmd_NotAvailable" 30 "BacklightCmd_Error" 16 "BacklightCmd_BacklightLevel16" 15 "BacklightCmd_BacklightLevel15" 14 "BacklightCmd_BacklightLevel14" 13 "BacklightCmd_BacklightLevel13" 12 "BacklightCmd_BacklightLevel12" 11 "BacklightCmd_BacklightLevel11" 10 "BacklightCmd_BacklightLevel10" 9 "BacklightCmd_BacklightLevel9" 8 "BacklightCmd_BacklightLevel8" 7 "BacklightCmd_BacklightLevel7" 6 "BacklightCmd_BacklightLevel6" 5 "BacklightCmd_BacklightLevel5" 4 "BacklightCmd_BacklightLevel4" 3 "BacklightCmd_BacklightLevel3" 2 "BacklightCmd_BacklightLevel2" 1 "BacklightCmd_BacklightLevel1" 0 "BacklightCmd_BacklightOff" ;
+VAL_ 474 FuncIndIlluminationLevel_ISig_6 7 "FuncIndIlluminationLevel_NotAvailable" 6 "FuncIndIlluminationLevel_Error" 5 "FuncIndIlluminationLevel_Spare" 4 "FuncIndIlluminationLevel_IlluminationLevel4" 3 "FuncIndIlluminationLevel_IlluminationLevel3" 2 "FuncIndIlluminationLevel_IlluminationLevel2" 1 "FuncIndIlluminationLevel_IlluminationLevel1" 0 "FuncIndIlluminationLevel_IlluminationOff" ;
+VAL_ 474 LCP_Status_ISig_6 7 "LCP_Status_NotAvailable" 6 "LCP_Status_Error" 5 "LCP_Status_SpareValue_01" 4 "LCP_Status_SpareValue" 3 "LCP_Status_DrivePlus_Auto" 2 "LCP_Status_Drive" 1 "LCP_Status_Park" 0 "LCP_Status_ZeroDRL" ;
+VAL_ 775 EMSRelayStatus 3 "OffOn_NotAvailable" 2 "OffOn_Error" 1 "OffOn_On" 0 "OffOn_Off" ;
+VAL_ 775 DirInd_FrontSide_Status 7 "DirIndFaultStatus_NotAvailable" 6 "DirIndFaultStatus_Error" 5 "DirIndFaultStatus_SpareValue_01" 4 "DirIndFaultStatus_SpareValue" 3 "DirIndFaultStatus_BothLeftAndRightDirectionIndicatorsFault" 2 "DirIndFaultStatus_RightDirectionIndicatorLampFault" 1 "DirIndFaultStatus_LeftDirectionIndicatorLampFault" 0 "DirIndFaultStatus_NoError" ;
+VAL_ 775 DirIndSideLamp2_stat 7 "LampCheckLeftRight_stat_NotAvailable" 6 "LampCheckLeftRight_stat_Error" 5 "LampCheckLeftRight_stat_Spare" 4 "LampCheckLeftRight_stat_TestedLeftAndRightLampNOK" 3 "LampCheckLeftRight_stat_TestedRightLampNOK" 2 "LampCheckLeftRight_stat_TestedLeftLampNOK" 1 "LampCheckLeftRight_stat_TestedLampOK" 0 "LampCheckLeftRight_stat_NotTested" ;
+VAL_ 775 WiperMotorFeedback 3 "WiperMotorFeedback_NotAvailable" 2 "WiperMotorFeedback_Spare" 1 "WiperMotorFeedback_MotorControlError" 0 "WiperMotorFeedback_WiperMotorOK" ;
+VAL_ 775 SensorCleaningPumpStatus_ISig_6 0 "INACTIVE" 1 "ACTIVE" 2 "ERROR" 3 "NOTAVAILABLE" ;
+VAL_ 778 AccessoriesSignal_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 AccessorySupply_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 BBIgnitionSupply_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 ElectricalMainRelay_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 EMS_Power_supply_Cmd 1 "EMS_Power_supply_Cmd_PowerSupplyShallBeActivated" 0 "EMS_Power_supply_Cmd_PowerSupplyShallBeDeactivated" ;
+VAL_ 778 EpsECUenable_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 IgnitionSignal 1 "DisabledEnabled_Enabled" 0 "DisabledEnabled_Disabled" ;
+VAL_ 778 IgnitionSupply_cmd 3 "DisableEnable_NotAvailable" 2 "DisableEnable_Error" 1 "DisableEnable_Enable" 0 "DisableEnable_Disable" ;
+VAL_ 778 PS_Relay2_cmd 3 "DeactivateActivate_NotAvailable" 2 "DeactivateActivate_Error" 1 "DeactivateActivate_Activate" 0 "DeactivateActivate_Deactivate" ;
+VAL_ 778 PS_Relay3_cmd 3 "DeactivateActivate_NotAvailable" 2 "DeactivateActivate_Error" 1 "DeactivateActivate_Activate" 0 "DeactivateActivate_Deactivate" ;
+VAL_ 778 PS_Relay4_cmd 3 "DeactivateActivate_NotAvailable" 2 "DeactivateActivate_Error" 1 "DeactivateActivate_Activate" 0 "DeactivateActivate_Deactivate" ;
+VAL_ 778 RefrigeratorRelay_cmd 3 "DeactivateActivate_NotAvailable" 2 "DeactivateActivate_Error" 1 "DeactivateActivate_Activate" 0 "DeactivateActivate_Deactivate" ;
+VAL_ 778 TECU_SupplyOutputCmd 3 "TECU_SupplyOutputCmd_NotAvailable" 2 "TECU_SupplyOutputCmd_Error" 1 "TECU_SupplyOutputCmd_TECUSupplyShallBeActivated" 0 "TECU_SupplyOutputCmd_TECUSupplyShallBeDeactivated" ;
+VAL_ 778 VMCUPowerFeed_rqst 3 "InactiveActive_NotAvailable" 2 "InactiveActive_Error" 1 "InactiveActive_Active" 0 "InactiveActive_Inactive" ;
+VAL_ 778 VehicleMode_ISig_6 15 "VehicleMode_NotAvailable" 14 "VehicleMode_Error" 13 "VehicleMode_Spare_7" 12 "VehicleMode_Spare_6" 11 "VehicleMode_Spare_5" 10 "VehicleMode_Spare_4" 9 "VehicleMode_Spare_3" 8 "VehicleMode_Spare_2" 7 "VehicleMode_Spare_1" 6 "VehicleMode_Running" 5 "VehicleMode_Cranking" 4 "VehicleMode_PreRunning" 3 "VehicleMode_Accessory" 2 "VehicleMode_Living" 1 "VehicleMode_Parked" 0 "VehicleMode_Hibernate" ;
+VAL_ 778 CabTiltMotor_cmd 3 "PowerSupply_NotAvailable" 2 "PowerSupply_Error" 1 "PowerSupply_PowerOn" 0 "PowerSupply_PowerOff" ;
+VAL_ 778 RS_VehicleType 15 "RS_VehicleType_NotAvailable" 14 "RS_VehicleType_ErrorIndicator" 13 "RS_VehicleType_Spare_08" 12 "RS_VehicleType_Spare_07" 11 "RS_VehicleType_Spare_06" 10 "RS_VehicleType_Spare_05" 9 "RS_VehicleType_Spare_04" 8 "RS_VehicleType_Spare_03" 7 "RS_VehicleType_Spare_02" 6 "RS_VehicleType_Spare_01" 5 "RS_VehicleType_RX" 4 "RS_VehicleType_RM" 3 "RS_VehicleType_KM" 2 "RS_VehicleType_CM" 1 "RS_VehicleType_FM" 0 "RS_VehicleType_FH" ;
+VAL_ 778 RS_WindScreenType 15 "RS_WindScreenType_NotAvailable" 14 "RS_WindScreenType_Error" 13 "RS_WindScreenType_Spare11" 12 "RS_WindScreenType_Spare10" 11 "RS_WindScreenType_Spare09" 10 "RS_WindScreenType_Spare08" 9 "RS_WindScreenType_Spare07" 8 "RS_WindScreenType_Spare06" 7 "RS_WindScreenType_Spare05" 6 "RS_WindScreenType_Spare04" 5 "RS_WindScreenType_Spare03" 4 "RS_WindScreenType_Spare02" 3 "RS_WindScreenType_Spare01" 2 "RS_WindScreenType_Spare" 1 "RS_WindScreenType_Untinted" 0 "RS_WindScreenType_Tinted" ;
+VAL_ 778 RS_Mode_rqst 3 "RS_Mode_NotAvailable" 2 "RS_Mode_ErrorIndicator" 1 "RS_Mode_CalibrationMode" 0 "RS_Mode_NormalMode" ;
+VAL_ 778 HL_Cleaning_cmd 3 "OffOn_NotAvailable" 2 "OffOn_Error" 1 "OffOn_On" 0 "OffOn_Off" ;
+VAL_ 778 SensorCleaningPumpAct_cmd 0 "OFF" 1 "ON" 2 "ERROR" 3 "NOTAVAILABLE" ;
+
