@@ -3,10 +3,12 @@
 #include "receiver.h"
 #include "step_gen.h"
 
-static void SetMotor1Direction(int i);
-static void SetMotor2Direction(int i);
 static void timer2Init( void );
+static void SetMotor1DirectionWrapper(String& str);
+static void SetMotor2DirectionWrapper(String& str);
 static void stepEventWrapper(String& str, StepGen* stepGen);
+static void stepsPerSecEventWrapper(String& str, StepGen* stepGen);
+static void useRampingEventWrapper(String& str, StepGen* stepGen);
 
 // defines pins numbers
 constexpr int motor1_stepPin = 5; // x-axis step
@@ -20,27 +22,24 @@ constexpr milli_sec t_off = 3;
 
 const int stepEnable = 8;
 
-StepGen stepGen1(motor1_stepPin, t_on, t_off);
-StepGen stepGen2(motor2_stepPin, t_on, t_off);
+static StepGen stepGen1(motor1_stepPin, t_on, t_off);
+static StepGen stepGen2(motor2_stepPin, t_on, t_off);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-void setup() {
-
-/*  SetPulsPerSecCommandHandler* pulsPerSec1CommandHandler = new SetPulsPerSecCommandHandler(stepGen1, String{"pps1"});
-  SetPulsPerSecCommandHandler* pulsPerSec2CommandHandler = new SetPulsPerSecCommandHandler(stepGen2, String{"pps2"});
-  SetRampingCommandHandler* ramping1CommandHandler = new SetRampingCommandHandler(stepGen1, String{"ramp1"});
-  SetRampingCommandHandler* ramping2CommandHandler = new SetRampingCommandHandler(stepGen2, String{"ramp2"});
-*/  
-  //EventHandler<void (&)(int)>* h1 = new EventHandler<void (&)(int)>(SetMotor1Direction, String{"dir1"});
+void setup() {  
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
-  //EventHandler<void (&)(int), StepGen>* h1 = new EventHandler<void (&)(int), StepGen>(String{"dir1"}, SetMotor1Direction, &stepGen1);
-  //EventHandler<void (&)(int), StepGen>* h2 = new EventHandler<void (&)(int), StepGen>(String{"dir2"}, SetMotor2Direction, &stepGen2);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps1"}, stepsPerSecEventWrapper, &stepGen1);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps2"}, stepsPerSecEventWrapper, &stepGen2);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp1"}, useRampingEventWrapper, &stepGen1);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp2"}, useRampingEventWrapper, &stepGen2);
+  DirectionEventHandler<void (&)(String&)>* setDirection1EventHandler = new DirectionEventHandler<void (&)(String&)>(String{"dir1"}, SetMotor1DirectionWrapper);
+  DirectionEventHandler<void (&)(String&)>* setDirection2EventHandler = new DirectionEventHandler<void (&)(String&)>(String{"dir2"}, SetMotor1DirectionWrapper);
 
-  //cli();
+  cli();
   timer2Init();
-  //sei();
+  sei();
 
   Serial.begin(38400);  // opens serial port
   Serial.setTimeout(500);
@@ -56,17 +55,15 @@ void setup() {
   
   eventParser.AddAcceptedHandler(*step1EventHandler);
   eventParser.AddAcceptedHandler(*step2EventHandler);
-/*  eventParser.AddAcceptedHandler(*pulsPerSec1CommandHandler);
-  eventParser.AddAcceptedHandler(*pulsPerSec2CommandHandler);
-  eventParser.AddAcceptedHandler(*ramping1CommandHandler);
-  eventParser.AddAcceptedHandler(*ramping2CommandHandler); 
-  eventParser.AddAcceptedHandler(*h1);
-  eventParser.AddAcceptedHandler(*h2);*/
- 
+  eventParser.AddAcceptedHandler(*stepsPerSec1EventHandler);
+  eventParser.AddAcceptedHandler(*stepsPerSec2EventHandler);
+  eventParser.AddAcceptedHandler(*useRamping1EventHandler);
+  eventParser.AddAcceptedHandler(*useRamping2EventHandler); 
+  eventParser.AddAcceptedHandler(*setDirection1EventHandler);
+  eventParser.AddAcceptedHandler(*setDirection2EventHandler);
 }
 
 void loop() {
-
 }
 
 
@@ -89,17 +86,27 @@ void serialEvent()
   receiver.scan();
 }
 
-static void SetMotor1Direction(int i)
+static void SetMotor1DirectionWrapper(String& str)
 {
-  digitalWrite(motor1_dirPin, i > 0 ? HIGH : LOW);
+  digitalWrite(motor1_dirPin, str.toInt() > 0 ? HIGH : LOW);
 }
 
-static void SetMotor2Direction(int i)
+static void SetMotor2DirectionWrapper(String& str)
 {
-  digitalWrite(motor2_dirPin, i > 0 ? HIGH : LOW);
+  digitalWrite(motor2_dirPin, str.toInt() > 0 ? HIGH : LOW);
 }
 
 static void stepEventWrapper(String& str, StepGen* stepGen)
 {
   stepGen->Step(str.toInt());
+}
+
+static void stepsPerSecEventWrapper(String& str, StepGen* stepGen)
+{
+  stepGen->SetStepsPerSec(str.toInt());
+}
+
+static void useRampingEventWrapper(String& str, StepGen* stepGen)
+{
+  stepGen->SetUseRamping(str.toInt() > 0 ? true : false);
 }

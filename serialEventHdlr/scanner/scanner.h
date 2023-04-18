@@ -5,36 +5,20 @@
 #include "event_parser.h"
 #include "step_gen.h"
 
-
-/*
-class SetPulsPerSecCommandHandler : public EventFunctor
+template<typename F>
+class DirectionEventHandler : public EventFunctor
 {
   public:
-    SetPulsPerSecCommandHandler(StepGen const &s, String const &event_name) : EventFunctor{event_name}, stepGen_(s) {};
+    DirectionEventHandler(String const &event_name, F f) : EventFunctor{event_name}, f_(f) {};
 
     void operator()(String& _parsedData)
     {
-      stepGen_.SetStepsPerSec(_parsedData.toInt());
+      f_(_parsedData);
     };
 
-  private:
-    StepGen const &stepGen_;
+    F f_;
 };
 
-class SetRampingCommandHandler : public EventFunctor
-{
-  public:
-    SetRampingCommandHandler(StepGen const &s, String const &event_name) : EventFunctor{event_name}, stepGen_{s} {};
-
-    void operator()(String& _parsedData)
-    {
-      stepGen_.SetUseRamping(_parsedData.toInt());
-    };
-
-  private:
-    StepGen const &stepGen_;
-};
-*/
 template<typename F, typename O>
 class EventHandler : public EventFunctor
 {
