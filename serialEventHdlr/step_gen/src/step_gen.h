@@ -1,5 +1,5 @@
-#ifndef __C_LCD_WRITER_H__
-#define __C_LCD_WRITER_H__
+#ifndef __C_STEP_GEN_H__
+#define __C_STEP_GEN_H__
 
 #include <Arduino.h>
 
