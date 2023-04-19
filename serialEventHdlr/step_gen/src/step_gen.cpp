@@ -1,6 +1,7 @@
 #include "step_gen.h"
 //#include <iostream>
 //#include <sstream>
+#include <Arduino.h>
 
 StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), pin_(pin)
 {
@@ -25,7 +26,7 @@ void StepGen::Update()
    state_->Update();
 }
 
-stepRetVal StepGen::Step(uint16_t steps)
+stepRetVal StepGen::Step(unsigned int steps)
 {
    if (!IsBusy())
    {
@@ -57,7 +58,7 @@ bool StepGen::IsBusy()
    return state_->IsBusy();
 }
 
-void StepGen::SetStepsPerSec(uint8_t steps_per_sec)
+void StepGen::SetStepsPerSec(char steps_per_sec)
 {
    if ((steps_per_sec != 0) && (steps_per_sec < max_steps_per_sec_))
    { 
@@ -111,9 +112,9 @@ milli_sec StepGen::CalcRampTimeOffset()
    return retVal;
 }
 
-uint16_t StepGen::CalcNbrOfRampSteps()
+unsigned int StepGen::CalcNbrOfRampSteps()
 {
-   uint16_t retVal;
+   unsigned int retVal;
 
    // can ramping up and down fit in the number of requested steps?
    if (curr_step_ < 2 * max_number_of_ramp_steps)

@@ -136,13 +136,11 @@ TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
 
    incTime(); // 5ms
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
+   ASSERT_TRUE(stepGen->IsBusy()); 
 
-   incTime(8); // 13ms
+   incTime(5); // 10ms
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-
-   incTime(); // 14ms
-   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_pin) == PinState_Low);
-   ASSERT_TRUE(stepGen->IsBusy() == false); 
+   ASSERT_FALSE(stepGen->IsBusy()); 
 }
 
 // test generating one step with specified speed
