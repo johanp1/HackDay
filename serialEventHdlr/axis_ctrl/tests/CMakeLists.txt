@@ -11,7 +11,7 @@ set(TEST_SOURCE
   main.cpp)
 
 add_executable(axisCtrlTests ${TEST_SOURCE})
-target_include_directories(axisCtrlTests PUBLIC . ../src)
+target_include_directories(axisCtrlTests PUBLIC . ../src ../../step_gen/src)
 target_link_libraries(axisCtrlTests axisCtrl gtest_main gmock_main)
 
 include(GoogleTest)
