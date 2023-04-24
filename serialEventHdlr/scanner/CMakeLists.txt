@@ -5,6 +5,8 @@ enable_language(CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_BUILD_TYPE Debug)
 
+add_subdirectory(src)
+
 # Force the .ino file to be treated as C++
 set_source_files_properties(scanner.ino
     PROPERTIES LANGUAGE CXX
@@ -15,15 +17,13 @@ set_source_files_properties(scanner.ino
 
 add_library(scanner
     scanner.ino
-    ../axis_ctrl/src/step_gen.cpp
-	../axis_ctrl/src/axis_ctrl.cpp
 )
-  
-target_include_directories(scanner PUBLIC . ../axis_ctrl/src)
 
-add_subdirectory(../../EventProxy/src build)
+target_include_directories(scanner  PUBLIC . ./src)
 
-target_link_libraries(scanner arduinoEvents)
+add_subdirectory(../EventProxy/src build)
+
+target_link_libraries(scanner axisCtrl arduinoEvents)
 
 option(COMPILE_TESTS "Compile the tests" OFF)
 if (COMPILE_TESTS)
