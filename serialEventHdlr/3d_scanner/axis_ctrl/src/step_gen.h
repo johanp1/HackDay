@@ -18,7 +18,7 @@ class StepGen
 {
    public:
    StepGen(Pin pin = 0, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
-   virtual ~StepGen(){};
+   virtual ~StepGen();
 
    virtual void Update();
    virtual stepRetVal Step(unsigned int steps = 1);

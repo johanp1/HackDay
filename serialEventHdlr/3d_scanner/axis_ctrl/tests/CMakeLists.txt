@@ -6,13 +6,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-set(TEST_SOURCE
-  axis_ctrl_tests.cpp
-  main.cpp)
+add_executable(stepGenTests step_gen_tests.cpp main.cpp)
+target_link_libraries(stepGenTests stepGen gtest_main gmock_main)
 
-add_executable(axisCtrlTests ${TEST_SOURCE})
-target_include_directories(axisCtrlTests PUBLIC . ../src ../../step_gen/src)
+add_executable(axisCtrlTests axis_ctrl_tests.cpp main.cpp)
 target_link_libraries(axisCtrlTests axisCtrl gtest_main gmock_main)
 
 include(GoogleTest)
+gtest_discover_tests(stepGenTests)
 gtest_discover_tests(axisCtrlTests)

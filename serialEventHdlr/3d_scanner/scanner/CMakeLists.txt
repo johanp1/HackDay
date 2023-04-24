@@ -15,12 +15,13 @@ set_source_files_properties(scanner.ino
 
 add_library(scanner
     scanner.ino
-    ../step_gen/src/step_gen.cpp
+    ../axis_ctrl/src/step_gen.cpp
+	../axis_ctrl/src/axis_ctrl.cpp
 )
   
-target_include_directories(scanner PUBLIC . ../step_gen/src)
+target_include_directories(scanner PUBLIC . ../axis_ctrl/src)
 
-add_subdirectory(../EventProxy/src build)
+add_subdirectory(../../EventProxy/src build)
 
 target_link_libraries(scanner arduinoEvents)
 
