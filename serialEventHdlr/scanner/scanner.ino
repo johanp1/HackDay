@@ -1,7 +1,7 @@
 // full-step 400 steps/rev for motor 1:4 ratio for axis => 1600 steps/rev => 0.225 degrees/step
 #include "scanner.h"
 #include "receiver.h"
-#include "step_gen.h"
+#include "src/step_gen.h"
 
 static void timer2Init( void );
 static void SetMotor1DirectionWrapper(String& str);

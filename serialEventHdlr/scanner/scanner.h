@@ -3,7 +3,7 @@
 
 #include "event_generator.h"
 #include "event_parser.h"
-#include "step_gen.h"
+#include "src/step_gen.h"
 
 template<typename F>
 class DirectionEventHandler : public EventFunctor
