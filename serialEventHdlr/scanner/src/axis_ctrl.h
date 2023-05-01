@@ -3,20 +3,26 @@
 
 #include "step_gen.h"
 
-//using milli_sec = uint16_t;
-//using Pin = byte;
-//enum stepRetVal { ok, busy };
-
-//constexpr milli_sec default_t_on = 2; //5ms
+// full-step 400 steps/rev for motor 1:4 ratio for axis => 1600 steps/rev => 0.225 degrees/step
 
 class AxisCtrl
 {
    public:
-   AxisCtrl(const StepGen& s);
+   AxisCtrl(StepGen& s, float scale = 1.0f);
    virtual ~AxisCtrl();
 
+   void SetScale(float scale);
+   void SetSpeed(float units_per_sec);
+   float GetPosition();
+   void SetRelativePosition(float pos);
+   void SetAbsolutPosition(float pos);
+
+   //void SetHome(float pos = 0.0f);
+
    private:
-   const StepGen& stepGen_;
+   float scale_ = 1.0f; // step/degree
+   float position_ = 0.0f;
+   StepGen& stepGen_;
 };
 
 #endif //__C_AXIS_CTRL_H__

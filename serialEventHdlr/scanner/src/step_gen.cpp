@@ -1,5 +1,5 @@
 #include "step_gen.h"
-//#include <iostream>
+#include <iostream>
 //#include <sstream>
 #include <Arduino.h>
 
@@ -58,7 +58,7 @@ bool StepGen::IsBusy()
    return state_->IsBusy();
 }
 
-void StepGen::SetStepsPerSec(char steps_per_sec)
+void StepGen::SetStepsPerSec(unsigned int steps_per_sec)
 {
    if ((steps_per_sec != 0) && (steps_per_sec < max_steps_per_sec_))
    { 
@@ -68,6 +68,7 @@ void StepGen::SetStepsPerSec(char steps_per_sec)
    {
       t_off_sps_ = 0;
    }
+   std::cout << "StepGen::SetStepsPerSec\n";
 }
 
 void StepGen::SetUseRamping(bool use_ramping)

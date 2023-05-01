@@ -6,8 +6,8 @@ using Pin = char;
 
 enum stepRetVal { ok, busy };
 
-constexpr milli_sec default_t_on = 2; //5ms
-constexpr milli_sec default_t_off = 3; //5ms
+constexpr milli_sec default_t_on = 2; // ms
+constexpr milli_sec default_t_off = 3; // ms
 constexpr char max_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
 constexpr milli_sec t_delta = 1;
 constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta; 
@@ -22,9 +22,9 @@ class StepGen
 
    virtual void Update();
    virtual stepRetVal Step(unsigned int steps = 1);
-   bool IsBusy(); // busy with generating the step()-request
-   void SetStepsPerSec(char steps_per_sec);
-   void SetUseRamping(bool use_ramping);
+   virtual bool IsBusy(); // busy with generating the step()-request
+   virtual void SetStepsPerSec(unsigned int steps_per_sec);
+   virtual void SetUseRamping(bool use_ramping);
    
    private:
    void StartNextStep(); // start one step
