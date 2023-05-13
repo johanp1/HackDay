@@ -10,98 +10,114 @@ namespace {
 
 using ::testing::_;
 using ::testing::NiceMock;
+using ::testing::InSequence;
 
 class MockStepGen : public StepGen
 {
    public:
-   MockStepGen(Pin pin, milli_sec t_on, milli_sec t_off){};
+   MockStepGen(Pin step_pin = 0, Pin dir_pin = 0, milli_sec t_on = 0, milli_sec t_off = 0){};
    ~MockStepGen(){};
 
    MOCK_METHOD(void, Update, (), (override));
-   MOCK_METHOD(stepRetVal, Step, (unsigned int steps), (override));
+   MOCK_METHOD(StepRetVal, Step, (unsigned int steps), (override));
    MOCK_METHOD(void, SetStepsPerSec, (unsigned int steps_per_sec), (override));
-   //void SetUseRamping(bool use_ramping);
+   MOCK_METHOD(void, SetDirection, (Direction d), (override));
 };
 
 class AxisCtrlTestFixture : public testing::Test 
 {
    protected:
-   //std::unique_ptr<MockStepGen> mockStepGen;
-   //std::unique_ptr<AxisCtrl> axisCtrl;
+   std::unique_ptr<NiceMock<MockStepGen>> mockStepGen;
+   std::unique_ptr<AxisCtrl> axisCtrl;
+
    void SetUp()
    {
-      //mockStepGen = std::make_unique<MockStepGen>();
-      //axisCtrl = std::make_unique<AxisCtrl>(*mockStepGen);
+      mockStepGen = std::make_unique<NiceMock<MockStepGen>>();
+      axisCtrl = std::make_unique<AxisCtrl>(*mockStepGen);
    }
    
    void TearDown()
    {
-      //mockStepGen.reset();
-      //axisCtrl.reset();
+      mockStepGen.reset();
+      axisCtrl.reset();
    }
 };
 
-TEST(AxisCtrlTestGroup, test_init)
+TEST_F(AxisCtrlTestFixture, test_init)
 {
-   MockStepGen mockStepGen(0,0,0);
-   AxisCtrl ac(mockStepGen);
-   ASSERT_TRUE(ac.GetPosition() == 0.0f);   
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.0f);   
 }
 
-TEST(AxisCtrlTestGroup, test_set_speed)
+TEST_F(AxisCtrlTestFixture, test_set_speed)
 {
-   NiceMock<MockStepGen> mockStepGen(0,0,0);
-   AxisCtrl ac(mockStepGen);
-
-   EXPECT_CALL(mockStepGen, SetStepsPerSec(2));
-   ac.SetSpeed(2);
+   EXPECT_CALL(*mockStepGen, SetStepsPerSec(2));
+   axisCtrl->SetSpeed(2);
 }
 
-TEST(AxisCtrlTestGroup, test_set_rel_pos_no_scale)
+TEST_F(AxisCtrlTestFixture, test_set_rel_pos_no_scale)
 {
-   NiceMock<MockStepGen> mockStepGen(0,0,0);
-   AxisCtrl ac(mockStepGen);
+   EXPECT_CALL(*mockStepGen, Step(2u)).Times(3);
+   {
+      InSequence seq;
 
-   EXPECT_CALL(mockStepGen, Step(2u)).Times(3);
+      EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, SetDirection(direction_reverse));
+   }
+   
+   axisCtrl->SetRelativePosition(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
-   ac.SetRelativePosition(2);
-   ASSERT_TRUE(ac.GetPosition() == 2.0f);
+   axisCtrl->SetRelativePosition(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 4.0f);
 
-   ac.SetRelativePosition(2);
-   ASSERT_TRUE(ac.GetPosition() == 4.0f);
-
-   ac.SetRelativePosition(-2);
-   ASSERT_TRUE(ac.GetPosition() == 2.0f);
+   axisCtrl->SetRelativePosition(-2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 }
 
-TEST(AxisCtrlTestGroup, test_set_abs_pos_no_scale)
+TEST_F(AxisCtrlTestFixture, test_set_abs_pos_no_scale)
 {
-   NiceMock<MockStepGen> mockStepGen(0,0,0);
-   AxisCtrl ac(mockStepGen);
+   EXPECT_CALL(*mockStepGen, Step(2));
+   EXPECT_CALL(*mockStepGen, Step(4));
+   {
+      InSequence seq;
 
-   EXPECT_CALL(mockStepGen, Step(2));
-   EXPECT_CALL(mockStepGen, Step(4));
-   //EXPECT_CALL(mockStepGen, Step(2));
+      EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, SetDirection(direction_reverse));
+   }
 
-   ac.SetAbsolutPosition(2);
-   ASSERT_TRUE(ac.GetPosition() == 2.0f);
+   axisCtrl->SetAbsolutPosition(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    // this request shall not end up in any call to stepGen.Step...
-   ac.SetAbsolutPosition(2);
-   ASSERT_TRUE(ac.GetPosition() == 2.0f);
+   axisCtrl->SetAbsolutPosition(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
-   ac.SetAbsolutPosition(-2);
-   ASSERT_TRUE(ac.GetPosition() == -2.0f);
+   axisCtrl->SetAbsolutPosition(-2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
-TEST(AxisCtrlTestGroup, test_set_scale)
+TEST_F(AxisCtrlTestFixture, test_set_scale)
 {
-   NiceMock<MockStepGen> mockStepGen(0,0,0);
-   AxisCtrl ac(mockStepGen);
+   axisCtrl->SetScale(1600.0f/360.0f); // steps/unit (degrees)
+   EXPECT_CALL(*mockStepGen, SetStepsPerSec((20*1600)/360));
+   axisCtrl->SetSpeed(20); //
+}
 
-   ac.SetScale(1600.0f/360.0f); // steps/unit (degrees)
-   EXPECT_CALL(mockStepGen, SetStepsPerSec((20*1600)/360));
-   ac.SetSpeed(20); //
+TEST_F(AxisCtrlTestFixture, test_set_home)
+{
+   EXPECT_CALL(*mockStepGen, Step(2));
+   axisCtrl->SetAbsolutPosition(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
+
+   axisCtrl->SetHome(0);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.0f);
+
+   axisCtrl->SetHome(2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
+
+   axisCtrl->SetHome(-2);
+   ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
 }

@@ -3,9 +3,10 @@
 //#include <sstream>
 #include <Arduino.h>
 
-StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), pin_(pin)
+StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin)
 {
-   pinMode(pin, OUTPUT);
+   pinMode(step_pin_, OUTPUT);
+   pinMode(dir_pin_, OUTPUT);
 
    use_ramping_ = false;
    max_steps_per_sec_ = 1000 / (t_on_ + t_off_);
@@ -13,7 +14,8 @@ StepGen::StepGen(Pin pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_
 
    SetStepsPerSec(max_steps_per_sec_);
    state_ = new StateInactive(this);
-   digitalWrite(pin_, state_->GetOutput());
+   digitalWrite(step_pin_, state_->GetOutput());
+   digitalWrite(dir_pin, LOW);
 }
 
 StepGen::~StepGen()
@@ -26,7 +28,7 @@ void StepGen::Update()
    state_->Update();
 }
 
-stepRetVal StepGen::Step(unsigned int steps)
+StepRetVal StepGen::Step(unsigned int steps)
 {
    if (!IsBusy())
    {
@@ -68,12 +70,16 @@ void StepGen::SetStepsPerSec(unsigned int steps_per_sec)
    {
       t_off_sps_ = 0;
    }
-   std::cout << "StepGen::SetStepsPerSec\n";
 }
 
 void StepGen::SetUseRamping(bool use_ramping)
 {
    use_ramping_ = use_ramping;
+}
+
+void StepGen::SetDirection(Direction d)
+{
+   digitalWrite(dir_pin_, d == direction_forward ? LOW : HIGH);
 }
 
 void StepGen::StartNextStep()
@@ -95,7 +101,7 @@ void StepGen::TransitionTo(State *state)
       
    this->state_ = state;
 
-   digitalWrite(pin_, state_->GetOutput());
+   digitalWrite(step_pin_, state_->GetOutput());
 }
 
 milli_sec StepGen::CalcRampTimeOffset()

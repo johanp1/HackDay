@@ -16,8 +16,7 @@ class AxisCtrl
    float GetPosition();
    void SetRelativePosition(float pos);
    void SetAbsolutPosition(float pos);
-
-   //void SetHome(float pos = 0.0f);
+   void SetHome(float pos = 0.0f);
 
    private:
    float scale_ = 1.0f; // step/degree

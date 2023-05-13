@@ -4,7 +4,8 @@
 using milli_sec = unsigned int;
 using Pin = char;
 
-enum stepRetVal { ok, busy };
+enum StepRetVal { ok, busy };
+enum Direction { direction_forward, direction_reverse };
 
 constexpr milli_sec default_t_on = 2; // ms
 constexpr milli_sec default_t_off = 3; // ms
@@ -17,14 +18,15 @@ class State;
 class StepGen
 {
    public:
-   StepGen(Pin pin = 0, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
+   StepGen(Pin stepPin = 0, Pin dirPin = 1, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
    virtual ~StepGen();
 
    virtual void Update();
-   virtual stepRetVal Step(unsigned int steps = 1);
+   virtual StepRetVal Step(unsigned int steps = 1);
    virtual bool IsBusy(); // busy with generating the step()-request
    virtual void SetStepsPerSec(unsigned int steps_per_sec);
    virtual void SetUseRamping(bool use_ramping);
+   virtual void SetDirection(Direction d);
    
    private:
    void StartNextStep(); // start one step
@@ -45,7 +47,8 @@ class StepGen
    bool use_ramping_;
 
    State *state_;
-   Pin pin_;
+   Pin step_pin_;
+   Pin dir_pin_;
 
    // Friendship is not inherited to children of State. All freindships need to be explicit...
    friend class StateOn;

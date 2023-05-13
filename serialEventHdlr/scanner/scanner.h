@@ -5,20 +5,6 @@
 #include "event_parser.h"
 #include "src/step_gen.h"
 
-template<typename F>
-class DirectionEventHandler : public EventFunctor
-{
-  public:
-    DirectionEventHandler(String const &event_name, F f) : EventFunctor{event_name}, f_(f) {};
-
-    void operator()(String& _parsedData)
-    {
-      f_(_parsedData);
-    };
-
-    F f_;
-};
-
 template<typename F, typename O>
 class EventHandler : public EventFunctor
 {
