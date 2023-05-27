@@ -7,6 +7,7 @@
 #include <sstream>
 
 namespace {
+
 constexpr byte test_step_pin = 1;
 constexpr byte test_dir_pin = 2;
 constexpr milli_sec t_on = 4;
@@ -17,21 +18,38 @@ constexpr milli_sec t_off_test = 5;
 
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
+class MockStepObserver : public StepObserver
+{
+   public:
+   void Update() override
+   {
+      hasBeenCalled = true;
+      nbrOfCalls++;
+   }
+
+   bool hasBeenCalled = false;
+   int nbrOfCalls = 0;
+};
+
 class StepGenTestFixture : public testing::Test 
 {
   protected: 
    std::unique_ptr<StepGen> stepGen;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
+   MockStepObserver *stepObserver;
 
    void SetUp()
    {
       arduinoStub->Reset();
       stepGen = std::make_unique<StepGen>(test_step_pin, test_dir_pin, t_on_test, t_off_test);
+      stepObserver = new MockStepObserver;
+      stepGen->Attach(stepObserver);
    }
    
    void TearDown()
    {
       stepGen.reset();
+      //delete stepObserver;
    }
    
    void incTime(milli_sec t = 1)
@@ -82,6 +100,7 @@ TEST_F(StepGenTestFixture, test_one_step)
 {
    stepGen->Step();
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+   ASSERT_TRUE(stepObserver->hasBeenCalled);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
@@ -94,6 +113,7 @@ TEST_F(StepGenTestFixture, test_two_steps)
    ASSERT_TRUE(stepGen->IsBusy());
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
    ASSERT_FALSE(stepGen->IsBusy());
+   ASSERT_TRUE(stepObserver->nbrOfCalls == 2);
 }
 
 // test step returns busy if current step is not done

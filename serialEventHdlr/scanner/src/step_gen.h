@@ -15,6 +15,12 @@ constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta;
 
 class State;
 
+class StepObserver
+{
+   public:
+   virtual void Update() = 0;
+};
+
 class StepGen
 {
    public:
@@ -27,6 +33,7 @@ class StepGen
    virtual void SetStepsPerSec(unsigned int steps_per_sec);
    virtual void SetUseRamping(bool use_ramping);
    virtual void SetDirection(Direction d);
+   void Attach(StepObserver *stepObserver);
    
    private:
    void StartNextStep(); // start one step
@@ -35,6 +42,7 @@ class StepGen
    unsigned int CalcNbrOfRampSteps(); // calculate how many ramping up/down steps we can squeez in
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
+   void UpdateObserver();
 
    milli_sec t_on_; // the step's "on-time" length
    milli_sec t_off_; // the step's "off-time"
@@ -46,6 +54,7 @@ class StepGen
    unsigned int ramp_steps_;
    bool use_ramping_;
 
+   StepObserver *stepObserver_ = nullptr;
    State *state_;
    Pin step_pin_;
    Pin dir_pin_;
@@ -59,9 +68,6 @@ class StepGen
 // virtual state base class
 class State 
 {
-   protected:
-   StepGen *stepGen_;
-
    public:
    State(StepGen *stepGen) : stepGen_(stepGen){};
    virtual ~State(){};
@@ -69,6 +75,9 @@ class State
    virtual bool IsBusy() {return false;};
    virtual void Update() = 0;
    virtual char GetOutput() = 0;
+   
+   protected:
+   StepGen *stepGen_;
 };
 
 class StateOn : public State 

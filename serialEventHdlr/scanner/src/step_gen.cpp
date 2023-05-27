@@ -11,6 +11,8 @@ StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t
    use_ramping_ = false;
    max_steps_per_sec_ = 1000 / (t_on_ + t_off_);
    curr_step_ = 0;
+   t_off_sps_ = 0;
+   t_off_ramp_ = 0;
 
    SetStepsPerSec(max_steps_per_sec_);
    state_ = new StateInactive(this);
@@ -82,6 +84,12 @@ void StepGen::SetDirection(Direction d)
    digitalWrite(dir_pin_, d == direction_forward ? LOW : HIGH);
 }
 
+void StepGen::Attach(StepObserver *stepObserver)
+{
+   stepObserver_ = stepObserver;
+}
+
+
 void StepGen::StartNextStep()
 {
    t_start_ = millis();
@@ -150,10 +158,22 @@ bool StepGen::IsLowDone()
    return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
 
+
+void StepGen::UpdateObserver() 
+{ 
+   if (stepObserver_ != nullptr)
+   {
+      stepObserver_->Update();
+   } 
+};
+
 void StateOn::Update()
 {
    if (stepGen_->IsHighDone())
    {
+      // notify observer that this "step" is done
+      stepGen_->UpdateObserver();
+
       digitalWrite(0, LOW);
       stepGen_->TransitionTo(new StateOff(stepGen_));
    }
@@ -163,16 +183,16 @@ void StateOff::Update()
 {
    if (stepGen_->IsLowDone())
    {
+      // start next step, or stop if all steps done
       if (stepGen_->curr_step_ > 0)
       {
-         // start next step, or stop if all steps done
          stepGen_->StartNextStep();
       }
       else
       {
          stepGen_->TransitionTo(new StateInactive(stepGen_));
       }
-   }
+   }   
 }
 
 
