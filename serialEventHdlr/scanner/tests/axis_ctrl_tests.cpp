@@ -22,6 +22,7 @@ class MockStepGen : public StepGen
    MOCK_METHOD(StepRetVal, Step, (unsigned int steps), (override));
    MOCK_METHOD(void, SetStepsPerSec, (unsigned int steps_per_sec), (override));
    MOCK_METHOD(void, SetDirection, (Direction d), (override));
+   MOCK_METHOD(Direction, GetDirection, (), (override));
 };
 
 class AxisCtrlTestFixture : public testing::Test 
@@ -66,12 +67,21 @@ TEST_F(AxisCtrlTestFixture, test_set_rel_pos_no_scale)
    }
    
    axisCtrl->SetRelativePosition(2);
+   axisCtrl->Update();
+   axisCtrl->Update();
+   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    axisCtrl->SetRelativePosition(2);
+   axisCtrl->Update();
+   axisCtrl->Update();
+   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 4.0f);
 
    axisCtrl->SetRelativePosition(-2);
+   axisCtrl->Update();
+   axisCtrl->Update();
+   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 }
 

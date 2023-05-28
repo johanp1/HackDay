@@ -1,7 +1,10 @@
 #include "axis_ctrl.h"
 #include <iostream>
 
-AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale) {}
+AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale)
+{
+    stepGen_.Attach(this);
+}
 
 AxisCtrl::~AxisCtrl()
 {}
@@ -24,9 +27,7 @@ float AxisCtrl::GetPosition()
 
 void AxisCtrl::SetRelativePosition(float pos)
 {
-    position_ += pos;
-
-
+    //position_ += pos;
     // remove sign from pos
     float unsigned_scaled_pos = (pos < 0 ? -pos : pos);
     if (unsigned_scaled_pos >= 1)
@@ -53,4 +54,10 @@ void AxisCtrl::SetAbsolutPosition(float pos)
 void AxisCtrl::SetHome(float pos)
 {
     position_ = pos;
+}
+
+void AxisCtrl::Update()
+{
+    position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
+    //position_ += 1/scale_;
 }

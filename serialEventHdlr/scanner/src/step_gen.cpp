@@ -84,6 +84,11 @@ void StepGen::SetDirection(Direction d)
    digitalWrite(dir_pin_, d == direction_forward ? LOW : HIGH);
 }
 
+Direction StepGen::GetDirection()
+{
+   return digitalRead(dir_pin_) == LOW ? direction_forward : direction_reverse;
+}
+
 void StepGen::Attach(StepObserver *stepObserver)
 {
    stepObserver_ = stepObserver;

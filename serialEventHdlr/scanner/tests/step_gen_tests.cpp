@@ -307,9 +307,11 @@ TEST_F(StepGenTestFixture, test_direction)
 
    stepGen->SetDirection(direction_reverse);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == HIGH);
+   ASSERT_TRUE(stepGen->GetDirection() == direction_reverse);
 
    stepGen->SetDirection(direction_forward);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == LOW);
+   ASSERT_TRUE(stepGen->GetDirection() == direction_forward);
 }
 
 }

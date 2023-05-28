@@ -5,7 +5,7 @@
 
 // full-step 400 steps/rev for motor 1:4 ratio for axis => 1600 steps/rev => 0.225 degrees/step
 
-class AxisCtrl
+class AxisCtrl : public StepObserver
 {
    public:
    AxisCtrl(StepGen& s, float scale = 1.0f);
@@ -17,7 +17,8 @@ class AxisCtrl
    void SetRelativePosition(float pos);
    void SetAbsolutPosition(float pos);
    void SetHome(float pos = 0.0f);
-
+   void Update() override;
+   
    private:
    float scale_ = 1.0f; // step/degree
    float position_ = 0.0f;

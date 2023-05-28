@@ -33,6 +33,7 @@ class StepGen
    virtual void SetStepsPerSec(unsigned int steps_per_sec);
    virtual void SetUseRamping(bool use_ramping);
    virtual void SetDirection(Direction d);
+   virtual Direction GetDirection();
    void Attach(StepObserver *stepObserver);
    
    private:
