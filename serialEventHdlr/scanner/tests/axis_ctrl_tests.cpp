@@ -11,6 +11,7 @@ namespace {
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::InSequence;
+using ::testing::Return;
 
 class MockStepGen : public StepGen
 {
@@ -62,26 +63,28 @@ TEST_F(AxisCtrlTestFixture, test_set_rel_pos_no_scale)
       InSequence seq;
 
       EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
+
       EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
+
       EXPECT_CALL(*mockStepGen, SetDirection(direction_reverse));
+      EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_reverse));
    }
    
    axisCtrl->SetRelativePosition(2);
+   axisCtrl->Update(); // 2 steps generated, will generate 2 stepObserver update calls
    axisCtrl->Update();
-   axisCtrl->Update();
-   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    axisCtrl->SetRelativePosition(2);
    axisCtrl->Update();
    axisCtrl->Update();
-   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 4.0f);
 
    axisCtrl->SetRelativePosition(-2);
    axisCtrl->Update();
    axisCtrl->Update();
-   std::cout << axisCtrl->GetPosition() << std::endl;
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 }
 
@@ -93,10 +96,15 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_no_scale)
       InSequence seq;
 
       EXPECT_CALL(*mockStepGen, SetDirection(direction_forward));
+      EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
+
       EXPECT_CALL(*mockStepGen, SetDirection(direction_reverse));
+      EXPECT_CALL(*mockStepGen, GetDirection()).Times(4).WillRepeatedly(Return(direction_reverse));
    }
 
    axisCtrl->SetAbsolutPosition(2);
+   axisCtrl->Update();  // 2 steps generated, will generate 2 stepObserver update calls
+   axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    // this request shall not end up in any call to stepGen.Step...
@@ -104,6 +112,10 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_no_scale)
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    axisCtrl->SetAbsolutPosition(-2);
+   axisCtrl->Update(); // 4 steps generated, will generate 4 stepObserver update calls
+   axisCtrl->Update();
+   axisCtrl->Update();
+   axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
@@ -117,7 +129,10 @@ TEST_F(AxisCtrlTestFixture, test_set_scale)
 TEST_F(AxisCtrlTestFixture, test_set_home)
 {
    EXPECT_CALL(*mockStepGen, Step(2));
+   EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
    axisCtrl->SetAbsolutPosition(2);
+   axisCtrl->Update();
+   axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    axisCtrl->SetHome(0);
