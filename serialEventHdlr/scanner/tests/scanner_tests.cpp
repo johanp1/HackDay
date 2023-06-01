@@ -2,6 +2,9 @@
 #include "Arduino.h"
 #include "scanner.h"
 #include <iostream>
+#include "src/axis_ctrl.h"
+
+extern AxisCtrl horizontalAxisCtrl;
 
 namespace {
 
@@ -42,15 +45,33 @@ class ScannerTestFixture : public testing::Test
 TEST_F(ScannerTestFixture, InitTest)
 {
    setup();
-   //ASSERT_TRUE(Serial.getData().compare("mpgPendant::setup()\n") == 0 );
 }
 
 TEST_F(ScannerTestFixture, step1EventTest)
 {
    String event_str{"step2_33\n"};
-   setup();
    Serial.setRecData(event_str);
    serialEvent();
+
+   arduinoStub->IncTimeMs(1000);
+}
+
+TEST_F(ScannerTestFixture, horizontalMoveEventTest)
+{
+   String event_str{"hor_33\n"};
+   Serial.setRecData(event_str);
+   
+   ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 0.0f);
+
+   serialEvent();
+   arduinoStub->IncTimeMs(1000);
+   ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 33.0f);
+
+   String event_str2{"hor_-40.0\n"};
+   Serial.setRecData(event_str2);
+   serialEvent();
+   arduinoStub->IncTimeMs(1000);
+   ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == -7.0f);
 }
 
 }

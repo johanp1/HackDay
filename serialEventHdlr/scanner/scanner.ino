@@ -2,8 +2,10 @@
 #include "scanner.h"
 #include "receiver.h"
 #include "src/step_gen.h"
+#include "src/axis_ctrl.h"
 
 static void timer2Init( void );
+static void horizontalMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void stepEventWrapper(String& str, StepGen* stepGen);
 static void stepsPerSecEventWrapper(String& str, StepGen* stepGen);
 static void useRampingEventWrapper(String& str, StepGen* stepGen);
@@ -22,16 +24,21 @@ const int enable_pin = 8;
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
+AxisCtrl horizontalAxisCtrl(stepGen1);
+AxisCtrl verticalAxisCtrl(stepGen2);
+
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
 void setup() {  
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, horizontalMoveWrapper, &horizontalAxisCtrl);
+  
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps1"}, stepsPerSecEventWrapper, &stepGen1);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps2"}, stepsPerSecEventWrapper, &stepGen2);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp1"}, useRampingEventWrapper, &stepGen1);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp2"}, useRampingEventWrapper, &stepGen2);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps1"}, stepsPerSecEventWrapper, &stepGen1);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps2"}, stepsPerSecEventWrapper, &stepGen2);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp1"}, useRampingEventWrapper, &stepGen1);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp2"}, useRampingEventWrapper, &stepGen2);
 
   cli();
   timer2Init();
@@ -49,12 +56,13 @@ void setup() {
 
   receiver.addEventListner(&eventParser);
   
+  eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*step1EventHandler);
   eventParser.AddAcceptedHandler(*step2EventHandler);
-  eventParser.AddAcceptedHandler(*stepsPerSec1EventHandler);
-  eventParser.AddAcceptedHandler(*stepsPerSec2EventHandler);
-  eventParser.AddAcceptedHandler(*useRamping1EventHandler);
-  eventParser.AddAcceptedHandler(*useRamping2EventHandler); 
+  //eventParser.AddAcceptedHandler(*stepsPerSec1EventHandler);
+  //eventParser.AddAcceptedHandler(*stepsPerSec2EventHandler);
+  //eventParser.AddAcceptedHandler(*useRamping1EventHandler);
+  //eventParser.AddAcceptedHandler(*useRamping2EventHandler); 
 }
 
 void loop() {
@@ -78,6 +86,12 @@ ISR( TIMER2_COMPA_vect  )
 void serialEvent()
 {
   receiver.scan();
+}
+
+static void horizontalMoveWrapper(String& str, AxisCtrl* axisCtrl)
+{
+  auto pos = str.toFloat();
+  axisCtrl->SetRelativePosition(pos);
 }
 
 static void stepEventWrapper(String& str, StepGen* stepGen)
