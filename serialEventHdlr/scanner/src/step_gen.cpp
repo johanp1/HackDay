@@ -178,8 +178,7 @@ void StateOn::Update()
    {
       // notify observer that this "step" is done
       stepGen_->UpdateObserver();
-
-      digitalWrite(0, LOW);
+      
       stepGen_->TransitionTo(new StateOff(stepGen_));
    }
 }

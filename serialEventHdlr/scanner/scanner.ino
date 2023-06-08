@@ -3,9 +3,11 @@
 #include "receiver.h"
 #include "src/step_gen.h"
 #include "src/axis_ctrl.h"
+#include "Arduino.h"
+
 
 static void timer2Init( void );
-static void horizontalMoveWrapper(String& str, AxisCtrl* axisCtrl);
+static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void stepEventWrapper(String& str, StepGen* stepGen);
 static void stepsPerSecEventWrapper(String& str, StepGen* stepGen);
 static void useRampingEventWrapper(String& str, StepGen* stepGen);
@@ -31,8 +33,8 @@ static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
 void setup() {  
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, horizontalMoveWrapper, &horizontalAxisCtrl);
-  
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
   //EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps1"}, stepsPerSecEventWrapper, &stepGen1);
@@ -57,6 +59,7 @@ void setup() {
   receiver.addEventListner(&eventParser);
   
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
+  eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*step1EventHandler);
   eventParser.AddAcceptedHandler(*step2EventHandler);
   //eventParser.AddAcceptedHandler(*stepsPerSec1EventHandler);
@@ -88,7 +91,7 @@ void serialEvent()
   receiver.scan();
 }
 
-static void horizontalMoveWrapper(String& str, AxisCtrl* axisCtrl)
+static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
 {
   auto pos = str.toFloat();
   axisCtrl->SetRelativePosition(pos);
