@@ -100,20 +100,16 @@ class Controller:
         self._comm_hdlr = comm_hdlr
 
     def horizontal_jog_ccw(self):
-        self._comm_hdlr.write_message('dir1_1')
-        self._comm_hdlr.write_message('step1_10')
+        self._comm_hdlr.write_message('hor_-10')
 
     def horizontal_jog_cw(self):
-        self._comm_hdlr.write_message('dir1_0')
-        self._comm_hdlr.write_message('step1_10')
+        self._comm_hdlr.write_message('hor_10')
 
     def vertical_jog_up(self):
-        self._comm_hdlr.write_message('dir2_0')
-        self._comm_hdlr.write_message('step2_10')
+        self._comm_hdlr.write_message('ver_10')
 
     def vertical_jog_down(self):
-        self._comm_hdlr.write_message('dir2_1')
-        self._comm_hdlr.write_message('step2_10')
+        self._comm_hdlr.write_message('ver_-10')
 
     def set_selected_port(self, selected_port):
         print(selected_port)
@@ -126,15 +122,15 @@ class Controller:
         self._comm_hdlr.write_message('test')
 
 class Model:
-    def __init__(self, comm_hdlr):
-        self.available_ports = comm_hdlr.get_available_ports()
-        self.observers = []
+    def __init__(self, available_ports):
+        self._available_ports = available_ports
+        self._observers = []
 
     def attatch(self, o):
-        self.observers.append(o)
+        self._observers.append(o)
         
     def notify(self):
-        for o in self.observers:
+        for o in self._observers:
             o.update()
 
 class View:
@@ -211,7 +207,7 @@ def message_handler(message):
 def main():
     """main function"""
     comms = Comms(message_handler)
-    model = Model(comms)
+    model = Model(comms.get_available_ports())
     view = View(model, comms)
 
     view.start()
