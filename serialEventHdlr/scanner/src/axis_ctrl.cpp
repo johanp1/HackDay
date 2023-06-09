@@ -28,24 +28,30 @@ float AxisCtrl::GetPosition()
 void AxisCtrl::SetRelativePosition(float pos)
 {
     // remove sign from pos
-    float unsigned_scaled_pos = (pos < 0 ? -pos : pos);
-    if (unsigned_scaled_pos >= 1)
+    if (!stepGen_.IsBusy())
     {
-        stepGen_.SetDirection(pos > 0 ? direction_forward : direction_reverse);
-        stepGen_.Step(unsigned_scaled_pos);
+        float unsigned_scaled_pos = (pos < 0 ? -pos*scale_ : pos*scale_);
+        if (unsigned_scaled_pos >= 1)
+        {
+            stepGen_.SetDirection(pos > 0 ? direction_forward : direction_reverse);
+            stepGen_.Step(unsigned_scaled_pos);
+        }
     }
 }
 
 void AxisCtrl::SetAbsolutPosition(float pos)
 {
-    float delta = position_ - pos;
-
-    // calculate number of steps to request, unsigned...
-    unsigned int steps = (delta < 0 ? -delta*scale_ : delta*scale_);
-    if (steps >= 1)
+    if (!stepGen_.IsBusy())
     {
-        stepGen_.SetDirection(delta < 0 ? direction_forward : direction_reverse);
-        stepGen_.Step(steps);
+        float delta = position_ - pos;
+
+        // calculate number of steps to request, unsigned...
+        unsigned int steps = (delta < 0 ? -delta*scale_ : delta*scale_);
+        if (steps >= 1)
+        {
+            stepGen_.SetDirection(delta < 0 ? direction_forward : direction_reverse);
+            stepGen_.Step(steps);
+        }
     }
 }
 
@@ -57,4 +63,5 @@ void AxisCtrl::SetHome(float pos)
 void AxisCtrl::Update()
 {
     position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
+    std::cout<<"AxisCtrl::Update()"<<std::endl;
 }

@@ -24,6 +24,7 @@ class MockStepGen : public StepGen
    MOCK_METHOD(void, SetStepsPerSec, (unsigned int steps_per_sec), (override));
    MOCK_METHOD(void, SetDirection, (Direction d), (override));
    MOCK_METHOD(Direction, GetDirection, (), (override));
+   MOCK_METHOD(bool, IsBusy, (), (override));
 };
 
 class AxisCtrlTestFixture : public testing::Test 
@@ -126,7 +127,7 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_default_scale)
    ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
-TEST_F(AxisCtrlTestFixture, test_set_scale)
+TEST_F(AxisCtrlTestFixture, test_set_scaled_steps_per_sec)
 {
    float test_scale = 1600.0f/360.0f;
    axisCtrl->SetScale(test_scale); // steps/unit (degrees)
@@ -135,15 +136,38 @@ TEST_F(AxisCtrlTestFixture, test_set_scale)
    unsigned int steps_per_sec = static_cast<unsigned int>(20.0f * test_scale);
    EXPECT_CALL(*mockStepGen, SetStepsPerSec(steps_per_sec));
    axisCtrl->SetSpeed(20); //
+}
+
+TEST_F(AxisCtrlTestFixture, test_set_rel_pos_scaled)
+{
+   float test_scale = 1600.0f/360.0f;
+   axisCtrl->SetScale(test_scale); // steps/unit (degrees)
+
+   // lets say we want 20 units(degrees) per sec. how many step/sec...
+   unsigned int steps_per_sec = static_cast<unsigned int>(20.0f * test_scale);
 
    // lets say we want to how many steps are 10 units
    EXPECT_CALL(*mockStepGen, Step(1));
    EXPECT_CALL(*mockStepGen, GetDirection()).WillRepeatedly(Return(direction_forward));
    
    // smallest movement possible
-   axisCtrl->SetAbsolutPosition(1/test_scale);
+   axisCtrl->SetRelativePosition(1/test_scale);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 0.225f);
+}
+
+TEST_F(AxisCtrlTestFixture, test_set_abs_pos_scaled)
+{
+   float test_scale = 1600.0f/360.0f;
+   axisCtrl->SetScale(test_scale); // steps/unit (degrees)
+
+   EXPECT_CALL(*mockStepGen, Step(1));
+   EXPECT_CALL(*mockStepGen, GetDirection()).WillRepeatedly(Return(direction_forward));
+
+   axisCtrl->SetAbsolutPosition(1/test_scale);
+   axisCtrl->Update();  // 2 steps generated, will generate 2 stepObserver update calls
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.225f);
+   axisCtrl->Update();
 }
 
 TEST_F(AxisCtrlTestFixture, test_set_home)
@@ -163,6 +187,15 @@ TEST_F(AxisCtrlTestFixture, test_set_home)
 
    axisCtrl->SetHome(-2);
    ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
+}
+
+TEST_F(AxisCtrlTestFixture, test_set_pos_busy)
+{
+   EXPECT_CALL(*mockStepGen, Step(_)).Times(0);
+   EXPECT_CALL(*mockStepGen, IsBusy()).WillRepeatedly(Return(true));
+   
+   axisCtrl->SetAbsolutPosition(10);
+   axisCtrl->SetRelativePosition(10);
 }
 
 }
