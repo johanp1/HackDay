@@ -9,13 +9,10 @@
 static void timer2Init( void );
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void stepEventWrapper(String& str, StepGen* stepGen);
-static void stepsPerSecEventWrapper(String& str, StepGen* stepGen);
-static void useRampingEventWrapper(String& str, StepGen* stepGen);
 
 // defines pins numbers
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
-
 constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 
@@ -37,10 +34,6 @@ void setup() {
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps1"}, stepsPerSecEventWrapper, &stepGen1);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* stepsPerSec2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"sps2"}, stepsPerSecEventWrapper, &stepGen2);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp1"}, useRampingEventWrapper, &stepGen1);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* useRamping2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"ramp2"}, useRampingEventWrapper, &stepGen2);
 
   cli();
   timer2Init();
@@ -49,23 +42,16 @@ void setup() {
   Serial.begin(38400);  // opens serial port
   Serial.setTimeout(500);
 
-  pinMode(motor1_dir_pin, OUTPUT);
-  pinMode(motor2_dir_pin, OUTPUT);
   pinMode(enable_pin, OUTPUT);
   digitalWrite(enable_pin, LOW);
   
   Serial.println("scanner::setup()"); // tell server setup is done
 
   receiver.addEventListner(&eventParser);
-  
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*step1EventHandler);
   eventParser.AddAcceptedHandler(*step2EventHandler);
-  //eventParser.AddAcceptedHandler(*stepsPerSec1EventHandler);
-  //eventParser.AddAcceptedHandler(*stepsPerSec2EventHandler);
-  //eventParser.AddAcceptedHandler(*useRamping1EventHandler);
-  //eventParser.AddAcceptedHandler(*useRamping2EventHandler); 
 }
 
 void loop() {
@@ -102,14 +88,4 @@ static void stepEventWrapper(String& str, StepGen* stepGen)
   auto steps = str.toInt();
   stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
   stepGen->Step(steps);
-}
-
-static void stepsPerSecEventWrapper(String& str, StepGen* stepGen)
-{
-  stepGen->SetStepsPerSec(str.toInt());
-}
-
-static void useRampingEventWrapper(String& str, StepGen* stepGen)
-{
-  stepGen->SetUseRamping(str.toInt() > 0 ? true : false);
 }

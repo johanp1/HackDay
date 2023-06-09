@@ -5,11 +5,15 @@
 #include "src/axis_ctrl.h"
 
 extern AxisCtrl horizontalAxisCtrl;
+extern AxisCtrl verticalAxisCtrl;
 extern void TIMER2_COMPA_vect();
+
 namespace {
 
+std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
+
 // find str2 in str1
-bool SubstringFind(const std::string& str1, const std::string& str2)
+bool substringFind(const std::string& str1, const std::string& str2)
 {
    auto retVal = false;
    
@@ -22,75 +26,55 @@ bool SubstringFind(const std::string& str1, const std::string& str2)
 
 bool hasBeenSent(const std::string& str)
 {
-   return SubstringFind(Serial.getData(), str);
+   return substringFind(Serial.getData(), str);
 }
 
-
-class ScannerTestFixture : public testing::Test 
-{  
-   protected: 
-   std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
-
-   void SetUp() override
-   {
-      arduinoStub->Reset();
-      Serial.clear();
-   }
-   
-   void TearDown()
-   {
-   }
-};
-
-/*TEST_F(ScannerTestFixture, InitTest)
+void serialSend(const String& s)
 {
-   setup();
-}
+   String temp_string = String(s);
 
-TEST_F(ScannerTestFixture, step1EventTest)
-{
-   String event_str{"step2_33\n"};
-   Serial.setRecData(event_str);
+   Serial.setRecData(temp_string);
    serialEvent();
 
-   arduinoStub->IncTimeMs(1000);
 }
-*/
-TEST_F(ScannerTestFixture, horizontalMoveEventTest)
+
+void RunMs(unsigned int ms)
 {
-   String event_str{"hor_33\n"};
-   Serial.setRecData(event_str);
-   
+   for (int i = 0; i < ms; i++)
+   {
+      arduinoStub->IncTimeMs(1);
+      TIMER2_COMPA_vect();
+   }
+}
+
+TEST(ScannerTestSuite, scannerTest)
+{
    setup();
+   
+   ASSERT_TRUE(arduinoStub->GetMode(2) == OUTPUT); // motor1_dir_pin
+   ASSERT_TRUE(arduinoStub->GetMode(3) == OUTPUT); // motor2_dir_pin
+   ASSERT_TRUE(arduinoStub->GetMode(5) == OUTPUT); // motor1_step_pin
+   ASSERT_TRUE(arduinoStub->GetMode(6) == OUTPUT); // motor2_step_pin
+   ASSERT_TRUE(arduinoStub->GetMode(8) == OUTPUT); // enable_pin
 
    ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 0.0f);
+   ASSERT_TRUE(verticalAxisCtrl.GetPosition() == 0.0f);
 
-   serialEvent();
-
-   for (int i = 0; i <1000; i++)
-   {
-
-      arduinoStub->IncTimeMs(1);
-      TIMER2_COMPA_vect();
-      //cout<<horizontalAxisCtrl.GetPosition()<<endl;
-   }
-   cout << "horizontalAxisCtrl.GetPosition() " << horizontalAxisCtrl.GetPosition() << endl;
+   serialSend(String{"hor_33\n"});
+   RunMs(1000);
    ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 33.0f);
 
-   String event_str2{"hor_-40.0\n"};
-   Serial.setRecData(event_str2);
-   serialEvent();
-
-   for (int i = 0; i <1000; i++)
-   {
-
-      arduinoStub->IncTimeMs(1);
-      TIMER2_COMPA_vect();
-      //cout<<horizontalAxisCtrl.GetPosition()<<endl;
-   }
-
-   arduinoStub->IncTimeMs(1000);
+   serialSend(String{"hor_-40\n"});
+   RunMs(1000);
    ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == -7.0f);
+
+   serialSend(String{"ver_33\n"});
+   RunMs(1000);
+   ASSERT_TRUE(verticalAxisCtrl.GetPosition() == 33.0f);
+
+   serialSend(String{"ver_-40\n"});
+   RunMs(1000);
+   ASSERT_TRUE(verticalAxisCtrl.GetPosition() == -7.0f);
 }
 
 }

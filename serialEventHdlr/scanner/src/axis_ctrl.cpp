@@ -1,5 +1,4 @@
 #include "axis_ctrl.h"
-#include <iostream>
 
 AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale)
 {
@@ -63,5 +62,4 @@ void AxisCtrl::SetHome(float pos)
 void AxisCtrl::Update()
 {
     position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
-    std::cout<<"AxisCtrl::Update()"<<std::endl;
 }
