@@ -1,9 +1,7 @@
 #ifndef __C_SCANNER_H__
 #define __C_SCANNER_H__
 
-#include "event_generator.h"
 #include "event_parser.h"
-#include "src/step_gen.h"
 
 template<typename F, typename O>
 class EventHandler : public EventFunctor

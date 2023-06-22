@@ -1,25 +1,25 @@
 // full-step 400 steps/rev for motor 1:4 ratio for axis => 1600 steps/rev => 0.225 degrees/step
 #include "scanner.h"
 #include "receiver.h"
+#include "event_generator.h"
 #include "src/step_gen.h"
 #include "src/axis_ctrl.h"
 #include "Arduino.h"
+#include "scanner_ctrl.h"
 
-
-static void timer2Init( void );
-static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
-static void stepEventWrapper(String& str, StepGen* stepGen);
-
-// defines pins numbers
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
 constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
+constexpr int enable_pin = 8;
 
 constexpr milli_sec t_on = 2;
 constexpr milli_sec t_off = 3;
 
-const int enable_pin = 8;
+static void timer2Init( void );
+static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
+//static void stepEventWrapper(String& str, StepGen* stepGen);
+static void modeWrapper(String& str, ScannerCtrl* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
@@ -29,11 +29,15 @@ AxisCtrl verticalAxisCtrl(stepGen2);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
+static ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
+
 void setup() {  
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
+
+  EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"mode"}, modeWrapper, &scannerCtrl);
 
   cli();
   timer2Init();
@@ -50,11 +54,14 @@ void setup() {
   receiver.addEventListner(&eventParser);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
-  eventParser.AddAcceptedHandler(*step1EventHandler);
-  eventParser.AddAcceptedHandler(*step2EventHandler);
+  //eventParser.AddAcceptedHandler(*step1EventHandler);
+  //eventParser.AddAcceptedHandler(*step2EventHandler);
+  eventParser.AddAcceptedHandler(*modeHandler);
 }
 
 void loop() {
+  //scannerCtrl.Update();
+  delay(5);
 }
 
 
@@ -83,9 +90,15 @@ static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
   axisCtrl->SetRelativePosition(pos);
 }
 
-static void stepEventWrapper(String& str, StepGen* stepGen)
+/*static void stepEventWrapper(String& str, StepGen* stepGen)
 {
   auto steps = str.toInt();
   stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
   stepGen->Step(steps);
+}*/
+
+static void modeWrapper(String& str, ScannerCtrl* ctrl)
+{
+  Mode mode = static_cast<Mode>(str.toInt());
+  ctrl->SetMode(mode);
 }

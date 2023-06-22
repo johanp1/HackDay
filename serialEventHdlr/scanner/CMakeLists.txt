@@ -23,7 +23,7 @@ target_include_directories(scanner  PUBLIC . ./src)
 
 add_subdirectory(../EventProxy/src build)
 
-target_link_libraries(scanner axisCtrl arduinoEvents)
+target_link_libraries(scanner scannerCtrl arduinoEvents)
 
 option(COMPILE_TESTS "Compile the tests" OFF)
 if (COMPILE_TESTS)

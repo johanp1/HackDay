@@ -12,5 +12,10 @@ target_link_libraries(stepGen arduinoMock)
 
 add_library(axisCtrl
     axis_ctrl.cpp)
-target_include_directories(stepGen PUBLIC .)
+target_include_directories(axisCtrl PUBLIC .)
 target_link_libraries(axisCtrl stepGen)
+
+add_library(scannerCtrl
+    scanner_ctrl.cpp)
+target_include_directories(scannerCtrl PUBLIC .)
+target_link_libraries(scannerCtrl axisCtrl)

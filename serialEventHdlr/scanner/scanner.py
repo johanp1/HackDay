@@ -133,6 +133,9 @@ class Model:
         for o in self._observers:
             o.update()
 
+    def get_available_ports(self):
+        return self._available_ports
+
 class View:
     def __init__(self, model, comm_hdlr):
         self._model = model
@@ -186,7 +189,7 @@ class View:
         btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
         # config frame content
-        available_ports = model.available_ports
+        available_ports = model.get_available_ports()
         if available_ports:
             self.current_port.set(available_ports[0])
         else:

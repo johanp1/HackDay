@@ -16,9 +16,13 @@ target_link_libraries(stepGenTests stepGen gtest_main gmock_main)
 add_executable(axisCtrlTests axis_ctrl_tests.cpp main.cpp)
 target_link_libraries(axisCtrlTests axisCtrl gtest_main gmock_main)
 
+add_executable(scannerCtrlTests scanner_ctrl_tests.cpp main.cpp)
+target_link_libraries(scannerCtrlTests scannerCtrl gtest_main gmock_main)
+
 include(GoogleTest)
 gtest_discover_tests(stepGenTests)
 gtest_discover_tests(axisCtrlTests)
+gtest_discover_tests(scannerCtrlTests)
 gtest_discover_tests(scanner_test)
 
 
