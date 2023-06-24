@@ -13,8 +13,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr milli_sec t_on = 2;
-constexpr milli_sec t_off = 3;
+constexpr milli_sec t_on = 5;//2;
+constexpr milli_sec t_off = 5;//3;
 
 static void timer2Init( void );
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
@@ -51,7 +51,7 @@ void setup() {
   timer2Init();
   sei();
 
-  Serial.begin(38400);  // opens serial port
+  Serial.begin(9600);  // opens serial port
   Serial.setTimeout(500);
 
   pinMode(enable_pin, OUTPUT);
@@ -64,6 +64,7 @@ void setup() {
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   //eventParser.AddAcceptedHandler(*step1EventHandler);
   //eventParser.AddAcceptedHandler(*step2EventHandler);
+  eventParser.AddAcceptedHandler(*modeHandler);
   eventParser.AddAcceptedHandler(*setVerticalStartHandler);
   eventParser.AddAcceptedHandler(*setVerticalEndHandler);
   eventParser.AddAcceptedHandler(*setHorizontalStartHandler);
@@ -72,7 +73,7 @@ void setup() {
 }
 
 void loop() {
-  //scannerCtrl.Update();
+  scannerCtrl.Update();
   delay(5);
 }
 

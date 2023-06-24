@@ -116,7 +116,7 @@ class Controller:
         self._comm_hdlr.set_port(selected_port)
 
     def start(self):
-        self._comm_hdlr.write_message('start')
+        self._comm_hdlr.write_message('mode_1')
         
     def test(self):
         self._comm_hdlr.write_message('test')

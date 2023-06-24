@@ -175,10 +175,7 @@ void StepGen::UpdateObserver()
 void StateOn::Update()
 {
    if (stepGen_->IsHighDone())
-   {
-      // notify observer that this "step" is done
-      stepGen_->UpdateObserver();
-      
+   {      
       stepGen_->TransitionTo(new StateOff(stepGen_));
    }
 }
@@ -187,6 +184,9 @@ void StateOff::Update()
 {
    if (stepGen_->IsLowDone())
    {
+      // notify observer that this "step" is done
+      stepGen_->UpdateObserver();
+
       // start next step, or stop if all steps done
       if (stepGen_->curr_step_ > 0)
       {

@@ -23,6 +23,9 @@ class ScannerCtrl
     {
       mode_ = m;
     }
+
+    Serial.print("mode_ ");
+    Serial.println(mode_);
   };
 
   void Update()
@@ -32,6 +35,8 @@ class ScannerCtrl
       if (horizontalAxisCtrl_.GetPosition() == horizontal_target_position_)
       {
         //measure...blocking...
+        delay(5);
+
         String sendStr{"h pos "};
         sendStr.concat(horizontal_target_position_);
         Serial.println(sendStr);

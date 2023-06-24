@@ -1,4 +1,5 @@
 #include "axis_ctrl.h"
+#include "Arduino.h"
 
 AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale)
 {
@@ -40,6 +41,8 @@ void AxisCtrl::SetRelativePosition(float pos)
 
 void AxisCtrl::SetAbsolutPosition(float pos)
 {
+    while (stepGen_.IsBusy()){delay(5);}
+
     if (!stepGen_.IsBusy())
     {
         float delta = position_ - pos;
