@@ -70,6 +70,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*setHorizontalStartHandler);
   eventParser.AddAcceptedHandler(*setHorizontalEndHandler);
 
+  horizontalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
+  verticalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
 }
 
 void loop() {
