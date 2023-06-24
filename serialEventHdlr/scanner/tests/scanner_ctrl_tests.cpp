@@ -58,18 +58,54 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
+    for (int i = 0; i < 35; i++)
     {
         InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
-        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(10.0f)).Times(1);
-
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(10.0f));
-        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(20.0f)).Times(1);
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*10.0f));
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition((i+1)*10.0f)).Times(1);
+        scannerCtrl.Update();
     }
 
+    // last itteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(350.0f));
+        // no setAbsolutPosition, measurement done
+        scannerCtrl.Update();
+    }
     scannerCtrl.Update();
-    scannerCtrl.Update();
+    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+}
 
+TEST(ScannerCtrlTestSuite, test_set_end_pos)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+
+    EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(0.0f)).Times(1);
+    scannerCtrl.SetMode(mode_test);
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
+    scannerCtrl.SetHorizontalEndPosition();
+
+    for (int i = 0; i < 9; i++)
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*10.0f));
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition((i+1)*10.0f)).Times(1);
+        scannerCtrl.Update();
+    }
+
+    // last itteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(90.0f));
+        // no setAbsolutPosition, measurement done
+        scannerCtrl.Update();
+    }
+    scannerCtrl.Update();
+    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
 
 }

@@ -5,7 +5,7 @@
 #include "src/step_gen.h"
 #include "src/axis_ctrl.h"
 #include "Arduino.h"
-#include "scanner_ctrl.h"
+#include "src/scanner_ctrl.h"
 
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
@@ -20,6 +20,10 @@ static void timer2Init( void );
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
 //static void stepEventWrapper(String& str, StepGen* stepGen);
 static void modeWrapper(String& str, ScannerCtrl* ctrl);
+static void setVerticalStartWrapper(ScannerCtrl* ctrl);
+static void setVerticalEndWrapper(ScannerCtrl* ctrl);
+static void setHorizontalStartWrapper(ScannerCtrl* ctrl);
+static void setHorizontalEndWrapper(ScannerCtrl* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
@@ -38,6 +42,10 @@ void setup() {
   //EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
 
   EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"mode"}, modeWrapper, &scannerCtrl);
+  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalStartHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"vs"}, setVerticalStartWrapper, &scannerCtrl);
+  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalEndHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"ve"}, setVerticalEndWrapper, &scannerCtrl);
+  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setHorizontalStartHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"hs"}, setHorizontalStartWrapper, &scannerCtrl);
+  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setHorizontalEndHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"he"}, setHorizontalEndWrapper, &scannerCtrl);
 
   cli();
   timer2Init();
@@ -56,7 +64,11 @@ void setup() {
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   //eventParser.AddAcceptedHandler(*step1EventHandler);
   //eventParser.AddAcceptedHandler(*step2EventHandler);
-  eventParser.AddAcceptedHandler(*modeHandler);
+  eventParser.AddAcceptedHandler(*setVerticalStartHandler);
+  eventParser.AddAcceptedHandler(*setVerticalEndHandler);
+  eventParser.AddAcceptedHandler(*setHorizontalStartHandler);
+  eventParser.AddAcceptedHandler(*setHorizontalEndHandler);
+
 }
 
 void loop() {
@@ -101,4 +113,24 @@ static void modeWrapper(String& str, ScannerCtrl* ctrl)
 {
   Mode mode = static_cast<Mode>(str.toInt());
   ctrl->SetMode(mode);
+}
+
+static void setVerticalStartWrapper(ScannerCtrl* ctrl)
+{
+  scannerCtrl.SetVerticalStartPosition();
+}
+
+static void setVerticalEndWrapper(ScannerCtrl* ctrl)
+{
+  scannerCtrl.SetVerticalEndPosition();
+}
+
+static void setHorizontalStartWrapper(ScannerCtrl* ctrl)
+{
+  scannerCtrl.SetHorizontalStartPosition();
+}
+
+static void setHorizontalEndWrapper(ScannerCtrl* ctrl)
+{
+  scannerCtrl.SetHorizontalEndPosition();
 }

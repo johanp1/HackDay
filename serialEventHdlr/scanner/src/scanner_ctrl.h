@@ -1,7 +1,9 @@
 #include "axis_ctrl.h"
 #include "Arduino.h"
-
+#include <iostream>
 enum Mode { mode_inactive, mode_test, mode_scanning };
+
+constexpr float start_position_ = 0.0f;
 
 class ScannerCtrl
 {
@@ -11,12 +13,16 @@ class ScannerCtrl
   {
     if ((m != mode_inactive) && (m != mode_))
     {
-        horizontalAxisCtrl_.SetAbsolutPosition(horizontal_start_position_);
-        horizontal_target_position_ = horizontal_start_position_;
-        horizontal_increment_ = (m == mode_test ? 10.0f : 1.0f);
+      horizontalAxisCtrl_.SetAbsolutPosition(start_position_);
+      horizontal_target_position_ = start_position_;
+      horizontal_increment_ = (m == mode_test ? 10.0f : 1.0f);
+      mode_ = m;
     }
 
-    mode_ = m;
+    if ((m == mode_inactive) && (m != mode_))
+    {
+      mode_ = m;
+    }
   };
 
   void Update()
@@ -29,27 +35,41 @@ class ScannerCtrl
         Serial.println("measure...");
 
         //then move to next pos
-        horizontal_target_position_ += horizontal_increment_; 
-        horizontalAxisCtrl_.SetAbsolutPosition(horizontal_target_position_);
+        horizontal_target_position_ += horizontal_increment_;
+
+        if (horizontal_target_position_ < horizontal_end_position_)
+        {
+          horizontalAxisCtrl_.SetAbsolutPosition(horizontal_target_position_);
+        }
+        else
+        {
+          // done
+          SetMode(mode_inactive);
+        }
       }
     }
   };
 
-  void SetHorizontalStartPosition(float pos)
+  Mode GetMode()
   {
-    horizontal_start_position_ = pos;
+    return mode_;
   };
-  void SetHorizontalEndPosition(float pos)
+
+  void SetHorizontalStartPosition()
   {
-    horizontal_end_position_ = pos;
+    horizontalAxisCtrl_.SetHome(0);
   };
-  void SetVerticalStartPosition(float pos)
+  void SetHorizontalEndPosition()
   {
-    vertical_start_position_ = pos;
+    horizontal_end_position_ = horizontalAxisCtrl_.GetPosition();
   };
-  void SetVerticalEndPosition(float pos)
+  void SetVerticalStartPosition()
   {
-    vertical_end_position_ = pos;
+    verticalAxisCtrl_.SetHome(0);
+  };
+  void SetVerticalEndPosition()
+  {
+    vertical_end_position_ = verticalAxisCtrl_.GetPosition();
   };
   
   //private:
@@ -58,8 +78,6 @@ class ScannerCtrl
   float vertical_target_position_ = 0.0f;
   float horizontal_end_position_ = 360.0f;
   float vertical_end_position_ = 30.0f;
-  float horizontal_start_position_ = 0.0f;
-  float vertical_start_position_ = 0.0f;
   float horizontal_increment_ = 1.0f;
   float vertical_increment_ = 1.0f;
 

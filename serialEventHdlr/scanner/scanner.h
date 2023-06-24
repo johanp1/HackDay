@@ -18,4 +18,19 @@ class EventHandler : public EventFunctor
     O* o_;
 };
 
+template<typename F, typename O>
+class EventHandlerNoArg : public EventFunctor
+{
+  public:
+    EventHandlerNoArg(String const &event_name, F f, O* o) : EventFunctor{event_name}, f_(f), o_(o) {};
+
+    void operator()()
+    {
+      f_(o_);
+    };
+
+    F f_;
+    O* o_;
+};
+
 #endif //__C_SCANNER_H__
