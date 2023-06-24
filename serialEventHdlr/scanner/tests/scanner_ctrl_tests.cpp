@@ -83,11 +83,11 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     MockAxisCtrl mockAxisCtrl(mockStepGen);
     ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
 
-    EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(mode_test);
-
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
     scannerCtrl.SetHorizontalEndPosition();
+
+    EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(0.0f)).Times(1);
+    scannerCtrl.SetMode(mode_test);
 
     for (int i = 0; i < 9; i++)
     {
@@ -101,6 +101,42 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     {
         InSequence seq;
         EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(90.0f));
+        // no setAbsolutPosition, measurement done
+        scannerCtrl.Update();
+    }
+    scannerCtrl.Update();
+    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+}
+
+// test start pos and end pos are absolute positions, not relative to eachother
+TEST(ScannerCtrlTestSuite, test_set_start_pos)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
+    scannerCtrl.SetHorizontalEndPosition();
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    scannerCtrl.SetHorizontalStartPosition();
+
+
+    EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(0.0f)).Times(1);
+    scannerCtrl.SetMode(mode_test);
+
+    for (int i = 0; i < 6; i++)
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*10.0f));
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition((i+1)*10.0f)).Times(1);
+        scannerCtrl.Update();
+    }
+
+    // last itteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(60.0f));
         // no setAbsolutPosition, measurement done
         scannerCtrl.Update();
     }

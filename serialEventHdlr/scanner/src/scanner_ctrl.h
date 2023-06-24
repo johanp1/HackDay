@@ -1,6 +1,6 @@
 #include "axis_ctrl.h"
 #include "Arduino.h"
-#include <iostream>
+
 enum Mode { mode_inactive, mode_test, mode_scanning };
 
 constexpr float start_position_ = 0.0f;
@@ -32,7 +32,9 @@ class ScannerCtrl
       if (horizontalAxisCtrl_.GetPosition() == horizontal_target_position_)
       {
         //measure...blocking...
-        Serial.println("measure...");
+        String sendStr{"h pos "};
+        sendStr.concat(horizontal_target_position_);
+        Serial.println(sendStr);
 
         //then move to next pos
         horizontal_target_position_ += horizontal_increment_;
@@ -57,6 +59,10 @@ class ScannerCtrl
 
   void SetHorizontalStartPosition()
   {
+    // re-calc end pos. end pos should be a relative pos, not an offset to start
+    horizontal_end_position_ -= horizontalAxisCtrl_.GetPosition();
+
+    // set this pos as start
     horizontalAxisCtrl_.SetHome(0);
   };
   void SetHorizontalEndPosition()
@@ -65,6 +71,10 @@ class ScannerCtrl
   };
   void SetVerticalStartPosition()
   {
+    // re-calc end pos. end pos should be a relative pos, not an offset to start
+    vertical_end_position_ -= verticalAxisCtrl_.GetPosition();
+
+    // set this pos as start
     verticalAxisCtrl_.SetHome(0);
   };
   void SetVerticalEndPosition()
