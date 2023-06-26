@@ -35,7 +35,6 @@ void serialSend(const String& s)
 
    Serial.setRecData(temp_string);
    serialEvent();
-
 }
 
 void RunMs(unsigned int ms)
@@ -49,7 +48,7 @@ void RunMs(unsigned int ms)
 
 bool checkPos(float actual, float expected, float tol = 0.1)
 {
-   return (actual <= expected + tol) || (actual >= expected - tol);
+   return (actual <= expected + tol) && (actual >= expected - tol);
 }
 
 TEST(ScannerTestSuite, scannerTest)
@@ -95,9 +94,11 @@ TEST(ScannerTestSuite, scannerTest)
    RunMs(2000);
    serialSend(String{"he\n"});
    RunMs(10);
+   cout<<horizontalAxisCtrl.GetPosition()<<endl;
 
    serialSend(String{"mode_1\n"});
    RunMs(2000);
+   cout<<horizontalAxisCtrl.GetPosition()<<endl;
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 30.0f));
 }
 

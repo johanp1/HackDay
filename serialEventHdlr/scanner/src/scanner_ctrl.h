@@ -15,7 +15,7 @@ class ScannerCtrl
     {
       horizontalAxisCtrl_.SetAbsolutPosition(start_position_);
       horizontal_target_position_ = start_position_;
-      horizontal_increment_ = (m == mode_test ? 1.0f : 1.0f);
+      horizontal_increment_ = (m == mode_test ? 10.0f : 1.0f);
       mode_ = m;
     }
 
@@ -32,11 +32,12 @@ class ScannerCtrl
   {
     if (mode_ == mode_test)
     {
-      if (isAtTargetPos())
+      float pos = horizontalAxisCtrl_.GetPosition();
+      if (isAtTargetPos(pos, horizontal_target_position_))
       {
         //measure...blocking...
-        String sendStr{"h pos "};
-        sendStr.concat(horizontalAxisCtrl_.GetPosition());
+        String sendStr{"h_"};
+        sendStr.concat(pos);
         Serial.println(sendStr);
 
         //then move to next pos
@@ -87,9 +88,9 @@ class ScannerCtrl
   };
   
   //private:
-  bool isAtTargetPos()
+  bool isAtTargetPos(float actual, float expected, float tol = 0.2)
   {
-    return (horizontal_target_position_ <= horizontalAxisCtrl_.GetPosition() + 0.2f) || (horizontal_target_position_ >= horizontalAxisCtrl_.GetPosition() - 0.2f);
+    return (actual <= expected + 0.2f) && (actual >= expected - 0.2f);
   };
 
   Mode mode_ = mode_inactive;

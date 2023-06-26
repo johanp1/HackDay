@@ -65,10 +65,10 @@ void setup() {
   //eventParser.AddAcceptedHandler(*step1EventHandler);
   //eventParser.AddAcceptedHandler(*step2EventHandler);
   eventParser.AddAcceptedHandler(*modeHandler);
-  eventParser.AddAcceptedHandler(*setVerticalStartHandler);
-  eventParser.AddAcceptedHandler(*setVerticalEndHandler);
   eventParser.AddAcceptedHandler(*setHorizontalStartHandler);
   eventParser.AddAcceptedHandler(*setHorizontalEndHandler);
+  eventParser.AddAcceptedHandler(*setVerticalStartHandler);
+  eventParser.AddAcceptedHandler(*setVerticalEndHandler);
 
   horizontalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
   verticalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
