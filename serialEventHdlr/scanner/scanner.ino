@@ -33,7 +33,7 @@ AxisCtrl verticalAxisCtrl(stepGen2);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-static ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
+ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
 
 void setup() {  
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);

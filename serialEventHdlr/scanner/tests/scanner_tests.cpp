@@ -3,9 +3,11 @@
 #include "scanner.h"
 #include <iostream>
 #include "src/axis_ctrl.h"
+#include "src/scanner_ctrl.h"
 
 extern AxisCtrl horizontalAxisCtrl;
 extern AxisCtrl verticalAxisCtrl;
+extern ScannerCtrl scannerCtrl;
 extern void TIMER2_COMPA_vect();
 
 namespace {
@@ -41,8 +43,14 @@ void RunMs(unsigned int ms)
 {
    for (int i = 0; i < ms; i++)
    {
-      arduinoStub->IncTimeMs(1);
       TIMER2_COMPA_vect();
+
+      if (i%5 == 0)
+      {
+         loop();
+      }
+
+      arduinoStub->IncTimeMs(1);
    }
 }
 
@@ -64,7 +72,7 @@ TEST(ScannerTestSuite, scannerTest)
    ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 0.0f);
    ASSERT_TRUE(verticalAxisCtrl.GetPosition() == 0.0f);
 
-   // Test Set Horizontal position
+   // Test Set Horizontal position ///////////////////////////////////////////////////
    serialSend(String{"hor_33\n"});
    RunMs(2000);
   
@@ -74,7 +82,7 @@ TEST(ScannerTestSuite, scannerTest)
    RunMs(2000);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.2f));
 
-   // Test Set Vertical position
+   // Test Set Vertical position ////////////////////////////////////////////////////
    serialSend(String{"ver_33\n"});
    RunMs(2000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 33.0f, 0.2f));
@@ -83,23 +91,24 @@ TEST(ScannerTestSuite, scannerTest)
    RunMs(2000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f, 0.2f));
 
-   // Test Set Horizontal start position
+   // Test Set Horizontal start position ////////////////////////////////////////////
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.2f));
    serialSend(String{"hs\n"});
    RunMs(10);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 0.0f));
 
-   // Test Set Horizontal end position
-   serialSend(String{"hor_30\n"});
+   // Test Set Horizontal end position and start test mode /////////////////////////
+   serialSend(String{"hor_29.7.0\n"});
    RunMs(2000);
    serialSend(String{"he\n"});
    RunMs(10);
-   cout<<horizontalAxisCtrl.GetPosition()<<endl;
+
+   serialSend(String{"hor_-29.7\n"}); // go back to abs pos 0
+   RunMs(2000);
 
    serialSend(String{"mode_1\n"});
-   RunMs(2000);
-   cout<<horizontalAxisCtrl.GetPosition()<<endl;
-   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 30.0f));
+   RunMs(1000);
+   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 29.7f, 0.3));
 }
 
 }

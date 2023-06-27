@@ -15,7 +15,7 @@ class ScannerCtrl
     {
       horizontalAxisCtrl_.SetAbsolutPosition(start_position_);
       horizontal_target_position_ = start_position_;
-      horizontal_increment_ = (m == mode_test ? 10.0f : 1.0f);
+      horizontal_increment_ = (m == mode_test ? 9.9f : 0.9f);
       mode_ = m;
     }
 
