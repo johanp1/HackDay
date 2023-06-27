@@ -33,7 +33,7 @@ class ScannerCtrl
     if (mode_ == mode_test)
     {
       float pos = horizontalAxisCtrl_.GetPosition();
-      if (isAtTargetPos(pos, horizontal_target_position_))
+      if (isAtTargetPos(pos, horizontal_target_position_, 0.25))
       {
         //measure...blocking...
         String sendStr{"h_"};

@@ -27,10 +27,12 @@ float AxisCtrl::GetPosition()
 
 void AxisCtrl::SetRelativePosition(float pos)
 {
+    while (stepGen_.IsBusy()){delay(5);}
+
     // remove sign from pos
     if (!stepGen_.IsBusy())
     {
-        float unsigned_scaled_pos = (pos < 0 ? -pos*scale_ : pos*scale_);
+        unsigned int unsigned_scaled_pos = (pos < 0 ? (-1*pos*scale_) + 0.5 : pos*scale_ + 0.5);
         if (unsigned_scaled_pos >= 1)
         {
             stepGen_.SetDirection(pos > 0 ? direction_forward : direction_reverse);
@@ -48,7 +50,7 @@ void AxisCtrl::SetAbsolutPosition(float pos)
         float delta = position_ - pos;
 
         // calculate number of steps to request, unsigned...
-        unsigned int steps = (delta < 0 ? -delta*scale_ : delta*scale_);
+        unsigned int steps = (delta < 0 ? (-1*delta*scale_) + 0.5 : delta*scale_ + 0.5);
         if (steps >= 1)
         {
             stepGen_.SetDirection(delta < 0 ? direction_forward : direction_reverse);
