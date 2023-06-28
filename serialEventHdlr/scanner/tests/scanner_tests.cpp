@@ -107,8 +107,8 @@ TEST(ScannerTestSuite, scannerTest)
    RunMs(2000);
 
    serialSend(String{"mode_1\n"});
-   RunMs(1000);
-   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 29.7f, 0.3));
+   RunMs(9000);
+   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 0.0, 0.1));
 }
 
 }

@@ -1,7 +1,7 @@
 #include "axis_ctrl.h"
 #include "Arduino.h"
 
-enum Mode { mode_inactive, mode_test, mode_scanning };
+enum Mode { mode_inactive, mode_test, mode_scanning, mode_done };
 
 constexpr float start_position_ = 0.0f;
 
@@ -11,16 +11,23 @@ class ScannerCtrl
   ScannerCtrl(AxisCtrl& verticalAxisCtrl, AxisCtrl& horizontalAxisCtrl) : verticalAxisCtrl_(verticalAxisCtrl), horizontalAxisCtrl_(horizontalAxisCtrl){};
   void SetMode(Mode m)
   {
-    if ((m != mode_inactive) && (m != mode_))
+    if ((m == mode_test) && (m != mode_))
     {
       horizontalAxisCtrl_.SetAbsolutPosition(start_position_);
       horizontal_target_position_ = start_position_;
-      horizontal_increment_ = (m == mode_test ? 9.9f : 0.9f);
+      horizontal_increment_ =  9.9f;
       mode_ = m;
     }
 
     if ((m == mode_inactive) && (m != mode_))
     {
+      mode_ = m;
+    }
+
+    if ((m == mode_done) && (m != mode_))
+    {
+      // go to start-pos (cw)
+      horizontalAxisCtrl_.SetAbsolutPosition(360.0);
       mode_ = m;
     }
 
@@ -30,6 +37,16 @@ class ScannerCtrl
 
   void Update()
   {
+    if (mode_ == mode_done)
+    {
+      float pos = horizontalAxisCtrl_.GetPosition();
+      if (isAtTargetPos(pos, 360.0, 0.2))
+      {
+        horizontalAxisCtrl_.SetHome(0); // reset current position to 0
+        SetMode(mode_inactive);
+      } 
+    }
+
     if (mode_ == mode_test)
     {
       float pos = horizontalAxisCtrl_.GetPosition();
@@ -43,18 +60,18 @@ class ScannerCtrl
         //then move to next pos
         horizontal_target_position_ += horizontal_increment_;
 
-        // set next target
-        if (horizontal_target_position_ < horizontal_end_position_)
+        // set next target, if increment makes us pass the end-pos lets consider this done
+        if (horizontal_target_position_ <= horizontal_end_position_)
         {
           horizontalAxisCtrl_.SetAbsolutPosition(horizontal_target_position_);
         }
         else
         {
           // done
-          SetMode(mode_inactive);
+          SetMode(mode_done);
         }
       }
-    }
+    }    
   };
 
   Mode GetMode()
@@ -64,8 +81,12 @@ class ScannerCtrl
 
   void SetHorizontalStartPosition()
   {
-    // re-calc end pos. end pos should be a relative pos, not an offset to start
+    // re-calc end pos. end pos should be a absolut pos, not an offset to start
     horizontal_end_position_ -= horizontalAxisCtrl_.GetPosition();
+    if (horizontal_end_position_ > 360)
+    {
+      horizontal_end_position_ = 360;
+    }
 
     // set this pos as start
     horizontalAxisCtrl_.SetHome(0);
@@ -76,9 +97,12 @@ class ScannerCtrl
   };
   void SetVerticalStartPosition()
   {
-    // re-calc end pos. end pos should be a relative pos, not an offset to start
+    // re-calc end pos. end pos should be a absolut pos, not an offset to start
     vertical_end_position_ -= verticalAxisCtrl_.GetPosition();
-
+    if (vertical_end_position_ > 360)
+    {
+      vertical_end_position_ = 360;
+    }
     // set this pos as start
     verticalAxisCtrl_.SetHome(0);
   };
@@ -90,7 +114,7 @@ class ScannerCtrl
   //private:
   bool isAtTargetPos(float actual, float expected, float tol = 0.2)
   {
-    return (actual <= expected + 0.2f) && (actual >= expected - 0.2f);
+    return (actual <= (expected + 0.2f)) && (actual >= (expected - 0.2f));
   };
 
   Mode mode_ = mode_inactive;

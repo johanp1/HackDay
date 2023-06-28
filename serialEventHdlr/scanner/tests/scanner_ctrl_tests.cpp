@@ -36,6 +36,7 @@ class MockAxisCtrl : public AxisCtrl
    MOCK_METHOD(float, GetPosition, (), (override));
    MOCK_METHOD(void, SetAbsolutPosition, (float pos), (override));
    MOCK_METHOD(void, SetRelativePosition, (float pos), (override));
+   //MOCK_METHOD(void, SetHome, (float pos), (override));
 };
 
 TEST(ScannerCtrlTestSuite, test_update_mode_inactive)
@@ -71,9 +72,11 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     {
         InSequence seq;
         EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(356.4f)); // 36*9.9
-        // no setAbsolutPosition, measurement done
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(_)).Times(1);
         scannerCtrl.Update();
     }
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
@@ -103,9 +106,11 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     {
         InSequence seq;
         EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(99.0f));
-        // no setAbsolutPosition, measurement done
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(_)).Times(1);
         scannerCtrl.Update();
     }
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
@@ -141,9 +146,10 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
     {
         InSequence seq;
         EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(59.4f));
-        // no setAbsolutPosition, measurement done
+        EXPECT_CALL(mockAxisCtrl, SetAbsolutPosition(_)).Times(1);
         scannerCtrl.Update();
     }
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
