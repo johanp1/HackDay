@@ -96,8 +96,9 @@ class Comms(threading.Thread):
         return b.decode('utf-8', 'ignore')        #convert byte array to string
 
 class Controller:
-    def __init__(self, comm_hdlr):
+    def __init__(self, comm_hdlr, model):
         self._comm_hdlr = comm_hdlr
+        self._model = model
 
     def horizontal_jog_ccw(self):
         self._comm_hdlr.write_message('hor_-10')
@@ -115,16 +116,37 @@ class Controller:
         print(selected_port)
         self._comm_hdlr.set_port(selected_port)
 
-    def start(self):
-        self._comm_hdlr.write_message('mode_1')
-        
-    def test(self):
-        self._comm_hdlr.write_message('test')
+    def vertical_start(self):
+        self._comm_hdlr.write_message('vs')
 
+    def vertical_end(self):
+        self._comm_hdlr.write_message('ve')
+
+    def horizontal_start(self):
+        self._comm_hdlr.write_message('hs')
+
+    def horizontal_end(self):
+        self._comm_hdlr.write_message('he')
+
+    def start(self):
+        self._comm_hdlr.write_message('mode_2')
+        self._model.set_scanner_running(True)
+
+    def test(self):
+        self._comm_hdlr.write_message('mode_1')
+        self._model.set_test_running(True)
+
+    def stop(self):
+        self._comm_hdlr.write_message('mode_0')
+        self._model.set_scanner_running(False)
+        self._model.set_test_running(False)
+        
 class Model:
     def __init__(self, available_ports):
         self._available_ports = available_ports
         self._observers = []
+        self._test_runnig = False
+        self._scanner_runnig = False
 
     def attatch(self, o):
         self._observers.append(o)
@@ -135,11 +157,22 @@ class Model:
 
     def get_available_ports(self):
         return self._available_ports
+    
+    def set_test_running(self, is_runnig):
+        if self._test_runnig != is_runnig:
+            self._test_runnig = is_runnig
+            self.notify()
+
+    def set_scanner_running(self, is_runnig):
+        if self._scanner_runnig != is_runnig:
+            self._scanner_runnig = is_runnig
+            self.notify()
 
 class View:
     def __init__(self, model, comm_hdlr):
         self._model = model
-        self._controller = Controller(comm_hdlr)
+        self._controller = Controller(comm_hdlr, model)
+        self._model.attatch(self)
 
         self.window = tk.Tk()
         self.current_port = tk.StringVar()
@@ -166,10 +199,10 @@ class View:
         btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
         btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
-        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5)#, command=self._controller.vertical_jog_up)
+        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5, command=self._controller.vertical_start)
         btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
 
-        btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5)#, command=self._controller.vertical_jog_down)
+        btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_end)
         btn_set_lower.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
@@ -180,6 +213,12 @@ class View:
 
         btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5, command=self._controller.horizontal_jog_cw)
         btn_jog_cw.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+
+        btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
+        btn_jog_ccw.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+
+        btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
+        btn_jog_cw.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
         btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
@@ -204,6 +243,9 @@ class View:
     def start(self):
         self.window.mainloop()
 
+    def update(self):
+        print("update")
+
 def message_handler(message):
     print(message)
 
@@ -214,6 +256,8 @@ def main():
     view = View(model, comms)
 
     view.start()
+
+
 
 if __name__ == '__main__':
     main()
