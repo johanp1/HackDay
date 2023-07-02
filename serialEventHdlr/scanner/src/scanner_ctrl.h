@@ -42,6 +42,12 @@ class ScannerCtrl
       float pos = horizontalAxisCtrl_.GetPosition();
       if (isAtTargetPos(pos, 360.0, 0.2))
       {
+        String sendStr{"done_"};
+        sendStr.concat(pos);
+        cli();  // serial.send seems to be upset by interrupts...
+        Serial.println(sendStr);
+        sei();
+
         horizontalAxisCtrl_.SetHome(0); // reset current position to 0
         SetMode(mode_inactive);
       } 
@@ -52,10 +58,11 @@ class ScannerCtrl
       float pos = horizontalAxisCtrl_.GetPosition();
       if (isAtTargetPos(pos, horizontal_target_position_, 0.25))
       {
-        //measure...blocking...
         String sendStr{"h_"};
         sendStr.concat(pos);
+        cli();  // serial.send seems to be upset by interrupts...
         Serial.println(sendStr);
+        sei();
 
         //then move to next pos
         horizontal_target_position_ += horizontal_increment_;
@@ -112,9 +119,9 @@ class ScannerCtrl
   };
   
   //private:
-  bool isAtTargetPos(float actual, float expected, float tol = 0.2)
+  bool isAtTargetPos(float actual, float expected, float tol = 0.2f)
   {
-    return (actual <= (expected + 0.2f)) && (actual >= (expected - 0.2f));
+    return (actual <= (expected + tol)) && (actual >= (expected - tol));
   };
 
   Mode mode_ = mode_inactive;
