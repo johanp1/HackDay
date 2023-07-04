@@ -20,7 +20,7 @@ class Comms(threading.Thread):
         self.serial.timeout = 0.05
         self.msg_hdlr = msg_handler
 
-        self.daemon=True
+        self.daemon = True
 
         self.ports = self.get_available_ports()
         if self.ports:
@@ -99,6 +99,7 @@ class Controller:
     def __init__(self, comm_hdlr, model):
         self._comm_hdlr = comm_hdlr
         self._model = model
+        self._model.attatch(self)
 
     def horizontal_jog_ccw(self):
         self._comm_hdlr.write_message('hor_-10')
@@ -130,16 +131,23 @@ class Controller:
 
     def start(self):
         self._comm_hdlr.write_message('mode_2')
-        self._model.set_scanner_running(True)
 
     def test(self):
         self._comm_hdlr.write_message('mode_1')
-        self._model.set_test_running(True)
 
     def stop(self):
         self._comm_hdlr.write_message('mode_0')
-        self._model.set_scanner_running(False)
-        self._model.set_test_running(False)
+
+    def update(self):
+        pass
+
+    def handle_mode_event(self, mode):
+        """gets serialized data from event brooker"""
+        try:
+            self._model.set_scanner_mode(int(mode))
+        except ValueError:
+            pass
+        
         
 class Model:
     def __init__(self, available_ports):
@@ -158,15 +166,11 @@ class Model:
     def get_available_ports(self):
         return self._available_ports
     
-    def set_test_running(self, is_runnig):
-        if self._test_runnig != is_runnig:
-            self._test_runnig = is_runnig
+    def set_scanner_mode(self, mode):
+        if self._mode != mode:
+            self._mode = mode
             self.notify()
 
-    def set_scanner_running(self, is_runnig):
-        if self._scanner_runnig != is_runnig:
-            self._scanner_runnig = is_runnig
-            self.notify()
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -221,11 +225,11 @@ class View:
         btn_jog_cw.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
-        btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
-        btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
+        self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
+        self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
 
-        btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5, command=self._controller.test)
-        btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
+        self.btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5, command=self._controller.test)
+        self.btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
         # config frame content
         available_ports = model.get_available_ports()
@@ -240,8 +244,20 @@ class View:
         port_option_menu.values = available_ports
         port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
 
+    def update(self):
+        if self._model._mode == 0:
+            self.btn_start.config(text="Start", command=self._controller.start, state="normal")
+            self.btn_test.config(text="Test", command=self._controller.test, state="normal")
+        if self._model._mode == 1: #test mode
+            self.btn_start.config(state="disabled")
+            self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
+        if self._model._mode == 2: #scanning mode
+            self.btn_start.config(text = "Stop", command=self._controller.Stop, state="normal")
+            self.btn_test.config(state = "disabled")
+
     def start(self):
         self.window.mainloop()
+
 
 class MessageBroker:
    def __init__(self):
@@ -262,17 +278,20 @@ class MessageBroker:
                 pass
                 #print('unable to invoke handler, too manny args supplied')
 
+def print_scan(angle):
+    print('horizontal angle: ' + angle)
 
 def main():
     """main function"""
-    message_broker = MessageBroker
+    message_broker = MessageBroker()
     comms = Comms(message_broker.message_handler)
     model = Model(comms.get_available_ports())
     view = View(model, comms)
 
+    message_broker.attach_handler('mode', view._controller.handle_mode_event)
+    message_broker.attach_handler('h', print_scan)
+
     view.start()
-
-
 
 if __name__ == '__main__':
     main()
