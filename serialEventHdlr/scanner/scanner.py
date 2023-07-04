@@ -243,15 +243,30 @@ class View:
     def start(self):
         self.window.mainloop()
 
-    def update(self):
-        print("update")
+class MessageBroker:
+   def __init__(self):
+      self.brokee_dict = {}
 
-def message_handler(message):
-    print(message)
+   def attach_handler(self, event_name, handler):
+      self.brokee_dict[event_name] = handler
+
+   def message_handler(self, message):
+        print(message)
+        de_serialized_message = message.split('_')
+        event_name = de_serialized_message[0]
+        event_data = de_serialized_message[1:]
+        if event_name in self.brokee_dict:  
+            try:          
+                self.brokee_dict[event_name](*event_data)
+            except TypeError:
+                pass
+                #print('unable to invoke handler, too manny args supplied')
+
 
 def main():
     """main function"""
-    comms = Comms(message_handler)
+    message_broker = MessageBroker
+    comms = Comms(message_broker.message_handler)
     model = Model(comms.get_available_ports())
     view = View(model, comms)
 
