@@ -75,6 +75,7 @@ class Comms(threading.Thread):
 
     def set_port(self, port):
         self.close()
+
         try:
             self.serial.port = port
         except serial.SerialException:
@@ -114,7 +115,6 @@ class Controller:
         self._comm_hdlr.write_message('ver_-10')
 
     def set_selected_port(self, selected_port):
-        print(selected_port)
         self._comm_hdlr.set_port(selected_port)
 
     def vertical_start(self):
@@ -153,8 +153,8 @@ class Model:
     def __init__(self, available_ports):
         self._available_ports = available_ports
         self._observers = []
-        self._test_runnig = False
-        self._scanner_runnig = False
+        self._mode = 0
+        self._file_name = ''
 
     def attatch(self, o):
         self._observers.append(o)
@@ -171,6 +171,11 @@ class Model:
             self._mode = mode
             self.notify()
 
+    def set_file_name(self, file_name):
+        self._file_name = file_name
+
+    def get_file_name(self, file_name):
+        return self._file_name
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -180,6 +185,8 @@ class View:
 
         self.window = tk.Tk()
         self.current_port = tk.StringVar()
+        self._file_name=tk.StringVar()
+        self._file_name.set('apa.txt')
 
         #the top level frames
         vertical_ctrl_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
@@ -239,10 +246,15 @@ class View:
             self.current_port.set('N/A')
 
         tk.Label(cfg_frame, text="File name:").grid(row=0, column=0, padx=5, pady=5)
+        self.filename_entry = tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=self.validate, validate='key').grid(row=0, column=1, padx=5, pady=5)
+
         tk.Label(cfg_frame, text="Com port:").grid(row=1, column=0, padx=5, pady=5)
-        port_option_menu = tk.OptionMenu(master = cfg_frame, variable = self.current_port, value = self.current_port.get(), command = self._controller.set_selected_port)
-        port_option_menu.values = available_ports
+        port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, available_ports[0], *available_ports, command = self._controller.set_selected_port)
         port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+
+    def validate(self):
+        self._model.set_file_name(self._file_name.get())
+        return True
 
     def update(self):
         if self._model._mode == 0:
@@ -252,7 +264,7 @@ class View:
             self.btn_start.config(state="disabled")
             self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
         if self._model._mode == 2: #scanning mode
-            self.btn_start.config(text = "Stop", command=self._controller.Stop, state="normal")
+            self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
             self.btn_test.config(state = "disabled")
 
     def start(self):
@@ -278,13 +290,28 @@ class MessageBroker:
                 pass
                 #print('unable to invoke handler, too manny args supplied')
 
+class TestComms:
+    def __init__(self, msg_handler):
+        self._msg_handler = msg_handler
+    
+    def write_message(self, s):
+        self._msg_handler(s)
+
+    def get_available_ports(self):    # get available ports
+        available_ports = ['COM1', 'COM2', 'COM3', 'COM4']
+        return available_ports
+    
+    def set_port(self, selected_port):
+        print('setting port ' + selected_port)
+
 def print_scan(angle):
     print('horizontal angle: ' + angle)
 
 def main():
     """main function"""
     message_broker = MessageBroker()
-    comms = Comms(message_broker.message_handler)
+    comms = TestComms(message_broker.message_handler)
+    #comms = Comms(message_broker.message_handler)
     model = Model(comms.get_available_ports())
     view = View(model, comms)
 
