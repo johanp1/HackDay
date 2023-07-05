@@ -31,7 +31,7 @@ class ScannerCtrl
       mode_ = m;
     }
 
-    Serial.print("mode ");
+    Serial.print("mode_");
     Serial.println(mode_);
   };
 
@@ -48,7 +48,7 @@ class ScannerCtrl
         Serial.println(sendStr);
         sei();
 
-        horizontalAxisCtrl_.SetHome(0); // reset current position to 0
+        horizontalAxisCtrl_.SetHome(pos-360.0f); // reset current position to 0
         SetMode(mode_inactive);
       } 
     }
