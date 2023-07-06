@@ -1,10 +1,13 @@
 """scanner main function"""
-
+import sys
+import getopt
+from datetime import datetime
 import threading
 import time
 import tkinter as tk
 import serial
 from serial.tools.list_ports import comports
+import test_comms
 
 class Comms(threading.Thread):
     """rs232 port"""
@@ -154,7 +157,7 @@ class Model:
         self._available_ports = available_ports
         self._observers = []
         self._mode = 0
-        self._file_name = ''
+        self._file_name = 'apa.txt'
 
     def attatch(self, o):
         self._observers.append(o)
@@ -171,10 +174,13 @@ class Model:
             self._mode = mode
             self.notify()
 
+    def get_scanner_mode(self):
+        return self._mode
+
     def set_file_name(self, file_name):
         self._file_name = file_name
 
-    def get_file_name(self, file_name):
+    def get_file_name(self):
         return self._file_name
 
 class View:
@@ -186,7 +192,7 @@ class View:
         self.window = tk.Tk()
         self.current_port = tk.StringVar()
         self._file_name=tk.StringVar()
-        self._file_name.set('apa.txt')
+        self._file_name.set(model.get_file_name())
 
         #the top level frames
         vertical_ctrl_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
@@ -240,30 +246,30 @@ class View:
 
         # config frame content
         available_ports = model.get_available_ports()
-        if available_ports:
-            self.current_port.set(available_ports[0])
-        else:
-            self.current_port.set('N/A')
+        if not available_ports:
+            available_ports.append('N/A')
+        self.current_port.set(available_ports[0])
 
+        vcmd = (cfg_frame.register(self.validate), '%P')
         tk.Label(cfg_frame, text="File name:").grid(row=0, column=0, padx=5, pady=5)
-        self.filename_entry = tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=self.validate, validate='key').grid(row=0, column=1, padx=5, pady=5)
+        self.filename_entry = tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=vcmd, validate='key').grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(cfg_frame, text="Com port:").grid(row=1, column=0, padx=5, pady=5)
         port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, available_ports[0], *available_ports, command = self._controller.set_selected_port)
         port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
 
-    def validate(self):
-        self._model.set_file_name(self._file_name.get())
+    def validate(self, file_name):
+        self._model.set_file_name(file_name)
         return True
 
     def update(self):
-        if self._model._mode == 0:
+        if self._model.get_scanner_mode() == 0:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
             self.btn_test.config(text="Test", command=self._controller.test, state="normal")
-        if self._model._mode == 1: #test mode
+        if self._model.get_scanner_mode() == 1: #test mode
             self.btn_start.config(state="disabled")
             self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
-        if self._model._mode == 2: #scanning mode
+        if self._model.get_scanner_mode() == 2: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
             self.btn_test.config(state = "disabled")
 
@@ -290,33 +296,53 @@ class MessageBroker:
                 pass
                 #print('unable to invoke handler, too manny args supplied')
 
-class TestComms:
-    def __init__(self, msg_handler):
-        self._msg_handler = msg_handler
-    
-    def write_message(self, s):
-        self._msg_handler(s)
 
-    def get_available_ports(self):    # get available ports
-        available_ports = ['COM1', 'COM2', 'COM3', 'COM4']
-        return available_ports
-    
-    def set_port(self, selected_port):
-        print('setting port ' + selected_port)
+class OutputFileHandler:
+    def __init__(self, model):
+        self._model = model
+        self._model.attatch(self)
 
-def print_scan(angle):
-    print('horizontal angle: ' + angle)
+    def print_scan(self, angle):
+        if not self.f_log.closed:
+            self.f_log.write(angle + '\n')
+
+    def update(self):
+        if self._model.get_scanner_mode() == 1:
+            self.f_log = open(self._model.get_file_name(), 'a', encoding="utf-8")
+            dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.f_log.write('start scanning ' + dt_string + '\n')
+
+        if self._model.get_scanner_mode() == 0:
+            dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.f_log.write('scanning done ' + dt_string + '\n')
+            self.f_log.close()
 
 def main():
-    """main function"""
+    use_test_comms = False
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "t", ["test"])
+    except getopt.GetoptError as err:
+        # print help information and exit:
+        print(err) # will print
+    
+    for o, a in opts:
+        if o in ("-t", "--test"):
+            use_test_comms = True
+
     message_broker = MessageBroker()
-    comms = TestComms(message_broker.message_handler)
-    #comms = Comms(message_broker.message_handler)
+
+    if use_test_comms == True:
+        comms = test_comms.TestComms(message_broker.message_handler)
+    else:
+        comms = Comms(message_broker.message_handler)
+ 
     model = Model(comms.get_available_ports())
     view = View(model, comms)
+    output_file_handler = OutputFileHandler(model)
 
     message_broker.attach_handler('mode', view._controller.handle_mode_event)
-    message_broker.attach_handler('h', print_scan)
+    message_broker.attach_handler('h', output_file_handler.print_scan)
 
     view.start()
 
