@@ -42,13 +42,14 @@ class ScannerCtrl
       float pos = horizontalAxisCtrl_.GetPosition();
       if (isAtTargetPos(pos, 360.0, 0.2))
       {
+        float new_home = pos-360.0f;
+        horizontalAxisCtrl_.SetHome(new_home); // reset current position to 0
         String sendStr{"done_"};
-        sendStr.concat(pos);
+        sendStr.concat(new_home);
         cli();  // serial.send seems to be upset by interrupts...
         Serial.println(sendStr);
         sei();
 
-        horizontalAxisCtrl_.SetHome(pos-360.0f); // reset current position to 0
         SetMode(mode_inactive);
       } 
     }

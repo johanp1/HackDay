@@ -304,7 +304,7 @@ class OutputFileHandler:
 
     def print_scan(self, angle):
         if not self.f_log.closed:
-            self.f_log.write(angle + '\n')
+            self.f_log.write(angle)
 
     def update(self):
         if self._model.get_scanner_mode() == 1:
