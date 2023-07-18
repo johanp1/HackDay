@@ -1,9 +1,9 @@
 %function retval = calc_delta_t (input1, input2)
-v_max = 1/2; % [rev/s] alltså 1 varv på 2 sekunder
+v_max = 1/2; % [rev/s] alltsï¿½ 1 varv pï¿½ 2 sekunder
 steps_per_rev = 400; % stegmotorspecifik
-tn = 2; % efter tn [s] vill jag ha v_target (helt påhittad)
+tn = 1; % efter tn [s] vill jag ha v_target (helt pï¿½hittad)
 
-% då blir motorstyrsignalen/pulståget:
+% dï¿½ blir motorstyrsignalen/pulstï¿½get:
 f = v_max * steps_per_rev;
 T_min = 1/f;
 fprintf("shortest possible step period: %f\n", T_min)
@@ -12,9 +12,9 @@ fprintf("shortest possible step period: %f\n", T_min)
 a_max = v_max/tn; %max acceleration [rev/s^2] 
 fprintf("acceleration = %.2f, given v_max = %.2f, tn = %.2f\n", a_max, v_max, tn)
 
-%delta_t beräkningar
-%hitta på antal uppdateringar av v under 0:tn
-n = 40; % 40 speed-updates mellan 0 och tn, helt påhittat
+%delta_t berï¿½kningar
+%hitta pï¿½ antal uppdateringar av v under 0:tn
+n = 28; % 28 speed-updates mellan 0 och tn, helt pï¿½hittat
 fprintf("number of speed updates during tn, n = %d \n", n)
 sum_n = sum(1:n);
 
@@ -34,7 +34,7 @@ for i = [2:n]
   s(i) = s(i-1) + v(i)*(t(i) - t(i-1));
 end
 
-% det man vill ha ut är delta_t då kan man räkna ut offsett mellan varje
+% det man vill ha ut ï¿½r delta_t dï¿½ kan man rï¿½kna ut offsett mellan varje
 % StartStep:
 % T_min+n(i)*delta_t
 
