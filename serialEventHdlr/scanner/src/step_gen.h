@@ -7,10 +7,10 @@ using Pin = char;
 enum StepRetVal { ok, busy };
 enum Direction { direction_forward, direction_reverse };
 
-constexpr milli_sec default_t_on = 2; // ms
-constexpr milli_sec default_t_off = 3; // ms
-constexpr char max_number_of_ramp_steps = 34; // calculated with ocatve-script "calc_n.m"
-constexpr milli_sec t_delta = 1;
+constexpr milli_sec default_t_on = 2;
+constexpr milli_sec default_t_off = 3;
+constexpr char max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
+constexpr milli_sec t_delta = 2;
 constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta; 
 
 class State;
