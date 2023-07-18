@@ -18,6 +18,7 @@ constexpr milli_sec t_off = 3;//3;
 
 static void timer2Init( void );
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
+static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
 //static void stepEventWrapper(String& str, StepGen* stepGen);
 static void modeWrapper(String& str, ScannerCtrl* ctrl);
 static void setVerticalStartWrapper(ScannerCtrl* ctrl);
@@ -40,7 +41,8 @@ void setup() {
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
   //EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
   //EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
-
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"mode"}, modeWrapper, &scannerCtrl);
   EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalStartHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"vs"}, setVerticalStartWrapper, &scannerCtrl);
   EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalEndHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"ve"}, setVerticalEndWrapper, &scannerCtrl);
@@ -62,6 +64,8 @@ void setup() {
   receiver.addEventListner(&eventParser);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
+  eventParser.AddAcceptedHandler(*setHorizontalUPSHandler);
+  eventParser.AddAcceptedHandler(*setVerticalUPSHandler);
   //eventParser.AddAcceptedHandler(*step1EventHandler);
   //eventParser.AddAcceptedHandler(*step2EventHandler);
   eventParser.AddAcceptedHandler(*modeHandler);
@@ -102,20 +106,19 @@ void serialEvent()
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
 {
   auto pos = str.toFloat();
-  axisCtrl->SetRelativePosition(pos);
+  axisCtrl->MoveToRelativePosition(pos);
 }
-
-/*static void stepEventWrapper(String& str, StepGen* stepGen)
-{
-  auto steps = str.toInt();
-  stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
-  stepGen->Step(steps);
-}*/
 
 static void modeWrapper(String& str, ScannerCtrl* ctrl)
 {
   Mode mode = static_cast<Mode>(str.toInt());
   ctrl->SetMode(mode);
+}
+
+static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl)
+{
+  auto ups = str.toFloat(); 
+  axisCtrl->SetSpeed(ups);
 }
 
 static void setVerticalStartWrapper(ScannerCtrl* ctrl)
@@ -137,3 +140,10 @@ static void setHorizontalEndWrapper(ScannerCtrl* ctrl)
 {
   scannerCtrl.SetHorizontalEndPosition();
 }
+
+/*static void stepEventWrapper(String& str, StepGen* stepGen)
+{
+  auto steps = str.toInt();
+  stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
+  stepGen->Step(steps);
+}*/

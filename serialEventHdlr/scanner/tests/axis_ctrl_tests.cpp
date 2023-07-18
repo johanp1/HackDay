@@ -53,8 +53,13 @@ TEST_F(AxisCtrlTestFixture, test_init)
 
 TEST_F(AxisCtrlTestFixture, test_set_speed)
 {
+   float scale = 800.0f/360.0f;
    EXPECT_CALL(*mockStepGen, SetStepsPerSec(2));
    axisCtrl->SetSpeed(2);
+
+   axisCtrl->SetScale(scale); // steps/unit (degrees)
+   EXPECT_CALL(*mockStepGen, SetStepsPerSec(scale*360/4));
+   axisCtrl->SetSpeed(360/4); // one full rev per 4 sec
 }
 
 TEST_F(AxisCtrlTestFixture, test_set_rel_pos_default_scale)
@@ -73,19 +78,19 @@ TEST_F(AxisCtrlTestFixture, test_set_rel_pos_default_scale)
       EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_reverse));
    }
    
-   axisCtrl->SetRelativePosition(2);
+   axisCtrl->MoveToRelativePosition(2);
    axisCtrl->Update(); // 2 steps generated, will generate 2 stepObserver update calls
    ASSERT_TRUE(axisCtrl->GetPosition() == 1.0f);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
-   axisCtrl->SetRelativePosition(2);
+   axisCtrl->MoveToRelativePosition(2);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 3.0f);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 4.0f);
 
-   axisCtrl->SetRelativePosition(-2);
+   axisCtrl->MoveToRelativePosition(-2);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 3.0f);
    axisCtrl->Update();
@@ -106,17 +111,17 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_default_scale)
       EXPECT_CALL(*mockStepGen, GetDirection()).Times(4).WillRepeatedly(Return(direction_reverse));
    }
 
-   axisCtrl->SetAbsolutPosition(2);
+   axisCtrl->MoveToAbsolutPosition(2);
    axisCtrl->Update();  // 2 steps generated, will generate 2 stepObserver update calls
    ASSERT_TRUE(axisCtrl->GetPosition() == 1.0f);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
    // this request shall not end up in any call to stepGen.Step...
-   axisCtrl->SetAbsolutPosition(2);
+   axisCtrl->MoveToAbsolutPosition(2);
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
 
-   axisCtrl->SetAbsolutPosition(-2);
+   axisCtrl->MoveToAbsolutPosition(-2);
    axisCtrl->Update(); // 4 steps generated, will generate 4 stepObserver update calls
    ASSERT_TRUE(axisCtrl->GetPosition() == 1.0f);
    axisCtrl->Update();
@@ -151,7 +156,7 @@ TEST_F(AxisCtrlTestFixture, test_set_rel_pos_scaled)
    EXPECT_CALL(*mockStepGen, GetDirection()).WillRepeatedly(Return(direction_forward));
    
    // smallest movement possible
-   axisCtrl->SetRelativePosition(1/test_scale);
+   axisCtrl->MoveToRelativePosition(1/test_scale);
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 0.225f);
 }
@@ -164,7 +169,7 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_scaled)
    EXPECT_CALL(*mockStepGen, Step(1));
    EXPECT_CALL(*mockStepGen, GetDirection()).WillRepeatedly(Return(direction_forward));
 
-   axisCtrl->SetAbsolutPosition(1/test_scale);
+   axisCtrl->MoveToAbsolutPosition(1/test_scale);
    axisCtrl->Update();  // 2 steps generated, will generate 2 stepObserver update calls
    ASSERT_TRUE(axisCtrl->GetPosition() == 0.225f);
    axisCtrl->Update();
@@ -174,7 +179,7 @@ TEST_F(AxisCtrlTestFixture, test_set_home)
 {
    EXPECT_CALL(*mockStepGen, Step(2));
    EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
-   axisCtrl->SetAbsolutPosition(2);
+   axisCtrl->MoveToAbsolutPosition(2);
    axisCtrl->Update();
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
@@ -194,8 +199,8 @@ TEST_F(AxisCtrlTestFixture, test_set_pos_busy)
    EXPECT_CALL(*mockStepGen, Step(_)).Times(0);
    EXPECT_CALL(*mockStepGen, IsBusy()).WillRepeatedly(Return(true));
    
-   axisCtrl->SetAbsolutPosition(10);
-   axisCtrl->SetRelativePosition(10);
+   axisCtrl->MoveToAbsolutPosition(10);
+   axisCtrl->MoveToRelativePosition(10);
 }
 
 }

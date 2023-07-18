@@ -199,7 +199,9 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
  
    // set nbr of steps >> max_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
-   incTime(43);
+   // t_on_test + t_off_test + t_off_ramp_ - 1 (-1 means "last off-state iteration")
+   // => 5 + 5 + 56 - 1 = 65
+   incTime(t_on_test + t_off_test + max_t_off_ramp - 1);
 
    // still working on the off part of the first step
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
@@ -208,8 +210,9 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    // new step just started
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
-   // first step took 44 ms to finish, 2nd should be done in 43
-   incTime(42);
+   // first step took 44 ms to finish, 2nd should be done in:
+   // t_on_test + t_off_test + t_off_ramp_ - t_delta - 1 = 5 + 5 + 56 - 2 - 1 = 63
+   incTime(t_on_test + t_off_test + max_t_off_ramp - 1*t_delta - 1);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    //ASSERT_FALSE(stepGen->IsBusy());
@@ -217,8 +220,9 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    // new step just started
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
-   // 3nd should be done in 42
-   incTime(41);
+   // 3nd should be done in:
+   // t_on_test + t_off_test + t_off_ramp_ - 2*t_delta - 1 = 5 + 5 + 56 - 4 - 1 = 61
+   incTime(t_on_test + t_off_test + max_t_off_ramp - 2*t_delta - 1);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    //ASSERT_FALSE(stepGen->IsBusy());
@@ -239,7 +243,7 @@ TEST_F(StepGenTestFixture, test_decresing_step)
 
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_delta*(ramp_steps-i)));
    }
 }
 
@@ -257,7 +261,7 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    for (int8_t i = 0; i < ramp_steps; i++)
    {
       //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (ramp_steps-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_delta*(ramp_steps-i)));
    }
 
    // one max speed step
@@ -268,7 +272,7 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    for (int8_t i = 1; i < ramp_steps; i++)
    {
       //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + i) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + i));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_delta*i));
    }
 }
 
@@ -289,15 +293,15 @@ TEST_F(StepGenTestFixture, test_incomlpete_ramping)
    {
       // cout << "checking ramp up step " << to_string(requested_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-i) << "\n";
       // cout << (checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_delta*(max_number_of_ramp_steps-i)));
    }
 
    // ramping down
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      // cout << "checking ramp down step " << to_string(ramp_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-ramp_steps) + i << "\n";
-      // cout << (checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-ramp_steps) + i) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test,  t_off_test + max_number_of_ramp_steps - ramp_steps + i));
+      // cout << "checking ramp down step " << to_string(ramp_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-ramp_steps) + t_delta*i << "\n";
+      // cout << (checkStep(t_on_test, t_off_test + t_delta*(max_number_of_ramp_steps - ramp_steps + i)) ? "OK":"fail") << "\n";
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_delta*(max_number_of_ramp_steps - ramp_steps + i)));
    }
 }
 

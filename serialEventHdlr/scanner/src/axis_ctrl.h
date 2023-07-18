@@ -14,8 +14,8 @@ class AxisCtrl : public StepObserver
    void SetScale(float scale);
    void SetSpeed(float units_per_sec);
    virtual float GetPosition();
-   virtual void SetRelativePosition(float pos);
-   virtual void SetAbsolutPosition(float pos);
+   virtual void MoveToRelativePosition(float pos);
+   virtual void MoveToAbsolutPosition(float pos);
    void SetHome(float pos = 0.0f);
    void Update() override;
    

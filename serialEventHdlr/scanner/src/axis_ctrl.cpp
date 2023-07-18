@@ -25,7 +25,7 @@ float AxisCtrl::GetPosition()
     return position_;
 }
 
-void AxisCtrl::SetRelativePosition(float pos)
+void AxisCtrl::MoveToRelativePosition(float pos)
 {
     while (stepGen_.IsBusy()){delay(5);}
 
@@ -35,13 +35,22 @@ void AxisCtrl::SetRelativePosition(float pos)
         unsigned int steps = abs(pos)*scale_ + 0.5;
         if (steps >= 1)
         {
+            if (steps >= 20)
+            {
+                stepGen_.SetUseRamping(true);
+            }
+            else
+            {
+                stepGen_.SetUseRamping(false);
+            }
+
             stepGen_.SetDirection(pos > 0 ? direction_forward : direction_reverse);
             stepGen_.Step(steps);
         }
     }
 }
 
-void AxisCtrl::SetAbsolutPosition(float pos)
+void AxisCtrl::MoveToAbsolutPosition(float pos)
 {
     while (stepGen_.IsBusy()){delay(5);}
 
@@ -53,6 +62,15 @@ void AxisCtrl::SetAbsolutPosition(float pos)
         unsigned int steps = abs(delta)*scale_ + 0.5;
         if (steps >= 1)
         {
+            if (steps >= 20)
+            {
+                stepGen_.SetUseRamping(true);
+            }
+            else
+            {
+                stepGen_.SetUseRamping(false);
+            }
+
             stepGen_.SetDirection(delta < 0 ? direction_forward : direction_reverse);
             stepGen_.Step(steps);
         }

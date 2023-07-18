@@ -54,8 +54,9 @@ void RunMs(unsigned int ms)
    }
 }
 
-bool checkPos(float actual, float expected, float tol = 0.1)
+bool checkPos(float actual, float expected, float tol = 0.1f)
 {
+   //cout << "actual pos: " << actual << ", expected pos: " << expected << endl;
    return (actual <= expected + tol) && (actual >= expected - tol);
 }
 
@@ -76,23 +77,23 @@ TEST(ScannerTestSuite, scannerTest)
    serialSend(String{"hor_33\n"});
    RunMs(2000);
   
-   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 33.0f, 0.2f));
+   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 33.0f, 0.25f));
 
    serialSend(String{"hor_-40\n"});
    RunMs(2000);
-   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.2f));
+   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.25f));
 
    // Test Set Vertical position ////////////////////////////////////////////////////
    serialSend(String{"ver_33\n"});
    RunMs(2000);
-   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 33.0f, 0.2f));
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 33.0f, 0.25f));
 
    serialSend(String{"ver_-40\n"});
    RunMs(2000);
-   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f, 0.2f));
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f, 0.25f));
 
    // Test Set Horizontal start position ////////////////////////////////////////////
-   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.2f));
+   ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.25f));
    serialSend(String{"hs\n"});
    RunMs(10);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 0.0f));

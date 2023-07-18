@@ -13,7 +13,7 @@ class ScannerCtrl
   {
     if ((m == mode_test) && (m != mode_))
     {
-      horizontalAxisCtrl_.SetAbsolutPosition(start_position_);
+      horizontalAxisCtrl_.MoveToAbsolutPosition(start_position_);
       horizontal_target_position_ = start_position_;
       horizontal_increment_ =  9.9f;
       mode_ = m;
@@ -27,7 +27,7 @@ class ScannerCtrl
     if ((m == mode_done) && (m != mode_))
     {
       // go to start-pos (cw)
-      horizontalAxisCtrl_.SetAbsolutPosition(360.0);
+      horizontalAxisCtrl_.MoveToAbsolutPosition(360.0);
       mode_ = m;
     }
 
@@ -71,7 +71,7 @@ class ScannerCtrl
         // set next target, if increment makes us pass the end-pos lets consider this done
         if (horizontal_target_position_ <= horizontal_end_position_)
         {
-          horizontalAxisCtrl_.SetAbsolutPosition(horizontal_target_position_);
+          horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
         }
         else
         {

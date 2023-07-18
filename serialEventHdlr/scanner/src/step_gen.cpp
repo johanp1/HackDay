@@ -34,7 +34,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 {
    if (!IsBusy())
    {
-      curr_step_ = steps-1; // current step is the step index [(n-1)..0]
+      curr_step_ = steps - 1; // current step is the step index [(n-1)..0]
 
       if (use_ramping_)
       {
