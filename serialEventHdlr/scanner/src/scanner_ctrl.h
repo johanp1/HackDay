@@ -1,3 +1,6 @@
+#ifndef __C_SCANNER_CTRL_H__
+#define __C_SCANNER_CTRL_H__
+
 #include "axis_ctrl.h"
 #include "Arduino.h"
 
@@ -9,6 +12,7 @@ class ScannerCtrl
 {
   public:
   ScannerCtrl(AxisCtrl& verticalAxisCtrl, AxisCtrl& horizontalAxisCtrl) : verticalAxisCtrl_(verticalAxisCtrl), horizontalAxisCtrl_(horizontalAxisCtrl){};
+
   void SetMode(Mode m)
   {
     if ((m == mode_test) && (m != mode_))
@@ -27,12 +31,14 @@ class ScannerCtrl
     if ((m == mode_done) && (m != mode_))
     {
       // go to start-pos (cw)
-      horizontalAxisCtrl_.MoveToAbsolutPosition(360.0);
+      horizontalAxisCtrl_.MoveToAbsolutPosition(360.0f);
       mode_ = m;
     }
 
+    cli();  // serial.send seems to be upset by interrupts...
     Serial.print("mode_");
     Serial.println(mode_);
+    sei();
   };
 
   void Update()
@@ -40,7 +46,7 @@ class ScannerCtrl
     if (mode_ == mode_done)
     {
       float pos = horizontalAxisCtrl_.GetPosition();
-      if (isAtTargetPos(pos, 360.0, 0.2))
+      if (isAtTargetPos(pos, 360.0f, 0.2f))
       {
         float new_home = pos-360.0f;
         horizontalAxisCtrl_.SetHome(new_home); // reset current position to 0
@@ -57,7 +63,7 @@ class ScannerCtrl
     if (mode_ == mode_test)
     {
       float pos = horizontalAxisCtrl_.GetPosition();
-      if (isAtTargetPos(pos, horizontal_target_position_, 0.25))
+      if (isAtTargetPos(pos, horizontal_target_position_, 0.25f))
       {
         String sendStr{"h_"};
         sendStr.concat(pos);
@@ -136,3 +142,5 @@ class ScannerCtrl
   AxisCtrl& verticalAxisCtrl_;
   AxisCtrl& horizontalAxisCtrl_;
 };
+
+#endif

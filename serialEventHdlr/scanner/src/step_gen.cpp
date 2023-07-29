@@ -15,8 +15,8 @@ StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t
    t_off_ramp_ = 0;
 
    SetStepsPerSec(max_steps_per_sec_);
-   state_ = StateInactive2;
-   digitalWrite(step_pin_, state_ == StateOn2 ? 1 : 0);
+   state_ = StateInactive;
+   digitalWrite(step_pin_, state_ == StateOn ? 1 : 0);
    digitalWrite(dir_pin, LOW);
 }
 
@@ -26,14 +26,14 @@ StepGen::~StepGen()
 
 void StepGen::Update()
 {
-   if (state_ == StateOn2)
+   if (state_ == StateOn)
    {
       if (IsHighDone())
       {      
-         state_ = StateOff2;
+         state_ = StateOff;
       }
    }
-   else if (state_ == StateOff2)
+   else if (state_ == StateOff)
    {
       if (IsLowDone())
       {
@@ -47,13 +47,13 @@ void StepGen::Update()
          }
          else
          {
-            state_ = StateInactive2;
+            state_ = StateInactive;
          }
       }  
    }
    else{}
 
-   digitalWrite(step_pin_, state_ == StateOn2 ? 1 : 0);
+   digitalWrite(step_pin_, state_ == StateOn ? 1 : 0);
 }
 
 StepRetVal StepGen::Step(unsigned int steps)
@@ -74,7 +74,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 
       t_start_ = millis();
       //TransitionTo(new StateOn(this));
-      state_ = StateOn2;
+      state_ = StateOn;
       digitalWrite(step_pin_, 1);
       return ok;
    }
@@ -87,7 +87,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 // still busy with generating the step()-request, or ready for new request
 bool StepGen::IsBusy()
 {
-   return (state_ == StateOn2) || (state_ == StateOff2);
+   return (state_ == StateOn) || (state_ == StateOff);
 }
 
 void StepGen::SetStepsPerSec(unsigned int steps_per_sec)
@@ -122,7 +122,6 @@ void StepGen::Attach(StepObserver *stepObserver)
    stepObserver_ = stepObserver;
 }
 
-
 void StepGen::StartNextStep()
 {
    t_start_ = millis();
@@ -132,8 +131,8 @@ void StepGen::StartNextStep()
    {
       t_off_ramp_ = CalcRampTimeOffset();
    }
-   //TransitionTo(new StateOn(this));
-   state_ = StateOn2;
+
+   state_ = StateOn;
 }
 
 milli_sec StepGen::CalcRampTimeOffset()
@@ -148,6 +147,7 @@ milli_sec StepGen::CalcRampTimeOffset()
    {  // ramp up
       t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta : t_off_ramp_ = 0;
    }
+
    return retVal;
 }
 
@@ -181,7 +181,6 @@ bool StepGen::IsLowDone()
 {
    return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
-
 
 void StepGen::UpdateObserver() 
 { 

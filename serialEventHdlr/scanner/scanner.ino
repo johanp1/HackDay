@@ -79,14 +79,13 @@ void setup() {
 }
 
 void loop() {
-  scannerCtrl.Update();
-  delay(5);
+  scannerCtrl.Update();  
+  delay(5); 
 }
-
 
 static void timer2Init( void )
 {
-  TIMSK2 = (1 << OCIE2A);                  // enable Timer2 Output Compare Match A Interrupt Enable
+  TIMSK2 = (1<<OCIE2A);                    // enable Timer2 Output Compare Match A Interrupt Enable
   TCCR2A = (1<<WGM21);                     // enable CTC mode, OCR2A as TOP
   TCCR2B = (1<<CS22)|(1<<CS21)|(1<<CS20);  // prescaler 1024
   OCR2A = 15;                              // compare match every Xth milli-sec. @20MHz => 77 = 5ms, 38 = 2.5ms, 15 = 1ms

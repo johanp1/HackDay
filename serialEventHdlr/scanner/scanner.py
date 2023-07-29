@@ -309,12 +309,12 @@ class OutputFileHandler:
     def update(self):
         if self._model.get_scanner_mode() == 1:
             self.f_log = open(self._model.get_file_name(), 'a', encoding="utf-8")
-            dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.f_log.write('start scanning ' + dt_string + '\n')
+            date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.f_log.write('start scanning ' + date_string + '\n')
 
         if self._model.get_scanner_mode() == 0:
-            dt_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.f_log.write('scanning done ' + dt_string + '\n')
+            date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.f_log.write('scanning done ' + date_string + '\n')
             self.f_log.close()
 
 def main():

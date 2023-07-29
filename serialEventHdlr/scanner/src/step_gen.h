@@ -4,13 +4,13 @@
 using milli_sec = unsigned int;
 using Pin = char;
 
-enum State { StateOn2, StateOff2, StateInactive2 };
+enum State { StateOn, StateOff, StateInactive };
 enum StepRetVal { ok, busy };
 enum Direction { direction_forward, direction_reverse };
 
 constexpr milli_sec default_t_on = 2;
 constexpr milli_sec default_t_off = 3;
-constexpr int max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
+constexpr unsigned int max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
 constexpr milli_sec t_delta = 2;
 constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta; 
 
@@ -49,7 +49,7 @@ class StepGen
    unsigned int max_steps_per_sec_;
    milli_sec t_off_sps_; // the step's "off-time" offset when using setting "Steps Per Sec"
    milli_sec t_off_ramp_; // the step's "off-time" offset when ramping speed
-   milli_sec t_start_; // start time of current step
+   unsigned long t_start_; // start time of current step
    unsigned int curr_step_; // number of steps left untill done with step request
    unsigned int ramp_steps_;
    bool use_ramping_;
