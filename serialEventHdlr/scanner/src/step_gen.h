@@ -4,16 +4,15 @@
 using milli_sec = unsigned int;
 using Pin = char;
 
+enum State { StateOn2, StateOff2, StateInactive2 };
 enum StepRetVal { ok, busy };
 enum Direction { direction_forward, direction_reverse };
 
 constexpr milli_sec default_t_on = 2;
 constexpr milli_sec default_t_off = 3;
-constexpr char max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
+constexpr int max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
 constexpr milli_sec t_delta = 2;
 constexpr milli_sec max_t_off_ramp = max_number_of_ramp_steps * t_delta; 
-
-class State;
 
 class StepObserver
 {
@@ -56,56 +55,9 @@ class StepGen
    bool use_ramping_;
 
    StepObserver *stepObserver_ = nullptr;
-   State *state_;
+   State state_;
    Pin step_pin_;
    Pin dir_pin_;
-
-   // Friendship is not inherited to children of State. All freindships need to be explicit...
-   friend class StateOn;
-   friend class StateOff;
-   friend class StateInactive;
 };
-
-// virtual state base class
-class State 
-{
-   public:
-   State(StepGen *stepGen) : stepGen_(stepGen){};
-   virtual ~State(){};
-
-   virtual bool IsBusy() {return false;};
-   virtual void Update() = 0;
-   virtual char GetOutput() = 0;
-   
-   protected:
-   StepGen *stepGen_;
-};
-
-class StateOn : public State 
-{
-   public:
-   StateOn(StepGen *stepGen) : State(stepGen){};
-   bool IsBusy() override {return true;};
-   void Update() override;
-   char GetOutput() override {return 1;};
-};
-
-class StateOff : public State 
-{
-   public:
-   StateOff(StepGen *stepGen) : State(stepGen){};
-   bool IsBusy() override {return true;};
-   void Update() override;
-   char GetOutput() override {return 0;};
-};
-
-class StateInactive : public State 
-{
-   public:   
-   StateInactive(StepGen *stepGen) : State(stepGen){};
-   void Update() override;
-   char GetOutput() override {return 0;};
-};
-
 
 #endif

@@ -15,19 +15,45 @@ StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t
    t_off_ramp_ = 0;
 
    SetStepsPerSec(max_steps_per_sec_);
-   state_ = new StateInactive(this);
-   digitalWrite(step_pin_, state_->GetOutput());
+   state_ = StateInactive2;
+   digitalWrite(step_pin_, state_ == StateOn2 ? 1 : 0);
    digitalWrite(dir_pin, LOW);
 }
 
 StepGen::~StepGen()
 {
-   delete state_;
 }
 
 void StepGen::Update()
 {
-   state_->Update();
+   if (state_ == StateOn2)
+   {
+      if (IsHighDone())
+      {      
+         state_ = StateOff2;
+      }
+   }
+   else if (state_ == StateOff2)
+   {
+      if (IsLowDone())
+      {
+         // notify observer that this "step" is done
+         UpdateObserver();
+
+         // start next step, or stop if all steps done
+         if (curr_step_ > 0)
+         {
+            StartNextStep();
+         }
+         else
+         {
+            state_ = StateInactive2;
+         }
+      }  
+   }
+   else{}
+
+   digitalWrite(step_pin_, state_ == StateOn2 ? 1 : 0);
 }
 
 StepRetVal StepGen::Step(unsigned int steps)
@@ -47,7 +73,9 @@ StepRetVal StepGen::Step(unsigned int steps)
       }
 
       t_start_ = millis();
-      TransitionTo(new StateOn(this));
+      //TransitionTo(new StateOn(this));
+      state_ = StateOn2;
+      digitalWrite(step_pin_, 1);
       return ok;
    }
    else
@@ -59,7 +87,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 // still busy with generating the step()-request, or ready for new request
 bool StepGen::IsBusy()
 {
-   return state_->IsBusy();
+   return (state_ == StateOn2) || (state_ == StateOff2);
 }
 
 void StepGen::SetStepsPerSec(unsigned int steps_per_sec)
@@ -104,17 +132,8 @@ void StepGen::StartNextStep()
    {
       t_off_ramp_ = CalcRampTimeOffset();
    }
-   TransitionTo(new StateOn(this));
-}
-
-void StepGen::TransitionTo(State *state) 
-{
-   if (this->state_ != nullptr)
-      delete this->state_;
-      
-   this->state_ = state;
-
-   digitalWrite(step_pin_, state_->GetOutput());
+   //TransitionTo(new StateOn(this));
+   state_ = StateOn2;
 }
 
 milli_sec StepGen::CalcRampTimeOffset()
@@ -171,33 +190,3 @@ void StepGen::UpdateObserver()
       stepObserver_->Update();
    } 
 };
-
-void StateOn::Update()
-{
-   if (stepGen_->IsHighDone())
-   {      
-      stepGen_->TransitionTo(new StateOff(stepGen_));
-   }
-}
-
-void StateOff::Update()
-{
-   if (stepGen_->IsLowDone())
-   {
-      // notify observer that this "step" is done
-      stepGen_->UpdateObserver();
-
-      // start next step, or stop if all steps done
-      if (stepGen_->curr_step_ > 0)
-      {
-         stepGen_->StartNextStep();
-      }
-      else
-      {
-         stepGen_->TransitionTo(new StateInactive(stepGen_));
-      }
-   }   
-}
-
-
-void StateInactive::Update(){}
