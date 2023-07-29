@@ -17,14 +17,12 @@ constexpr milli_sec t_on = 2;//2;
 constexpr milli_sec t_off = 3;//3;
 
 static void timer2Init( void );
+
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
+static void axisMoveHomeWrapper(AxisCtrl* axisCtrl);
 static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
-//static void stepEventWrapper(String& str, StepGen* stepGen);
 static void modeWrapper(String& str, ScannerCtrl* ctrl);
-static void setVerticalStartWrapper(ScannerCtrl* ctrl);
-static void setVerticalEndWrapper(ScannerCtrl* ctrl);
-static void setHorizontalStartWrapper(ScannerCtrl* ctrl);
-static void setHorizontalEndWrapper(ScannerCtrl* ctrl);
+static void setLimitWrapper(ScannerCtrl* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
@@ -39,16 +37,13 @@ ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
 void setup() {  
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* step1EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepEventWrapper, &stepGen1);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* step2EventHandler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepEventWrapper, &stepGen2);
+  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"hhome"}, axisMoveHomeWrapper, &horizontalAxisCtrl);
+  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"vhome"}, axisMoveHomeWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"mode"}, modeWrapper, &scannerCtrl);
-  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalStartHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"vs"}, setVerticalStartWrapper, &scannerCtrl);
-  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setVerticalEndHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"ve"}, setVerticalEndWrapper, &scannerCtrl);
-  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setHorizontalStartHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"hs"}, setHorizontalStartWrapper, &scannerCtrl);
-  EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>* setHorizontalEndHandler = new EventHandlerNoArg<void (&)(ScannerCtrl*), ScannerCtrl>(String{"he"}, setHorizontalEndWrapper, &scannerCtrl);
-
+  EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"set"}, setLimitWrapper, &scannerCtrl);
+  
   cli();
   timer2Init();
   sei();
@@ -64,15 +59,12 @@ void setup() {
   receiver.addEventListner(&eventParser);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
+  eventParser.AddAcceptedHandler(*horizontalMoveHomeHandler);
+  eventParser.AddAcceptedHandler(*verticalMoveHomeHandler);
   eventParser.AddAcceptedHandler(*setHorizontalUPSHandler);
   eventParser.AddAcceptedHandler(*setVerticalUPSHandler);
-  //eventParser.AddAcceptedHandler(*step1EventHandler);
-  //eventParser.AddAcceptedHandler(*step2EventHandler);
   eventParser.AddAcceptedHandler(*modeHandler);
-  eventParser.AddAcceptedHandler(*setHorizontalStartHandler);
-  eventParser.AddAcceptedHandler(*setHorizontalEndHandler);
-  eventParser.AddAcceptedHandler(*setVerticalStartHandler);
-  eventParser.AddAcceptedHandler(*setVerticalEndHandler);
+  eventParser.AddAcceptedHandler(*setLimitHandler);
 
   horizontalAxisCtrl.SetScale(800.0f/360.0f); // steps/unit (degrees)
   verticalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
@@ -108,6 +100,11 @@ static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
   axisCtrl->MoveToRelativePosition(pos);
 }
 
+static void axisMoveHomeWrapper(AxisCtrl* axisCtrl)
+{
+  axisCtrl->MoveToAbsolutPosition(0);
+}
+
 static void modeWrapper(String& str, ScannerCtrl* ctrl)
 {
   Mode mode = static_cast<Mode>(str.toInt());
@@ -120,29 +117,22 @@ static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl)
   axisCtrl->SetSpeed(ups);
 }
 
-static void setVerticalStartWrapper(ScannerCtrl* ctrl)
+static void setLimitWrapper(String& str, ScannerCtrl* ctrl)
 {
-  scannerCtrl.SetVerticalStartPosition();
+  if (str.compareTo("vs"))
+  {
+    scannerCtrl.SetVerticalStartPosition();
+  }
+  if (str.compareTo("ve"))
+  {
+    scannerCtrl.SetVerticalEndPosition();
+  }
+  if (str.compareTo("hs"))
+  {
+    scannerCtrl.SetHorizontalStartPosition();
+  }
+  if (str.compareTo("he"))
+  {
+    scannerCtrl.SetHorizontalEndPosition();
+  }
 }
-
-static void setVerticalEndWrapper(ScannerCtrl* ctrl)
-{
-  scannerCtrl.SetVerticalEndPosition();
-}
-
-static void setHorizontalStartWrapper(ScannerCtrl* ctrl)
-{
-  scannerCtrl.SetHorizontalStartPosition();
-}
-
-static void setHorizontalEndWrapper(ScannerCtrl* ctrl)
-{
-  scannerCtrl.SetHorizontalEndPosition();
-}
-
-/*static void stepEventWrapper(String& str, StepGen* stepGen)
-{
-  auto steps = str.toInt();
-  stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
-  stepGen->Step(steps);
-}*/

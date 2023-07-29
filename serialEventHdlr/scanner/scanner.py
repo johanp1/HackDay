@@ -117,20 +117,26 @@ class Controller:
     def vertical_jog_down(self):
         self._comm_hdlr.write_message('ver_-10')
 
+    def horizontal_go_home(self):
+        self._comm_hdlr.write_message('hhome')
+
+    def vertical_go_home(self):
+        self._comm_hdlr.write_message('vhome')
+
     def set_selected_port(self, selected_port):
         self._comm_hdlr.set_port(selected_port)
 
     def vertical_start(self):
-        self._comm_hdlr.write_message('vs')
+        self._comm_hdlr.write_message('set_vs')
 
     def vertical_end(self):
-        self._comm_hdlr.write_message('ve')
+        self._comm_hdlr.write_message('set_ve')
 
     def horizontal_start(self):
-        self._comm_hdlr.write_message('hs')
+        self._comm_hdlr.write_message('set_hs')
 
     def horizontal_end(self):
-        self._comm_hdlr.write_message('he')
+        self._comm_hdlr.write_message('set_he')
 
     def start(self):
         self._comm_hdlr.write_message('mode_2')
@@ -216,6 +222,9 @@ class View:
         btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
         btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
+        btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
+        btn_ver_home.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
+
         btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5, command=self._controller.vertical_start)
         btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
 
@@ -230,6 +239,9 @@ class View:
 
         btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5, command=self._controller.horizontal_jog_cw)
         btn_jog_cw.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+
+        btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
+        btn_hor_home.grid(row=1, column=2, padx=5, pady=5, sticky="nw")
 
         btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
         btn_jog_ccw.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
@@ -266,9 +278,11 @@ class View:
         if self._model.get_scanner_mode() == 0:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
             self.btn_test.config(text="Test", command=self._controller.test, state="normal")
+
         if self._model.get_scanner_mode() == 1: #test mode
             self.btn_start.config(state="disabled")
             self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
+
         if self._model.get_scanner_mode() == 2: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
             self.btn_test.config(state = "disabled")
