@@ -18,23 +18,25 @@ constexpr milli_sec t_off = 3;//3;
 
 static void timer2Init( void );
 
+static void stepWrapper(String& str, StepGen* stepGen);
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void axisMoveHomeWrapper(AxisCtrl* axisCtrl);
 static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
 static void modeWrapper(String& str, ScannerCtrl* ctrl);
-static void setLimitWrapper(ScannerCtrl* ctrl);
+static void setLimitWrapper(String& str, ScannerCtrl* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
 AxisCtrl horizontalAxisCtrl(stepGen1);
 AxisCtrl verticalAxisCtrl(stepGen2);
+ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
 
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
-
 void setup() {  
+  EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
   EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"hhome"}, axisMoveHomeWrapper, &horizontalAxisCtrl);
@@ -57,6 +59,8 @@ void setup() {
   Serial.println("scanner::setup()"); // tell server setup is done
 
   receiver.addEventListner(&eventParser);
+  eventParser.AddAcceptedHandler(*step1Handler);
+  eventParser.AddAcceptedHandler(*step2Handler);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*horizontalMoveHomeHandler);
@@ -92,6 +96,13 @@ ISR( TIMER2_COMPA_vect  )
 void serialEvent()
 {
   receiver.scan();
+}
+
+static void stepWrapper(String& str, StepGen* stepGen)
+{
+  auto steps = str.toInt();
+  stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
+  stepGen->Step(steps);
 }
 
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)

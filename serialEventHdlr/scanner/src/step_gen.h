@@ -4,7 +4,7 @@
 using milli_sec = unsigned int;
 using Pin = char;
 
-enum State { StateOn, StateOff, StateInactive };
+enum State { state_on, state_off, state_inactive };
 enum StepRetVal { ok, busy };
 enum Direction { direction_forward, direction_reverse };
 
@@ -43,6 +43,7 @@ class StepGen
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
    void UpdateObserver();
+   void SetState(State s);
 
    milli_sec t_on_; // the step's "on-time" length
    milli_sec t_off_; // the step's "off-time"
