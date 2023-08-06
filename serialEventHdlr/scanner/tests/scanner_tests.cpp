@@ -4,10 +4,12 @@
 #include <iostream>
 #include "src/axis_ctrl.h"
 #include "src/scanner_ctrl.h"
+#include "LIDARLite.h"
 
 extern AxisCtrl horizontalAxisCtrl;
 extern AxisCtrl verticalAxisCtrl;
-extern ScannerCtrl scannerCtrl;
+extern LIDARLite lidar;
+extern ScannerCtrl<LIDARLite> scannerCtrl;
 extern void TIMER2_COMPA_vect();
 
 namespace {

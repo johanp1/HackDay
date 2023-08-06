@@ -6,6 +6,7 @@
 #include "src/axis_ctrl.h"
 #include "Arduino.h"
 #include "src/scanner_ctrl.h"
+#include "LIDARLite.h"
 
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
@@ -22,14 +23,15 @@ static void stepWrapper(String& str, StepGen* stepGen);
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void axisMoveHomeWrapper(AxisCtrl* axisCtrl);
 static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
-static void modeWrapper(String& str, ScannerCtrl* ctrl);
-static void setLimitWrapper(String& str, ScannerCtrl* ctrl);
+static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
 AxisCtrl horizontalAxisCtrl(stepGen1);
 AxisCtrl verticalAxisCtrl(stepGen2);
-ScannerCtrl scannerCtrl(verticalAxisCtrl, horizontalAxisCtrl);
+LIDARLite lidar;
+ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
@@ -43,8 +45,8 @@ void setup() {
   EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"vhome"}, axisMoveHomeWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
-  EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"mode"}, modeWrapper, &scannerCtrl);
-  EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl*), ScannerCtrl>(String{"set"}, setLimitWrapper, &scannerCtrl);
+  EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
+  EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"set"}, setLimitWrapper, &scannerCtrl);
   
   cli();
   timer2Init();
@@ -116,7 +118,7 @@ static void axisMoveHomeWrapper(AxisCtrl* axisCtrl)
   axisCtrl->MoveToAbsolutPosition(0);
 }
 
-static void modeWrapper(String& str, ScannerCtrl* ctrl)
+static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 {
   Mode mode = static_cast<Mode>(str.toInt());
   ctrl->SetMode(mode);
@@ -128,7 +130,7 @@ static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl)
   axisCtrl->SetSpeed(ups);
 }
 
-static void setLimitWrapper(String& str, ScannerCtrl* ctrl)
+static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 {
   if (str.compareTo("vs"))
   {

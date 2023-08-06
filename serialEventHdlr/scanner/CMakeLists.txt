@@ -19,7 +19,7 @@ add_library(scanner
     scanner.ino
 )
 
-target_include_directories(scanner  PUBLIC . ./src)
+target_include_directories(scanner  PUBLIC . ./src ./tests)
 
 add_subdirectory(../EventProxy/src build)
 

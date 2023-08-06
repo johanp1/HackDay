@@ -39,11 +39,21 @@ class MockAxisCtrl : public AxisCtrl
    //MOCK_METHOD(void, SetHome, (float pos), (override));
 };
 
+class MockLidar
+{
+    public:
+    MockLidar(){};
+    void begin(int, bool){};
+    void configure(int){};
+    int distance(bool = true){return 0;};
+};
+
 TEST(ScannerCtrlTestSuite, test_update_mode_inactive)
 {
     MockStepGen mockStepGen;
     MockAxisCtrl mockAxisCtrl(mockStepGen);
-    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
     scannerCtrl.SetMode(mode_inactive);
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(0);
@@ -54,7 +64,8 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
 {
     MockStepGen mockStepGen;
     MockAxisCtrl mockAxisCtrl(mockStepGen);
-    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
@@ -85,7 +96,8 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
 {
     MockStepGen mockStepGen;
     MockAxisCtrl mockAxisCtrl(mockStepGen);
-    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
     scannerCtrl.SetHorizontalEndPosition();
@@ -120,7 +132,8 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
 {
     MockStepGen mockStepGen;
     MockAxisCtrl mockAxisCtrl(mockStepGen);
-    ScannerCtrl scannerCtrl(mockAxisCtrl, mockAxisCtrl);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
     // set end pos
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(99.0f));
