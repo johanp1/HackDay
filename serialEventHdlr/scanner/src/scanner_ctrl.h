@@ -14,8 +14,7 @@ class ScannerCtrl
   public:
   ScannerCtrl(Lidar& lidar, AxisCtrl& verticalAxisCtrl, AxisCtrl& horizontalAxisCtrl) : lidar_(lidar), verticalAxisCtrl_(verticalAxisCtrl), horizontalAxisCtrl_(horizontalAxisCtrl)
   {
-    lidar_.begin(0, true); // Set configuration to default and I2C to 400 kHz
-    lidar_.configure(0); // Change this number to try out alternate configurations
+    lidar_ = lidar;
   };
 
   void SetMode(Mode m);

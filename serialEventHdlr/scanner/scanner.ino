@@ -6,6 +6,7 @@
 #include "src/axis_ctrl.h"
 #include "Arduino.h"
 #include "src/scanner_ctrl.h"
+#include <Wire.h>
 #include "LIDARLite.h"
 
 constexpr int motor1_step_pin = 5; // x-axis step
@@ -14,8 +15,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr milli_sec t_on = 2;//2;
-constexpr milli_sec t_off = 3;//3;
+constexpr milli_sec t_on = 2; //2;
+constexpr milli_sec t_off = 2; //3;
 
 static void timer2Init( void );
 
@@ -37,6 +38,9 @@ static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
 void setup() {  
+  lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
+  lidar.configure(0); // Change this number to try out alternate configurations
+
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
@@ -50,8 +54,7 @@ void setup() {
   
   cli();
   timer2Init();
-  sei();
-
+ 
   Serial.begin(9600);  // opens serial port
   Serial.setTimeout(500);
 
@@ -72,8 +75,10 @@ void setup() {
   eventParser.AddAcceptedHandler(*modeHandler);
   eventParser.AddAcceptedHandler(*setLimitHandler);
 
-  horizontalAxisCtrl.SetScale(800.0f/360.0f); // steps/unit (degrees)
-  verticalAxisCtrl.SetScale(1600.0f/360.0f); // steps/unit (degrees)
+  horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/rev)/unit
+  verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/rev)/unit
+
+  sei();
 }
 
 void loop() {
@@ -104,7 +109,7 @@ static void stepWrapper(String& str, StepGen* stepGen)
 {
   auto steps = str.toInt();
   stepGen->SetDirection(steps > 0 ? direction_forward : direction_reverse);
-  stepGen->Step(steps);
+  stepGen->Step(abs(steps));
 }
 
 static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
@@ -134,18 +139,18 @@ static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 {
   if (str.compareTo("vs"))
   {
-    scannerCtrl.SetVerticalStartPosition();
+    ctrl->SetVerticalStartPosition();
   }
   if (str.compareTo("ve"))
   {
-    scannerCtrl.SetVerticalEndPosition();
+    ctrl->SetVerticalEndPosition();
   }
   if (str.compareTo("hs"))
   {
-    scannerCtrl.SetHorizontalStartPosition();
+    ctrl->SetHorizontalStartPosition();
   }
   if (str.compareTo("he"))
   {
-    scannerCtrl.SetHorizontalEndPosition();
+    ctrl->SetHorizontalEndPosition();
   }
 }
