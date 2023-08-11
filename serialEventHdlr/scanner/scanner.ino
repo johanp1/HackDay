@@ -28,7 +28,7 @@ static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
-static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off);
+static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true);
 AxisCtrl horizontalAxisCtrl(stepGen1);
 AxisCtrl verticalAxisCtrl(stepGen2);
 LIDARLite lidar;
@@ -137,19 +137,19 @@ static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl)
 
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 {
-  if (str.compareTo("vs"))
+  if (str.compareTo("vs") == 0)
   {
     ctrl->SetVerticalStartPosition();
   }
-  if (str.compareTo("ve"))
+  if (str.compareTo("ve") == 0)
   {
     ctrl->SetVerticalEndPosition();
   }
-  if (str.compareTo("hs"))
+  if (str.compareTo("hs") == 0)
   {
     ctrl->SetHorizontalStartPosition();
   }
-  if (str.compareTo("he"))
+  if (str.compareTo("he") == 0)
   {
     ctrl->SetHorizontalEndPosition();
   }

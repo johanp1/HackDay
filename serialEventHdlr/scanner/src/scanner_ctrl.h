@@ -6,6 +6,7 @@
 
 enum Mode { mode_inactive, mode_test, mode_scanning, mode_done };
 
+constexpr float k_degrees_per_rev = 360;
 constexpr float start_position_ = 0.0f;
 
 template <class Lidar>
@@ -47,22 +48,26 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
 {
   if ((m == mode_test) && (m != mode_))
   {
+    // if current position passed 360, reset to current pos modulo 360
+    float pos = fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+    horizontalAxisCtrl_.SetHome(pos);
+
     horizontalAxisCtrl_.MoveToAbsolutPosition(start_position_);
     horizontal_target_position_ = start_position_;
     horizontal_increment_ =  9.9f;
-    mode_ = m;
+    mode_ = mode_test;
   }
 
   if ((m == mode_inactive) && (m != mode_))
   {
-    mode_ = m;
+    mode_ = mode_inactive;
   }
 
   if ((m == mode_done) && (m != mode_))
   {
     // go to start-pos (cw)
     horizontalAxisCtrl_.MoveToAbsolutPosition(360.0f);
-    mode_ = m;
+    mode_ = mode_done;
   }
 
   cli();  // serial.send seems to be upset by interrupts...
@@ -128,20 +133,16 @@ template <class Lidar>
 void ScannerCtrl<Lidar>::SetHorizontalStartPosition()
 {
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
-  horizontal_end_position_ -= horizontalAxisCtrl_.GetPosition();
-  if (horizontal_end_position_ > 360)
-  {
-    horizontal_end_position_ = 360;
-  }
+  horizontal_end_position_ -= fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
 
   // set this pos as start
-  horizontalAxisCtrl_.SetHome(0);
+  horizontalAxisCtrl_.SetHome(0.0f);
 };
 
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetHorizontalEndPosition()
 {
-  horizontal_end_position_ = horizontalAxisCtrl_.GetPosition();
+  horizontal_end_position_ = fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
 };
 
 
@@ -149,19 +150,16 @@ template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 {
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
-  vertical_end_position_ -= verticalAxisCtrl_.GetPosition();
-  if (vertical_end_position_ > 360)
-  {
-    vertical_end_position_ = 360;
-  }
+  vertical_end_position_ -= fmod(verticalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+
   // set this pos as start
-  verticalAxisCtrl_.SetHome(0);
+  verticalAxisCtrl_.SetHome(0.0f);
 };
 
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalEndPosition()
 {
-  vertical_end_position_ = verticalAxisCtrl_.GetPosition();
+  vertical_end_position_ = fmod(verticalAxisCtrl_.GetPosition(), k_degrees_per_rev);
 };
 
 template <class Lidar>

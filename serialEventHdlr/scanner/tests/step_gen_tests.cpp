@@ -119,7 +119,7 @@ TEST_F(StepGenTestFixture, test_two_steps)
 // test step returns busy if current step is not done
 TEST(StepGenTestGroup, test_busy)
 {
-   StepGen s(test_step_pin, 5, 5);
+   StepGen s(test_step_pin, test_dir_pin, 5, 5);
 
    // precondition, start a step, inc time 4 ms
    ASSERT_TRUE(s.Step() == ok);  
@@ -316,6 +316,21 @@ TEST_F(StepGenTestFixture, test_direction)
    stepGen->SetDirection(direction_forward);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == LOW);
    ASSERT_TRUE(stepGen->GetDirection() == direction_forward);
+}
+
+TEST(StepGenTestGroup, test_direction_flipped)
+{
+   StepGen s(test_step_pin, test_dir_pin, 5, 5, true);
+
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == HIGH);
+
+   s.SetDirection(direction_reverse);
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == LOW);
+   ASSERT_TRUE(s.GetDirection() == direction_reverse);
+
+   s.SetDirection(direction_forward);
+   ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == HIGH);
+   ASSERT_TRUE(s.GetDirection() == direction_forward);
 }
 
 }

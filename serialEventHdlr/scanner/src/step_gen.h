@@ -23,7 +23,7 @@ class StepObserver
 class StepGen
 {
    public:
-   StepGen(Pin stepPin = 0, Pin dirPin = 1, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off);
+   StepGen(Pin stepPin = 0, Pin dirPin = 1, milli_sec t_on = default_t_on, milli_sec t_off = default_t_off, bool flip = false);
    virtual ~StepGen();
 
    virtual void Update();
@@ -54,7 +54,8 @@ class StepGen
    unsigned int curr_step_; // number of steps left untill done with step request
    unsigned int ramp_steps_;
    bool use_ramping_;
-
+   bool flipped_;
+   
    StepObserver *stepObserver_ = nullptr;
    State state_;
    Pin step_pin_;

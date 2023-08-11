@@ -3,7 +3,7 @@
 //#include <sstream>
 #include <Arduino.h>
 
-StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin)
+StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off, bool flip) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
 {
    pinMode(step_pin_, OUTPUT);
    pinMode(dir_pin_, OUTPUT);
@@ -17,7 +17,6 @@ StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off) : t
    SetStepsPerSec(max_steps_per_sec_);
    SetState(state_inactive);
    SetDirection(direction_forward);
-   digitalWrite(dir_pin, LOW);
 }
 
 StepGen::~StepGen()
@@ -105,12 +104,12 @@ void StepGen::SetUseRamping(bool use_ramping)
 
 void StepGen::SetDirection(Direction d)
 {
-   digitalWrite(dir_pin_, d == direction_forward ? LOW : HIGH);
+   digitalWrite(dir_pin_, (d == direction_forward) ^ (flipped_ == true) ? LOW : HIGH);
 }
 
 Direction StepGen::GetDirection()
 {
-   return digitalRead(dir_pin_) == LOW ? direction_forward : direction_reverse;
+   return ((digitalRead(dir_pin_) == LOW ) ^ (flipped_ == true) ? direction_forward : direction_reverse);
 }
 
 void StepGen::Attach(StepObserver *stepObserver)

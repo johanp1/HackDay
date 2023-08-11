@@ -67,6 +67,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -102,6 +103,7 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
     scannerCtrl.SetHorizontalEndPosition();
 
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -143,6 +145,48 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
     scannerCtrl.SetHorizontalStartPosition();
 
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
+    scannerCtrl.SetMode(mode_test);
+
+    for (int i = 0; i < 6; i++)
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*9.9f));
+        //EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition((i+1)*9.9f)).Times(1);
+        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
+        scannerCtrl.Update();
+    }
+
+    // last itteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(59.4f));
+        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
+        scannerCtrl.Update();
+    }
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
+    scannerCtrl.Update();
+    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+}
+
+// test start pos and end pos are absolute positions, not relative to eachother
+TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
+
+    // set end pos
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+99.0f));
+    scannerCtrl.SetHorizontalEndPosition();
+
+    // set start pos
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
+    scannerCtrl.SetHorizontalStartPosition();
+
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
