@@ -356,7 +356,7 @@ def main():
     output_file_handler = OutputFileHandler(model)
 
     message_broker.attach_handler('mode', view._controller.handle_mode_event)
-    message_broker.attach_handler('h', output_file_handler.print_scan)
+    message_broker.attach_handler('scan', output_file_handler.print_scan)
 
     view.start()
 

@@ -46,6 +46,21 @@ class ScannerCtrl
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetMode(Mode m)
 {
+  if ((m == mode_scanning) && (m != mode_))
+  {
+    // if current position passed 360, reset to current pos modulo 360
+    float hpos = fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+    horizontalAxisCtrl_.SetHome(hpos);
+    
+    horizontalAxisCtrl_.MoveToAbsolutPosition(start_position_);
+    verticalAxisCtrl_.MoveToAbsolutPosition(start_position_);
+    horizontal_target_position_ = start_position_;
+    vertical_target_position_ = start_position_;
+    horizontal_increment_ =  1.0f;
+    vertical_increment_ =  1.0f;
+    mode_ = mode_scanning;
+  }
+
   if ((m == mode_test) && (m != mode_))
   {
     // if current position passed 360, reset to current pos modulo 360
@@ -96,6 +111,53 @@ void ScannerCtrl<Lidar>::Update()
     } 
   }
 
+  if (mode_ == mode_scanning)
+  {
+    float hpos = fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+    float vpos = verticalAxisCtrl_.GetPosition();
+    if (isAtTargetPos(hpos, horizontal_target_position_, 0.20f))
+    {
+      // measure distance
+      auto distance = lidar_.distance();
+      
+      String sendStr{"scan_"};
+      sendStr.concat(hpos);
+      sendStr.concat("_");
+      sendStr.concat(vpos);
+      sendStr.concat("_");
+      sendStr.concat(distance);
+      cli();  // serial.send seems to be upset by interrupts...
+      Serial.println(sendStr);
+      sei();
+
+      //then move to next pos
+      horizontal_target_position_ += horizontal_increment_;
+
+      // set next target, if increment makes us pass the end-pos lets consider this done
+      if (horizontal_target_position_ <= horizontal_end_position_)
+      {
+        horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
+      }
+      else
+      {
+        //move to next vertical pos
+        vertical_target_position_ += vertical_increment_;
+        if (vertical_target_position_ <= vertical_end_position_)
+        {
+          verticalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);        
+          horizontalAxisCtrl_.MoveToAbsolutPosition(360.0f);
+          horizontal_target_position_ = 0.0f;
+        }
+        else
+        {
+          // done
+          SetMode(mode_inactive);
+        }
+
+      }
+    }
+  }    
+
   if (mode_ == mode_test)
   {
     float pos = horizontalAxisCtrl_.GetPosition();
@@ -104,7 +166,7 @@ void ScannerCtrl<Lidar>::Update()
       // measure distance
       auto distance = lidar_.distance();
       
-      String sendStr{"h_"};
+      String sendStr{"scan_"};
       sendStr.concat(pos);
       sendStr.concat(" ");
       sendStr.concat(distance);
