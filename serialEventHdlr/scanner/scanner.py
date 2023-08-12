@@ -316,12 +316,12 @@ class OutputFileHandler:
         self._model = model
         self._model.attatch(self)
 
-    def print_scan(self, angle):
+    def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(angle)
+            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist)
 
     def update(self):
-        if self._model.get_scanner_mode() == 1:
+        if self._model.get_scanner_mode() == 2:
             self.f_log = open(self._model.get_file_name(), 'a', encoding="utf-8")
             date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.f_log.write('start scanning ' + date_string + '\n')
@@ -330,6 +330,9 @@ class OutputFileHandler:
             date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.f_log.write('scanning done ' + date_string + '\n')
             self.f_log.close()
+
+def print_pos(pos):
+    print(pos)
 
 def main():
     use_test_comms = False
@@ -357,6 +360,7 @@ def main():
 
     message_broker.attach_handler('mode', view._controller.handle_mode_event)
     message_broker.attach_handler('scan', output_file_handler.print_scan)
+    message_broker.attach_handler('vpos', print_pos)
 
     view.start()
 

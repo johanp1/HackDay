@@ -56,8 +56,8 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
     verticalAxisCtrl_.MoveToAbsolutPosition(start_position_);
     horizontal_target_position_ = start_position_;
     vertical_target_position_ = start_position_;
-    horizontal_increment_ =  1.0f;
-    vertical_increment_ =  1.0f;
+    horizontal_increment_ =  0.9f;
+    vertical_increment_ =  0.9f;
     mode_ = mode_scanning;
   }
 
@@ -94,28 +94,11 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
 template <class Lidar>
 void ScannerCtrl<Lidar>::Update()
 {
-  if (mode_ == mode_done)
-  {
-    float pos = horizontalAxisCtrl_.GetPosition();
-    if (isAtTargetPos(pos, 360.0f, 0.2f))
-    {
-      float new_home = pos-360.0f;
-      horizontalAxisCtrl_.SetHome(new_home); // reset current position to 0
-      String sendStr{"done_"};
-      sendStr.concat(new_home);
-      cli();  // serial.send seems to be upset by interrupts...
-      Serial.println(sendStr);
-      sei();
-
-      SetMode(mode_inactive);
-    } 
-  }
-
   if (mode_ == mode_scanning)
   {
-    float hpos = fmod(horizontalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+    float hpos = horizontalAxisCtrl_.GetPosition();
     float vpos = verticalAxisCtrl_.GetPosition();
-    if (isAtTargetPos(hpos, horizontal_target_position_, 0.20f))
+    if ((isAtTargetPos(hpos, horizontal_target_position_, 0.25f)) && (isAtTargetPos(vpos, vertical_target_position_, 0.25f)))
     {
       // measure distance
       auto distance = lidar_.distance();
@@ -134,7 +117,7 @@ void ScannerCtrl<Lidar>::Update()
       horizontal_target_position_ += horizontal_increment_;
 
       // set next target, if increment makes us pass the end-pos lets consider this done
-      if (horizontal_target_position_ <= horizontal_end_position_)
+      if (horizontal_target_position_ <= horizontal_end_position_ + 0.1) // adding random tolerance
       {
         horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
       }
@@ -144,8 +127,11 @@ void ScannerCtrl<Lidar>::Update()
         vertical_target_position_ += vertical_increment_;
         if (vertical_target_position_ <= vertical_end_position_)
         {
-          verticalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);        
-          horizontalAxisCtrl_.MoveToAbsolutPosition(360.0f);
+          verticalAxisCtrl_.MoveToAbsolutPosition(vertical_target_position_); 
+
+          // reset horizontal position. hpos should always be <= 360
+          horizontalAxisCtrl_.SetHome(k_degrees_per_rev - hpos);
+          horizontalAxisCtrl_.MoveToAbsolutPosition(0.0f);
           horizontal_target_position_ = 0.0f;
         }
         else
@@ -153,10 +139,26 @@ void ScannerCtrl<Lidar>::Update()
           // done
           SetMode(mode_inactive);
         }
-
       }
     }
   }    
+
+  if (mode_ == mode_done)
+  {
+    float pos = horizontalAxisCtrl_.GetPosition();
+    if (isAtTargetPos(pos, 360.0f, 0.2f))
+    {
+      float new_home = pos-360.0f;
+      horizontalAxisCtrl_.SetHome(new_home); // reset current position to 0
+      String sendStr{"done_"};
+      sendStr.concat(new_home);
+      cli();  // serial.send seems to be upset by interrupts...
+      Serial.println(sendStr);
+      sei();
+
+      SetMode(mode_inactive);
+    } 
+  }
 
   if (mode_ == mode_test)
   {
@@ -165,7 +167,7 @@ void ScannerCtrl<Lidar>::Update()
     {
       // measure distance
       auto distance = lidar_.distance();
-      
+  
       String sendStr{"scan_"};
       sendStr.concat(pos);
       sendStr.concat(" ");
@@ -211,9 +213,21 @@ void ScannerCtrl<Lidar>::SetHorizontalEndPosition()
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 {
+  String sendStr{"current pos "};
+  sendStr.concat(verticalAxisCtrl_.GetPosition());
+  sendStr.concat("\n");
+  sendStr.concat("old end ");
+  sendStr.concat(vertical_end_position_);
+  sendStr.concat("\n");
+  
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
   vertical_end_position_ -= fmod(verticalAxisCtrl_.GetPosition(), k_degrees_per_rev);
 
+  sendStr.concat("new end ");
+  sendStr.concat(vertical_end_position_);
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
   // set this pos as start
   verticalAxisCtrl_.SetHome(0.0f);
 };

@@ -26,6 +26,7 @@ static void axisAbsMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
 static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void getPosWrapper(AxisCtrl* axisCtrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true);
@@ -51,7 +52,8 @@ void setup() {
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"set"}, setLimitWrapper, &scannerCtrl);
-  
+  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
+
   cli();
   timer2Init();
  
@@ -74,6 +76,7 @@ void setup() {
   eventParser.AddAcceptedHandler(*setVerticalUPSHandler);
   eventParser.AddAcceptedHandler(*modeHandler);
   eventParser.AddAcceptedHandler(*setLimitHandler);
+  eventParser.AddAcceptedHandler(*verticalGetHandler);
 
   horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/rev)/unit
   verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/rev)/unit
@@ -153,4 +156,13 @@ static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
   {
     ctrl->SetHorizontalEndPosition();
   }
+}
+
+static void getPosWrapper(AxisCtrl* axisCtrl)
+{
+  String sendStr{"vpos_"};
+  sendStr.concat(axisCtrl->GetPosition());
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
 }
