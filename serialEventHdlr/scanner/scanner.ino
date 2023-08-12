@@ -21,8 +21,8 @@ constexpr milli_sec t_off = 2; //3;
 static void timer2Init( void );
 
 static void stepWrapper(String& str, StepGen* stepGen);
-static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl);
-static void axisMoveHomeWrapper(AxisCtrl* axisCtrl);
+static void axisRelMoveWrapper(String& str, AxisCtrl* axisCtrl);
+static void axisAbsMoveWrapper(String& str, AxisCtrl* axisCtrl);
 static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
 static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
@@ -43,10 +43,10 @@ void setup() {
 
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hor"}, axisMoveWrapper, &horizontalAxisCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ver"}, axisMoveWrapper, &verticalAxisCtrl);
-  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"hhome"}, axisMoveHomeWrapper, &horizontalAxisCtrl);
-  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"vhome"}, axisMoveHomeWrapper, &verticalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ham"}, axisAbsMoveWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vam"}, axisAbsMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
@@ -112,13 +112,13 @@ static void stepWrapper(String& str, StepGen* stepGen)
   stepGen->Step(abs(steps));
 }
 
-static void axisMoveWrapper(String& str, AxisCtrl* axisCtrl)
+static void axisRelMoveWrapper(String& str, AxisCtrl* axisCtrl)
 {
   auto pos = str.toFloat();
   axisCtrl->MoveToRelativePosition(pos);
 }
 
-static void axisMoveHomeWrapper(AxisCtrl* axisCtrl)
+static void axisAbsMoveWrapper(String& str, AxisCtrl* axisCtrl)
 {
   axisCtrl->MoveToAbsolutPosition(0);
 }

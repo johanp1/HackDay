@@ -76,21 +76,21 @@ TEST(ScannerTestSuite, scannerTest)
    ASSERT_TRUE(verticalAxisCtrl.GetPosition() == 0.0f);
 
    // Test Set Horizontal position ///////////////////////////////////////////////////
-   serialSend(String{"hor_33\n"});
+   serialSend(String{"hrm_33\n"});
    RunMs(2000);
   
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 33.0f, 0.25f));
 
-   serialSend(String{"hor_-40\n"});
+   serialSend(String{"hrm_-40\n"});
    RunMs(2000);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.25f));
 
    // Test Set Vertical position ////////////////////////////////////////////////////
-   serialSend(String{"ver_33\n"});
+   serialSend(String{"vrm_33\n"});
    RunMs(2000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 33.0f, 0.25f));
 
-   serialSend(String{"ver_-40\n"});
+   serialSend(String{"vrm_-40\n"});
    RunMs(2000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f, 0.25f));
 
@@ -101,12 +101,12 @@ TEST(ScannerTestSuite, scannerTest)
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 0.0f));
 
    // Test Set Horizontal end position /////////////////////////////////////////////
-   serialSend(String{"hor_29.7.0\n"});
+   serialSend(String{"hrm_29.7.0\n"});
    RunMs(2000);
    serialSend(String{"set_he\n"});
    RunMs(10);
 
-   serialSend(String{"hor_-29.7\n"}); // go back to abs pos 0
+   serialSend(String{"hrm_-29.7\n"}); // go back to abs pos 0
    RunMs(2000);
 
    // Test start test mode /////////////////////////////////////////////////////////

@@ -36,7 +36,7 @@ class MockAxisCtrl : public AxisCtrl
    MOCK_METHOD(float, GetPosition, (), (override));
    MOCK_METHOD(void, MoveToAbsolutPosition, (float pos), (override));
    MOCK_METHOD(void, MoveToRelativePosition, (float pos), (override));
-   //MOCK_METHOD(void, SetHome, (float pos), (override));
+   MOCK_METHOD(void, SetHome, (float pos), (override));
 };
 
 class MockLidar
@@ -68,6 +68,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -89,6 +90,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     }
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
@@ -104,6 +106,7 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     scannerCtrl.SetHorizontalEndPosition();
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(100.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -125,6 +128,7 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     }
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
@@ -143,9 +147,11 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
 
     // set start pos
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.SetHorizontalStartPosition();
 
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -166,6 +172,7 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
         scannerCtrl.Update();
     }
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }
@@ -184,9 +191,11 @@ TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
 
     // set start pos
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.SetHorizontalStartPosition();
 
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
     scannerCtrl.SetMode(mode_test);
 
@@ -207,6 +216,7 @@ TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
         scannerCtrl.Update();
     }
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
 }

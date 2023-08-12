@@ -106,22 +106,22 @@ class Controller:
         self._model.attatch(self)
 
     def horizontal_jog_ccw(self):
-        self._comm_hdlr.write_message('hor_-10')
+        self._comm_hdlr.write_message('hrm_-10')
 
     def horizontal_jog_cw(self):
-        self._comm_hdlr.write_message('hor_10')
+        self._comm_hdlr.write_message('hrm_10')
 
     def vertical_jog_up(self):
-        self._comm_hdlr.write_message('ver_10')
+        self._comm_hdlr.write_message('vrm_10')
 
     def vertical_jog_down(self):
-        self._comm_hdlr.write_message('ver_-10')
+        self._comm_hdlr.write_message('vrm_-10')
 
     def horizontal_go_home(self):
-        self._comm_hdlr.write_message('hhome')
+        self._comm_hdlr.write_message('ham_0')
 
     def vertical_go_home(self):
-        self._comm_hdlr.write_message('vhome')
+        self._comm_hdlr.write_message('vam_0')
 
     def set_selected_port(self, selected_port):
         self._comm_hdlr.set_port(selected_port)

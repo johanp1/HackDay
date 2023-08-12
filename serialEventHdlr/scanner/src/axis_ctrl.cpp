@@ -76,9 +76,10 @@ void AxisCtrl::MoveToAbsolutPosition(float pos)
     }
 }
 
-void AxisCtrl::SetHome(float pos)
+// will set current position to <offset>, i.e. new home will be <offset> away from current pos
+void AxisCtrl::SetHome(float offset)
 {
-    position_ = pos;
+    position_ = offset;
 }
 
 void AxisCtrl::Update()
