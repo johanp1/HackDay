@@ -264,7 +264,7 @@ class View:
 
         vcmd = (cfg_frame.register(self.validate), '%P')
         tk.Label(cfg_frame, text="File name:").grid(row=0, column=0, padx=5, pady=5)
-        self.filename_entry = tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=vcmd, validate='key').grid(row=0, column=1, padx=5, pady=5)
+        tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=vcmd, validate='key').grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(cfg_frame, text="Com port:").grid(row=1, column=0, padx=5, pady=5)
         port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, available_ports[0], *available_ports, command = self._controller.set_selected_port)
@@ -315,6 +315,7 @@ class OutputFileHandler:
     def __init__(self, model):
         self._model = model
         self._model.attatch(self)
+        self._start_time = datetime.now() # initialize to something
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
@@ -323,13 +324,26 @@ class OutputFileHandler:
     def update(self):
         if self._model.get_scanner_mode() == 2:
             self.f_log = open(self._model.get_file_name(), 'a', encoding="utf-8")
-            date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.f_log.write('start scanning ' + date_string + '\n')
+            self._start_time = datetime.now()
+            date_string = self._start_time.strftime("%Y-%m-%d %H:%M:%S")
+            self.f_log.write('#start scanning ' + date_string + '\n')
 
         if self._model.get_scanner_mode() == 0:
-            date_string = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.f_log.write('scanning done ' + date_string + '\n')
+            stop_time = datetime.now()
+            date_string = stop_time.strftime("%Y-%m-%d %H:%M:%S")
+
+            duration = stop_time - self._start_time
+            
+
+            self.f_log.write('#scanning done ' + date_string + '\n')
+            self.f_log.write(self.strfdelta(duration, '#scanning took {minutes} minutes, {seconds} seconds'))
             self.f_log.close()
+
+    def strfdelta(self, tdelta, fmt):
+        d = {"days": tdelta.days}
+        d["hours"], rem = divmod(tdelta.seconds, 3600)
+        d["minutes"], d["seconds"] = divmod(rem, 60)
+        return fmt.format(**d)
 
 def print_pos(pos):
     print(pos)

@@ -1,17 +1,17 @@
 import numpy as np
 from PIL import Image
 
-c = list(range(0, 255)) #needs to be normalized...
-
 f_in = open('apa.txt','r')
 
-line = f_in.readline()
+SCANS_PER_ROW = 401
+MIN_SCANS_PER_ROW = 300
 prev = 0.00
 m = []
 row = []
-
 max_dist = 0
+max_scan = ''
 
+line = f_in.readline()
 while line != '':
     if not line.startswith('#'):
         scan = line.split(' ')
@@ -21,19 +21,22 @@ while line != '':
         # find max distance readibng
         if dist > max_dist:
             max_dist = dist
+            max_scan = line
 
+        # is the vertical angle the same as previous
         if v_angle == prev:
-            row.append(dist)
+            row.append(dist) # yes, append current reading to the image row
         else:
-            if len(row) > 300:
+            # the current reading contain a new vertical angle => save the row containing reading with old angle, start new row
+            if len(row) > MIN_SCANS_PER_ROW:
                 print('vertical angle: ' + str(prev) + ' measurements: ' + str(len(row)))
                 
                 # if first row, create the matrix
                 if len(m) == 0:
-                    m = np.resize(row, 400)
+                    m = np.resize(row, SCANS_PER_ROW)
                 # for all other rows, append/stack
                 else:
-                    row_resized = np.resize(row, 400)
+                    row_resized = np.resize(row, SCANS_PER_ROW)
                     m = np.row_stack([row_resized, m])
 
             # start new row
@@ -42,17 +45,19 @@ while line != '':
 
     line = f_in.readline()
 
-if len(row) > 300:
+# take care of the last row
+if len(row) > MIN_SCANS_PER_ROW:
     print('last line, vertical angle: ' + str(prev) + ' measurements: ' + str(len(row)))
-    row_resized = np.resize(row, 400)
+    row_resized = np.resize(row, SCANS_PER_ROW)
     m = np.row_stack([row_resized, m])
 
-# normalize
+print('normalizing...')
+print('max dist reading at: ' + max_scan)
 m_normalized = (m/max_dist)*255
 
 img = Image.fromarray(np.uint8(m_normalized), "L")
 img.show()
 
-# Save the Numpy array as Image
-#image_filename = "opengenus_image.jpeg"
-#img.save(image_filename)
+#image_filename = "scan"
+#img.save(image_filename + '.jpeg')
+#img.save(image_filename + '.png')
