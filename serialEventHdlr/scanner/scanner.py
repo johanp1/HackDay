@@ -20,7 +20,7 @@ class Comms(threading.Thread):
         self.serial.bytesize = 8
         self.serial.stopbits = 1
         self.serial.xonxoff = False       # disable software flow control
-        self.serial.timeout = 0.05
+        self.serial.timeout = 0.1
         self.msg_hdlr = msg_handler
 
         self.daemon = True
@@ -225,10 +225,10 @@ class View:
         btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
         btn_ver_home.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
 
-        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5, command=self._controller.vertical_start)
+        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5, command=self._controller.vertical_end)
         btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
 
-        btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_end)
+        btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_start)
         btn_set_lower.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
@@ -243,11 +243,11 @@ class View:
         btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
         btn_hor_home.grid(row=1, column=2, padx=5, pady=5, sticky="nw")
 
-        btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
-        btn_jog_ccw.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+        btn_set_start = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
+        btn_set_start.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
-        btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
-        btn_jog_cw.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
+        btn_set_end = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
+        btn_set_end.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
         self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)

@@ -33,10 +33,10 @@ class ScannerCtrl
   Mode mode_ = mode_inactive;
   float horizontal_target_position_ = 0.0f;
   float vertical_target_position_ = 0.0f;
-  float horizontal_end_position_ = 360.0f;
-  float vertical_end_position_ = 30.0f;
-  float horizontal_increment_ = 1.0f;
-  float vertical_increment_ = 1.0f;
+  float horizontal_end_position_ = 359.1f;
+  float vertical_end_position_ = 60.0f;
+  float horizontal_increment_ = 0.9f;
+  float vertical_increment_ = 0.9f;
 
   Lidar& lidar_;
   AxisCtrl& verticalAxisCtrl_;
@@ -58,6 +58,7 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
     vertical_target_position_ = start_position_;
     horizontal_increment_ =  0.9f;
     vertical_increment_ =  0.9f;
+
     mode_ = mode_scanning;
   }
 
@@ -98,7 +99,7 @@ void ScannerCtrl<Lidar>::Update()
   {
     float hpos = horizontalAxisCtrl_.GetPosition();
     float vpos = verticalAxisCtrl_.GetPosition();
-    if ((isAtTargetPos(hpos, horizontal_target_position_, 0.25f)) && (isAtTargetPos(vpos, vertical_target_position_, 0.25f)))
+    if ((isAtTargetPos(hpos, horizontal_target_position_, 0.05f)) && (isAtTargetPos(vpos, vertical_target_position_, 0.05f)))
     {
       // measure distance
       auto distance = lidar_.distance();
@@ -225,17 +226,31 @@ void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 
   sendStr.concat("new end ");
   sendStr.concat(vertical_end_position_);
+  sendStr.concat("\n");
+  
+  // set this pos as start
+  verticalAxisCtrl_.SetHome(0.0f);
+
+  sendStr.concat("new curr ");
+  sendStr.concat(verticalAxisCtrl_.GetPosition());
   cli();  // serial.send seems to be upset by interrupts...
   Serial.println(sendStr);
   sei();
-  // set this pos as start
-  verticalAxisCtrl_.SetHome(0.0f);
 };
 
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalEndPosition()
 {
   vertical_end_position_ = fmod(verticalAxisCtrl_.GetPosition(), k_degrees_per_rev);
+
+  String sendStr{"end pos "};
+  sendStr.concat(vertical_end_position_);
+  sendStr.concat("\n");
+  sendStr.concat("curr pos ");
+  sendStr.concat(verticalAxisCtrl_.GetPosition());
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
 };
 
 template <class Lidar>
