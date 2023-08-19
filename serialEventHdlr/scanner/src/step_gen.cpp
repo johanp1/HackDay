@@ -3,7 +3,7 @@
 //#include <sstream>
 #include <Arduino.h>
 
-StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off, bool flip) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
+StepGen::StepGen(Pin step_pin, Pin dir_pin, micro_sec t_on, micro_sec t_off, bool flip) : t_on_(t_on/1000), t_off_(t_off/1000), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
 {
    pinMode(step_pin_, OUTPUT);
    pinMode(dir_pin_, OUTPUT);
@@ -61,7 +61,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 
       if (use_ramping_)
       {
-         t_off_ramp_ = max_t_off_ramp; // initialize the first ramp step's time offset
+         t_off_ramp_ = max_t_off_ramp_us/1000; // initialize the first ramp step's time offset
          ramp_steps_ = CalcNbrOfRampSteps();
       }
       else
@@ -69,7 +69,8 @@ StepRetVal StepGen::Step(unsigned int steps)
           t_off_ramp_ = 0;
       }
 
-      t_start_ = millis();
+      //t_start_ = millis();
+      t_start_ = micros()/1000;
       SetState(state_on);
       return ok;
    }
@@ -119,7 +120,8 @@ void StepGen::Attach(StepObserver *stepObserver)
 
 void StepGen::StartNextStep()
 {
-   t_start_ = millis();
+   //t_start_ = millis();
+   t_start_ = micros()/1000;
    curr_step_--;
 
    if (use_ramping_)
@@ -136,11 +138,11 @@ milli_sec StepGen::CalcRampTimeOffset()
 
    if (curr_step_ < ramp_steps_)
    {  // ramp down
-      t_off_ramp_ <= max_t_off_ramp ? retVal = t_off_ramp_ + t_delta : retVal = max_t_off_ramp;
+      t_off_ramp_ <= max_t_off_ramp_us/1000 ? retVal = t_off_ramp_ + t_delta_us/1000 : retVal = max_t_off_ramp_us/1000;
    }
    else
    {  // ramp up
-      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta : t_off_ramp_ = 0;
+      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta_us/1000 : t_off_ramp_ = 0;
    }
 
    return retVal;
@@ -168,13 +170,15 @@ unsigned int StepGen::CalcNbrOfRampSteps()
 // is the "on"/high part of the full step done
 bool StepGen::IsHighDone()
 {
-   return millis() - t_start_ >= t_on_;
+   //return millis() - t_start_ >= t_on_;
+   return micros()/1000 - t_start_ >= t_on_;
 }
 
 // is the "off"/low part of the full step done
 bool StepGen::IsLowDone()
 {
-   return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
+   //return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
+   return micros()/1000 - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
 
 void StepGen::UpdateObserver() 
