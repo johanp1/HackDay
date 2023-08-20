@@ -15,8 +15,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr milli_sec t_on = 2; //2;
-constexpr milli_sec t_off = 2; //3;
+constexpr micro_sec t_on = 1000;
+constexpr micro_sec t_off = 1000;
 
 static void timer2Init( void );
 
@@ -56,7 +56,8 @@ void setup() {
 
   cli();
   timer2Init();
- 
+  sei();
+
   Serial.begin(9600);  // opens serial port
   Serial.setTimeout(500);
 
@@ -78,23 +79,32 @@ void setup() {
   eventParser.AddAcceptedHandler(*setLimitHandler);
   eventParser.AddAcceptedHandler(*verticalGetHandler);
 
-  horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/rev)/unit
-  verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/rev)/unit
-
-  sei();
+  horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
+  verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
 }
 
 void loop() {
   scannerCtrl.Update();  
-  delay(5); 
+  delay(2);
+  //delayMicroseconds(2500); 
 }
 
 static void timer2Init( void )
 {
   TIMSK2 = (1<<OCIE2A);                    // enable Timer2 Output Compare Match A Interrupt Enable
   TCCR2A = (1<<WGM21);                     // enable CTC mode, OCR2A as TOP
-  TCCR2B = (1<<CS22)|(1<<CS21)|(1<<CS20);  // prescaler 1024
-  OCR2A = 15;                              // compare match every Xth milli-sec. @20MHz => 77 = 5ms, 38 = 2.5ms, 15 = 1ms
+
+  TCCR2B = (1<<CS22);                      // prescaler 64
+  OCR2A = 124;                             // compare match every Xth milli-sec. @20MHz => 124 = 500us, 61 = 248us, 62 = 252u
+
+  //TCCR2B = (1<<CS22)|(1<<CS20);          // prescaler 128
+  //OCR2A = 124;                           // compare match every Xth milli-sec. @20MHz => 124 = 1000us
+
+  //TCCR2B = (1<<CS21)|(1<<CS20);          // prescaler 32
+  //OCR2A = 50;                            // compare match every Xth milli-sec. @20MHz => 50 = 100us
+
+  //TCCR2B = (1<<CS22)|(1<<CS21)|(1<<CS20);  // prescaler 1024
+  //OCR2A = 15;                              // compare match every Xth milli-sec. @20MHz => 77 = 5ms, 38 = 2.5ms, 15 = 1024us
 }
 
 ISR( TIMER2_COMPA_vect  )

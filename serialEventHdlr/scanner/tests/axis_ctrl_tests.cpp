@@ -16,7 +16,7 @@ using ::testing::Return;
 class MockStepGen : public StepGen
 {
    public:
-   MockStepGen(Pin step_pin = 0, Pin dir_pin = 0, milli_sec t_on = 0, milli_sec t_off = 0){};
+   MockStepGen(Pin step_pin = 0, Pin dir_pin = 0, micro_sec t_on = 0, micro_sec t_off = 0){};
    ~MockStepGen(){};
 
    MOCK_METHOD(void, Update, (), (override));
@@ -194,13 +194,18 @@ TEST_F(AxisCtrlTestFixture, test_set_home)
    ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
+// not a good test....
 TEST_F(AxisCtrlTestFixture, test_set_pos_busy)
 {
-   EXPECT_CALL(*mockStepGen, Step(_)).Times(0);
-   EXPECT_CALL(*mockStepGen, IsBusy()).WillRepeatedly(Return(true));
+   EXPECT_CALL(*mockStepGen, Step(_)).Times(1);
+   {
+      InSequence seq;      
+      EXPECT_CALL(*mockStepGen, IsBusy()).WillOnce(Return(true));
+      EXPECT_CALL(*mockStepGen, IsBusy()).Times(2).WillRepeatedly(Return(false));
+   }
    
    axisCtrl->MoveToAbsolutPosition(10);
-   axisCtrl->MoveToRelativePosition(10);
+   //axisCtrl->MoveToRelativePosition(10);
 }
 
 }

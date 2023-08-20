@@ -16,7 +16,7 @@ using ::testing::Return;
 class MockStepGen : public StepGen
 {
    public:
-   MockStepGen(Pin step_pin = 0, Pin dir_pin = 0, milli_sec t_on = 0, milli_sec t_off = 0){};
+   MockStepGen(Pin step_pin = 0, Pin dir_pin = 0, micro_sec t_on = 0, micro_sec t_off = 0){};
    ~MockStepGen(){};
 
    MOCK_METHOD(void, Update, (), (override));
