@@ -10,8 +10,8 @@ enum Direction { direction_forward, direction_reverse };
  
 constexpr micro_sec default_t_on_us = 2000;
 constexpr micro_sec default_t_off_us = 3000;
-constexpr micro_sec t_delta_us = 2000;
-constexpr unsigned int max_number_of_ramp_steps = 28; //34; // calculated with ocatve-script "calc_n.m"
+constexpr micro_sec t_delta_us = 1000;
+constexpr unsigned int max_number_of_ramp_steps = 43; // calculated with ocatve-script "calc_n.m"
 constexpr unsigned long max_t_off_ramp_us = max_number_of_ramp_steps * t_delta_us; 
 
 class StepObserver

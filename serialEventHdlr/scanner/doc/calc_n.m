@@ -1,8 +1,11 @@
-v_max = 1/2; % [rev/s] alltså 1 varv på 2 sekunder
-tn = 1;
+T_min = 0.002; % snabbast m�jliga periodtid f�r en puls
+
+% som det �r nu, 1600 step/varv, varje varv tar 
+v_max = 500/1600; % [rev/s] alltså 1 varv på 2 sekunder
+tn = 1.0; % tid till v_max
 a_max = v_max/tn; %max acceleration [rev/s^2] 
-T_min = 0.005;
-t_delta = 2*10^-3;
+
+t_delta = 1*10^-3;
 
 t = [tn];
 
