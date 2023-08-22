@@ -3,13 +3,15 @@
 //#include <sstream>
 #include <Arduino.h>
 
-StepGen::StepGen(Pin step_pin, Pin dir_pin, milli_sec t_on, milli_sec t_off, bool flip) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
+constexpr unsigned long c_us_per_sec = 1000000;
+
+StepGen::StepGen(Pin step_pin, Pin dir_pin, micro_sec t_on, micro_sec t_off, bool flip) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
 {
    pinMode(step_pin_, OUTPUT);
    pinMode(dir_pin_, OUTPUT);
 
    use_ramping_ = false;
-   max_steps_per_sec_ = 1000 / (t_on_ + t_off_);
+   max_steps_per_sec_ = 1000000 / (t_on_ + t_off_);
    curr_step_ = 0;
    t_off_sps_ = 0;
    t_off_ramp_ = 0;
@@ -61,7 +63,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 
       if (use_ramping_)
       {
-         t_off_ramp_ = max_t_off_ramp; // initialize the first ramp step's time offset
+         t_off_ramp_ = max_t_off_ramp_us; // initialize the first ramp step's time offset
          ramp_steps_ = CalcNbrOfRampSteps();
       }
       else
@@ -69,7 +71,8 @@ StepRetVal StepGen::Step(unsigned int steps)
           t_off_ramp_ = 0;
       }
 
-      t_start_ = millis();
+      //t_start_ = millis();
+      t_start_ = micros();
       SetState(state_on);
       return ok;
    }
@@ -89,7 +92,7 @@ void StepGen::SetStepsPerSec(unsigned int steps_per_sec)
 {
    if ((steps_per_sec != 0) && (steps_per_sec < max_steps_per_sec_))
    { 
-      t_off_sps_ = 1000/steps_per_sec - t_on_ - t_off_;
+      t_off_sps_ = 1000000/steps_per_sec - t_on_ - t_off_;
    }
    else
    {
@@ -119,7 +122,7 @@ void StepGen::Attach(StepObserver *stepObserver)
 
 void StepGen::StartNextStep()
 {
-   t_start_ = millis();
+   t_start_ = micros();
    curr_step_--;
 
    if (use_ramping_)
@@ -130,17 +133,17 @@ void StepGen::StartNextStep()
    SetState(state_on);
 }
 
-milli_sec StepGen::CalcRampTimeOffset()
+micro_sec StepGen::CalcRampTimeOffset()
 {
-   milli_sec retVal = t_off_ramp_;
+   micro_sec retVal = t_off_ramp_;
 
    if (curr_step_ < ramp_steps_)
    {  // ramp down
-      t_off_ramp_ <= max_t_off_ramp ? retVal = t_off_ramp_ + t_delta : retVal = max_t_off_ramp;
+      t_off_ramp_ <= max_t_off_ramp_us ? retVal = t_off_ramp_ + t_delta_us : retVal = max_t_off_ramp_us;
    }
    else
    {  // ramp up
-      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta : t_off_ramp_ = 0;
+      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta_us : t_off_ramp_ = 0;
    }
 
    return retVal;
@@ -168,13 +171,16 @@ unsigned int StepGen::CalcNbrOfRampSteps()
 // is the "on"/high part of the full step done
 bool StepGen::IsHighDone()
 {
-   return millis() - t_start_ >= t_on_;
+   //return millis() - t_start_ >= t_on_;
+   return micros() - t_start_ >= t_on_;
 }
 
 // is the "off"/low part of the full step done
 bool StepGen::IsLowDone()
 {
-   return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
+   //return millis() - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
+   unsigned long current_time = micros();
+   return current_time - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
 
 void StepGen::UpdateObserver() 
