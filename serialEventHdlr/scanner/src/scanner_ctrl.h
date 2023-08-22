@@ -131,7 +131,7 @@ void ScannerCtrl<Lidar>::Update()
           verticalAxisCtrl_.MoveToAbsolutPosition(vertical_target_position_); 
 
           // reset horizontal position. hpos should always be <= 360
-          horizontalAxisCtrl_.SetHome(k_degrees_per_rev - hpos);
+          horizontalAxisCtrl_.SetHome(hpos - k_degrees_per_rev);
           horizontalAxisCtrl_.MoveToAbsolutPosition(0.0f);
           horizontal_target_position_ = 0.0f;
         }
