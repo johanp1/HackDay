@@ -33,10 +33,10 @@ class ScannerCtrl
   Mode mode_ = mode_inactive;
   float horizontal_target_position_ = 0.0f;
   float vertical_target_position_ = 0.0f;
-  float horizontal_end_position_ = 359.1f;
-  float vertical_end_position_ = 60.0f;
-  float horizontal_increment_ = 0.9f;
-  float vertical_increment_ = 0.9f;
+  float horizontal_increment_ = 0.45f;
+  float vertical_increment_ = 0.45f;
+  float horizontal_end_position_ = 360.0f - horizontal_increment_;
+  float vertical_end_position_ = 90.0f;
 
   Lidar& lidar_;
   AxisCtrl& verticalAxisCtrl_;
@@ -56,8 +56,8 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
     verticalAxisCtrl_.MoveToAbsolutPosition(start_position_);
     horizontal_target_position_ = start_position_;
     vertical_target_position_ = start_position_;
-    horizontal_increment_ =  0.9f;
-    vertical_increment_ =  0.9f;
+    horizontal_increment_ =  0.225f;
+    vertical_increment_ =  0.45f;
 
     mode_ = mode_scanning;
   }
@@ -118,7 +118,7 @@ void ScannerCtrl<Lidar>::Update()
       horizontal_target_position_ += horizontal_increment_;
 
       // set next target, if increment makes us pass the end-pos lets consider this done
-      if (horizontal_target_position_ <= horizontal_end_position_ + 0.1) // adding random tolerance
+      if (horizontal_target_position_ <= horizontal_end_position_ + 0.05) // adding random tolerance
       {
         horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
       }
