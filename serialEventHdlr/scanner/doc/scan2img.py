@@ -20,9 +20,12 @@ while line != '':
 
         # find max distance readibng
         if dist > max_dist:
+            if dist > 600:
+                dist = 600
+
             max_dist = dist
             max_scan = line
-
+            
         # is the vertical angle the same as previous
         if v_angle == prev:
             row.append(dist) # yes, append current reading to the image row
@@ -58,6 +61,6 @@ m_normalized = (m/max_dist)*255
 img = Image.fromarray(np.uint8(m_normalized), "L")
 img.show()
 
-#image_filename = "scan"
+image_filename = "scan2"
 #img.save(image_filename + '.jpeg')
 #img.save(image_filename + '.png')
