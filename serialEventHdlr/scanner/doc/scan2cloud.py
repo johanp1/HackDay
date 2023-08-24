@@ -7,9 +7,9 @@ line = f_in.readline()
 while line != '':
     if not line.startswith('#'):
         scan = line.split(' ')
-        h_angle = float(scan[0])
-        v_angle = float(scan[1])
-        dist = int(scan[2])
+        h_angle_rad = np.deg2rad(float(scan[0]))
+        v_angle_rad = np.deg2rad(float(scan[1]))
+        dist = float(scan[2])
 
         # alpha - vinkeln i horisontalplanet
         # beta - vinkeln i vertikalplanet
@@ -17,12 +17,14 @@ while line != '':
         # x = r*cos(alpha)*cos(beta)
         # y = r*sin(alpha)*cos(beta)
         # z = r*sin(beta)
-        x = dist * np.cos(np.rad2deg(h_angle)) * np.cos(np.rad2deg(v_angle))
-        y = dist * np.sin(np.rad2deg(h_angle)) * np.cos(np.rad2deg(v_angle))
-        z = dist * np.sin(np.rad2deg(v_angle))
+        x = dist * np.cos(h_angle_rad) * np.cos(v_angle_rad)
+        y = dist * np.sin(h_angle_rad) * np.cos(v_angle_rad)
+        z = dist * np.sin(v_angle_rad)
 
-        f_out.write(x + ' ' + y + ' ' + z)
-        print(x + ' ' + y + ' ' + z)
+        f_out.write('{:.6f}'.format(x) + ' ' + '{:.6f}'.format(y) + ' ' + '{:.6f}'.format(z) + '\n')
+        #print('{:.6f}'.format(x) + ' ' + '{:.6f}'.format(y) + ' ' + '{:.6f}'.format(z))
+
+    line = f_in.readline()
 
 f_in.close()
 f_out.close()
