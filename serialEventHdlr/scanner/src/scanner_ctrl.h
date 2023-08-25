@@ -9,6 +9,8 @@ enum Mode { mode_inactive, mode_test, mode_scanning, mode_done };
 constexpr float k_degrees_per_rev = 360;
 constexpr float start_position_ = 0.0f;
 
+static float my_fmod(float x, float denominator );
+
 template <class Lidar>
 class ScannerCtrl
 {
@@ -33,10 +35,11 @@ class ScannerCtrl
   Mode mode_ = mode_inactive;
   float horizontal_target_position_ = 0.0f;
   float vertical_target_position_ = 0.0f;
-  float horizontal_increment_ = 0.45f;
-  float vertical_increment_ = 0.45f;
+  float horizontal_increment_ = 0.9f;
+  float vertical_increment_ = 0.9f;
   float horizontal_end_position_ = 360.0f - horizontal_increment_;
   float vertical_end_position_ = 90.0f;
+  unsigned int watchdog = 0;
 
   Lidar& lidar_;
   AxisCtrl& verticalAxisCtrl_;
@@ -56,10 +59,22 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
     verticalAxisCtrl_.MoveToAbsolutPosition(start_position_);
     horizontal_target_position_ = start_position_;
     vertical_target_position_ = start_position_;
-    horizontal_increment_ =  0.225f;
-    vertical_increment_ =  0.45f;
+    horizontal_increment_ =  0.9f;
+    vertical_increment_ =  0.9f;
 
     mode_ = mode_scanning;
+
+    String sendStr{"start_"};
+    sendStr.concat(hpos);
+    sendStr.concat("_");
+    sendStr.concat(horizontal_target_position_);
+    sendStr.concat("_");
+    sendStr.concat(vertical_target_position_);
+    cli();  // serial.send seems to be upset by interrupts...
+    Serial.println(sendStr);
+    sei();
+
+    watchdog = 0;
   }
 
   if ((m == mode_test) && (m != mode_))
@@ -97,10 +112,12 @@ void ScannerCtrl<Lidar>::Update()
 {
   if (mode_ == mode_scanning)
   {
+    watchdog++;
     float hpos = horizontalAxisCtrl_.GetPosition();
     float vpos = verticalAxisCtrl_.GetPosition();
     if ((isAtTargetPos(hpos, horizontal_target_position_, 0.05f)) && (isAtTargetPos(vpos, vertical_target_position_, 0.05f)))
     {
+      watchdog = 0;
       // measure distance
       auto distance = lidar_.distance();
       
@@ -143,6 +160,23 @@ void ScannerCtrl<Lidar>::Update()
       }
     }
   }    
+
+  if (watchdog > 1000)
+  {
+    String sendStr{"wd_"};
+    sendStr.concat(hpos);
+    sendStr.concat(" ");
+    sendStr.concat(horizontal_target_position_);
+    sendStr.concat("_");
+    sendStr.concat(vpos);
+    sendStr.concat(" ");
+    sendStr.concat(vertical_target_position_);
+    cli();  // serial.send seems to be upset by interrupts...
+    Serial.println(sendStr);
+    sei();
+
+    watchdog = 0;
+  }
 
   if (mode_ == mode_done)
   {
@@ -258,5 +292,11 @@ bool ScannerCtrl<Lidar>::isAtTargetPos(float actual, float expected, float tol)
 {
   return (actual <= (expected + tol)) && (actual >= (expected - tol));
 };
+
+float my_fmod(float x, float denominator )
+{
+  float retval = fmod(abs(x), denominator);
+  return (x >= 0) ? retval : -retval;
+}
 
 #endif
