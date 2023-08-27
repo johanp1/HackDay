@@ -4,6 +4,8 @@
 #include "step_gen.h"
 
 // full-step 400 steps/rev for motor 1:4 ratio for axis => 1600 steps/rev => 0.225 degrees/step
+enum AxisCrtlStatus { idle, moving };
+enum MoveRequestStatus {ok, not_ok};
 
 class AxisCtrl : public StepObserver
 {
@@ -15,8 +17,9 @@ class AxisCtrl : public StepObserver
    void SetSpeed(float units_per_sec);
    virtual float GetPosition();
    virtual void MoveToRelativePosition(float pos);
-   virtual void MoveToAbsolutPosition(float pos);
+   virtual MoveRequestStatus MoveToAbsolutPosition(float pos);
    virtual void SetHome(float offset = 0.0f);
+   virtual AxisCrtlStatus GetStatus();
    void Update() override;
    
    private:

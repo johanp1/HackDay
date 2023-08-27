@@ -1,0 +1,17 @@
+ONGOING använda busy/moving/idle i scanner crtl istället för isAtTarget
+
+stepGen-test har default 1us upplösning i checkStep, ändra till något rimligt
+
+"set vertical 0"-event eller spara offset i clienten...
+
+variabel jog...
+
+n och delta_t som argument till stepgen-konstruktorn...
+
+REDO FÖR TEST testa av set-limit... start stopp etc
+
+kanske?
+isAtTargetPos tolleransen... 0.25f för stort?
+scanner_ctrl kanske skall vara en eventgenerator med en sender event_listner?
+reset-event till scanner.ino som resetar start/stop
+egen watchdog-klass

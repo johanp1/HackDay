@@ -15,8 +15,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr micro_sec t_on = 1000;
-constexpr micro_sec t_off = 1000;
+constexpr micro_sec t_on = 500;
+constexpr micro_sec t_off = 500;
 
 static void timer2Init( void );
 
@@ -58,7 +58,7 @@ void setup() {
   timer2Init();
   sei();
 
-  Serial.begin(9600);  // opens serial port
+  Serial.begin(57600);  // opens serial port
   Serial.setTimeout(500);
 
   pinMode(enable_pin, OUTPUT);
@@ -85,7 +85,7 @@ void setup() {
 
 void loop() {
   scannerCtrl.Update();  
-  delay(2);
+  delay(1);
   //delayMicroseconds(2500); 
 }
 
@@ -95,7 +95,7 @@ static void timer2Init( void )
   TCCR2A = (1<<WGM21);                     // enable CTC mode, OCR2A as TOP
 
   TCCR2B = (1<<CS22);                      // prescaler 64
-  OCR2A = 124;                             // compare match every Xth milli-sec. @20MHz => 124 = 500us, 61 = 248us, 62 = 252u
+  OCR2A = 62;                             // compare match every Xth milli-sec. @20MHz => 124 = 500us, 61 = 248us, 62 = 252u
 
   //TCCR2B = (1<<CS22)|(1<<CS20);          // prescaler 128
   //OCR2A = 124;                           // compare match every Xth milli-sec. @20MHz => 124 = 1000us

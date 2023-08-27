@@ -51,7 +51,7 @@ void AxisCtrl::MoveToRelativePosition(float pos)
 
 void AxisCtrl::MoveToAbsolutPosition(float pos)
 {
-    while (stepGen_.IsBusy()){delay(5);}
+    MoveRequestStatus retVal = ok;
 
     if (!stepGen_.IsBusy())
     {
@@ -74,12 +74,23 @@ void AxisCtrl::MoveToAbsolutPosition(float pos)
             stepGen_.Step(steps);
         }
     }
+    else
+    {
+        retVal = not_ok;
+    }
+
+    return retVal;
 }
 
 // will set current position to <offset>, i.e. new home will be <offset> away from current pos
 void AxisCtrl::SetHome(float offset)
 {
     position_ = offset;
+}
+
+AxisCrtlStatus AxisCtrl::GetStatus()
+{
+    return stepGen_.IsBusy() ? moving : idle;
 }
 
 void AxisCtrl::Update()
