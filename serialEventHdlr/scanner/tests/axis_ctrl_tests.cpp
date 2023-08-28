@@ -169,7 +169,7 @@ TEST_F(AxisCtrlTestFixture, test_set_abs_pos_scaled)
    EXPECT_CALL(*mockStepGen, Step(1));
    EXPECT_CALL(*mockStepGen, GetDirection()).WillRepeatedly(Return(direction_forward));
 
-   axisCtrl->MoveToAbsolutPosition(1/test_scale);
+   ASSERT_TRUE(axisCtrl->MoveToAbsolutPosition(1/test_scale) == kOk);
    axisCtrl->Update();  // 2 steps generated, will generate 2 stepObserver update calls
    ASSERT_TRUE(axisCtrl->GetPosition() == 0.225f);
    axisCtrl->Update();
@@ -179,7 +179,7 @@ TEST_F(AxisCtrlTestFixture, test_set_home)
 {
    EXPECT_CALL(*mockStepGen, Step(2));
    EXPECT_CALL(*mockStepGen, GetDirection()).Times(2).WillRepeatedly(Return(direction_forward));
-   axisCtrl->MoveToAbsolutPosition(2);
+   ASSERT_TRUE(axisCtrl->MoveToAbsolutPosition(2) == kOk);
    axisCtrl->Update();
    axisCtrl->Update();
    ASSERT_TRUE(axisCtrl->GetPosition() == 2.0f);
@@ -194,18 +194,22 @@ TEST_F(AxisCtrlTestFixture, test_set_home)
    ASSERT_TRUE(axisCtrl->GetPosition() == -2.0f);
 }
 
-// not a good test....
 TEST_F(AxisCtrlTestFixture, test_set_pos_busy)
 {
-   EXPECT_CALL(*mockStepGen, Step(_)).Times(1);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.0f);
    {
       InSequence seq;      
       EXPECT_CALL(*mockStepGen, IsBusy()).WillOnce(Return(true));
-      EXPECT_CALL(*mockStepGen, IsBusy()).Times(2).WillRepeatedly(Return(false));
    }
-   
-   axisCtrl->MoveToAbsolutPosition(10);
-   //axisCtrl->MoveToRelativePosition(10);
+   ASSERT_TRUE(axisCtrl->MoveToAbsolutPosition(10) == kNotOk);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.0f);
+
+   {
+      InSequence seq;      
+      EXPECT_CALL(*mockStepGen, IsBusy()).WillOnce(Return(true));
+   }
+   ASSERT_TRUE(axisCtrl->MoveToRelativePosition(10) == kNotOk);
+   ASSERT_TRUE(axisCtrl->GetPosition() == 0.0f);
 }
 
 }

@@ -74,7 +74,7 @@ StepRetVal StepGen::Step(unsigned int steps)
       //t_start_ = millis();
       t_start_ = micros();
       SetState(state_on);
-      return ok;
+      return idle;
    }
    else
    {

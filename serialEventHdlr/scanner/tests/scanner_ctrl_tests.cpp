@@ -33,9 +33,9 @@ class MockAxisCtrl : public AxisCtrl
    MockAxisCtrl(StepGen& s):AxisCtrl(s){};
    ~MockAxisCtrl(){};
 
-   MOCK_METHOD(float, GetPosition, (), (override));
-   MOCK_METHOD(void, MoveToAbsolutPosition, (float pos), (override));
-   MOCK_METHOD(void, MoveToRelativePosition, (float pos), (override));
+   MOCK_METHOD(Position, GetPosition, (), (override));
+   MOCK_METHOD(MoveRequestStatus, MoveToAbsolutPosition, (float pos), (override));
+   MOCK_METHOD(MoveRequestStatus, MoveToRelativePosition, (Position pos), (override));
    MOCK_METHOD(void, SetHome, (float pos), (override));
 };
 
@@ -55,7 +55,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_inactive)
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
-    scannerCtrl.SetMode(mode_inactive);
+    scannerCtrl.SetMode(kModeInactive);
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(0);
     scannerCtrl.Update();
 }
@@ -70,7 +70,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(mode_test);
+    scannerCtrl.SetMode(kModeTest);
 
     for (int i = 0; i < 36; i++)
     {
@@ -92,7 +92,7 @@ TEST(ScannerCtrlTestSuite, test_update_mode_test)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
-    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
 TEST(ScannerCtrlTestSuite, test_set_end_pos)
@@ -108,7 +108,7 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(100.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(mode_test);
+    scannerCtrl.SetMode(kModeTest);
 
     for (int i = 0; i < 10; i++)
     {
@@ -130,7 +130,7 @@ TEST(ScannerCtrlTestSuite, test_set_end_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
-    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
 // test start pos and end pos are absolute positions, not relative to eachother
@@ -153,7 +153,7 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(mode_test);
+    scannerCtrl.SetMode(kModeTest);
 
     for (int i = 0; i < 6; i++)
     {
@@ -174,7 +174,7 @@ TEST(ScannerCtrlTestSuite, test_set_start_pos)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
-    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
 // test start pos and end pos are absolute positions, not relative to eachother
@@ -197,7 +197,7 @@ TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
     EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(mode_test);
+    scannerCtrl.SetMode(kModeTest);
 
     for (int i = 0; i < 6; i++)
     {
@@ -218,7 +218,7 @@ TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
     EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
     EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.Update();
-    ASSERT_TRUE(scannerCtrl.GetMode() == mode_inactive);
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
 }

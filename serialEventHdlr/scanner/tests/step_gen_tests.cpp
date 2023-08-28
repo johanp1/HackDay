@@ -120,7 +120,7 @@ TEST(StepGenTestGroup, test_busy)
    StepGen s(test_step_pin, test_dir_pin, 5000, 5000);
 
    // precondition, start a step, inc time 4 ms
-   ASSERT_TRUE(s.Step() == ok);  
+   ASSERT_TRUE(s.Step() == idle);  
    arduinoStub->IncTimeMs(4);
    s.Update();
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
@@ -143,7 +143,7 @@ TEST(StepGenTestGroup, test_busy)
 TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
 {
    // precondition, start a step
-   ASSERT_TRUE(stepGen->Step() == ok);  
+   ASSERT_TRUE(stepGen->Step() == idle);  
    incTime(200);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 

@@ -20,14 +20,14 @@ void AxisCtrl::SetSpeed(float units_per_sec)
     stepGen_.SetStepsPerSec(steps_per_sec);
 }
 
-float AxisCtrl::GetPosition()
+Position AxisCtrl::GetPosition()
 {
     return position_;
 }
 
-void AxisCtrl::MoveToRelativePosition(float pos)
+MoveRequestStatus AxisCtrl::MoveToRelativePosition(Position pos)
 {
-    while (stepGen_.IsBusy()){delay(5);}
+    MoveRequestStatus retVal = kOk;
     
     if (!stepGen_.IsBusy())
     {
@@ -47,11 +47,17 @@ void AxisCtrl::MoveToRelativePosition(float pos)
             stepGen_.Step(steps);
         }
     }
+    else
+    {
+        retVal = kNotOk;
+    }
+
+    return retVal;
 }
 
-void AxisCtrl::MoveToAbsolutPosition(float pos)
+MoveRequestStatus AxisCtrl::MoveToAbsolutPosition(Position pos)
 {
-    MoveRequestStatus retVal = ok;
+    MoveRequestStatus retVal = kOk;
 
     if (!stepGen_.IsBusy())
     {
@@ -76,7 +82,7 @@ void AxisCtrl::MoveToAbsolutPosition(float pos)
     }
     else
     {
-        retVal = not_ok;
+        retVal = kNotOk;
     }
 
     return retVal;
@@ -90,7 +96,7 @@ void AxisCtrl::SetHome(float offset)
 
 AxisCrtlStatus AxisCtrl::GetStatus()
 {
-    return stepGen_.IsBusy() ? moving : idle;
+    return stepGen_.IsBusy() ? kMoving : kIdle;
 }
 
 void AxisCtrl::Update()

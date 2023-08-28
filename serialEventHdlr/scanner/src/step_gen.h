@@ -5,7 +5,7 @@ using micro_sec = unsigned int;
 using Pin = char;
 
 enum State { state_on, state_off, state_inactive };
-enum StepRetVal { ok, busy };
+enum StepRetVal { idle, busy };
 enum Direction { direction_forward, direction_reverse };
  
 constexpr micro_sec default_t_on_us = 2000;
