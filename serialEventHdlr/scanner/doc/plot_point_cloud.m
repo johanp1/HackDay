@@ -1,4 +1,6 @@
-fileID = fopen('pcm-house1.xyz', 'r')
+
+
+fileID = fopen('scan_cloud.xyz', 'r')
 sizeA = [3 Inf];
 formatSpec = '%f %f %f';
 xyz = fscanf(fileID, formatSpec, sizeA);

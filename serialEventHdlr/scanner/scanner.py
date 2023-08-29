@@ -106,10 +106,12 @@ class Controller:
         self._model.attatch(self)
 
     def horizontal_jog_ccw(self):
-        self._comm_hdlr.write_message('hrm_-10')
-
+        #self._comm_hdlr.write_message('hrm_-' + self._model.get_horizontal_jog_increment())
+        print('hrm_-' + str(self._model.get_horizontal_jog_increment()))
+        
     def horizontal_jog_cw(self):
-        self._comm_hdlr.write_message('hrm_10')
+        #self._comm_hdlr.write_message('hrm_' + self._model.get_horizontal_jog_increment())
+        print('hrm_' + str(self._model.get_horizontal_jog_increment()))
 
     def vertical_jog_up(self):
         self._comm_hdlr.write_message('vrm_10')
@@ -147,6 +149,9 @@ class Controller:
     def stop(self):
         self._comm_hdlr.write_message('mode_0')
 
+    def set_horizontal_jog_increment(self, inc):
+        self._model.set_horizontal_jog_increment(inc)
+
     def update(self):
         pass
 
@@ -164,6 +169,7 @@ class Model:
         self._observers = []
         self._mode = 0
         self._file_name = 'apa.txt'
+        self.horizontal_jog_increment = 0
 
     def attatch(self, o):
         self._observers.append(o)
@@ -188,6 +194,12 @@ class Model:
 
     def get_file_name(self):
         return self._file_name
+    
+    def get_horizontal_jog_increment(self):
+        return self.horizontal_jog_increment
+    
+    def set_horizontal_jog_increment(self, inc):
+        self.horizontal_jog_increment = inc
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -196,7 +208,14 @@ class View:
         self._model.attatch(self)
 
         self.window = tk.Tk()
+
         self.current_port = tk.StringVar()
+
+        jog_increment = [1, 10]
+        self._model.set_horizontal_jog_increment(jog_increment[1])
+        self.current_horizontal_jog_increment = tk.StringVar()
+        self.current_horizontal_jog_increment.set(jog_increment[1])
+
         self._file_name=tk.StringVar()
         self._file_name.set(model.get_file_name())
 
@@ -215,6 +234,8 @@ class View:
 
         # Vertical control frame content
         tk.Label(vertical_ctrl_frame, text="Vertical control:").grid(row=0, column=0, padx=5, pady=5)
+        btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
+        btn_ver_home.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
         btn_jog_up = tk.Button(master=vertical_ctrl_frame, text="jog up", padx=5, pady=5, command=self._controller.vertical_jog_up)
         btn_jog_up.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
@@ -222,10 +243,7 @@ class View:
         btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
         btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
-        btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
-        btn_ver_home.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
-
-        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="upper limit", padx=5, pady=5, command=self._controller.vertical_end)
+        btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="set upper limit", padx=5, pady=5, command=self._controller.vertical_end)
         btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
 
         btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_start)
@@ -233,6 +251,8 @@ class View:
 
         # horizontal control frame content
         tk.Label(horizontal_ctrl_frame, text="Horizontal control:").grid(row=0, column=0, padx=5, pady=5)
+        btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
+        btn_hor_home.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
         btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="jog ccw", padx=5, pady=5, command=self._controller.horizontal_jog_ccw)
         btn_jog_ccw.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
@@ -240,16 +260,17 @@ class View:
         btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5, command=self._controller.horizontal_jog_cw)
         btn_jog_cw.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
 
-        btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
-        btn_hor_home.grid(row=1, column=2, padx=5, pady=5, sticky="nw")
-
         btn_set_start = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
         btn_set_start.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_end = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
         btn_set_end.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
-        # horizontal control frame content
+        tk.Label(horizontal_ctrl_frame, text="jog increment:").grid(row=3, column=0, padx=5, pady=5)
+        port_option_menu = tk.OptionMenu(horizontal_ctrl_frame, self.current_horizontal_jog_increment, *jog_increment, command = self._controller.set_horizontal_jog_increment)
+        port_option_menu.grid(row=3, column=1, padx=5, pady=5, sticky="n")
+
+        # control frame content
         self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
         self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
 
@@ -267,7 +288,7 @@ class View:
         tk.Entry(cfg_frame, textvariable=self._file_name, validatecommand=vcmd, validate='key').grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(cfg_frame, text="Com port:").grid(row=1, column=0, padx=5, pady=5)
-        port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, available_ports[0], *available_ports, command = self._controller.set_selected_port)
+        port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, *available_ports, command = self._controller.set_selected_port)
         port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
 
     def validate(self, file_name):
