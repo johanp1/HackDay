@@ -3,9 +3,9 @@
 //#include <sstream>
 #include <Arduino.h>
 
-constexpr unsigned long c_us_per_sec = 1000000;
+constexpr unsigned long kMicroSecundsPerSec = 1000000;
 
-StepGen::StepGen(Pin step_pin, Pin dir_pin, micro_sec t_on, micro_sec t_off, bool flip) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip)
+StepGen::StepGen(Pin step_pin, Pin dir_pin, micro_sec t_on, micro_sec t_off, bool flip, micro_sec t_d, unsigned int number_of_ramp_steps) : t_on_(t_on), t_off_(t_off), step_pin_(step_pin), dir_pin_(dir_pin), flipped_(flip), t_delta_(t_d), number_of_ramp_steps_(number_of_ramp_steps)
 {
    pinMode(step_pin_, OUTPUT);
    pinMode(dir_pin_, OUTPUT);
@@ -63,7 +63,7 @@ StepRetVal StepGen::Step(unsigned int steps)
 
       if (use_ramping_)
       {
-         t_off_ramp_ = max_t_off_ramp_us; // initialize the first ramp step's time offset
+         t_off_ramp_ = number_of_ramp_steps_ * t_delta_; // initialize the first ramp step's time offset
          ramp_steps_ = CalcNbrOfRampSteps();
       }
       else
@@ -136,14 +136,15 @@ void StepGen::StartNextStep()
 micro_sec StepGen::CalcRampTimeOffset()
 {
    micro_sec retVal = t_off_ramp_;
+   unsigned long max_t_off_ramp = number_of_ramp_steps_ * t_delta_;
 
    if (curr_step_ < ramp_steps_)
    {  // ramp down
-      t_off_ramp_ <= max_t_off_ramp_us ? retVal = t_off_ramp_ + t_delta_us : retVal = max_t_off_ramp_us;
+      t_off_ramp_ <= max_t_off_ramp ? retVal = t_off_ramp_ + t_delta_ : retVal = max_t_off_ramp;
    }
    else
    {  // ramp up
-      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta_us : t_off_ramp_ = 0;
+      t_off_ramp_ > 0 ? retVal = t_off_ramp_ - t_delta_ : t_off_ramp_ = 0;
    }
 
    return retVal;
@@ -154,7 +155,7 @@ unsigned int StepGen::CalcNbrOfRampSteps()
    unsigned int retVal;
 
    // can ramping up and down fit in the number of requested steps?
-   if (curr_step_ < 2 * max_number_of_ramp_steps)
+   if (curr_step_ < 2 * number_of_ramp_steps_)
    {
       // no, ramp upp as far as possible, will not reach max speed, then ramp down
       retVal = curr_step_ / 2;
@@ -162,7 +163,7 @@ unsigned int StepGen::CalcNbrOfRampSteps()
    else
    {
       // yes, full ramp-up to max speed, then ramp down when appropriate
-      retVal = max_number_of_ramp_steps;
+      retVal = number_of_ramp_steps_;
    }
 
    return retVal;

@@ -8,11 +8,11 @@ enum State { state_on, state_off, state_inactive };
 enum StepRetVal { idle, busy };
 enum Direction { direction_forward, direction_reverse };
  
-constexpr micro_sec default_t_on_us = 2000;
-constexpr micro_sec default_t_off_us = 3000;
-constexpr micro_sec t_delta_us = 1000;
-constexpr unsigned int max_number_of_ramp_steps = 43; // calculated with ocatve-script "calc_n.m"
-constexpr unsigned long max_t_off_ramp_us = max_number_of_ramp_steps * t_delta_us; 
+constexpr micro_sec default_t_on = 2000; //micro secunds (us)
+constexpr micro_sec default_t_off = 3000; // us
+constexpr micro_sec default_t_delta = 1000; // us, used for ramp-steps
+constexpr unsigned int default_number_of_ramp_steps = 43; // calculated with ocatve-script "calc_n.m"
+//constexpr unsigned long max_t_off_ramp = default_number_of_ramp_steps * default_t_delta; 
 
 class StepObserver
 {
@@ -23,7 +23,7 @@ class StepObserver
 class StepGen
 {
    public:
-   StepGen(Pin stepPin = 0, Pin dirPin = 1, micro_sec t_on = default_t_on_us, micro_sec t_off = default_t_off_us, bool flip = false);
+   StepGen(Pin stepPin = 0, Pin dirPin = 1, micro_sec t_on = default_t_on, micro_sec t_off = default_t_off, bool flip = false, micro_sec t_d = default_t_delta, unsigned int number_of_ramp_steps = default_number_of_ramp_steps);
    virtual ~StepGen();
 
    virtual void Update();
@@ -55,7 +55,9 @@ class StepGen
    unsigned int ramp_steps_;
    bool use_ramping_;
    bool flipped_;
-   
+   unsigned int number_of_ramp_steps_;
+   micro_sec t_delta_;
+
    StepObserver *stepObserver_ = nullptr;
    State state_;
    Pin step_pin_;

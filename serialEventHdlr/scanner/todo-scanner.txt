@@ -1,13 +1,13 @@
 scan2cloud spegelvänder horizontalplanet
 
-stepGen-test har default 1us upplösning i checkStep, ändra till något rimligt
-stepGen::n och delta_t som argument till stepgen-konstruktorn...
-
 "set vertical 0"-event eller spara offset i clienten...
 
 REDO FÖR TEST använda busy/moving/idle i scanner crtl istället för isAtTarget
 REDO FÖR TEST variabel jog...
 REDO FÖR TEST testa av set-limit... start stopp etc
+
+KLAR stepGen-test har default 1us upplösning i checkStep, ändra till något rimligt
+KLAR stepGen::n och delta_t som argument till stepgen-konstruktorn...
 
 kanske?
 scanner_ctrl kanske skall vara en eventgenerator med en sender event_listner?

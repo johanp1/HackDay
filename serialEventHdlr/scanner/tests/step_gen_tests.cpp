@@ -14,6 +14,10 @@ constexpr byte test_dir_pin = 2;
 constexpr micro_sec t_on_test = 1000;
 constexpr micro_sec t_off_test = 1000;
 
+constexpr unsigned long kDefaultMaxTOffRamp = default_number_of_ramp_steps * default_t_delta; 
+
+constexpr micro_sec periodicity = 250; // us
+
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
 class MockStepObserver : public StepObserver
@@ -50,21 +54,20 @@ class StepGenTestFixture : public testing::Test
       //delete stepObserver;
    }
    
-   void incTime(unsigned long t = 1)
+   void incTime(unsigned int iterations = 1)
    {
-      for (auto i = 0; i < t; i++)
+      for (auto i = 0; i < iterations; i++)
       {
-         arduinoStub->IncTime(1);
+         arduinoStub->IncTime(periodicity);
          stepGen->Update();
       }
    }
 
-   
-   bool checkStep(micro_sec t_on, micro_sec t_off)
+   bool checkStep(micro_sec t_on, micro_sec t_off, micro_sec period = periodicity)
    {
       bool retVal = true;
-      // check step is on for t_on ms
-      for (micro_sec i = 0; i < t_on; i++)
+      
+      for (micro_sec i = 0; i < t_on/periodicity; i++)
       {
          retVal = retVal & (arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
          incTime();
@@ -72,8 +75,7 @@ class StepGenTestFixture : public testing::Test
          //if (!retVal) cout << "checking step is high at pos " << i << " failed\n";
       }
 
-      // check step is off for t_off ms
-      for (micro_sec i = 0; i < t_off; i++)
+      for (micro_sec i = 0; i < t_off/periodicity; i++)
       {
          retVal = retVal & (arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
          incTime();
@@ -144,17 +146,17 @@ TEST_F(StepGenTestFixture, test_one_step_high_freq_update)
 {
    // precondition, start a step
    ASSERT_TRUE(stepGen->Step() == idle);  
-   incTime(200);
+   incTime();
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
-   incTime(600);
+   incTime(2); // increase time += 3*periodicity
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
-   incTime(200);
+   incTime();
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    ASSERT_TRUE(stepGen->IsBusy()); 
 
-   incTime(1000);
+   incTime(4);
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    ASSERT_FALSE(stepGen->IsBusy()); 
 }
@@ -164,11 +166,11 @@ TEST_F(StepGenTestFixture, test_step_with_set_speed)
 {
    stepGen->SetStepsPerSec(50);
    stepGen->Step(1); // with 50 steps per sec, one pulse is 20ms
-   incTime(1000);
+   incTime(1000/periodicity);
    ASSERT_TRUE(stepGen->IsBusy());
-   incTime(18000);
+   incTime(18000/periodicity);
    ASSERT_TRUE(stepGen->IsBusy());
-   incTime(1000);
+   incTime(1000/periodicity);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
@@ -180,11 +182,11 @@ TEST_F(StepGenTestFixture, test_step_with_to_high_speed)
    // test speed saturated if above
    stepGen->SetStepsPerSec(600);
    stepGen->Step(1);
-   incTime(200);
+   incTime();
    ASSERT_TRUE(stepGen->IsBusy());
-   incTime(1600);
+   incTime(6);
    ASSERT_TRUE(stepGen->IsBusy());
-   incTime(200);
+   incTime(1);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
@@ -196,10 +198,10 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
  
    constexpr micro_sec t_sps_test = 8000;
 
-   // set nbr of steps >> max_number_of_ramp_steps not to get intervened by ramping down
+   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
    // t_on_test + t_off_test + t_sps_test + t_off_ramp_ - 1 (-1 means "last off-state iteration")
-   incTime(t_on_test + t_off_test + t_sps_test + max_t_off_ramp_us - 1);
+   incTime((t_on_test + t_off_test + t_sps_test + kDefaultMaxTOffRamp - periodicity)/periodicity);
 
    // still working on the off part of the first step
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
@@ -209,8 +211,8 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
    // first step took 44 ms to finish, 2nd should be done in:
-   // t_on_test + t_off_test + t_sps_test + t_off_ramp_ - t_delta - 1
-   incTime(t_on_test + t_off_test + t_sps_test + max_t_off_ramp_us - 1*t_delta_us - 1);
+   // t_on_test + t_off_test + t_sps_test + t_off_ramp_ - default_t_delta - 1
+   incTime((t_on_test + t_off_test + t_sps_test + kDefaultMaxTOffRamp - 1*default_t_delta - periodicity)/periodicity);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    //ASSERT_FALSE(stepGen->IsBusy());
@@ -219,8 +221,8 @@ TEST_F(StepGenTestFixture, test_decresing_step_length_with_speed_ramp_up)
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_High);
 
    // 3nd should be done in:
-   // t_on_test + t_off_test + t_sps_test + t_off_ramp_ - 2*t_delta - 1
-   incTime(t_on_test + t_off_test + t_sps_test + max_t_off_ramp_us - 2*t_delta_us - 1);
+   // t_on_test + t_off_test + t_sps_test + t_off_ramp_ - 2*default_t_delta - 1
+   incTime((t_on_test + t_off_test + t_sps_test + kDefaultMaxTOffRamp - 2*default_t_delta - periodicity)/periodicity);
    // all requested steps done
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_step_pin) == PinState_Low);
    //ASSERT_FALSE(stepGen->IsBusy());
@@ -235,14 +237,14 @@ TEST_F(StepGenTestFixture, test_decresing_step)
    stepGen->SetStepsPerSec(100);
    constexpr micro_sec t_sps_test = 8000;
 
-   constexpr auto ramp_steps = max_number_of_ramp_steps;
+   constexpr auto ramp_steps = default_number_of_ramp_steps;
 
-   // set nbr of steps >> max_number_of_ramp_steps not to get intervened by ramping down
+   // set nbr of steps >> default_number_of_ramp_steps not to get intervened by ramping down
    stepGen->Step(100); 
 
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*(ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(ramp_steps-i)));
    }
 }
 
@@ -252,7 +254,7 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    stepGen->SetStepsPerSec(100);
    
    constexpr micro_sec t_sps_test = 8000;
-   constexpr auto ramp_steps = max_number_of_ramp_steps;
+   constexpr auto ramp_steps = default_number_of_ramp_steps;
 
    // set nbr of steps to get full ramp up, one steady state step then full ramp down
    stepGen->Step(2 * ramp_steps + 1); 
@@ -260,19 +262,16 @@ TEST_F(StepGenTestFixture, test_incresing_step_length_with_speed_ramp_down)
    // ramping up
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      //cout << "checking ramp up step " << to_string(i) << (checkStep(t_on_test, t_off_test + (ramp_steps-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*(ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(ramp_steps-i)));
    }
 
    // one max speed step
-   //cout << "checking steady state step " << (checkStep(t_on_test, t_off_test) ? "OK":"fail") << "\n";
    ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test));
 
    // ramping down
    for (int8_t i = 1; i < ramp_steps; i++)
    {
-      //cout << "checking ramp down step " << to_string(i) << (checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*i) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*i));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*i));
    }
 }
 
@@ -292,17 +291,13 @@ TEST_F(StepGenTestFixture, test_incomlpete_ramping)
    // ramping up
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      // cout << "checking ramp up step " << to_string(requested_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-i) << "\n";
-      // cout << (checkStep(t_on_test, t_off_test + (max_number_of_ramp_steps-i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*(max_number_of_ramp_steps-i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(default_number_of_ramp_steps-i)));
    }
 
    // ramping down
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      // cout << "checking ramp down step " << to_string(ramp_steps-1-i) << ", t_on " << t_on_test << " , t_off " << t_off_test + (max_number_of_ramp_steps-ramp_steps) + t_delta*i << "\n";
-      // cout << (checkStep(t_on_test, t_off_test + t_delta*(max_number_of_ramp_steps - ramp_steps + i)) ? "OK":"fail") << "\n";
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + t_delta_us*(max_number_of_ramp_steps - ramp_steps + i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(default_number_of_ramp_steps - ramp_steps + i)));
    }
 }
 
