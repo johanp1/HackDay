@@ -106,18 +106,16 @@ class Controller:
         self._model.attatch(self)
 
     def horizontal_jog_ccw(self):
-        #self._comm_hdlr.write_message('hrm_-' + self._model.get_horizontal_jog_increment())
-        print('hrm_-' + str(self._model.get_horizontal_jog_increment()))
+        self._comm_hdlr.write_message('hrm_-' + str(self._model.get_horizontal_jog_increment()))
         
     def horizontal_jog_cw(self):
-        #self._comm_hdlr.write_message('hrm_' + self._model.get_horizontal_jog_increment())
-        print('hrm_' + str(self._model.get_horizontal_jog_increment()))
+        self._comm_hdlr.write_message('hrm_' + str(self._model.get_horizontal_jog_increment()))
 
     def vertical_jog_up(self):
-        self._comm_hdlr.write_message('vrm_10')
+        self._comm_hdlr.write_message('vrm_' + str(self._model.get_vertical_jog_increment()))
 
     def vertical_jog_down(self):
-        self._comm_hdlr.write_message('vrm_-10')
+        self._comm_hdlr.write_message('vrm_-' + str(self._model.get_vertical_jog_increment()))
 
     def horizontal_go_home(self):
         self._comm_hdlr.write_message('ham_0')
@@ -151,6 +149,9 @@ class Controller:
 
     def set_horizontal_jog_increment(self, inc):
         self._model.set_horizontal_jog_increment(inc)
+
+    def set_vertical_jog_increment(self, inc):
+        self._model.set_vertical_jog_increment(inc)
 
     def update(self):
         pass
@@ -200,6 +201,12 @@ class Model:
     
     def set_horizontal_jog_increment(self, inc):
         self.horizontal_jog_increment = inc
+        
+    def get_vertical_jog_increment(self):
+        return self.vertical_jog_increment
+    
+    def set_vertical_jog_increment(self, inc):
+        self.vertical_jog_increment = inc
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -211,10 +218,14 @@ class View:
 
         self.current_port = tk.StringVar()
 
-        jog_increment = [1, 10]
-        self._model.set_horizontal_jog_increment(jog_increment[1])
+        JOG_INCREMENT = [1, 10]
+        self._model.set_horizontal_jog_increment(JOG_INCREMENT[1])
         self.current_horizontal_jog_increment = tk.StringVar()
-        self.current_horizontal_jog_increment.set(jog_increment[1])
+        self.current_horizontal_jog_increment.set(JOG_INCREMENT[1])
+
+        self._model.set_vertical_jog_increment(JOG_INCREMENT[1])
+        self.current_vertical_jog_increment = tk.StringVar()
+        self.current_vertical_jog_increment.set(JOG_INCREMENT[1])
 
         self._file_name=tk.StringVar()
         self._file_name.set(model.get_file_name())
@@ -237,38 +248,42 @@ class View:
         btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
         btn_ver_home.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
-        btn_jog_up = tk.Button(master=vertical_ctrl_frame, text="jog up", padx=5, pady=5, command=self._controller.vertical_jog_up)
-        btn_jog_up.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+        tk.Label(vertical_ctrl_frame, text="jog increment:").grid(row=1, column=0, padx=5, pady=5)
+        port_option_menu = tk.OptionMenu(vertical_ctrl_frame, self.current_vertical_jog_increment, *JOG_INCREMENT, command = self._controller.set_vertical_jog_increment)
+        port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
 
-        btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
-        btn_jog_down.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+        btn_jog_up = tk.Button(master=vertical_ctrl_frame, text="jog up", padx=5, pady=5, command=self._controller.vertical_jog_up)
+        btn_jog_up.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="set upper limit", padx=5, pady=5, command=self._controller.vertical_end)
-        btn_set_upper.grid(row=1, column=1, padx=5, pady=5, sticky='nw')
+        btn_set_upper.grid(row=2, column=1, padx=5, pady=5, sticky='nw')
+
+        btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
+        btn_jog_down.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_start)
-        btn_set_lower.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
+        btn_set_lower.grid(row=3, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
         tk.Label(horizontal_ctrl_frame, text="Horizontal control:").grid(row=0, column=0, padx=5, pady=5)
         btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
         btn_hor_home.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
 
+        tk.Label(horizontal_ctrl_frame, text="jog increment:").grid(row=1, column=0, padx=5, pady=5)
+        port_option_menu = tk.OptionMenu(horizontal_ctrl_frame, self.current_horizontal_jog_increment, *JOG_INCREMENT, command = self._controller.set_horizontal_jog_increment)
+        port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+
         btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="jog ccw", padx=5, pady=5, command=self._controller.horizontal_jog_ccw)
-        btn_jog_ccw.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+        btn_jog_ccw.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
 
         btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5, command=self._controller.horizontal_jog_cw)
-        btn_jog_cw.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+        btn_jog_cw.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         btn_set_start = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
-        btn_set_start.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+        btn_set_start.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_end = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
-        btn_set_end.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
-
-        tk.Label(horizontal_ctrl_frame, text="jog increment:").grid(row=3, column=0, padx=5, pady=5)
-        port_option_menu = tk.OptionMenu(horizontal_ctrl_frame, self.current_horizontal_jog_increment, *jog_increment, command = self._controller.set_horizontal_jog_increment)
-        port_option_menu.grid(row=3, column=1, padx=5, pady=5, sticky="n")
+        btn_set_end.grid(row=3, column=1, padx=5, pady=5, sticky="nw")
 
         # control frame content
         self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
