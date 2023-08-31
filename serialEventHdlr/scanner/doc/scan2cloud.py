@@ -20,8 +20,8 @@ while line != '':
         # x = r*cos(alpha)*cos(beta)
         # y = r*sin(alpha)*cos(beta)
         # z = r*sin(beta)
-        x = dist * np.cos(h_angle_rad) * np.cos(v_angle_rad)
-        y = dist * np.sin(h_angle_rad) * np.cos(v_angle_rad)
+        x = dist * np.cos(-h_angle_rad) * np.cos(v_angle_rad)
+        y = dist * np.sin(-h_angle_rad) * np.cos(v_angle_rad)
         z = dist * np.sin(v_angle_rad)
 
         f_out.write('{:.6f}'.format(x) + ' ' + '{:.6f}'.format(y) + ' ' + '{:.6f}'.format(z) + '\n')
