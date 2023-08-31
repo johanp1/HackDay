@@ -1,11 +1,10 @@
-scan2cloud spegelvänder horizontalplanet
-
 "set vertical 0"-event eller spara offset i clienten...
 
 REDO FÖR TEST använda busy/moving/idle i scanner crtl istället för isAtTarget
 REDO FÖR TEST variabel jog...
 REDO FÖR TEST testa av set-limit... start stopp etc
 
+KLAR scan2cloud spegelvänder horizontalplanet
 KLAR stepGen-test har default 1us upplösning i checkStep, ändra till något rimligt
 KLAR stepGen::n och delta_t som argument till stepgen-konstruktorn...
 
