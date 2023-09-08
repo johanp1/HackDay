@@ -8,6 +8,12 @@ import tkinter as tk
 import serial
 from serial.tools.list_ports import comports
 import test_comms
+from enum import IntEnum
+
+class ScannerMode(IntEnum):
+    NOT_HOMED = 0
+    INACTIVE = 1
+    SCANNING = 2
 
 class Comms(threading.Thread):
     """rs232 port"""
@@ -168,7 +174,7 @@ class Model:
     def __init__(self, available_ports):
         self._available_ports = available_ports
         self._observers = []
-        self._mode = 0
+        self._mode = ScannerMode.NOT_HOMED
         self._file_name = 'apa.txt'
         self.horizontal_jog_increment = 0
 
@@ -311,7 +317,12 @@ class View:
         return True
 
     def update(self):
-        if self._model.get_scanner_mode() == 0:
+        if self._model.get_scanner_mode() == ScannerMode.NOT_HOMED:
+            pass
+            #self.btn_start.config(text="Start", command=self._controller.start, state="normal")
+            #self.btn_test.config(text="Test", command=self._controller.test, state="normal")
+
+        if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
             self.btn_test.config(text="Test", command=self._controller.test, state="normal")
 
@@ -319,7 +330,7 @@ class View:
             self.btn_start.config(state="disabled")
             self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
 
-        if self._model.get_scanner_mode() == 2: #scanning mode
+        if self._model.get_scanner_mode() == ScannerMode.SCANNING: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
             self.btn_test.config(state = "disabled")
 
@@ -358,13 +369,13 @@ class OutputFileHandler:
             self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist)
 
     def update(self):
-        if self._model.get_scanner_mode() == 2:
+        if self._model.get_scanner_mode() == ScannerMode.SCANNING:
             self.f_log = open(self._model.get_file_name(), 'a', encoding="utf-8")
             self._start_time = datetime.now()
             date_string = self._start_time.strftime("%Y-%m-%d %H:%M:%S")
             self.f_log.write('#start scanning ' + date_string + '\n')
 
-        if self._model.get_scanner_mode() == 0:
+        if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
             stop_time = datetime.now()
             date_string = stop_time.strftime("%Y-%m-%d %H:%M:%S")
 
