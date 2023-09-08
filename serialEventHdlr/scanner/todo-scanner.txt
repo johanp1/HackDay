@@ -1,4 +1,7 @@
+testfall för "scan" i scanner_ctrl
+ta bort test-mode och done, och test-knappen
 "set vertical 0"-event eller spara offset i clienten...
+disable startknapp innan "set vertical 0"-event - lägg till unhomed-state i scanner_ctrl
 
 REDO FÖR TEST använda busy/moving/idle i scanner crtl istället för isAtTarget
 REDO FÖR TEST variabel jog...
