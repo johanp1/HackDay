@@ -147,11 +147,8 @@ class Controller:
     def start(self):
         self._comm_hdlr.write_message('mode_2')
 
-    def test(self):
-        self._comm_hdlr.write_message('mode_1')
-
     def stop(self):
-        self._comm_hdlr.write_message('mode_0')
+        self._comm_hdlr.write_message('mode_1')
 
     def set_horizontal_jog_increment(self, inc):
         self._model.set_horizontal_jog_increment(inc)
@@ -295,8 +292,8 @@ class View:
         self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
         self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
 
-        self.btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5, command=self._controller.test)
-        self.btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
+        #self.btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5, command=self._controller.test)
+        #self.btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
         # config frame content
         available_ports = model.get_available_ports()
@@ -318,21 +315,16 @@ class View:
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.NOT_HOMED:
-            pass
-            #self.btn_start.config(text="Start", command=self._controller.start, state="normal")
-            #self.btn_test.config(text="Test", command=self._controller.test, state="normal")
+            self.btn_start.config(state="disable")
 
         if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
-            self.btn_test.config(text="Test", command=self._controller.test, state="normal")
 
         if self._model.get_scanner_mode() == 1: #test mode
             self.btn_start.config(state="disabled")
-            self.btn_test.config(text="Stop", command=self._controller.stop, state="normal")
 
         if self._model.get_scanner_mode() == ScannerMode.SCANNING: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
-            self.btn_test.config(state = "disabled")
 
     def start(self):
         self.window.mainloop()
