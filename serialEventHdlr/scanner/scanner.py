@@ -135,6 +135,9 @@ class Controller:
     def vertical_start(self):
         self._comm_hdlr.write_message('set_vs')
 
+    def vertical_home(self):
+        self._comm_hdlr.write_message('set_vh')
+
     def vertical_end(self):
         self._comm_hdlr.write_message('set_ve')
 
@@ -145,10 +148,10 @@ class Controller:
         self._comm_hdlr.write_message('set_he')
 
     def start(self):
-        self._comm_hdlr.write_message('mode_2')
+        self._comm_hdlr.write_message('mode_' + str(ScannerMode.SCANNING.value))
 
     def stop(self):
-        self._comm_hdlr.write_message('mode_1')
+        self._comm_hdlr.write_message('mode_' + str(ScannerMode.INACTIVE.value))
 
     def set_horizontal_jog_increment(self, inc):
         self._model.set_horizontal_jog_increment(inc)
@@ -291,9 +294,10 @@ class View:
         # control frame content
         self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
         self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
+        self.btn_start.config(state="disable")
 
-        #self.btn_test = tk.Button(master=ctrl_frame, text="Test", padx=5, pady=5, command=self._controller.test)
-        #self.btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
+        self.btn_test = tk.Button(master=ctrl_frame, text="Set Vertical Home", padx=5, pady=5, command=self._controller.vertical_home)
+        self.btn_test.grid(row=0, column=1, padx=5, pady=5, sticky="n")
 
         # config frame content
         available_ports = model.get_available_ports()
@@ -315,13 +319,10 @@ class View:
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.NOT_HOMED:
-            self.btn_start.config(state="disable")
+            self.btn_start.config(text="Start", state="disable")
 
         if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
-
-        if self._model.get_scanner_mode() == 1: #test mode
-            self.btn_start.config(state="disabled")
 
         if self._model.get_scanner_mode() == ScannerMode.SCANNING: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
@@ -355,10 +356,11 @@ class OutputFileHandler:
         self._model = model
         self._model.attatch(self)
         self._start_time = datetime.now() # initialize to something
+        self.f_log = None
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist)
+            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist + '\n')
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.SCANNING:
@@ -368,15 +370,15 @@ class OutputFileHandler:
             self.f_log.write('#start scanning ' + date_string + '\n')
 
         if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
-            stop_time = datetime.now()
-            date_string = stop_time.strftime("%Y-%m-%d %H:%M:%S")
+            if self.f_log is not None:
+                stop_time = datetime.now()
+                date_string = stop_time.strftime("%Y-%m-%d %H:%M:%S")
 
-            duration = stop_time - self._start_time
-            
+                duration = stop_time - self._start_time
 
-            self.f_log.write('#scanning done ' + date_string + '\n')
-            self.f_log.write(self.strfdelta(duration, '#scanning took {minutes} minutes, {seconds} seconds'))
-            self.f_log.close()
+                self.f_log.write('#scanning done ' + date_string + '\n')
+                self.f_log.write(self.strfdelta(duration, '#scanning took {minutes} minutes, {seconds} seconds'))
+                self.f_log.close()
 
     def strfdelta(self, tdelta, fmt):
         d = {"days": tdelta.days}

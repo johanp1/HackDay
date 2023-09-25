@@ -7,11 +7,12 @@ class TestComms:
         self._msg_handler(s)
 
         if s == 'set_vh':
-            self._msg_handler('mode_0')
+            self._msg_handler('mode_1')
 
         if s == 'mode_2':
-            for angle in range(0, 360, 10):
-                self._msg_handler('h_' + str(angle))
+            for v_angle in range(-45, 45, 10):
+                for h_angle in range(0, 360, 10):
+                    self._msg_handler('scan_' + str(h_angle) + '_' + str(v_angle)  + '_' + '100')
             self._msg_handler('mode_1')
 
     def get_available_ports(self):    # get available ports
