@@ -17,6 +17,8 @@ constexpr float kDefaultVerticalStartPosition = -45.0f;
 constexpr float kDefaultHorizontalEndPosition = 360.0f - kHorizontalIncrement;
 constexpr float kDefaultVerticalEndPosition = 45.0f;
 
+constexpr int kLidarBiasCorrectionInterval = 100;
+
 template <class Lidar>
 class ScannerCtrl
 {
@@ -46,6 +48,8 @@ class ScannerCtrl
   float horizontal_end_position_ = kDefaultHorizontalEndPosition;
   float vertical_end_position_ = kDefaultVerticalEndPosition;
   float vertical_start_position_ = kDefaultVerticalStartPosition;
+
+  int lidar_bias_correction_counter_ = 0;
 
   Lidar& lidar_;
   AxisCtrl& verticalAxisCtrl_;
@@ -216,10 +220,18 @@ bool ScannerCtrl<Lidar>::IsAtTargetPos(float actual, float expected, float tol)
 template <class Lidar>
 void ScannerCtrl<Lidar>::Scan()
 {
-  auto distance = lidar_.distance();
+  bool bias_correction_flag = (lidar_bias_correction_counter_ == 0 ? true : false);
+  int distance;
   auto horizontal_pos = horizontalAxisCtrl_.GetPosition();
   auto vertical_pos = verticalAxisCtrl_.GetPosition();
   String sendStr{"scan_"};
+
+  if (++lidar_bias_correction_counter_ >= kLidarBiasCorrectionInterval)
+  {
+    lidar_bias_correction_counter_ = 0;
+  }
+
+  distance = lidar_.distance(bias_correction_flag);
 
   sendStr.concat(horizontal_pos);
   sendStr.concat("_");
