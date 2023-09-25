@@ -158,6 +158,10 @@ static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
   {
     ctrl->SetVerticalEndPosition();
   }
+  if (str.compareTo("vh") == 0)
+  {
+    ctrl->SetVerticalHomePosition();
+  }
   if (str.compareTo("hs") == 0)
   {
     ctrl->SetHorizontalStartPosition();

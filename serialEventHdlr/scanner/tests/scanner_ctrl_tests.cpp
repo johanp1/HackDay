@@ -12,6 +12,9 @@ using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::InSequence;
 using ::testing::Return;
+using ::testing::AllOf;
+using ::testing::Gt;
+using ::testing::Lt;
 
 class MockStepGen : public StepGen
 {
@@ -37,6 +40,7 @@ class MockAxisCtrl : public AxisCtrl
    MOCK_METHOD(MoveRequestStatus, MoveToAbsolutPosition, (float pos), (override));
    MOCK_METHOD(MoveRequestStatus, MoveToRelativePosition, (Position pos), (override));
    MOCK_METHOD(void, SetHome, (float pos), (override));
+   MOCK_METHOD(AxisCrtlStatus, GetStatus, (), (override));
 };
 
 class MockLidar
@@ -47,6 +51,21 @@ class MockLidar
     void configure(int){};
     int distance(bool = true){return 0;};
 };
+
+static void ExpectedMoveToPos(MockAxisCtrl& axisCtrl, float pos, float tol = 0.1)
+{
+    EXPECT_CALL(axisCtrl, MoveToAbsolutPosition(AllOf(Gt(pos-tol),Lt(pos+tol)))).Times(1).WillOnce(Return(kOk));
+}
+
+TEST(ScannerCtrlTestSuite, test_init)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
+
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeNotHomed);
+}
 
 TEST(ScannerCtrlTestSuite, test_update_mode_inactive)
 {
@@ -60,164 +79,386 @@ TEST(ScannerCtrlTestSuite, test_update_mode_inactive)
     scannerCtrl.Update();
 }
 
-TEST(ScannerCtrlTestSuite, test_update_mode_test)
+TEST(ScannerCtrlTestSuite, test_homing)
 {
     MockStepGen mockStepGen;
     MockAxisCtrl mockAxisCtrl(mockStepGen);
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
 
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
-    EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(kModeTest);
-
-    for (int i = 0; i < 36; i++)
-    {
-        InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*9.9f));
-        //EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition((i+1)*9.90f)).Times(1);
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
-        scannerCtrl.Update();
-    }
-
-    // last itteration
-    {
-        InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(356.4f)); // 36*9.9
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
-        scannerCtrl.Update();
-    }
-
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
-    scannerCtrl.Update();
+    scannerCtrl.SetMode(kModeNotHomed);
+    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1);
+    EXPECT_CALL(mockAxisCtrl, SetHome(0.0f)).Times(1);
+    scannerCtrl.SetVerticalHomePosition();
     ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
-TEST(ScannerCtrlTestSuite, test_set_end_pos)
+TEST(ScannerCtrlTestSuite, test_basic_scanning)
 {
     MockStepGen mockStepGen;
-    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
-    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+    int j;
+    int i;
+    int vertical_iterations = (int)((kDefaultVerticalEndPosition-kDefaultVerticalStartPosition)/kVerticalIncrement);
+    int horizontal_iterations = (int)(kDefaultHorizontalEndPosition/kHorizontalIncrement);
 
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
-    scannerCtrl.SetHorizontalEndPosition();
-
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(100.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(100.0)).Times(1);
-    EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(kModeTest);
-
-    for (int i = 0; i < 10; i++)
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(kDefaultVerticalStartPosition)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    for(j = 0; j < vertical_iterations; j++)
     {
-        InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*9.9f));
-        //EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition((i+1)*10.0f)).Times(1);
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
-        scannerCtrl.Update();
+        // one horizontal rev...
+        for (i = 0; i < horizontal_iterations - 1; i++)
+        {
+            InSequence seq;
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+            EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+            // from scan()
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+            EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+            //////////////
+
+            ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
+            scannerCtrl.Update();
+        }
+        //last iteration
+        {
+            InSequence seq;
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+            EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+            // from scan
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+            EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+            ////////////
+
+            // this is not needed for the absolut last iteration
+            if (j != vertical_iterations - 1)
+            {
+                ExpectedMoveToPos(mockVerticalAxisCtrl, kDefaultVerticalStartPosition+(j+1)*kVerticalIncrement);
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+                EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+                EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
+            }
+            scannerCtrl.Update();
+        }
     }
 
-    // last itteration
-    {
-        InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(99.0f));
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
-        scannerCtrl.Update();
-    }
-
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
-    scannerCtrl.Update();
     ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
-// test start pos and end pos are absolute positions, not relative to eachother
-TEST(ScannerCtrlTestSuite, test_set_start_pos)
+TEST(ScannerCtrlTestSuite, test_scanning_set_horizontal_start_pos)
 {
     MockStepGen mockStepGen;
-    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
-    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
 
-    // set end pos
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(99.0f));
-    scannerCtrl.SetHorizontalEndPosition();
-
-    // set start pos
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
+    int i;
+    int horizontal_iterations = (int)((kDefaultHorizontalEndPosition - 30.0f)/kHorizontalIncrement);
+  
+    // precondition - set a new start pos at current pos 30
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.SetHorizontalStartPosition();
 
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
-    EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(kModeTest);
-
-    for (int i = 0; i < 6; i++)
+    // start test
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(kDefaultVerticalStartPosition)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    // one horizontal rev...
+    for (i = 0; i < horizontal_iterations; i++)
     {
         InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*9.9f));
-        //EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition((i+1)*9.9f)).Times(1);
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan()
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        //////////////
+
+        ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
+        scannerCtrl.Update();
+    }
+    //last iteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        ////////////
+
+        ExpectedMoveToPos(mockVerticalAxisCtrl, kDefaultVerticalStartPosition + kVerticalIncrement);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
         scannerCtrl.Update();
     }
 
-    // last itteration
-    {
-        InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(59.4f));
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
-        scannerCtrl.Update();
-    }
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
-    scannerCtrl.Update();
-    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeScanning);
 }
 
-// test start pos and end pos are absolute positions, not relative to eachother
-TEST(ScannerCtrlTestSuite, test_get_position_fmod_360)
+TEST(ScannerCtrlTestSuite, test_scanning_set_horizontal_end_pos)
 {
     MockStepGen mockStepGen;
-    MockAxisCtrl mockAxisCtrl(mockStepGen);
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
-    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockAxisCtrl, mockAxisCtrl);
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
 
-    // set end pos
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+99.0f));
+    int i;
+    int horizontal_iterations = (int)((90.0f)/kHorizontalIncrement);
+  
+    // precondition - set a new end pos
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(90.0f));
     scannerCtrl.SetHorizontalEndPosition();
 
-    // set start pos
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(kDefaultVerticalStartPosition)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    // one horizontal rev...
+    for (i = 0; i < horizontal_iterations; i++)
+    {
+        InSequence seq;
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan()
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        //////////////
+
+        ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
+        scannerCtrl.Update();
+    }
+    //last iteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        ////////////
+
+        ExpectedMoveToPos(mockVerticalAxisCtrl, kDefaultVerticalStartPosition + kVerticalIncrement);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
+        scannerCtrl.Update();
+    }
+
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeScanning);
+}
+
+//negative start, then the end pos will remain as 
+TEST(ScannerCtrlTestSuite, test_horizontal_negative_start_pos)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+
+    int i;
+    int horizontal_iterations = (int)(kDefaultHorizontalEndPosition/kHorizontalIncrement);
+  
+    // precondition - set a new start pos at current pos -30
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(-30.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
     scannerCtrl.SetHorizontalStartPosition();
 
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f+30.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(30.0)).Times(1);
-    EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1);
-    scannerCtrl.SetMode(kModeTest);
-
-    for (int i = 0; i < 6; i++)
+    // start test
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(kDefaultVerticalStartPosition)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    // one horizontal rev...
+    for (i = 0; i < horizontal_iterations-1; i++)
     {
         InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(i*9.9f));
-        //EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition((i+1)*9.9f)).Times(1);
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan()
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        //////////////
+
+        ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
+        scannerCtrl.Update();
+    }
+    //last iteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        ////////////
+
+        ExpectedMoveToPos(mockVerticalAxisCtrl, kDefaultVerticalStartPosition + kVerticalIncrement);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
         scannerCtrl.Update();
     }
 
-    // last itteration
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeScanning);
+}
+
+TEST(ScannerCtrlTestSuite, test_horizontal_negative_end_pos)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+
+    int i;
+    int horizontal_iterations = (int)((330.0f)/kHorizontalIncrement);
+  
+    // precondition - set a new end pos
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(-30.0f)); // should be interpreted as 330
+    scannerCtrl.SetHorizontalEndPosition();
+
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(kDefaultVerticalStartPosition)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    // one horizontal rev...
+    for (i = 0; i < horizontal_iterations; i++)
     {
         InSequence seq;
-        EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(59.4f));
-        EXPECT_CALL(mockAxisCtrl, MoveToAbsolutPosition(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan()
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        //////////////
+
+        ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
         scannerCtrl.Update();
     }
-    EXPECT_CALL(mockAxisCtrl, GetPosition()).Times(1).WillOnce(Return(360.0f));
-    EXPECT_CALL(mockAxisCtrl, SetHome(0.0)).Times(1);
-    scannerCtrl.Update();
+    //last iteration
+    {
+        InSequence seq;
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+        EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+        // from scan
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+        ////////////
+
+        ExpectedMoveToPos(mockVerticalAxisCtrl, kDefaultVerticalStartPosition + kVerticalIncrement);
+        EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+        EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
+        scannerCtrl.Update();
+    }
+
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeScanning);
+}
+
+TEST(ScannerCtrlTestSuite, test_vertical_limits)
+{
+    MockStepGen mockStepGen;
+    MockAxisCtrl mockHorizontalAxisCtrl(mockStepGen);
+    MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
+    MockLidar mockLidar;
+    ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+    int j;
+    int i;
+    int vertical_iterations = (int)((20.0f)/kVerticalIncrement);
+    int horizontal_iterations = (int)((10.0f)/kHorizontalIncrement);
+  
+    // prepare - smaller horizontal range to speed things up
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(10.0f));
+    scannerCtrl.SetHorizontalEndPosition();
+
+    // precondition - set a new vertical start/end pos
+    EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(15.0f));
+    scannerCtrl.SetVerticalEndPosition();
+    EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(-5.0f));
+    scannerCtrl.SetVerticalStartPosition();
+
+    EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(0.0f));
+    EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
+    EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
+    EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(-5.0f)).Times(1);
+    scannerCtrl.SetMode(kModeScanning);
+    
+    for(j = 0; j <= vertical_iterations; j++)
+    {
+        // one horizontal rev...
+        for (i = 0; i < horizontal_iterations; i++)
+        {
+            InSequence seq;
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+            EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+            // from scan()
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+            EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+            //////////////
+
+            ExpectedMoveToPos(mockHorizontalAxisCtrl, (i+1)*kHorizontalIncrement);
+            scannerCtrl.Update();
+        }
+        //last iteration
+        {
+            InSequence seq;
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+            EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+            // from scan
+            EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+            EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+            ////////////
+
+            // this is not needed for the absolut last iteration
+            if (j != vertical_iterations)
+            {
+                ExpectedMoveToPos(mockVerticalAxisCtrl, -5.0f+(j+1)*kVerticalIncrement);
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+                EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(_)).Times(1);
+                EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
+            }
+            else
+            {
+                int apa = 0;
+            }
+            scannerCtrl.Update();
+        }
+    }
+
     ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
