@@ -27,6 +27,17 @@ Position AxisCtrl::GetPosition()
 
 MoveRequestStatus AxisCtrl::MoveToRelativePosition(Position pos)
 {
+    return MoveRequest(pos);
+}
+
+MoveRequestStatus AxisCtrl::MoveToAbsolutPosition(Position pos)
+{
+    float delta = pos - position_;
+    return MoveRequest(delta);
+}
+
+MoveRequestStatus AxisCtrl::MoveRequest(float pos)
+{
     MoveRequestStatus retVal = kOk;
     
     if (!stepGen_.IsBusy())
@@ -55,39 +66,6 @@ MoveRequestStatus AxisCtrl::MoveToRelativePosition(Position pos)
     return retVal;
 }
 
-MoveRequestStatus AxisCtrl::MoveToAbsolutPosition(Position pos)
-{
-    MoveRequestStatus retVal = kOk;
-
-    if (!stepGen_.IsBusy())
-    {
-        float delta = pos - position_;
-
-        // calculate number of steps to request, unsigned...
-        unsigned int steps = abs(delta)*scale_ + 0.5f;
-        if (steps >= 1)
-        {
-            if (steps >= 20)
-            {
-                stepGen_.SetUseRamping(true);
-            }
-            else
-            {
-                stepGen_.SetUseRamping(false);
-            }
-
-            stepGen_.SetDirection(delta > 0 ? direction_forward : direction_reverse);
-            stepGen_.Step(steps);
-        }
-    }
-    else
-    {
-        retVal = kNotOk;
-    }
-
-    return retVal;
-}
-
 // will set current position to <offset>, i.e. new home will be <offset> away from current pos
 void AxisCtrl::SetHome(float offset)
 {
@@ -102,4 +80,28 @@ AxisCrtlStatus AxisCtrl::GetStatus()
 void AxisCtrl::Update()
 {
     position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
+}
+
+RotaryAxisCtrl::RotaryAxisCtrl(StepGen& s, float scale) : AxisCtrl(s, scale) {}
+
+RotaryAxisCtrl::~RotaryAxisCtrl()
+{}
+
+// will set current position to <offset>, i.e. new home will be <offset> away from current pos
+void RotaryAxisCtrl::SetHome(float offset)
+{
+    position_ = fmod(offset, kDegreesPerRev);
+}
+
+void RotaryAxisCtrl::Update()
+{
+    position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
+    position_ = fmod(position_, kDegreesPerRev);
+}
+
+// for rotary axis, absolut moves will take the shortest way to target pas
+MoveRequestStatus RotaryAxisCtrl::MoveToAbsolutPosition(Position pos)
+{
+    float delta = pos - position_;
+    return MoveRequest(delta);
 }

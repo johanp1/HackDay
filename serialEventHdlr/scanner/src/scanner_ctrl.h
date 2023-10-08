@@ -6,8 +6,6 @@
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
 
-constexpr float kDegreesPerRev = 360;
-
 constexpr float kHorizontalIncrement = 0.45f;
 constexpr float kVerticalIncrement = 0.45f;
 
@@ -93,7 +91,6 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
 template <class Lidar>
 void ScannerCtrl<Lidar>::Update()
 {
-  static int apa;
   if (mode_ == kModeScanning)
   {
     if ((horizontalAxisCtrl_.GetStatus() == kIdle) && (verticalAxisCtrl_.GetStatus() == kIdle))
@@ -112,7 +109,7 @@ void ScannerCtrl<Lidar>::Update()
       }
       else
       {
-        if (vertical_target_position_ + kVerticalIncrement<= vertical_end_position_)
+        if (vertical_target_position_ + kVerticalIncrement <= vertical_end_position_)
         {
           if (verticalAxisCtrl_.MoveToAbsolutPosition(vertical_target_position_ + kVerticalIncrement) == kOk)
           {
@@ -120,11 +117,11 @@ void ScannerCtrl<Lidar>::Update()
 
             // the move was possible, save it as new target
             vertical_target_position_ += kVerticalIncrement;
-            //cout << apa++ << " " << vertical_target_position_ << " " << vertical_end_position_ << endl;
+          
             // reset horizontal position. hpos should always be <= 360
             horizontalAxisCtrl_.SetHome(h_pos - kDegreesPerRev);
-            horizontalAxisCtrl_.MoveToAbsolutPosition(0.0f);
-            horizontal_target_position_ = 0.0f;
+            horizontalAxisCtrl_.MoveToAbsolutPosition(kDefaultHorizontalStartPosition);
+            horizontal_target_position_ = kDefaultHorizontalStartPosition;
           }
         }
         else
