@@ -71,9 +71,8 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
   if ((m == kModeScanning) && (m != mode_))
   {
     // if current position passed 360, reset to current pos modulo 360
-    float h_pos = fmod(horizontalAxisCtrl_.GetPosition(), kDegreesPerRev);
-    horizontalAxisCtrl_.SetHome(h_pos);
-    
+    float h_pos = horizontalAxisCtrl_.GetPosition();
+  
     horizontal_target_position_ = horizontal_start_position_;
     vertical_target_position_ = vertical_start_position_;
 
@@ -120,7 +119,7 @@ void ScannerCtrl<Lidar>::Update()
             vertical_target_position_ += kVerticalIncrement;
           
             // reset horizontal position. hpos should always be <= 360
-            horizontalAxisCtrl_.SetHome(h_pos - kDegreesPerRev);
+            //horizontalAxisCtrl_.SetHome(h_pos - kDegreesPerRev);
             horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_start_position_);
             horizontal_target_position_ = horizontal_start_position_;
           }
@@ -138,7 +137,7 @@ void ScannerCtrl<Lidar>::Update()
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetHorizontalStartPosition()
 {
-  auto pos = fmod(horizontalAxisCtrl_.GetPosition(), kDegreesPerRev);
+  auto pos = horizontalAxisCtrl_.GetPosition();
 
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
   horizontal_end_position_ -= pos;
@@ -155,7 +154,7 @@ void ScannerCtrl<Lidar>::SetHorizontalStartPosition()
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetHorizontalEndPosition()
 {
-  auto pos = fmod(horizontalAxisCtrl_.GetPosition(), kDegreesPerRev);
+  auto pos = horizontalAxisCtrl_.GetPosition();
 
   if (pos < 0)
   {
@@ -181,7 +180,7 @@ void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalEndPosition()
 {
-  float pos = fmod(verticalAxisCtrl_.GetPosition(), kDegreesPerRev);
+  float pos = verticalAxisCtrl_.GetPosition();
 
   if (pos > vertical_start_position_)
   {
