@@ -99,9 +99,17 @@ void RotaryAxisCtrl::Update()
     position_ = fmod(position_, kDegreesPerRev);
 }
 
-// for rotary axis, absolut moves will take the shortest way to target pas
+// for rotary axis, absolut moves will take the shortest way to target pos
 MoveRequestStatus RotaryAxisCtrl::MoveToAbsolutPosition(Position pos)
 {
-    float delta = pos - position_;
-    return MoveRequest(delta);
+    pos = fmod(pos, kDegreesPerRev);
+
+    // if doing clock-wise move, cc_delta is the distance.
+    // the counter-clock-wise move distance is 360-cc_delta
+    float delta_distance = pos - position_; // positve values is counter clock-wise moves
+    float cc_distance = delta_distance >= 0 ? delta_distance : (kDegreesPerRev + delta_distance);
+    float ccw_distance = (kDegreesPerRev - cc_distance);
+    float move_req = cc_distance <= ccw_distance ? cc_distance : -ccw_distance;
+    
+    return MoveRequest(move_req);
 }

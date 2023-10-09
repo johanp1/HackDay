@@ -44,6 +44,7 @@ class ScannerCtrl
   float horizontal_target_position_ = kDefaultHorizontalStartPosition;
   float vertical_target_position_ = kDefaultVerticalStartPosition;
   float horizontal_end_position_ = kDefaultHorizontalEndPosition;
+  float horizontal_start_position_ = kDefaultHorizontalStartPosition;
   float vertical_end_position_ = kDefaultVerticalEndPosition;
   float vertical_start_position_ = kDefaultVerticalStartPosition;
 
@@ -73,7 +74,7 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
     float h_pos = fmod(horizontalAxisCtrl_.GetPosition(), kDegreesPerRev);
     horizontalAxisCtrl_.SetHome(h_pos);
     
-    horizontal_target_position_ = kDefaultHorizontalStartPosition;
+    horizontal_target_position_ = horizontal_start_position_;
     vertical_target_position_ = vertical_start_position_;
 
     horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
@@ -120,8 +121,8 @@ void ScannerCtrl<Lidar>::Update()
           
             // reset horizontal position. hpos should always be <= 360
             horizontalAxisCtrl_.SetHome(h_pos - kDegreesPerRev);
-            horizontalAxisCtrl_.MoveToAbsolutPosition(kDefaultHorizontalStartPosition);
-            horizontal_target_position_ = kDefaultHorizontalStartPosition;
+            horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_start_position_);
+            horizontal_target_position_ = horizontal_start_position_;
           }
         }
         else

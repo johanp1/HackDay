@@ -232,15 +232,15 @@ TEST(AxisCtrlTestGroup, test_set_abs_pos_rotary)
    MockStepGen stepGen;
    RotaryAxisCtrl rotaryAxisCtrl(stepGen, 1);
 
-   
    EXPECT_CALL(stepGen, IsBusy());
    EXPECT_CALL(stepGen, SetDirection(direction_forward));
-   EXPECT_CALL(stepGen, Step(400));
+   EXPECT_CALL(stepGen, Step(40));
    
+   // test that actual move to abs pos is "fmod(request)" = 40 steps in this case
    ASSERT_TRUE(rotaryAxisCtrl.MoveToAbsolutPosition(400) == kOk);
 
    // rotate forward
-   for (int i = 1 ; i < 360; i++)
+   for (int i = 1 ; i <= 40; i++)
    {
       InSequence seq;
       EXPECT_CALL(stepGen, GetDirection()).WillOnce(Return(direction_forward));
@@ -248,19 +248,12 @@ TEST(AxisCtrlTestGroup, test_set_abs_pos_rotary)
       //std::cout << i << std::endl;
       ASSERT_TRUE(rotaryAxisCtrl.GetPosition() == i);
    }
-   for (int i = 0 ; i <= 40; i++)
-   {
-      InSequence seq;
-      EXPECT_CALL(stepGen, GetDirection()).WillOnce(Return(direction_forward));
-      rotaryAxisCtrl.Update();
-      //std::cout << i << std::endl;
-      ASSERT_TRUE(rotaryAxisCtrl.GetPosition() == i);
-   }
-
+   
    EXPECT_CALL(stepGen, IsBusy());
    EXPECT_CALL(stepGen, SetDirection(direction_reverse));
    EXPECT_CALL(stepGen, Step(50));
    
+   // check reverse direction move request
    ASSERT_TRUE(rotaryAxisCtrl.MoveToAbsolutPosition(-10) == kOk);
 
    // rotate reverse
@@ -272,6 +265,30 @@ TEST(AxisCtrlTestGroup, test_set_abs_pos_rotary)
       //std::cout << i << std::endl;
       ASSERT_TRUE(rotaryAxisCtrl.GetPosition() == i);
    }
+}
+
+TEST(AxisCtrlTestGroup, test_set_abs_pos_rotary_shortest_path)
+{
+   MockStepGen stepGen;
+   RotaryAxisCtrl rotaryAxisCtrl(stepGen, 1);
+
+   rotaryAxisCtrl.SetHome(350);
+   EXPECT_CALL(stepGen, IsBusy());
+   EXPECT_CALL(stepGen, SetDirection(direction_forward));
+   EXPECT_CALL(stepGen, Step(10));
+   ASSERT_TRUE(rotaryAxisCtrl.MoveToAbsolutPosition(0) == kOk);
+
+   rotaryAxisCtrl.SetHome(350);
+   EXPECT_CALL(stepGen, IsBusy());
+   EXPECT_CALL(stepGen, SetDirection(direction_reverse));
+   EXPECT_CALL(stepGen, Step(1));
+   ASSERT_TRUE(rotaryAxisCtrl.MoveToAbsolutPosition(-11) == kOk);
+
+   rotaryAxisCtrl.SetHome(-20);
+   EXPECT_CALL(stepGen, IsBusy());
+   EXPECT_CALL(stepGen, SetDirection(direction_forward));
+   EXPECT_CALL(stepGen, Step(30));
+   ASSERT_TRUE(rotaryAxisCtrl.MoveToAbsolutPosition(10) == kOk);
 }
 
 TEST(AxisCtrlTestGroup, test_set_abs_pos_scaled_rotary)
