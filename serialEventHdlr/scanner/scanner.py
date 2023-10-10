@@ -21,7 +21,7 @@ class Comms(threading.Thread):
     def __init__(self, msg_handler):
         threading.Thread.__init__(self)
         self.serial = serial.Serial()
-        self.serial.baudrate = 9600
+        self.serial.baudrate = 57600
         self.serial.parity = 'N'
         self.serial.bytesize = 8
         self.serial.stopbits = 1
@@ -360,7 +360,7 @@ class OutputFileHandler:
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist + '\n')
+            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist)
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.SCANNING:
@@ -377,7 +377,7 @@ class OutputFileHandler:
                 duration = stop_time - self._start_time
 
                 self.f_log.write('#scanning done ' + date_string + '\n')
-                self.f_log.write(self.strfdelta(duration, '#scanning took {minutes} minutes, {seconds} seconds'))
+                self.f_log.write(self.strfdelta(duration, '#scanning took {minutes} minutes, {seconds} seconds') + '\n')
                 self.f_log.close()
 
     def strfdelta(self, tdelta, fmt):
