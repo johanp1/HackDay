@@ -27,10 +27,11 @@ static void setUnitsPerSecWrapper(String& str, AxisCtrl* axisCtrl);
 static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void getPosWrapper(AxisCtrl* axisCtrl);
+static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true);
-AxisCtrl horizontalAxisCtrl(stepGen1);
+RotaryAxisCtrl horizontalAxisCtrl(stepGen1);
 AxisCtrl verticalAxisCtrl(stepGen2);
 LIDARLite lidar;
 ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
@@ -42,8 +43,8 @@ void setup() {
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
   lidar.configure(0); // Change this number to try out alternate configurations
 
-  EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
-  EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
+  //EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ham"}, axisAbsMoveWrapper, &horizontalAxisCtrl);
@@ -53,6 +54,8 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"set"}, setLimitWrapper, &scannerCtrl);
   EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
+  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
 
   cli();
   timer2Init();
@@ -67,8 +70,8 @@ void setup() {
   Serial.println("scanner::setup()"); // tell server setup is done
 
   receiver.addEventListner(&eventParser);
-  eventParser.AddAcceptedHandler(*step1Handler);
-  eventParser.AddAcceptedHandler(*step2Handler);
+  //eventParser.AddAcceptedHandler(*step1Handler);
+  //eventParser.AddAcceptedHandler(*step2Handler);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*horizontalMoveHomeHandler);
@@ -78,6 +81,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*modeHandler);
   eventParser.AddAcceptedHandler(*setLimitHandler);
   eventParser.AddAcceptedHandler(*verticalGetHandler);
+  eventParser.AddAcceptedHandler(*horizontalGetHandler);
+  eventParser.AddAcceptedHandler(*setRowFirstHandler);
 
   horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
   verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
@@ -85,8 +90,8 @@ void setup() {
 
 void loop() {
   scannerCtrl.Update();  
-  delay(1);
-  //delayMicroseconds(2500); 
+  //delay(1);
+  delayMicroseconds(500); 
 }
 
 static void timer2Init( void )
@@ -174,9 +179,14 @@ static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 
 static void getPosWrapper(AxisCtrl* axisCtrl)
 {
-  String sendStr{"vpos_"};
+  String sendStr{"pos_"};
   sendStr.concat(axisCtrl->GetPosition());
   cli();  // serial.send seems to be upset by interrupts...
   Serial.println(sendStr);
   sei();
+}
+
+static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
+{
+  ctrl->SetRowFirst(str.toInt() > 0 ? true : false);
 }
