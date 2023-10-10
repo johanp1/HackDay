@@ -159,6 +159,9 @@ class Controller:
     def set_vertical_jog_increment(self, inc):
         self._model.set_vertical_jog_increment(inc)
 
+    def set_test(self):
+        self._comm_hdlr.write_message('rf_0')
+
     def update(self):
         pass
 
@@ -301,7 +304,7 @@ class View:
         self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
         self.btn_start.config(state="disable")
 
-        self.btn_test = tk.Button(master=ctrl_frame, text="test", padx=5, pady=5, command=self._controller.vertical_home)
+        self.btn_test = tk.Button(master=ctrl_frame, text="test", padx=5, pady=5, command=self._controller.set_test)
         self.btn_test.grid(row=1, column=0, padx=5, pady=5, sticky="n")
 
         # config frame content

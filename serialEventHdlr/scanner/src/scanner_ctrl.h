@@ -3,7 +3,6 @@
 
 #include "axis_ctrl.h"
 #include "Arduino.h"
-#include <iostream>
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
 

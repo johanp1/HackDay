@@ -1,12 +1,14 @@
-testfall för "scan" i scanner_ctrl
-ta bort test-mode och done, och test-knappen
-"set vertical 0"-event eller spara offset i clienten...
-disable startknapp innan "set vertical 0"-event - lägg till unhomed-state i scanner_ctrl
+fixa tillbaka "ramping" i axel_ctrl.c::MoveRequest ev. bara för horizontalAxisCtrl
+row_first av/på från scanner.py
+combobox för increment
 
-REDO FÖR TEST använda busy/moving/idle i scanner crtl istället för isAtTarget
-REDO FÖR TEST variabel jog...
-REDO FÖR TEST testa av set-limit... start stopp etc
-
+KLAR testfall för "scan" i scanner_ctrl
+KLAR ta bort test-mode och done, och test-knappen
+KLAR "set vertical 0"-event
+KLAR disable startknapp innan "set vertical 0"-event - lägg till unhomed-state i scanner_ctrl
+KLAR använda busy/moving/idle i scanner crtl istället för isAtTarget
+KLAR variabel jog...
+KLAR testa av set-limit... start stopp etc
 KLAR scan2cloud spegelvänder horizontalplanet
 KLAR stepGen-test har default 1us upplösning i checkStep, ändra till något rimligt
 KLAR stepGen::n och delta_t som argument till stepgen-konstruktorn...

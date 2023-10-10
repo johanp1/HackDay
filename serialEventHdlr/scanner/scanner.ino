@@ -90,8 +90,8 @@ void setup() {
 
 void loop() {
   scannerCtrl.Update();  
-  delay(1);
-  //delayMicroseconds(2500); 
+  //delay(1);
+  delayMicroseconds(500); 
 }
 
 static void timer2Init( void )
