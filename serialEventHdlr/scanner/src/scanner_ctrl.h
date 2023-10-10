@@ -3,6 +3,7 @@
 
 #include "axis_ctrl.h"
 #include "Arduino.h"
+#include <iostream>
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
 
@@ -67,8 +68,8 @@ class ScannerCtrl
   AxisCtrl& verticalAxisCtrl_;
   AxisCtrl& horizontalAxisCtrl_;
 
-  AxisCtrl const* majorAxisCtrl_;
-  AxisCtrl const* minorAxisCtrl_;
+  AxisCtrl* majorAxisCtrl_;
+  AxisCtrl* minorAxisCtrl_;
   AxisConfig majorAxisConfig_;
   AxisConfig minorAxisConfig_;
 };
@@ -144,7 +145,7 @@ void ScannerCtrl<Lidar>::Update()
       
       // set next target, if increment makes us pass the end-pos let's consider this rev done
       auto next_major_target = NextTargetPos(majorAxisConfig_);
-      if (next_major_target <= majorAxisConfig_.end_position_)
+      if (next_major_target <= majorAxisConfig_.end_position)
       {
         if (majorAxisCtrl_->MoveToAbsolutPosition(next_major_target) == kOk)
         {
