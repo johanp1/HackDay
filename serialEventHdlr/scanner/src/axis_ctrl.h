@@ -37,7 +37,7 @@ class AxisCtrl : public StepObserver
 class RotaryAxisCtrl : public AxisCtrl
 {
    public:
-   RotaryAxisCtrl(StepGen& s, float scale);
+   RotaryAxisCtrl(StepGen& s, float scale = 1.0f);
    ~RotaryAxisCtrl();
    
    MoveRequestStatus MoveToAbsolutPosition(Position pos) override;

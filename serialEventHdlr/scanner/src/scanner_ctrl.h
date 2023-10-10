@@ -9,13 +9,21 @@ enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
 constexpr float kHorizontalIncrement = 0.45f;
 constexpr float kVerticalIncrement = 0.45f;
 
-constexpr float kDefaultHorizontalStartPosition = 0.0f;
-constexpr float kDefaultVerticalStartPosition = -45.0f;
+constexpr Position kDefaultHorizontalStartPosition = 0.0f;
+constexpr Position kDefaultVerticalStartPosition = -45.0f;
 
-constexpr float kDefaultHorizontalEndPosition = 360.0f - kHorizontalIncrement;
-constexpr float kDefaultVerticalEndPosition = 45.0f;
+constexpr Position kDefaultHorizontalEndPosition = 360.0f - kHorizontalIncrement;
+constexpr Position kDefaultVerticalEndPosition = 45.0f;
 
 constexpr int kLidarBiasCorrectionInterval = 100;
+
+struct AxisConfig
+{
+  Position target_position;
+  Position end_position;
+  Position start_position;
+  float increment;
+};
 
 template <class Lidar>
 class ScannerCtrl
@@ -35,24 +43,34 @@ class ScannerCtrl
   void SetVerticalStartPosition();
   void SetVerticalEndPosition();
   void SetVerticalHomePosition();
-  
+  void SetRowFirst(bool rf);
+
   private:
   bool IsAtTargetPos(float actual, float expected, float tol = 0.2f);
   void Scan();
+  Position NextTargetPos(AxisConfig& config);
+  
 
   Mode mode_ = kModeNotHomed;
-  float horizontal_target_position_ = kDefaultHorizontalStartPosition;
-  float vertical_target_position_ = kDefaultVerticalStartPosition;
-  float horizontal_end_position_ = kDefaultHorizontalEndPosition;
-  float horizontal_start_position_ = kDefaultHorizontalStartPosition;
-  float vertical_end_position_ = kDefaultVerticalEndPosition;
-  float vertical_start_position_ = kDefaultVerticalStartPosition;
+
+  Position horizontal_end_position_ = kDefaultHorizontalEndPosition;
+  Position horizontal_start_position_ = kDefaultHorizontalStartPosition;
+  Position vertical_end_position_ = kDefaultVerticalEndPosition;
+  Position vertical_start_position_ = kDefaultVerticalStartPosition;
+
+  bool row_first_ = true; // scanning row first then increment vertical axis
+                          // if false, obviously, scanning will first move along vertical limits, then increment horizontally
 
   int lidar_bias_correction_counter_ = 0;
 
   Lidar& lidar_;
   AxisCtrl& verticalAxisCtrl_;
   AxisCtrl& horizontalAxisCtrl_;
+
+  AxisCtrl const* majorAxisCtrl_;
+  AxisCtrl const* minorAxisCtrl_;
+  AxisConfig majorAxisConfig_;
+  AxisConfig minorAxisConfig_;
 };
 
 template <class Lidar>
@@ -70,14 +88,40 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
 
   if ((m == kModeScanning) && (m != mode_))
   {
-    // if current position passed 360, reset to current pos modulo 360
-    float h_pos = horizontalAxisCtrl_.GetPosition();
-  
-    horizontal_target_position_ = horizontal_start_position_;
-    vertical_target_position_ = vertical_start_position_;
 
-    horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_);
-    verticalAxisCtrl_.MoveToAbsolutPosition(vertical_target_position_);
+    if (row_first_)
+    {  // scan along horizontal axis first, then increment vertical axis
+      majorAxisCtrl_ = &horizontalAxisCtrl_;
+      minorAxisCtrl_ = &verticalAxisCtrl_;
+
+      majorAxisConfig_.start_position = horizontal_start_position_;
+      majorAxisConfig_.end_position = horizontal_end_position_;
+      majorAxisConfig_.target_position = horizontal_start_position_;
+      majorAxisConfig_.increment = kHorizontalIncrement;
+
+      minorAxisConfig_.start_position = vertical_start_position_;
+      minorAxisConfig_.end_position = vertical_end_position_;
+      minorAxisConfig_.target_position = vertical_start_position_;
+      minorAxisConfig_.increment = kVerticalIncrement;
+    }
+    else
+    {   // scan along vertical axis first, then increment horizontal axis
+      majorAxisCtrl_ = &verticalAxisCtrl_;
+      minorAxisCtrl_ = &horizontalAxisCtrl_;
+
+      majorAxisConfig_.start_position = vertical_start_position_;
+      majorAxisConfig_.end_position = vertical_end_position_;
+      majorAxisConfig_.target_position = vertical_start_position_;
+      majorAxisConfig_.increment = kVerticalIncrement;
+
+      minorAxisConfig_.start_position = horizontal_start_position_;
+      minorAxisConfig_.end_position = horizontal_end_position_;
+      minorAxisConfig_.target_position = horizontal_start_position_;
+      minorAxisConfig_.increment = kHorizontalIncrement;
+    }
+
+    majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
+    minorAxisCtrl_->MoveToAbsolutPosition(minorAxisConfig_.target_position);
 
     mode_ = kModeScanning;
   }
@@ -99,29 +143,28 @@ void ScannerCtrl<Lidar>::Update()
       Scan();
       
       // set next target, if increment makes us pass the end-pos let's consider this rev done
-      if (horizontal_target_position_ + kHorizontalIncrement <= horizontal_end_position_)
+      auto next_major_target = NextTargetPos(majorAxisConfig_);
+      if (next_major_target <= majorAxisConfig_.end_position_)
       {
-        if (horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_target_position_ + kHorizontalIncrement) == kOk)
+        if (majorAxisCtrl_->MoveToAbsolutPosition(next_major_target) == kOk)
         {
           // the move was possible, save it as new target
-          horizontal_target_position_ += kHorizontalIncrement;
+          majorAxisConfig_.target_position = next_major_target;
         }
       }
       else
       {
-        if (vertical_target_position_ + kVerticalIncrement <= vertical_end_position_)
+        auto next_minor_target = NextTargetPos(minorAxisConfig_);
+        if (next_minor_target <= minorAxisConfig_.end_position)
         {
-          if (verticalAxisCtrl_.MoveToAbsolutPosition(vertical_target_position_ + kVerticalIncrement) == kOk)
+          if (minorAxisCtrl_->MoveToAbsolutPosition(next_minor_target) == kOk)
           {
-            float h_pos = horizontalAxisCtrl_.GetPosition();
-
             // the move was possible, save it as new target
-            vertical_target_position_ += kVerticalIncrement;
+            minorAxisConfig_.target_position = next_minor_target;
           
-            // reset horizontal position. hpos should always be <= 360
-            //horizontalAxisCtrl_.SetHome(h_pos - kDegreesPerRev);
-            horizontalAxisCtrl_.MoveToAbsolutPosition(horizontal_start_position_);
-            horizontal_target_position_ = horizontal_start_position_;
+            // go to major axis start pos
+            majorAxisConfig_.target_position = majorAxisConfig_.start_position;
+            majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
           }
         }
         else
@@ -180,7 +223,7 @@ void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalEndPosition()
 {
-  float pos = verticalAxisCtrl_.GetPosition();
+  auto pos = verticalAxisCtrl_.GetPosition();
 
   if (pos > vertical_start_position_)
   {
@@ -207,6 +250,13 @@ void ScannerCtrl<Lidar>::SetVerticalHomePosition()
   verticalAxisCtrl_.SetHome(0.0f);
   SetMode(kModeInactive);
 };
+
+
+template <class Lidar>
+void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
+{
+  row_first_ = rf;
+}
 
 template <class Lidar>
 bool ScannerCtrl<Lidar>::IsAtTargetPos(float actual, float expected, float tol)
@@ -239,5 +289,11 @@ void ScannerCtrl<Lidar>::Scan()
   Serial.println(sendStr);
   sei();
 };
+ 
+template <class Lidar>
+Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config)
+{
+  return config.target_position + config.increment;
+}
 
 #endif
