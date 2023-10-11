@@ -227,7 +227,7 @@ class View:
 
         self.current_port = tk.StringVar()
 
-        JOG_INCREMENT = [1, 10]
+        JOG_INCREMENT = [1, 10, 100]
         self._model.set_horizontal_jog_increment(JOG_INCREMENT[1])
         self.current_horizontal_jog_increment = tk.StringVar()
         self.current_horizontal_jog_increment.set(JOG_INCREMENT[1])

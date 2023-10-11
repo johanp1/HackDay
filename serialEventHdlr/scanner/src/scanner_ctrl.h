@@ -6,8 +6,8 @@
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
 
-constexpr float kHorizontalIncrement = 0.45f;
-constexpr float kVerticalIncrement = 0.45f;
+constexpr float kHorizontalIncrement = 0.225f;
+constexpr float kVerticalIncrement = 0.225f;
 
 constexpr Position kDefaultHorizontalStartPosition = 0.0f;
 constexpr Position kDefaultVerticalStartPosition = -45.0f;

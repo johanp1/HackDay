@@ -15,8 +15,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr micro_sec t_on = 500;
-constexpr micro_sec t_off = 500;
+constexpr micro_sec t_on = 250;
+constexpr micro_sec t_off = 250;
 
 static void timer2Init( void );
 
@@ -29,8 +29,8 @@ static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 
-static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off);
-static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true);
+static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
+static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 250, 2);
 RotaryAxisCtrl horizontalAxisCtrl(stepGen1);
 AxisCtrl verticalAxisCtrl(stepGen2);
 LIDARLite lidar;

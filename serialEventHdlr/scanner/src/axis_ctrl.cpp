@@ -45,14 +45,14 @@ MoveRequestStatus AxisCtrl::MoveRequest(float pos)
         unsigned int steps = abs(pos)*scale_ + 0.5f; // remove sign from pos
         if (steps >= 1)
         {
-            /*if (steps >= 20)
+            if (steps >= 20)
             {
                 stepGen_.SetUseRamping(true);
             }
             else
             {
                 stepGen_.SetUseRamping(false);
-            }*/
+            }
 
             stepGen_.SetDirection(pos > 0 ? direction_forward : direction_reverse);
             stepGen_.Step(steps);
