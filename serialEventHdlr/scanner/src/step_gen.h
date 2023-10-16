@@ -39,7 +39,7 @@ class StepGen
    void StartNextStep(); // start one step
    void TransitionTo(State *state);
    micro_sec CalcRampTimeOffset(); // calculate t_off_ramp_
-   unsigned int CalcNbrOfRampSteps(); // calculate how many ramping up/down steps we can squeez in
+   unsigned int CalcNbrOfRampSteps(unsigned int steps); // calculate how many ramping up/down steps we can squeez in
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
    void UpdateObserver();

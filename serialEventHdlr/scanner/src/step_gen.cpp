@@ -64,7 +64,7 @@ StepRetVal StepGen::Step(unsigned int steps)
       if (use_ramping_)
       {
          t_off_ramp_ = number_of_ramp_steps_ * t_delta_; // initialize the first ramp step's time offset
-         ramp_steps_ = CalcNbrOfRampSteps();
+         ramp_steps_ = CalcNbrOfRampSteps(steps);
       }
       else
       {
@@ -150,15 +150,15 @@ micro_sec StepGen::CalcRampTimeOffset()
    return retVal;
 }
 
-unsigned int StepGen::CalcNbrOfRampSteps()
+unsigned int StepGen::CalcNbrOfRampSteps(unsigned int steps)
 {
    unsigned int retVal;
 
    // can ramping up and down fit in the number of requested steps?
-   if (curr_step_ < 2 * number_of_ramp_steps_)
+   if (steps < 2 * number_of_ramp_steps_)
    {
       // no, ramp upp as far as possible, will not reach max speed, then ramp down
-      retVal = curr_step_ / 2;
+      retVal = steps / 2;
    }
    else
    {

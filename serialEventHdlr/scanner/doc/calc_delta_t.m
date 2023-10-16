@@ -1,10 +1,11 @@
 %function retval = calc_delta_t (input1, input2)
 
 steps_per_rev = 1600; % stegmotorspecifik
-T_min = 2*10^-3 % minsta step-längd
+%T_min = 2*10^-3 % minsta step-längd
+T_min = 1*10^-3 % minsta step-längd
 
 v_max = 1/T_min/steps_per_rev; % (steg/s)/(steg/rev)
-tn = 1; % efter tn [s] vill jag ha v_target (helt påhittad)
+tn = 0.25; % efter tn [s] vill jag ha v_target (helt påhittad)
 
 % dï¿½ blir motorstyrsignalen/pulstï¿½get:
 fprintf("shortest possible step period: %f\n", T_min)

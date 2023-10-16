@@ -15,6 +15,12 @@ class TestComms:
                     self._msg_handler('scan_' + str(h_angle) + '_' + str(v_angle)  + '_' + '100')
             self._msg_handler('mode_1')
 
+        if s == 'rf_1':
+            self._msg_handler('rm_1')
+
+        if s == 'rf_0':
+            self._msg_handler('rm_0')
+
     def get_available_ports(self):    # get available ports
         available_ports = ['COM5', 'COM6']
         return available_ports

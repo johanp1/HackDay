@@ -256,6 +256,10 @@ template <class Lidar>
 void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
 {
   row_first_ = rf;
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.print("rm_");
+  Serial.println(row_first_);
+  sei();
 }
 
 template <class Lidar>

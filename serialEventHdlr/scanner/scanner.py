@@ -15,6 +15,10 @@ class ScannerMode(IntEnum):
     INACTIVE = 1
     SCANNING = 2
 
+class ScanningOrder(IntEnum):
+    ColumnMajor = 0
+    RowMajor = 1
+
 class Comms(threading.Thread):
     """rs232 port"""
 
@@ -159,9 +163,12 @@ class Controller:
     def set_vertical_jog_increment(self, inc):
         self._model.set_vertical_jog_increment(inc)
 
-    def set_test(self):
-        self._comm_hdlr.write_message('rf_0')
-
+    def set_scanning_order_row_major(self):
+        self._comm_hdlr.write_message('rf_' + str(ScanningOrder.RowMajor.value))
+        print('rf_' + str(ScanningOrder.RowMajor.value))
+    def set_scanning_order_column_major(self):
+        self._comm_hdlr.write_message('rf_' + str(ScanningOrder.ColumnMajor.value))
+        print('rf_' + str(ScanningOrder.ColumnMajor.value))
     def update(self):
         pass
 
@@ -171,15 +178,23 @@ class Controller:
             self._model.set_scanner_mode(int(mode))
         except ValueError:
             pass
-        
+
+    def handle_scanning_order_event(self, v):
+        """gets serialized data from event brooker"""
+        try:
+            self._model.set_scanning_order(int(v))
+        except ValueError:
+            pass
         
 class Model:
     def __init__(self, available_ports):
         self._available_ports = available_ports
         self._observers = []
         self._mode = ScannerMode.NOT_HOMED
-        self._file_name = 'apa.txt'
+        self._file_name = 'scan.txt'
         self.horizontal_jog_increment = 0
+        self.vertical_jog_increment = 0
+        self.scanning_order = ScanningOrder.RowMajor
 
     def attatch(self, o):
         self._observers.append(o)
@@ -217,6 +232,14 @@ class Model:
     def set_vertical_jog_increment(self, inc):
         self.vertical_jog_increment = inc
 
+    def set_scanning_order(self, o):
+        if self.scanning_order != o:
+            self.scanning_order = o
+            self.notify()
+
+    def get_scanning_order(self):
+        return self.scanning_order
+
 class View:
     def __init__(self, model, comm_hdlr):
         self._model = model
@@ -227,7 +250,7 @@ class View:
 
         self.current_port = tk.StringVar()
 
-        JOG_INCREMENT = [1, 10, 100]
+        JOG_INCREMENT = [1, 15, 45, 90]
         self._model.set_horizontal_jog_increment(JOG_INCREMENT[1])
         self.current_horizontal_jog_increment = tk.StringVar()
         self.current_horizontal_jog_increment.set(JOG_INCREMENT[1])
@@ -300,12 +323,13 @@ class View:
         btn_set_end.grid(row=4, column=1, padx=5, pady=5, sticky="nw")
 
         # control frame content
-        self.btn_start = tk.Button(master = ctrl_frame, text="Start", padx=5, pady=5, command=self._controller.start)
+        self.btn_start = tk.Button(master = ctrl_frame, padx=5, pady=5)
         self.btn_start.grid(row=0, column=0, padx=5, pady=5, sticky="n")
-        self.btn_start.config(state="disable")
 
-        self.btn_test = tk.Button(master=ctrl_frame, text="test", padx=5, pady=5, command=self._controller.set_test)
+        self.btn_test = tk.Button(master=ctrl_frame, padx=5, pady=5)
         self.btn_test.grid(row=1, column=0, padx=5, pady=5, sticky="n")
+
+        self.update()
 
         # config frame content
         available_ports = model.get_available_ports()
@@ -335,24 +359,30 @@ class View:
         if self._model.get_scanner_mode() == ScannerMode.SCANNING: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
 
+        if self._model.get_scanning_order() == ScanningOrder.RowMajor:
+            self.btn_test.config(text = "Set Col Major", command=self._controller.set_scanning_order_column_major)
+        
+        if self._model.get_scanning_order() == ScanningOrder.ColumnMajor:
+            self.btn_test.config(text = "Set Row Major", command=self._controller.set_scanning_order_row_major)
+
     def start(self):
         self.window.mainloop()
 
 
 class MessageBroker:
-   def __init__(self):
-      self.brokee_dict = {}
+    def __init__(self):
+        self.brokee_dict = {}
 
-   def attach_handler(self, event_name, handler):
-      self.brokee_dict[event_name] = handler
+    def attach_handler(self, event_name, handler):
+        self.brokee_dict[event_name] = handler
 
-   def message_handler(self, message):
+    def message_handler(self, message):
         print(message)
         de_serialized_message = message.split('_')
         event_name = de_serialized_message[0]
         event_data = de_serialized_message[1:]
-        if event_name in self.brokee_dict:  
-            try:          
+        if event_name in self.brokee_dict:
+            try:
                 self.brokee_dict[event_name](*event_data)
             except TypeError:
                 pass
@@ -422,6 +452,7 @@ def main():
     output_file_handler = OutputFileHandler(model)
 
     message_broker.attach_handler('mode', view._controller.handle_mode_event)
+    message_broker.attach_handler('rm', view._controller.handle_scanning_order_event)
     message_broker.attach_handler('scan', output_file_handler.print_scan)
     message_broker.attach_handler('pos', print_pos)
 

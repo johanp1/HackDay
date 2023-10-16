@@ -1,11 +1,13 @@
-T_min = 0.002; % snabbast möjliga periodtid för en puls
+T_min = 0.001; % snabbast möjliga periodtid för en puls
 
+steps_per_rev = 1600; % ratio*microsteps*motorns steg/varv
 % som det är nu, 1600 step/varv, varje varv tar 
-v_max = 500/1600; % [rev/s] alltsÃ¥ 1 varv pÃ¥ 2 sekunder
-tn = 1.0; % tid till v_max
+v_max = 1/T_min/steps_per_rev; % (steg/s)/(steg/rev)
+
+tn = 0.25; % tid till v_max
 a_max = v_max/tn; %max acceleration [rev/s^2] 
 
-t_delta = 1*10^-3;
+t_delta = 0.50*10^-3;
 
 t = [tn];
 
