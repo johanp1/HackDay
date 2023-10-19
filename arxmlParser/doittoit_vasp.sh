@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if python3 create_ports.py --port_arxml=../../comp_vasp/vasp/SW_C/davinci/PortInterfaces.arxml\
-						   --types_arxml=../../comp_vasp/vasp/SW_C/davinci/DataTypes.arxml\
-						   --swc_arxml=../../comp_vasp/vasp/SW_C/davinci/ComponentTypes/DacuVASPApp_Simulink_VASPComponentTypes.arxml\
+if python3 create_ports.py --port_arxml=../../vasp_classic/vasp/SW_C/autosar4/PortInterfaces.arxml\
+						   --types_arxml=../../vasp_classic/vasp/SW_C/autosar4/DataTypes.arxml\
+						   --swc_arxml=../../vasp_classic/vasp/SW_C/autosar4/ComponentTypes/DacuVASPApp_Simulink_VASPComponentTypes.arxml\
 						   --ldc_name=DacuVaspApp\
 						   --ecu=VCM\
 						   --can_db=can/CAN01-T3_2.3.0-postfix.dbc\
@@ -20,9 +20,14 @@ if python3 create_ports.py --port_arxml=../../comp_vasp/vasp/SW_C/davinci/PortIn
 	python3 patcher.py out/DacuVaspApp.xml ../../comp_vasp/Adapt2/Module.xml out/temp.xml
 	python3 patcher.py out/temp.xml arxml/Vcm.xml out/temp2.xml
 
-
-	mv out/temp2.xml out/DacuVaspApp.xml
-	cp out/DacuVaspApp.xml ../../comp_vasp/Adapt2/.
+	#qurky way of adding the xml namespace...
+	echo '<?xml version="1.0" encoding="utf-8"?>' > out/temp3.xml
+	echo '<ModuleConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.volvo.com/gtt/adapt/ModuleConfig">' >> out/temp3.xml
+	cat out/temp2.xml >> out/temp3.xml
+	echo '</ModuleConfig>' >> out/temp3.xml
+	
+	mv out/temp3.xml out/DacuVaspApp.xml
+	cp out/DacuVaspApp.xml ../../vasp_classic/vasp/SW_C/autosar4/.
 	rm out/temp*
 
 	echo "number of stubbed signals before patching:"
