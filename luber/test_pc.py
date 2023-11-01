@@ -37,56 +37,56 @@ class TestXml(unittest.TestCase):
       subprocess.call(callString, shell=True) 
 
    def test_empty(self):
-      x = luber.parameterContainer('test.xml')
-      data = x.getParams()
+      x = luber.ParameterContainer('test.xml')
+      data = x.get_params()
       self.assertTrue(len(data) == 0)
 
    def test_unsupportedPinType(self):
       self.addTestPar(self.testFile, 'par1', '0.0')
         
-      x = luber.parameterContainer(self.testFile)
-      data = x.getParam('par2')
+      x = luber.ParameterContainer(self.testFile)
+      data = x.get_param('par2')
       self.assertTrue(data == None)
 
    def test_onePar(self):
       self.addTestPar(self.testFile, 'par1', '1.0')
       
-      x = luber.parameterContainer(self.testFile)
-      data = x.getParam('par1')
+      x = luber.ParameterContainer(self.testFile)
+      data = x.get_param('par1')
       self.assertTrue(data == 1.0)
 
    def test_writePar(self):
       self.addTestPar(self.testFile, 'par1', '1.0')
      
-      x = luber.parameterContainer(self.testFile)
-      data = x.getParam('par1')
+      x = luber.ParameterContainer(self.testFile)
+      data = x.get_param('par1')
       self.assertTrue(data == 1.0)
 
-      x.writeParam('par1', 2.6)
-      data = x.getParam('par1')
+      x.write_param('par1', 2.6)
+      data = x.get_param('par1')
       self.assertTrue(data == 2.6)
 
    def test_write2Par(self):
       self.addTestPar(self.testFile, 'par1', '1.0')
       self.addTestPar(self.testFile, 'par2', '2.0')
 
-      x = luber.parameterContainer(self.testFile)
-      data = x.getParam('par2')
+      x = luber.ParameterContainer(self.testFile)
+      data = x.get_param('par2')
       self.assertTrue(data == 2.0)
 
-      x.writeParam('par2', 2.1)
-      data = x.getParam('par2')
+      x.write_param('par2', 2.1)
+      data = x.get_param('par2')
       self.assertTrue(data == 2.1)
-      data = x.getParam('par1')
+      data = x.get_param('par1')
       self.assertTrue(data == 1.0)
 
    def test_writeToFile(self):
       self.addTestPar(self.testFile, 'par1', '1.0')
       self.addTestPar(self.testFile, 'par2', '200.4')
 
-      x = luber.parameterContainer(self.testFile)
-      x.writeParam('par1', 100.4)
-      x.writeToFile()
+      x = luber.ParameterContainer(self.testFile)
+      x.write_param('par1', 100.4)
+      x.write_to_file()
 
       tree = ET.parse(self.testFile)
       root = tree.getroot()

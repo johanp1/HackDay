@@ -35,14 +35,14 @@ class TestPort(unittest.TestCase):
    def setUp(self):
       self.visitor = TestVisitor()
 
-   def test_init_pport(self):
+   def test_init_rport(self):
       p = RPort('test_rport', 'rport_if')
             
       self.assertTrue(p.port_name == 'test_rport')
       self.assertTrue(p.port_if == 'rport_if')
       self.assertTrue(len(p.signal_array) == 0)
 
-   def test_init_rport(self):
+   def test_init_pport(self):
       p = PPort('test_pport', 'pport_if')
             
       self.assertTrue(p.port_name == 'test_pport')
@@ -75,15 +75,16 @@ class TestPort(unittest.TestCase):
       p = RPort('rport', 'rport_if')
       p.signal_array.append(StructSignal('struct_signal', 'struct_type'))
       p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element1_type'))
+      p.signal_array[-1].element_array.append(StructSignalElement('element2', 'element2_type'))
 
       p.accept(self.visitor)
       self.assertTrue(len(p.signal_array) == 1)
-      self.assertTrue(len(p.signal_array[-1].element_array) == 1)
+      self.assertTrue(len(p.signal_array[-1].element_array) == 2)
       self.assertTrue(self.visitor.visited_rport == 'rport')
       self.assertTrue(self.visitor.visited_signal == 'struct_signal')
-      self.assertTrue(self.visitor.visited_element == 'element1')
+      self.assertTrue(self.visitor.visited_element == 'element2')
 
-   """def test3(self):
+   def test3(self):
       p = RPort('name', 'name_if') 
       p.signal_array.append(ValueSignal('signal1', 'signal_type1', '1', '0'))
       p.signal_array.append(ValueSignal('signal2', 'signal_type2', '1', '0'))
@@ -92,7 +93,8 @@ class TestPort(unittest.TestCase):
       p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element_type1', '1', '0'))
       p.signal_array[-1].element_array.append(StructSignalElement('element2', 'element_type2', '1', '0'))
 
-      print(p)"""
+      print(p)
+      p.accept(self.visitor)
 
 if __name__ == '__main__':
    unittest.main()

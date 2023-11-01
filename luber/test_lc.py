@@ -1,6 +1,6 @@
 #! /usr/bin/python
 import unittest
-import luber  
+import luber
 import time
 
 class TestComp(unittest.TestCase):
@@ -44,73 +44,73 @@ class TestComp(unittest.TestCase):
 
    def test_off_to_on(self):
       self.lubeCtrl.calc_dist_from_vel(10, 10, 9)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(expected == 2.9)
-      self.assertTrue(self.lubeCtrl.numberOfLubings == 1)
+      self.assertTrue(self.lubeCtrl.number_of_lubings == 1)
 
       self.incMockTime(0.1)
 
       self.lubeCtrl.calc_dist_from_vel(1, 0, 0)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       expected = round(self.lubeCtrl.total_distance, 1)
       self.assertTrue(self.lubeCtrl.state == 'ON')
       self.assertTrue(expected == 0)
-      self.assertTrue(self.lubeCtrl.numberOfLubings == 2)
+      self.assertTrue(self.lubeCtrl.number_of_lubings == 2)
 
    def test_on_to_off(self):
       self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
-      self.incMockTime(self.lubeCtrl.lubeOnTime)
-      self.lubeCtrl.runStateMachine(False)
+      self.incMockTime(self.lubeCtrl.lube_on_time)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
       self.incMockTime(0.1)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'OFF')
-      self.assertTrue(self.lubeCtrl.lubeLevelOkOut)
+      self.assertTrue(self.lubeCtrl.lube_level_ok)
 
    def test_low_lube_level(self):
       self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
-      self.lubeCtrl.setLubeLevelOK(False)
+      self.lubeCtrl.set_lube_level_ok(False)
 
-      self.incMockTime(self.lubeCtrl.lubeOnTime + 0.1)
-      self.lubeCtrl.runStateMachine(False)
+      self.incMockTime(self.lubeCtrl.lube_on_time + 0.1)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'OFF')
-      self.assertFalse(self.lubeCtrl.lubeLevelOkOut)
+      self.assertFalse(self.lubeCtrl.lube_level_ok)
 
    def test_reset(self):
       self.lubeCtrl.calc_dist_from_vel(10, 10, 11)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
       self.lubeCtrl.reset()
 
       self.assertTrue(self.lubeCtrl.state == 'OFF')
       self.assertTrue(self.lubeCtrl.total_distance == 0)
-      self.assertTrue(self.lubeCtrl.numberOfLubings == 2) # don't reset
+      self.assertTrue(self.lubeCtrl.number_of_lubings == 2) # don't reset
 
    def test_external_request(self):
       self.lubeCtrl.calc_dist_from_vel(0, 0, 0)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'OFF')
 
-      self.lubeCtrl.runStateMachine(True)
+      self.lubeCtrl.run_state_machine(True)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
-      self.incMockTime(self.lubeCtrl.lubeOnTime)
-      self.lubeCtrl.runStateMachine(False)
+      self.incMockTime(self.lubeCtrl.lube_on_time)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'ON')
 
       self.incMockTime(0.1)
-      self.lubeCtrl.runStateMachine(False)
+      self.lubeCtrl.run_state_machine(False)
       self.assertTrue(self.lubeCtrl.state == 'OFF')
-      self.assertTrue(self.lubeCtrl.lubeLevelOkOut)
+      self.assertTrue(self.lubeCtrl.lube_level_ok)
 
 if __name__ == '__main__':
    unittest.main()
