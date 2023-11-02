@@ -111,7 +111,7 @@ class ParameterContainer:
 
 class LubeControl:
     def __init__(self, lube_on_time, accumulated_distance, distance_threshold, number_of_lubings):
-        self.lube_on_time = lube_on_time                   # [sec]
+        self.lube_on_time = lube_on_time                 # [sec]
         self.total_distance = accumulated_distance       # [mm]
         self.distance_threshold = distance_threshold     # [mm]
         self.number_of_lubings = number_of_lubings
@@ -134,15 +134,14 @@ class LubeControl:
 
     def run_state_machine(self, ext_req):
         current_time = time.time()
-        if self.state == 'OFF' and self.lube_level_ok and (self.total_distance >= self.distance_threshold or ext_req == True):
+        if self._transition_to_state_on(ext_req):
             self.state = 'ON'
             self.timeout = self.lube_on_time + current_time
             self.total_distance = 0
             self.number_of_lubings += 1
 
-        if self.state == 'ON':
-            if current_time > self.timeout or not self.lube_level_ok:
-                self.state = 'OFF'
+        if self._transition_to_state_off(current_time):
+            self.state = 'OFF'
 
     def set_lube_level_ok(self, level_ok):
         self.lube_level_ok = level_ok
@@ -152,14 +151,21 @@ class LubeControl:
         self.state = 'OFF'
         self.lube_level_ok = True
 
+    def _transition_to_state_on(self, ext_req):
+        return self.state == 'OFF' \
+                and self.lube_level_ok \
+                and (self.total_distance >= self.distance_threshold or ext_req == True)
+
+    def _transition_to_state_off(self, current_time):
+        return self.state == 'ON' \
+                and (current_time > self.timeout or not self.lube_level_ok)
+
 def _usage():
-    """ print command line options 
-    print "usage luber.py -h -c<name> <path/>in_file.xml\n"\
+    """ print command line options """
+    print("usage luber.py -h -c<name> <path/>in_file.xml\n"\
         "in_file         # input xml-file describing what knobs and/or button are on the pendant\n"\
         "-c <name>       # name of component in HAL. 'my-luber' default\n"\
-        "-h              # Help test"
-   """
-    pass
+        "-h              # Help test")
 
 def main():
     xml_file = 'luber.xml'
@@ -195,12 +201,10 @@ def main():
 
     h = HalAdapter(name)
 
-    total_distance = p.get_param('totalDistance')
-    distance_threshold = p.get_param('distanceThreshold')
-    lube_on_time = p.get_param('lubePulseTime')
-    nbr_of_lubings = p.get_param('numberOfLubings')
-
-    lube_ctrl = LubeControl(lube_on_time, total_distance, distance_threshold, nbr_of_lubings)
+    lube_ctrl = LubeControl(p.get_param('lubePulseTime'),\
+                            p.get_param('totalDistance'),\
+                            p.get_param('distanceThreshold'),\
+                            p.get_param('numberOfLubings'))
 
     try:
         while 1:

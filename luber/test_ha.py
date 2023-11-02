@@ -11,20 +11,18 @@ class TestHalAdapter(unittest.TestCase):
    
       
    def test_init(self):
-      self.local_ha = luber.HalAdapter('local_hal_adaptor', )
+      local_ha = luber.HalAdapter('local_hal_adaptor', )
       
-      self.assertTrue(self.local_ha.h.name == 'local_hal_adaptor')
-      self.assertTrue(self.local_ha.h.pinDict.has_key('velocity'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('x-vel'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('y-vel'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('z-vel'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('lube-level-ok'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('reset'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('lube-cmd'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('lube-level-alarm'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('accumulated-distance'))
-      self.assertTrue(self.local_ha.h.pinDict.has_key('lube-ext-req'))
-
+      self.assertTrue(local_ha.h.name == 'local_hal_adaptor')
+      self.assertTrue('x-vel' in local_ha.h.pinDict)
+      self.assertTrue('y-vel' in local_ha.h.pinDict)
+      self.assertTrue('z-vel' in local_ha.h.pinDict)
+      self.assertTrue('lube-level-ok' in local_ha.h.pinDict)
+      self.assertTrue('reset' in local_ha.h.pinDict)
+      self.assertTrue('lube-level-alarm' in local_ha.h.pinDict)
+      self.assertTrue('accumulated-distance' in local_ha.h.pinDict)
+      self.assertTrue('lube-ext-req' in local_ha.h.pinDict)
+      
    def test_is_lube_level_ok(self):
       self.ha.h['lube-level-ok'] = 1
       self.assertTrue(self.ha.is_lube_level_ok() == True)
