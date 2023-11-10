@@ -93,7 +93,7 @@ class TestPort(unittest.TestCase):
       p.signal_array[-1].element_array.append(StructSignalElement('element1', 'element_type1', '1', '0'))
       p.signal_array[-1].element_array.append(StructSignalElement('element2', 'element_type2', '1', '0'))
 
-      print(p)
+      #print(p)
       p.accept(self.visitor)
 
 if __name__ == '__main__':

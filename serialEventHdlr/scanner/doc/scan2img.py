@@ -8,24 +8,30 @@ MIN_SCANS_PER_ROW = 300
 prev = 0.00
 m = []
 row = []
+col = []
 max_dist = 0
 max_scan = ''
+img = []
 
 line = f_in.readline()
 while line != '':
-    if not line.startswith('#'):
+    if not line.startswith('#'):  
         scan = line.split(' ')
         dist = int(scan[2])
         v_angle = float(scan[1])
+        h_angle = float(scan[0])
 
-        # find max distance readibng
+        # find max distance and truncate. for normalizing...
         if dist > max_dist:
             if dist > 600:
                 dist = 600
 
             max_dist = dist
             max_scan = line
-            
+
+        if h_angle == prev:
+            col = 
+"""            
         # is the vertical angle the same as previous
         if v_angle == prev:
             row.append(dist) # yes, append current reading to the image row
@@ -64,3 +70,4 @@ img.show()
 image_filename = "scan2"
 #img.save(image_filename + '.jpeg')
 #img.save(image_filename + '.png')
+"""
