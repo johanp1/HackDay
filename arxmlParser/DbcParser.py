@@ -29,7 +29,7 @@ class DbcParser:
         
         try:
             dbc_line = f_dbc.readline()
-            print(dbc_line)
+            #print(dbc_line)
         except UnicodeDecodeError:
             print("can't decode")
             dbc_line = ''

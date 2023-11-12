@@ -110,6 +110,10 @@ def main():
         if optParser.render_stubs:
             port.accept(sr)
         port.accept(cr)
+    
+    for port in ap.cal_array:
+        if optParser.render_rte:
+            port.accept(rr)
 
 if __name__ == '__main__':
     main()

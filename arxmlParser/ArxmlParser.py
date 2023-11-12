@@ -46,8 +46,7 @@ class CPort(Port):
         return 'c-port: ' + str_  + '\n'
 
     def accept(self, visitor):
-        pass
-        #visitor.renderRPort(self)
+        visitor.renderCPort(self)
 
 
 class Signal:
@@ -117,6 +116,7 @@ class ArxmlParser:
         self.signal_dict = {}
         self.type_dict = {}
         self.appl_type_dict = {}
+        self.compu_method_dict = {}
         self._ns = ''
 
     def parse(self, namespace, swc_arxml, port_arxml, types_arxml):
@@ -125,14 +125,16 @@ class ArxmlParser:
         #ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
 
         self._ns = {'default_ns':namespace}
-        self._get_r_ports(swc_arxml)
-        self._get_p_ports(swc_arxml)
-        self._get_c_ports(swc_arxml)
-        self._get_signals(port_arxml)
-        self._get_parameter_if(port_arxml)
-        self._get_impl_types(types_arxml)
-        self._get_appl_types(types_arxml)
- 
+        self._get_r_ports(swc_arxml) #get component's r-ports
+        self._get_p_ports(swc_arxml) #get component's p-ports
+        self._get_c_ports(swc_arxml) #get component's c-ports
+        self._get_signals(port_arxml) #get signal- and type of all sender/receiver port-if's in port_arxml
+        self._get_parameter_if(port_arxml) #get type of all c-port-if's in port_arxml
+        self._get_impl_types(types_arxml) #get all implementation data types in types_arxml
+        self._get_appl_types(types_arxml) #get all application data types in types_arxml
+        self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
+
+        #sender-receiver port mangling:
         for port in self.port_array:
             if port.port_if in self.signal_dict:
                 port.signal_name = self.signal_dict[port.port_if].name
@@ -141,7 +143,7 @@ class ArxmlParser:
                 type_key = self.signal_dict[port.port_if].type
 
                 if type_key in self.type_dict:
-                    if self.type_dict[type_key][0].element_name != '':
+                    if self.type_dict[type_key][0].element_name != '': #
                         port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
                         for element in self.type_dict[type_key]:
                             port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
@@ -165,13 +167,15 @@ class ArxmlParser:
                 type_key = self.signal_dict[port.port_if].type
 
                 if type_key in self.appl_type_dict:
-                    if self.appl_type_dict[type_key][0].element_name != '':
-                        port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        for element in self.appl_type_dict[type_key]:
-                            port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
-                    else:
-                        port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        
+                    port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+                    
+                    #assign scale and offset from compu-method
+                    compu_method_name = self.appl_type_dict[type_key][0].compu
+                    if compu_method_name != '':
+                        if compu_method_name in self.compu_method_dict:
+                            port.signal_array[-1].scale = self.compu_method_dict[compu_method_name].scale
+                            port.signal_array[-1].offset = self.compu_method_dict[compu_method_name].offset
+
     def _get_r_ports(self, swc_arxml):
         tree = ET.parse(swc_arxml)
         root = tree.getroot()
@@ -305,6 +309,8 @@ class ArxmlParser:
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-PRIMITIVE-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+            
+            self.appl_type_dict[data_type_name] = []
 
             sw_props = data_type.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
             sw_props_variant = sw_props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
@@ -314,9 +320,26 @@ class ArxmlParser:
             if compu_method is not None:
                 compu_method_name = compu_method.text.split('/')[-1]
                 Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-                self.appl_type_dict[data_type_name] = []
+                
                 self.appl_type_dict[data_type_name].append(Element('', '', compu_method_name))
                 f_log.write('data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+
+        #pick out the array data types
+        tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-ARRAY-DATA-TYPE'
+        for data_type in root.iter(tag):
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+
+            self.appl_type_dict[data_type_name] = []
+
+            element = data_type.find('default_ns:ELEMENT', self._ns)
+            element_name = element.find('default_ns:SHORT-NAME', self._ns).text
+            element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
+            nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
+
+            Element = namedtuple("Element", ["element_name", "element_type", "compu"])
+            self.appl_type_dict[data_type_name].append(Element(element_name, element_type, ''))
+
+            f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + ' nbr_of_elements ' + nbr_of_elements + '\n')
 
         #pick out the "struct" data types
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
@@ -339,3 +362,28 @@ class ArxmlParser:
                     f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
 
         f_log.close()
+
+    def _get_compu_methods(self, types_arxml):
+        tree = ET.parse(types_arxml)
+        root = tree.getroot()
+        f_log = open('./logs/compu.txt', 'w', encoding="utf-8")
+
+        tag = '{' + self._ns['default_ns'] + '}' + 'COMPU-METHOD'
+        for compu_method in root.iter(tag):
+            compu_method_category = compu_method.find('default_ns:CATEGORY', self._ns).text
+            if compu_method_category == 'SCALE_LINEAR':
+                compu_method_name = compu_method.find('default_ns:SHORT-NAME', self._ns).text
+                
+                compu_internal_to_phys = compu_method.find('default_ns:COMPU-INTERNAL-TO-PHYS', self._ns)
+                compu_scales = compu_internal_to_phys.find('default_ns:COMPU-SCALES', self._ns)
+                compu_scale = compu_scales.find('default_ns:COMPU-SCALE', self._ns)
+                coeffs = compu_scale.find('default_ns:COMPU-RATIONAL-COEFFS', self._ns)
+                numerator = coeffs.find('default_ns:COMPU-NUMERATOR', self._ns)
+                scale_offset = numerator.findall('default_ns:V', self._ns)
+                offset = scale_offset[0].text
+                scale = scale_offset[1].text
+                #print(compu_method_name + ' ' + scale + ' ' + offset)
+                CompuMethod = namedtuple("CompuMethod", ["scale", "offset"])
+                self.compu_method_dict[compu_method_name] = CompuMethod(scale, offset)
+
+                f_log.write('compu_method_name ' + compu_method_name + ' scale ' + scale + ' offset ' + offset + '\n')

@@ -125,3 +125,15 @@ class RteRenderer:
         s = s.replace('#write_data', write_data)
 
         self.f_out.write(s)
+
+    def renderCPort(self, port):
+        #print(port)
+        if port.signal_array[0]:
+            signal = port.signal_array[0]
+            scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
+            offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+
+            #print(port.port_name + ' ' + ' port_if ' + port.port_if)
+            s = '\t' + port.port_name + ' = ' + scale_str + 'Rte_cal_' + port.port_name + '_' + signal.name + '()' +  offset_str + ';\n'
+
+            self.f_out.write(s)

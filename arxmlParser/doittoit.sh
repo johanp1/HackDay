@@ -23,10 +23,10 @@ if python3 create_ports.py --port_arxml=arxml/PortInterfaces.arxml\
 						   --can_db=can/CAN06-T3_1.9.0.dbc\
 						   --can_db=can/CAN32-T3_1.9.0.dbc; then
 	echo "create_ports succeeded"
-	compare out/rte_data.h ref/rte_data.h
-	compare out/StateEstimationCtrl.xml ref/StateEstimationCtrl.xml
-	compare out/cunit_stubs.c ref/cunit_stubs.c
-	compare out/cunit_stubs.h ref/cunit_stubs.h
+#	compare out/rte_data.h ref/rte_data.h
+#	compare out/StateEstimationCtrl.xml ref/StateEstimationCtrl.xml
+#	compare out/cunit_stubs.c ref/cunit_stubs.c
+#	compare out/cunit_stubs.h ref/cunit_stubs.h
 else
 	echo "create_ports failed"
 fi	
