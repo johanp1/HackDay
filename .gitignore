@@ -53,3 +53,5 @@ build/
 #drawio backups
 *.bkp
 *.dtmp
+
+\scans

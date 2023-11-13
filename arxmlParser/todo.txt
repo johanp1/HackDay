@@ -1,5 +1,8 @@
-KLAR componentRenderer skall plocka Signal från dbc, inte port'en
-KLAR lägg till can-signal-namn i port klassen
+ArxmlPArser - gör om namedtuple till klass med några olika subklasser
+
+tror applikationsdatatyperna behöver egna visitormetoder
+value, array och stuct (kanske inte struct...)
+
 
 P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
 

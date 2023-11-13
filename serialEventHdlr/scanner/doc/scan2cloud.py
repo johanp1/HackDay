@@ -16,6 +16,7 @@ try:
 except:
     output_file_name = input_file_name.split('.')[0] + '.xyz'
 
+print('saving file as ' + output_file_name)
 f_out = open(output_file_name, 'w')
 
 line = f_in.readline()
