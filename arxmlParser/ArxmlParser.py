@@ -108,15 +108,96 @@ class StructSignalElement:
         """visitor method"""
         visitor.renderStructElement(self)
 
+class ArraySignal(Signal):
+    """representation of a AUTOSAR-array-signal"""
+    def __init__(self, name, type_, scale = '1', offset = '0'):
+        super().__init__(name, type_)
+        self.type = type_
+        self.scale = scale
+        self.offset = offset
+
+    def __repr__(self):
+        my_repr = super().__repr__() + '\n'
+        my_repr += repr(self.type)
+        my_repr += ' scale: ' + self.scale + ' offset: ' + self.offset + '\n'
+        return '\tArraySignal ' + my_repr
+
+    def accept(self, visitor):
+        """visitor method"""
+        visitor.renderArraySignal(self)
+
+class Type:
+    """representation of a generic AUTOSAR-type"""
+    def __init__(self, name_):
+        self.name = name_
+
+    def __repr__(self):
+        return self.name
+
+    def create_signal(self, signal_name):
+        """factory method, to be overridden by child class"""
+
+class ValueType(Type):
+    """representation of a AUTOSAR-value-type"""
+    def __init__(self, name, compu_method = ''):
+        super().__init__(name)
+        self.compu_method = compu_method
+
+    def __repr__(self):
+        super_repr = super().__repr__()
+        compu_method_str = '' if self.compu_method == '' else ' compu_method: ' + self.compu_method
+        return '\tValueType ' + super_repr + compu_method_str + '\n'
+
+    def create_signal(self, signal_name):
+        """factory method for value signal"""
+        return ValueSignal(signal_name, self.name)
+
+class ArrayType(Type):
+    """representation of a AUTOSAR-array-type"""
+    def __init__(self, name, size, element_type):
+        super().__init__(name)
+        self.size = size
+        self.element_type = element_type
+
+    def __repr__(self):
+        super_repr = super().__repr__()
+        return '\tArrayType ' + super_repr + ' size: ' + self.size + ' element type: '\
+            + repr(self.element_type) + '\n'
+
+    def create_signal(self, signal_name):
+        """factory method for array signal"""
+        return ArraySignal(signal_name, self)
+
+class StructType(Type):
+    """representation of a AUTOSAR-struct-type"""
+    def __init__(self, name):
+        super().__init__(name)
+        self.element_dict = {}
+
+    def __repr__(self):
+        my_repr = super().__repr__() + '\n'
+        for key, element in self.element_dict.items():
+            my_repr += '\t element name: ' + key + repr(element)
+        return '\tStructSignal ' + my_repr
+
+    def add_element(self, name, type_):
+        """add struct element"""
+        self.element_dict[name] = type_
+
+    def create_signal(self, signal_name):
+        """factory method for value signal"""
+        return StructSignal(signal_name, self.name)
+
 class ArxmlParser:
     """ArxmlParser"""
     def __init__(self):
         self.port_array = []
         self.cal_array = []
         self.signal_dict = {}
-        self.type_dict = {}
-        self.appl_type_dict = {}
+        self.type_array = []
+        self.appl_type_array = []
         self.compu_method_dict = {}
+        self.mapping_dict = {}
         self._ns = ''
 
     def parse(self, namespace, swc_arxml, port_arxml, types_arxml):
@@ -133,73 +214,38 @@ class ArxmlParser:
         self._get_impl_types(types_arxml) #get all implementation data types in types_arxml
         self._get_appl_types(types_arxml) #get all application data types in types_arxml
         self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
+        self._get_type_mapping(types_arxml) #get impl<->appl type mapping
 
         #sender-receiver port mangling:
         for port in self.port_array:
             if port.port_if in self.signal_dict:
-                port.signal_name = self.signal_dict[port.port_if].name
-                port.type = self.signal_dict[port.port_if].type
+                signal_name = self.signal_dict[port.port_if].name
+                type_name = self.signal_dict[port.port_if].type
 
-                type_key = self.signal_dict[port.port_if].type
+                port.signal_name = signal_name
+                port.type = type_name
 
-                if type_key in self.type_dict:
-                    if self.type_dict[type_key][0].element_name != '': #
-                        port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        for element in self.type_dict[type_key]:
-                            port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
-                    else:
-                        port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+                for t in self.type_array:
+                    if type_name == t.name:
+                        port.signal_array.append(t.create_signal(signal_name))
 
-                if type_key in self.appl_type_dict:
-                    if self.appl_type_dict[type_key][0].element_name != '':
-                        port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        for element in self.appl_type_dict[type_key]:
-                            port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
-                    else:
-                        port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
+                for t in self.appl_type_array:
+                    if type_name == t.name:
+                        port.signal_array.append(t.create_signal(signal_name))
 
         #calibration port mangling:
         for port in self.cal_array:
             if port.port_if in self.signal_dict:
-                port.signal_name = self.signal_dict[port.port_if].name
-                port.type = self.signal_dict[port.port_if].type
+                signal_name = self.signal_dict[port.port_if].name
+                type_name = self.signal_dict[port.port_if].type
 
-                type_key = self.signal_dict[port.port_if].type
+                port.signal_name = signal_name
+                port.type = type_name
 
-                if type_key in self.appl_type_dict:
-                    port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                    
-                    #assign scale and offset from compu-method
-                    compu_method_name = self.appl_type_dict[type_key][0].compu
-                    if compu_method_name != '':
-                        if compu_method_name in self.compu_method_dict:
-                            port.signal_array[-1].scale = self.compu_method_dict[compu_method_name].scale
-                            port.signal_array[-1].offset = self.compu_method_dict[compu_method_name].offset
-
-                if type_key in self.appl_type_dict:
-                    if self.appl_type_dict[type_key][0].element_name != '':
-                        port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        for element in self.appl_type_dict[type_key]:
-                            port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
-                    else:
-                        port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-
-        #calibration port mangling:
-        for port in self.cal_array:
-            if port.port_if in self.signal_dict:
-                port.signal_name = self.signal_dict[port.port_if].name
-                port.type = self.signal_dict[port.port_if].type
-
-                type_key = self.signal_dict[port.port_if].type
-
-                if type_key in self.appl_type_dict:
-                    if self.appl_type_dict[type_key][0].element_name != '':
-                        port.signal_array.append(StructSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        for element in self.appl_type_dict[type_key]:
-                            port.signal_array[-1].element_array.append(StructSignalElement(element.element_name, element.element_type))
-                    else:
-                        port.signal_array.append(ValueSignal(self.signal_dict[port.port_if].name, self.signal_dict[port.port_if].type))
-                        
+                for t in self.appl_type_array:
+                    if type_name == t.name:
+                        port.signal_array.append(t.create_signal(signal_name))
+    
     def _get_r_ports(self, swc_arxml):
         tree = ET.parse(swc_arxml)
         root = tree.getroot()
@@ -261,7 +307,7 @@ class ArxmlParser:
             variable_data_prototype = data_elements.find('default_ns:VARIABLE-DATA-PROTOTYPE', self._ns)
 
             # get port_if name
-            signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', self._ns).text 
+            signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', self._ns).text
             signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
 
             SignalTuple = namedtuple("Signal", ["name", "type"])
@@ -303,11 +349,14 @@ class ArxmlParser:
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
             data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
 
-            self.type_dict[data_type_name] = []
-            Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-            self.type_dict[data_type_name].append(Element('', '', ''))
-         
+            if data_type_category == 'VALUE':
+                self.type_array.append(ValueType(data_type_name))
+
+                f_log.write('value_data_type_name ' + data_type_name + '\n')
+
             if data_type_category == 'STRUCTURE':
+                struct_type = StructType(data_type_name)
+
                 struct_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
                 
                 for struct_data_type in data_type.iter(struct_tag):
@@ -316,11 +365,26 @@ class ArxmlParser:
                     type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-REF'
                     for data_def_props in struct_data_type.iter(type_ref_tag):
                         element_type = data_def_props.text.split('/')[-1]
+                        struct_type.add_element(element_name, element_type)
 
-                        Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-                        self.type_dict[data_type_name].append(Element(element_name, element_type, ''))
+                        f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+                
+                self.type_array.append(struct_type)
 
-                        f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+            if data_type_category == 'ARRAY':
+                elements = data_type.find('default_ns:SUB-ELEMENTS', self._ns)
+                element = elements.find('default_ns:IMPLEMENTATION-DATA-TYPE-ELEMENT', self._ns)
+                array_size = element.find('default_ns:ARRAY-SIZE', self._ns).text
+
+                props = element.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
+                variants = props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
+                conditional = variants.find('default_ns:SW-DATA-DEF-PROPS-CONDITIONAL', self._ns)
+                element_type = conditional.find('default_ns:IMPLEMENTATION-DATA-TYPE-REF', self._ns).text.split('/')[-1]
+
+                self.type_array.append(ArrayType(data_type_name, array_size, element_type))
+
+                f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + array_size + ' element_type ' + element_type + '\n')
+
 
         f_log.close()
 
@@ -333,8 +397,6 @@ class ArxmlParser:
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-PRIMITIVE-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
-            
-            self.appl_type_dict[data_type_name] = []
 
             sw_props = data_type.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
             sw_props_variant = sw_props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
@@ -343,34 +405,30 @@ class ArxmlParser:
             compu_method = sw_props_conditional.find('default_ns:COMPU-METHOD-REF', self._ns)
             if compu_method is not None:
                 compu_method_name = compu_method.text.split('/')[-1]
-                Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-                
-                self.appl_type_dict[data_type_name].append(Element('', '', compu_method_name))
-                f_log.write('data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+                self.appl_type_array.append(ValueType(data_type_name, compu_method_name))
+
+                f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
 
         #pick out the array data types
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-ARRAY-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
-            self.appl_type_dict[data_type_name] = []
-
             element = data_type.find('default_ns:ELEMENT', self._ns)
             element_name = element.find('default_ns:SHORT-NAME', self._ns).text
             element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
             nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
 
-            Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-            self.appl_type_dict[data_type_name].append(Element(element_name, element_type, ''))
+            self.appl_type_array.append(ArrayType(data_type_name, nbr_of_elements, element_type))
 
-            f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + ' nbr_of_elements ' + nbr_of_elements + '\n')
+            f_log.write('array_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + ' nbr_of_elements ' + nbr_of_elements + '\n')
 
         #pick out the "struct" data types
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
-            self.appl_type_dict[data_type_name] = []
+            struct_type = StructType(data_type_name)
 
             struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
             for struct_data_type in data_type.iter(struct_tag):
@@ -379,15 +437,17 @@ class ArxmlParser:
                 type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
                 for data_def_props in struct_data_type.iter(type_ref_tag):
                     element_type = data_def_props.text.split('/')[-1]
+                    
+                    struct_type.add_element(element_name, element_type)
 
-                    Element = namedtuple("Element", ["element_name", "element_type", "compu"])
-                    self.appl_type_dict[data_type_name].append(Element(element_name, element_type, ''))
+                    f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
 
-                    f_log.write('data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+            self.appl_type_array.append(struct_type)
 
         f_log.close()
 
     def _get_compu_methods(self, types_arxml):
+        """ creates dictionary with SCALE_LINEAR compu methods, dict-key is the compu-method name"""
         tree = ET.parse(types_arxml)
         root = tree.getroot()
         f_log = open('./logs/compu.txt', 'w', encoding="utf-8")
@@ -411,3 +471,17 @@ class ArxmlParser:
                 self.compu_method_dict[compu_method_name] = CompuMethod(scale, offset)
 
                 f_log.write('compu_method_name ' + compu_method_name + ' scale ' + scale + ' offset ' + offset + '\n')
+
+    def _get_type_mapping(self, types_arxml):
+        """ creates dictionary with application-type to implementation-type mappings"""
+        tree = ET.parse(types_arxml)
+        root = tree.getroot()
+        f_log = open('./logs/mapping.txt', 'w', encoding="utf-8")
+
+        tag = '{' + self._ns['default_ns'] + '}' + 'DATA-TYPE-MAP'
+        for type_map in root.iter(tag):
+            appl_type = type_map.find('default_ns:APPLICATION-DATA-TYPE-REF', self._ns).text.split('/')[-1]
+            impl_type = type_map.find('default_ns:IMPLEMENTATION-DATA-TYPE-REF', self._ns).text.split('/')[-1]
+            self.mapping_dict[appl_type] = impl_type
+
+            f_log.write('appl_type: ' + appl_type + ' maps to impl_type: ' + impl_type + '\n')

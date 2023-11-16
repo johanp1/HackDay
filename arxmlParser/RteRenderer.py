@@ -30,6 +30,27 @@ class RPortVisitor:
     def renderStructElement(self, signal):
         pass
 
+    def renderArraySignal(self, signal):
+        pass
+
+class CPortVisitor:
+    """CPortVisitor-class for RteRenderer"""
+    def __init__(self, renderer):
+        self.renderer = renderer
+        self.port_name = ''
+
+    def renderValueSignal(self, signal):
+        self.renderer.render_cport_value_signal(self.port_name, signal)
+
+    def renderStructSignal(self, signal):
+       pass
+
+    def renderStructElement(self, signal):
+        pass
+
+    def renderArraySignal(self, signal):
+        self.renderer.render_cport_array_signal(self.port_name, signal)
+
 class RteRenderer:
     """Renders c functions in output file"""
     def __init__(self, module, ldc, swc):
@@ -38,6 +59,7 @@ class RteRenderer:
 
         self.pport_visitor = PPortVisitor(self)
         self.rport_visitor = RPortVisitor(self)
+        self.cport_visitor = CPortVisitor(self)
 
         # copy template until
         for line in f_template:
@@ -74,6 +96,11 @@ class RteRenderer:
         self.rport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.rport_visitor)
+
+    def renderCPort(self, port):
+        self.cport_visitor.port_name = port.port_name
+        for signal in port.signal_array:
+            signal.accept(self.cport_visitor)
 
     def render_rport_signal(self, port_name, signal):
         """Renders Rte_Read_... function invocation in c-output file"""
@@ -126,14 +153,24 @@ class RteRenderer:
 
         self.f_out.write(s)
 
-    def renderCPort(self, port):
-        #print(port)
-        if port.signal_array[0]:
-            signal = port.signal_array[0]
-            scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
-            offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+    def render_cport_value_signal(self, port_name, signal):
+        scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
+        offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
 
-            #print(port.port_name + ' ' + ' port_if ' + port.port_if)
-            s = '\t' + port.port_name + ' = ' + scale_str + 'Rte_cal_' + port.port_name + '_' + signal.name + '()' +  offset_str + ';\n'
+        #print(port.port_name + ' ' + ' port_if ' + port.port_if)
+        s = '\t' + port_name + ' = ' + scale_str + 'Rte_Prm_' + port_name + '_' + signal.name + '()' +  offset_str + ';\n'
 
-            self.f_out.write(s)
+        self.f_out.write(s)
+
+    def render_cport_array_signal(self, port_name, signal):
+        scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
+        offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+
+        s = ''
+        int(signal.type.size)
+        for i in range(int(signal.type.size)):
+            s += '\t' + port_name + '[' + str(i) + ']' + ' = '\
+              + scale_str + '(*Rte_Prm_' + port_name + '_' + signal.name + '())' + '[' + str(i) + ']'\
+              +  offset_str + ';\n'
+
+        self.f_out.write(s)

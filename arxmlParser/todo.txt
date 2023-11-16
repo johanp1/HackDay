@@ -1,14 +1,15 @@
-ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
-tror applikationsdatatyperna behöver egna visitormetoder
-value, array och stuct (kanske inte struct...)
+type::create_signal, skicka med typen i signal-constructorn istället för typ_namn
+signal-constructor'n behöver såklar göras om lite, och även render'arna
+
+KLAR ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
 
+inte jätteviktigt:
 P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
 
 pylint
 
-inte jätteviktigt:
 printf förutsätter int med %d, funkar inte för float
 
 assert förutsätter bool eller int. funkar inte för float
