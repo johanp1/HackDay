@@ -117,7 +117,7 @@ class RteRenderer:
         out_str = out_str.replace('#var_name', var_name)
         out_str = out_str.replace('#port_name', port_name)
         out_str = out_str.replace('#signal_name', signal.name)
-        out_str = out_str.replace('#datatype', signal.type)
+        out_str = out_str.replace('#datatype', signal.type.name)
 
         self.f_out.write(out_str)
 
@@ -148,7 +148,7 @@ class RteRenderer:
 
         s = s.replace('#portName', port_name)
         s = s.replace('#signalName', signal.name)
-        s = s.replace('#dataType', signal.type)
+        s = s.replace('#dataType', signal.type.name)
         s = s.replace('#write_data', write_data)
 
         self.f_out.write(s)

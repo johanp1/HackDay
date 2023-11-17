@@ -1,11 +1,23 @@
 
-type::create_signal, skicka med typen i signal-constructorn istället för typ_namn
+ArxmlParser hanterar inte portar med flera signaler. 
+strukturen/typerna hanterar det men parsern lägger inte till fler än en signal
+_get_signals behöver ändras lite
+
+skicka med compu-methon vid structType::add_element och arrayType-constr
+
+KLAR type::create_signal, skicka med typen i signal-constructorn istället för typ_namn
 signal-constructor'n behöver såklar göras om lite, och även render'arna
+
+KLAR ta bort
+     SignalTuple = namedtuple("Signal", ["name", "type"])
+     signal dict borde vara en dict av signal-object istället
 
 KLAR ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
 
 inte jätteviktigt:
+döp om renderXYZ till visitXYZ
+
 P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
 
 pylint

@@ -56,7 +56,7 @@ class Signal:
         self.type = type_
 
     def __repr__(self):
-        return 'Signal name: ' + self.name + ' type: ' + self.type
+        return 'Signal name: ' + self.name + ' type: ' + repr(self.type)
 
     def accept(self, visitor):
         """visitor method, to be overridden by child class"""
@@ -82,8 +82,12 @@ class StructSignal(Signal):
         super().__init__(signal_name, signal_type)
         self.element_array = []
 
+        for element_name, element_type in signal_type.element_dict.items():
+            self.element_array.append(StructSignalElement(element_name, element_type))
+
     def __repr__(self):
-        my_repr = super().__repr__() + '\n'
+        #my_repr = super().__repr__() + '\n'
+        my_repr = 'Signal name: ' + self.name + ' type: ' + self.type.name + '\n'
         for element in self.element_array:
             my_repr += repr(element)
         return '\tStructSignal ' + my_repr
@@ -112,7 +116,6 @@ class ArraySignal(Signal):
     """representation of a AUTOSAR-array-signal"""
     def __init__(self, name, type_, scale = '1', offset = '0'):
         super().__init__(name, type_)
-        self.type = type_
         self.scale = scale
         self.offset = offset
 
@@ -139,18 +142,18 @@ class Type:
 
 class ValueType(Type):
     """representation of a AUTOSAR-value-type"""
-    def __init__(self, name, compu_method = ''):
+    def __init__(self, name, compu_method = None):
         super().__init__(name)
         self.compu_method = compu_method
 
     def __repr__(self):
         super_repr = super().__repr__()
-        compu_method_str = '' if self.compu_method == '' else ' compu_method: ' + self.compu_method
+        compu_method_str = '' if self.compu_method is None else ' compu_method: ' + repr(self.compu_method)
         return '\tValueType ' + super_repr + compu_method_str + '\n'
 
     def create_signal(self, signal_name):
         """factory method for value signal"""
-        return ValueSignal(signal_name, self.name)
+        return ValueSignal(signal_name, self)
 
 class ArrayType(Type):
     """representation of a AUTOSAR-array-type"""
@@ -186,7 +189,18 @@ class StructType(Type):
 
     def create_signal(self, signal_name):
         """factory method for value signal"""
-        return StructSignal(signal_name, self.name)
+        return StructSignal(signal_name, self)
+
+class CompuMethod:
+    """representation of scale-linear compu-method"""
+    def __init__(self, name, scale = '1', offset = '0'):
+        self.name = name
+        self.scale = scale
+        self.offset = offset
+
+    def __repr__(self):
+        return '\t\tCompu.method name: ' + self.name\
+         + ' scale: ' + self.scale + ' offset: ' + self.offset + '\n'
 
 class ArxmlParser:
     """ArxmlParser"""
@@ -209,43 +223,30 @@ class ArxmlParser:
         self._get_r_ports(swc_arxml) #get component's r-ports
         self._get_p_ports(swc_arxml) #get component's p-ports
         self._get_c_ports(swc_arxml) #get component's c-ports
-        self._get_signals(port_arxml) #get signal- and type of all sender/receiver port-if's in port_arxml
-        self._get_parameter_if(port_arxml) #get type of all c-port-if's in port_arxml
+        self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
         self._get_impl_types(types_arxml) #get all implementation data types in types_arxml
         self._get_appl_types(types_arxml) #get all application data types in types_arxml
-        self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
         self._get_type_mapping(types_arxml) #get impl<->appl type mapping
+
+        self._get_signals(port_arxml) #get signal- and type of all sender/receiver port-if's in port_arxml
+        self._get_parameter_if(port_arxml) #get type of all c-port-if's in port_arxml
+
+        self._assign_scaling()
+
+        #substitute appl-type for impl-type and add scaling
+        self._substitute_appl_types()
 
         #sender-receiver port mangling:
         for port in self.port_array:
             if port.port_if in self.signal_dict:
-                signal_name = self.signal_dict[port.port_if].name
-                type_name = self.signal_dict[port.port_if].type
-
-                port.signal_name = signal_name
-                port.type = type_name
-
-                for t in self.type_array:
-                    if type_name == t.name:
-                        port.signal_array.append(t.create_signal(signal_name))
-
-                for t in self.appl_type_array:
-                    if type_name == t.name:
-                        port.signal_array.append(t.create_signal(signal_name))
+                port.signal_array.append(self.signal_dict[port.port_if])
 
         #calibration port mangling:
         for port in self.cal_array:
             if port.port_if in self.signal_dict:
-                signal_name = self.signal_dict[port.port_if].name
-                type_name = self.signal_dict[port.port_if].type
+                port.signal_array.append(self.signal_dict[port.port_if])
+        #print(self.port_array)
 
-                port.signal_name = signal_name
-                port.type = type_name
-
-                for t in self.appl_type_array:
-                    if type_name == t.name:
-                        port.signal_array.append(t.create_signal(signal_name))
-    
     def _get_r_ports(self, swc_arxml):
         tree = ET.parse(swc_arxml)
         root = tree.getroot()
@@ -310,8 +311,13 @@ class ArxmlParser:
             signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', self._ns).text
             signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
 
-            SignalTuple = namedtuple("Signal", ["name", "type"])
-            self.signal_dict[port_if_name] = SignalTuple(signal_name, signal_type)
+            for t in self.type_array:
+                if signal_type == t.name:
+                    self.signal_dict[port_if_name] = t.create_signal(signal_name)
+
+            for t in self.appl_type_array:
+                if signal_type == t.name:
+                    self.signal_dict[port_if_name] = t.create_signal(signal_name)
 
             f_log.write('port-if: ' + port_if_name + ' signal_name: ' + signal_name + ' signal_type: ' + signal_type + '\n')
 
@@ -332,8 +338,13 @@ class ArxmlParser:
             prototype_name = parameter_data_prototype.find('default_ns:SHORT-NAME', self._ns).text 
             prototype_type = parameter_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
 
-            ParameterTuple = namedtuple("Parameter", ["name", "type"])
-            self.signal_dict[par_if_name] = ParameterTuple(prototype_name, prototype_type)
+            for t in self.type_array:
+                if prototype_type == t.name:
+                    self.signal_dict[par_if_name] = t.create_signal(prototype_name)
+
+            for t in self.appl_type_array:
+                if prototype_type == t.name:
+                    self.signal_dict[par_if_name] = t.create_signal(prototype_name)
 
             f_log.write('port-if: ' + par_if_name + ' prototype_name: ' + prototype_name + ' prototype_type: ' + prototype_type + '\n')
 
@@ -349,7 +360,7 @@ class ArxmlParser:
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
             data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
 
-            if data_type_category == 'VALUE':
+            if data_type_category == 'VALUE' or data_type_category == 'TYPE_REFERENCE':
                 self.type_array.append(ValueType(data_type_name))
 
                 f_log.write('value_data_type_name ' + data_type_name + '\n')
@@ -405,6 +416,7 @@ class ArxmlParser:
             compu_method = sw_props_conditional.find('default_ns:COMPU-METHOD-REF', self._ns)
             if compu_method is not None:
                 compu_method_name = compu_method.text.split('/')[-1]
+
                 self.appl_type_array.append(ValueType(data_type_name, compu_method_name))
 
                 f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
@@ -466,9 +478,8 @@ class ArxmlParser:
                 scale_offset = numerator.findall('default_ns:V', self._ns)
                 offset = scale_offset[0].text
                 scale = scale_offset[1].text
-                #print(compu_method_name + ' ' + scale + ' ' + offset)
-                CompuMethod = namedtuple("CompuMethod", ["scale", "offset"])
-                self.compu_method_dict[compu_method_name] = CompuMethod(scale, offset)
+                                
+                self.compu_method_dict[compu_method_name] = CompuMethod(compu_method_name, scale, offset)
 
                 f_log.write('compu_method_name ' + compu_method_name + ' scale ' + scale + ' offset ' + offset + '\n')
 
@@ -485,3 +496,10 @@ class ArxmlParser:
             self.mapping_dict[appl_type] = impl_type
 
             f_log.write('appl_type: ' + appl_type + ' maps to impl_type: ' + impl_type + '\n')
+
+    def _assign_scaling(self):
+        pass #for key, value in self.signal_dict.items():
+
+
+    def _substitute_appl_types(self):
+        pass

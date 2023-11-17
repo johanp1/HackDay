@@ -100,7 +100,7 @@ class StubRenderer:
     def _collect_stub_struct_elements(self, port_name, signal):
         self.signal_struct_elements += '\tstruct\n'
         self.signal_struct_elements += '\t{\n'
-        self.signal_struct_elements += '\t\t' + signal.type + ' ' + 'par;\n'
+        self.signal_struct_elements += '\t\t' + signal.type.name + ' ' + 'par;\n'
         self.signal_struct_elements += '\t\t' + 'Std_ReturnType ret;\n'
         self.signal_struct_elements += '\t}' + ' ' + 'Rte_' + port_name + '_' + signal.name + ';\n\n'
 
@@ -116,7 +116,7 @@ class StubRenderer:
     def _collect_pport_stub_struct_signals(self ,port_name, signal):
         port_signal = port_name + '_' + signal.name
         self.stub_signals += 'Std_ReturnType Rte_Write_' + port_signal \
-            + '(' + signal.type + ' const*' + ' par)\n'
+            + '(' + signal.type.name + ' const*' + ' par)\n'
         self.stub_signals += '{\n'
         self.stub_signals += '\tp.Rte_' + port_signal + '.par = ' + '*' + 'par;\n'
         self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
@@ -125,7 +125,7 @@ class StubRenderer:
     def _collect_rport_stub_value_signals(self, port_name, signal):
         port_signal = port_name + '_' + signal.name
         self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal \
-            + '(' + signal.type + '* par)\n'
+            + '(' + signal.type.name + '* par)\n'
         self.stub_signals += '{\n'
         self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
         self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
@@ -134,7 +134,7 @@ class StubRenderer:
     def _collect_rport_stub_struct_signals(self ,port_name, signal):
         port_signal = port_name + '_' + signal.name
         self.stub_signals += 'Std_ReturnType Rte_Read_' + port_signal \
-            + '(' + signal.type + '* par)\n'
+            + '(' + signal.type.name + '* par)\n'
         self.stub_signals += '{\n'
         self.stub_signals += '\t*par = p.Rte_' + port_signal + '.par;\n'
         self.stub_signals += '\treturn p.Rte_' + port_signal + '.ret;\n'
@@ -142,7 +142,7 @@ class StubRenderer:
 
     def _collect_rport_stub_set_signals(self ,port_name, signal):
         port_signal = port_name + '_' + signal.name
-        function_prototype = 'void stubs_set_' + port_signal + '(' +  signal.type + ' par)'
+        function_prototype = 'void stubs_set_' + port_signal + '(' +  signal.type.name + ' par)'
 
         self.stub_set_functions += function_prototype + '\n'
         self.stub_set_functions += '{\n'
@@ -175,7 +175,7 @@ class StubRenderer:
         port_signal = port_name + '_' + signal.name
         function_define = '#define stubs_check_' + port_signal + '(expected) _stubs_check_' \
             + port_signal + '(expected, __FILE__, __FUNCTION__, __LINE__);'
-        function_prototype = 'void _stubs_check_' + port_signal + '(' +  signal.type \
+        function_prototype = 'void _stubs_check_' + port_signal + '(' +  signal.type.name \
             + '* expected, const char *file, const char *function, const int line)'
 
         self.stub_check_functions += function_prototype + '\n'
