@@ -105,7 +105,7 @@ class StructSignalElement:
         self.offset = offset
 
     def __repr__(self):
-        return '\t\tStructSignalElement name: ' + self.name + ' type: ' + self.type \
+        return '\t\tStructSignalElement name: ' + self.name + ' type: ' + repr(self.type) \
          + ' scale: ' + self.scale + ' offset: ' + self.offset + '\n'
 
     def accept(self, visitor):
@@ -355,6 +355,7 @@ class ArxmlParser:
         root = tree.getroot()
         f_log = open('./logs/types.txt', 'w', encoding="utf-8")
 
+        #first, find all value types
         tag = '{' + self._ns['default_ns'] + '}' + 'IMPLEMENTATION-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
@@ -365,22 +366,53 @@ class ArxmlParser:
 
                 f_log.write('value_data_type_name ' + data_type_name + '\n')
 
+        #find all struct types
+        #this has to be done in steps in order to support nested structs
+        #find all struct types
+        struct_array = []
+        tag = '{' + self._ns['default_ns'] + '}' + 'IMPLEMENTATION-DATA-TYPE'
+        for data_type in root.iter(tag):
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+            data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
+
             if data_type_category == 'STRUCTURE':
-                struct_type = StructType(data_type_name)
+                struct_array.append(StructType(data_type_name))
 
-                struct_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
-                
-                for struct_data_type in data_type.iter(struct_tag):
-                    element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
+        #then populate the struct elements
+        for struct_type in struct_array:
+            tag = '{' + self._ns['default_ns'] + '}' + 'IMPLEMENTATION-DATA-TYPE'
+            for data_type in root.iter(tag):
+                data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+                data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
 
-                    type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-REF'
-                    for data_def_props in struct_data_type.iter(type_ref_tag):
-                        element_type = data_def_props.text.split('/')[-1]
-                        struct_type.add_element(element_name, element_type)
+                if data_type_category == 'STRUCTURE' and struct_type.name == data_type_name:
+                    #find all the elements
+                    struct_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-ELEMENT'
+                    for struct_data_type in data_type.iter(struct_tag):
+                        element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
 
-                        f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
-                
-                self.type_array.append(struct_type)
+                        type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'IMPLEMENTATION-DATA-TYPE-REF'
+                        for data_def_props in struct_data_type.iter(type_ref_tag):
+                            element_type = data_def_props.text.split('/')[-1]
+
+                            found = False
+                            for t in self.type_array:
+                                if element_type == t.name:
+                                    found = True
+                                    struct_type.add_element(element_name, t)
+                                    break
+
+                            if found:
+                                f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+                                self.type_array.append(struct_type)
+                            else:
+                                print(element_type + ' not found')
+                                
+        #find all array types
+        tag = '{' + self._ns['default_ns'] + '}' + 'IMPLEMENTATION-DATA-TYPE'
+        for data_type in root.iter(tag):
+            data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+            data_type_category = data_type.find('default_ns:CATEGORY', self._ns).text # find out if it is a struct data type or a value
 
             if data_type_category == 'ARRAY':
                 elements = data_type.find('default_ns:SUB-ELEMENTS', self._ns)
@@ -392,9 +424,17 @@ class ArxmlParser:
                 conditional = variants.find('default_ns:SW-DATA-DEF-PROPS-CONDITIONAL', self._ns)
                 element_type = conditional.find('default_ns:IMPLEMENTATION-DATA-TYPE-REF', self._ns).text.split('/')[-1]
 
-                self.type_array.append(ArrayType(data_type_name, array_size, element_type))
+                found = False
+                for t in self.type_array:
+                    if element_type == t.name:
+                        found = True
+                        self.type_array.append(ArrayType(data_type_name, array_size, t))
+                        break
 
-                f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + array_size + ' element_type ' + element_type + '\n')
+                if found:
+                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + array_size + ' element_type ' + element_type + '\n')
+                else:
+                    print(element_type + ' not found')
 
 
         f_log.close()
@@ -416,10 +456,14 @@ class ArxmlParser:
             compu_method = sw_props_conditional.find('default_ns:COMPU-METHOD-REF', self._ns)
             if compu_method is not None:
                 compu_method_name = compu_method.text.split('/')[-1]
-
-                self.appl_type_array.append(ValueType(data_type_name, compu_method_name))
-
-                f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+                if compu_method_name in self.compu_method_dict:
+                    self.appl_type_array.append(ValueType(data_type_name, self.compu_method_dict[compu_method_name]))
+                    f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+                else:
+                    print('could not add type: ' + data_type_name + ', compum-method: ' + compu_method_name + ' not found')
+            else:
+                self.appl_type_array.append(ValueType(data_type_name))
+                f_log.write('value_data_type_name ' + data_type_name)
 
         #pick out the array data types
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-ARRAY-DATA-TYPE'
@@ -431,30 +475,51 @@ class ArxmlParser:
             element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
             nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
 
-            self.appl_type_array.append(ArrayType(data_type_name, nbr_of_elements, element_type))
 
-            f_log.write('array_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + ' nbr_of_elements ' + nbr_of_elements + '\n')
+            found = False
+            for t in self.appl_type_array:
+                if element_type == t.name:
+                    found = True
+                    self.appl_type_array.append(ArrayType(data_type_name, nbr_of_elements, t))
+                    break
+
+            if found:
+                f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + nbr_of_elements + ' element_type ' + element_type + '\n')
+            else:
+                print(element_type + ' not found')
 
         #pick out the "struct" data types
+        struct_array = []
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+            struct_array.append(StructType(data_type_name))
 
-            struct_type = StructType(data_type_name)
+        for struct_type in struct_array:
+            tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
+            for data_type in root.iter(tag):
+                data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+                
+                struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
+                for struct_data_type in data_type.iter(struct_tag):
+                    element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
 
-            struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
-            for struct_data_type in data_type.iter(struct_tag):
-                element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
+                    type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
+                    for data_def_props in struct_data_type.iter(type_ref_tag):
+                        element_type = data_def_props.text.split('/')[-1]
+                        
+                        found = False
+                        for t in self.appl_type_array:
+                            if element_type == t.name:
+                                found = True
+                                struct_type.add_element(element_name, t)
+                                break
 
-                type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
-                for data_def_props in struct_data_type.iter(type_ref_tag):
-                    element_type = data_def_props.text.split('/')[-1]
-                    
-                    struct_type.add_element(element_name, element_type)
-
-                    f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
-
-            self.appl_type_array.append(struct_type)
+                        if found:
+                            f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+                            self.appl_type_array.append(struct_type)
+                        else:
+                            print(element_type + ' not found')
 
         f_log.close()
 
@@ -466,9 +531,10 @@ class ArxmlParser:
 
         tag = '{' + self._ns['default_ns'] + '}' + 'COMPU-METHOD'
         for compu_method in root.iter(tag):
+            compu_method_name = compu_method.find('default_ns:SHORT-NAME', self._ns).text
             compu_method_category = compu_method.find('default_ns:CATEGORY', self._ns).text
+
             if compu_method_category == 'SCALE_LINEAR':
-                compu_method_name = compu_method.find('default_ns:SHORT-NAME', self._ns).text
                 
                 compu_internal_to_phys = compu_method.find('default_ns:COMPU-INTERNAL-TO-PHYS', self._ns)
                 compu_scales = compu_internal_to_phys.find('default_ns:COMPU-SCALES', self._ns)
@@ -480,8 +546,11 @@ class ArxmlParser:
                 scale = scale_offset[1].text
                                 
                 self.compu_method_dict[compu_method_name] = CompuMethod(compu_method_name, scale, offset)
-
                 f_log.write('compu_method_name ' + compu_method_name + ' scale ' + scale + ' offset ' + offset + '\n')
+            else:
+                self.compu_method_dict[compu_method_name] = CompuMethod(compu_method_name)
+                f_log.write('compu_method_name ' + compu_method_name)
+
 
     def _get_type_mapping(self, types_arxml):
         """ creates dictionary with application-type to implementation-type mappings"""

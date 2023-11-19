@@ -3,7 +3,9 @@ ArxmlParser hanterar inte portar med flera signaler.
 strukturen/typerna hanterar det men parsern lägger inte till fler än en signal
 _get_signals behöver ändras lite
 
-skicka med compu-methon vid structType::add_element och arrayType-constr
+KLAR lägg till alla kategorier av compu-method
+
+KLAR skicka med compu-methon vid structType::add_element och arrayType-constr
 
 KLAR type::create_signal, skicka med typen i signal-constructorn istället för typ_namn
 signal-constructor'n behöver såklar göras om lite, och även render'arna
