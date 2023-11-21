@@ -114,6 +114,8 @@ def main():
     for port in ap.cal_array:
         if optParser.render_rte:
             port.accept(rr)
+        if optParser.render_stubs:
+            port.accept(sr)
 
 if __name__ == '__main__':
     main()

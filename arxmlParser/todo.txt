@@ -1,7 +1,25 @@
+byt ut _ADT mot _T
+
+
+compu-method scale till signal scale blev inte supersnyggt
+     type-klassen behöver en accept-metod och en visitor som 
+     traverserar signalerna i en port och sätter scale/offset samt byter _ADT till _T
+
 
 ArxmlParser hanterar inte portar med flera signaler. 
 strukturen/typerna hanterar det men parsern lägger inte till fler än en signal
 _get_signals behöver ändras lite
+
+
+
+
+
+
+
+
+
+
+
 
 KLAR lägg till alla kategorier av compu-method
 
@@ -17,8 +35,9 @@ KLAR ta bort
 KLAR ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
 
+
 inte jätteviktigt:
-döp om renderXYZ till visitXYZ
+döp om renderXYZ till visitorXYZ
 
 P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
 

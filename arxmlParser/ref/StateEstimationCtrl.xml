@@ -1,27 +1,17 @@
 <Component Name="StateEstimationCtrl">
 	<SenderReceiverPorts>
 		<Port Name="ASREngineControlActive" Direction="Receive" Signal="ASREngineControlActive" />
-		<Port Name="EngineSpeed" Direction="Receive" Signal="EngineSpeed" Stub="true" />
 		<Port Name="ActualEnginePercentTorque" Direction="Receive" Signal="ActualEnginePercentTorque" Stub="true" />
 		<Port Name="ActualDrvlnRetdrPercentTorque" Direction="Receive" Signal="ActualDrvlnRetdrPercentTorque" Stub="true" />
 		<Port Name="EngineReferenceTorque" Direction="Receive" Signal="EngineReferenceTorque" Stub="true" />
 		<Port Name="TransmissionActualGearRatio" Direction="Receive" Signal="TransmissionActualGearRatio" Stub="true" />
-		<Port Name="TransmissionShiftInProcess" Direction="Receive" Signal="TransmissionShiftInProcess" />
 		<Port Name="TransmissionDrivelineEngaged" Direction="Receive" Signal="TransmissionDrivelineEngaged" Stub="true" />
-		<Port Name="TransmissionCurrentGear" Direction="Receive" Signal="TransmissionCurrentGear" Stub="true" />
-		<Port Name="ACC_SGO_Status" Direction="Receive" Signal="ACC_SGO_Status" Stub="true" />
 		<Port Name="RoadInclinationPerc" Direction="Receive" Signal="RoadInclinationPerc" Stub="true" />
-		<Port Name="ABSAxle1Active" Direction="Receive" Signal="ABSAxle1Active" />
-		<Port Name="ABSAxle2Active" Direction="Receive" Signal="ABSAxle2Active" />
-		<Port Name="ABSAxle3Active" Direction="Receive" Signal="ABSAxle3Active" />
-		<Port Name="ABSAxle4Active" Direction="Receive" Signal="ABSAxle4Active" />
-		<Port Name="ABSAxle5Active" Direction="Receive" Signal="ABSAxle5Active" />
 		<Port Name="ASRBrakeControlActive" Direction="Receive" Signal="ASRBrakeControlActive" />
 		<Port Name="ActualEHPusherWheelAngle" Direction="Receive" Signal="ActualEHPusherWheelAngle" Stub="true" />
 		<Port Name="ActualEHTagWheelAngle" Direction="Receive" Signal="ActualEHTagWheelAngle" Stub="true" />
 		<Port Name="ActualTagWheelAngle" Direction="Receive" Signal="ActualTagWheelAngle" />
 		<Port Name="DriveAxleLoad" Direction="Receive" Signal="DriveAxleLoad" Stub="true" />
-		<Port Name="FASFullyOperational" Direction="Receive" Signal="FASFullyOperational" />
 		<Port Name="FrAxleLtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleLtWhlBrakeApplPrsHiRng" />
 		<Port Name="FrAxleRtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="FrAxleRtWhlBrakeApplPrsHiRng" />
 		<Port Name="FrontAxle1Load" Direction="Receive" Signal="FrontAxle1Load" />
@@ -33,9 +23,7 @@
 		<Port Name="LiftAxle1PositionStatus" Direction="Receive" Signal="LiftAxle1PositionStatus" Stub="true" />
 		<Port Name="LiftAxle2PositionStatus" Direction="Receive" Signal="LiftAxle2PositionStatus" Stub="true" />
 		<Port Name="LongitudinalAcceleration" Direction="Receive" Signal="LongitudinalAcceleration" Stub="true" />
-		<Port Name="PusherAxleLeftWheelSpeed" Direction="Receive" Signal="PusherAxleLeftWheelSpeed" />
 		<Port Name="PusherAxleLoad" Direction="Receive" Signal="PusherAxleLoad" />
-		<Port Name="PusherAxleRightWheelSpeed" Direction="Receive" Signal="PusherAxleRightWheelSpeed" />
 		<Port Name="RearAxleLeftWheelSpeed" Direction="Receive" Signal="RearAxleLeftWheelSpeed" Stub="true" />
 		<Port Name="RearAxleRightWheelSpeed" Direction="Receive" Signal="RearAxleRightWheelSpeed" Stub="true" />
 		<Port Name="RearAxleSteeringFunctionStatus" Direction="Receive" Signal="RearAxleSteeringFunctionStatus" />
@@ -45,114 +33,307 @@
 		<Port Name="RrAxle2RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle2RtWhlBrakeApplPrsHiRng" />
 		<Port Name="RrAxle3LtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3LtWhlBrakeApplPrsHiRng" />
 		<Port Name="RrAxle3RtWhlBrakeApplPrsHiRng" Direction="Receive" Signal="RrAxle3RtWhlBrakeApplPrsHiRng" />
-		<Port Name="ScndFrAxleLeftWheelSpeed" Direction="Receive" Signal="ScndFrAxleLeftWheelSpeed" />
-		<Port Name="ScndFrAxleRightWheelSpeed" Direction="Receive" Signal="ScndFrAxleRightWheelSpeed" />
 		<Port Name="SecondaryDriveAxleLoad" Direction="Receive" Signal="SecondaryDriveAxleLoad" />
 		<Port Name="SteeringWheelAngle" Direction="Receive" Signal="SteeringWheelAngle" />
-		<Port Name="TagAxleLeftWheelSpeed" Direction="Receive" Signal="TagAxleLeftWheelSpeed" />
 		<Port Name="TagAxleLoad" Direction="Receive" Signal="TagAxleLoad" />
-		<Port Name="TagAxleRightWheelSpeed" Direction="Receive" Signal="TagAxleRightWheelSpeed" />
 		<Port Name="TransmOutputShaftSpeedSigned" Direction="Receive" Signal="TransmOutputShaftSpeedSigned" />
 		<Port Name="XPRsystemstate" Direction="Receive" Signal="XPRsystemstate" Stub="true" />
 		<Port Name="YawRate" Direction="Receive" Signal="YawRate" />
 		<Port Name="VehicleMode" Direction="Receive" Signal="VehicleMode" />
-		<Port Name="ScndRrDriveAxleLeftWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleLeftWheelSpeed" Stub="true" />
-		<Port Name="ScndRrDriveAxleRightWheelSpeed" Direction="Receive" Signal="ScndRrDriveAxleRightWheelSpeed" Stub="true" />
-		<Port Name="FrontAxleSpeed" Direction="Receive" Signal="FrontAxleSpeed" Stub="true" />
-		<Port Name="ABSFullyOperational" Direction="Receive" Signal="ABSFullyOperational" />
-		<Port Name="VehicleYawInertia" Direction="Send" Signal="VehicleYawInertia" Stub="true" >
+		<Port Name="ActualEngineRetarderPercentTrq" Direction="Receive" Signal="ActualEngineRetarderPercentTrq" Stub="true" />
+		<Port Name="AgrV_yawChassis" Direction="Send" Signal="AgrV_yawChassis" Stub="true" >
 			<Signals>
-				<Signal Name="VehicleYawInertia_Inertia" Element="Inertia" />
-				<Signal Name="VehicleYawInertia_QualityFlag" Element="QualityFlag" />
+				<Signal Name="AgrV_yawChassis_YawRate" Element="YawRate" />
 			</Signals>
 		</Port>
-		<Port Name="VehicleRollInertia" Direction="Send" Signal="VehicleRollInertia" Stub="true" >
+		<Port Name="AgrA_yawChassis" Direction="Send" Signal="AgrA_yawChassis" Stub="true" >
 			<Signals>
-				<Signal Name="VehicleRollInertia_Inertia" Element="Inertia" />
-				<Signal Name="VehicleRollInertia_QualityFlag" Element="QualityFlag" />
+				<Signal Name="AgrA_yawChassis_YawAcc" Element="YawAcc" />
 			</Signals>
 		</Port>
-		<Port Name="VehiclePitchInertia" Direction="Send" Signal="VehiclePitchInertia" Stub="true" >
+		<Port Name="V_spdXRefPoint" Direction="Send" Signal="V_spdXRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="VehiclePitchInertia_Inertia" Element="Inertia" />
-				<Signal Name="VehiclePitchInertia_QualityFlag" Element="QualityFlag" />
+				<Signal Name="V_spdXRefPoint_Speed" Element="Speed" />
 			</Signals>
 		</Port>
-		<Port Name="RearAxleCurvature" Direction="Send" Signal="RearAxleCurvature" Stub="true" >
+		<Port Name="A_accXRefPoint" Direction="Send" Signal="A_accXRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="RearAxleCurvature_Curvature" Element="Curvature" />
-				<Signal Name="RearAxleCurvature_QualityFlag" Element="QualityFlag" />
+				<Signal Name="A_accXRefPoint_Acceleration" Element="Acceleration" />
 			</Signals>
 		</Port>
-		<Port Name="SpeedOverGround" Direction="Send" Signal="SpeedOverGround" Stub="true" >
+		<Port Name="A_accYRefPoint" Direction="Send" Signal="A_accYRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="SpeedOverGround_Speed" Element="Speed" />
-				<Signal Name="SpeedOverGround_QualityFlag" Element="QualityFlag" />
+				<Signal Name="A_accYRefPoint_Acceleration" Element="Acceleration" />
 			</Signals>
 		</Port>
-		<Port Name="LongitudinalAccelerationQ" Direction="Send" Signal="LongitudinalAccelerationQ" Stub="true" >
+		<Port Name="Ag_sideslipRefPoint" Direction="Send" Signal="Ag_sideslipRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="LongitudinalAccelerationQ_Acceleration" Element="Acceleration" />
-				<Signal Name="LongitudinalAccelerationQ_QualityFlag" Element="QualityFlag" />
+				<Signal Name="Ag_sideslipRefPoint_Angle" Element="Angle" />
 			</Signals>
 		</Port>
-		<Port Name="ArticulationAngle" Direction="Send" Signal="ArticulationAngle" Stub="true" >
+		<Port Name="Crvt_pathRefPoint" Direction="Send" Signal="Crvt_pathRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="ArticulationAngle_Angle" Element="Angle" />
-				<Signal Name="ArticulationAngle_QualityFlag" Element="QualityFlag" />
+				<Signal Name="Crvt_pathRefPoint_Curvature" Element="Curvature" />
 			</Signals>
 		</Port>
-		<Port Name="FrontAxleLoadQ" Direction="Send" Signal="FrontAxleLoadQ" Stub="true" >
+		<Port Name="N_crvtFacRefPoint" Direction="Send" Signal="N_crvtFacRefPoint" Stub="true" >
 			<Signals>
-				<Signal Name="FrontAxleLoadQ_Load" Element="Load" />
-				<Signal Name="FrontAxleLoadQ_QualityFlag" Element="QualityFlag" />
+				<Signal Name="N_crvtFacRefPoint_CurvatureFac" Element="CurvatureFac" />
 			</Signals>
 		</Port>
-		<Port Name="PusherAxleLoadQ" Direction="Send" Signal="PusherAxleLoadQ" Stub="true" >
+		<Port Name="L_equivalentRearAxlePosition" Direction="Send" Signal="L_equivalentRearAxlePosition" Stub="true" >
 			<Signals>
-				<Signal Name="PusherAxleLoadQ_Load" Element="Load" />
-				<Signal Name="PusherAxleLoadQ_QualityFlag" Element="QualityFlag" />
+				<Signal Name="L_equivalentRearAxlePosition_EquivRrAxlePos" Element="EquivRrAxlePos" />
 			</Signals>
 		</Port>
-		<Port Name="DriveAxleLoadQ" Direction="Send" Signal="DriveAxleLoadQ" Stub="true" >
+		<Port Name="E_motionEstStatus" Direction="Send" Signal="E_motionEstStatus" Stub="true" >
 			<Signals>
-				<Signal Name="DriveAxleLoadQ_Load" Element="Load" />
-				<Signal Name="DriveAxleLoadQ_QualityFlag" Element="QualityFlag" />
+				<Signal Name="E_motionEstStatus_MotionEstState" Element="MotionEstState" />
 			</Signals>
 		</Port>
-		<Port Name="TrailerAxleLoadQ" Direction="Send" Signal="TrailerAxleLoadQ" Stub="true" >
+		<Port Name="D_yawRateVari" Direction="Send" Signal="D_yawRateVari" Stub="true" >
 			<Signals>
-				<Signal Name="TrailerAxleLoadQ_Load" Element="Load" />
-				<Signal Name="TrailerAxleLoadQ_QualityFlag" Element="QualityFlag" />
+				<Signal Name="D_yawRateVari_Variance" Element="Variance" />
 			</Signals>
 		</Port>
-		<Port Name="RearAxleLifted" Direction="Send" Signal="RearAxleLifted" Stub="true" >
+		<Port Name="D_yawAccVari" Direction="Send" Signal="D_yawAccVari" Stub="true" >
 			<Signals>
-				<Signal Name="RearAxleLifted_Lifted" Element="Lifted" />
-				<Signal Name="RearAxleLifted_QualityFlag" Element="QualityFlag" />
+				<Signal Name="D_yawAccVari_Variance" Element="Variance" />
 			</Signals>
 		</Port>
-		<Port Name="MotionState" Direction="Send" Signal="MotionState" Stub="true" >
+		<Port Name="D_spdXVari" Direction="Send" Signal="D_spdXVari" Stub="true" >
 			<Signals>
-				<Signal Name="MotionState_State" Element="State" />
-				<Signal Name="MotionState_QualityFlag" Element="QualityFlag" />
+				<Signal Name="D_spdXVari_Variance" Element="Variance" />
 			</Signals>
 		</Port>
-		<Port Name="TrailerConnected" Direction="Send" Signal="TrailerConnected" >
+		<Port Name="D_spdYVari" Direction="Send" Signal="D_spdYVari" Stub="true" >
 			<Signals>
-				<Signal Name="TrailerConnected_Connected" Element="Connected" />
-				<Signal Name="TrailerConnected_QualityFlag" Element="QualityFlag" />
+				<Signal Name="D_spdYVari_Variance" Element="Variance" />
 			</Signals>
 		</Port>
-		<Port Name="VehicleStandstill" Direction="Send" Signal="VehicleStandstill" Stub="true" >
+		<Port Name="D_accXVari" Direction="Send" Signal="D_accXVari" Stub="true" >
 			<Signals>
-				<Signal Name="VehicleStandstill_StandStill" Element="StandStill" />
-				<Signal Name="VehicleStandstill_QualityFlag" Element="QualityFlag" />
+				<Signal Name="D_accXVari_Variance" Element="Variance" />
 			</Signals>
 		</Port>
-		<Port Name="VehicleStructureSts" Direction="Send" Signal="VehicleStructureSts" >
+		<Port Name="D_accYVari" Direction="Send" Signal="D_accYVari" Stub="true" >
 			<Signals>
-				<Signal Name="VehicleStructureSts_Mass_RE" Element="Mass_RE" />
+				<Signal Name="D_accYVari_Variance" Element="Variance" />
+			</Signals>
+		</Port>
+		<Port Name="D_sideslipVari" Direction="Send" Signal="D_sideslipVari" Stub="true" >
+			<Signals>
+				<Signal Name="D_sideslipVari_Variance" Element="Variance" />
+			</Signals>
+		</Port>
+		<Port Name="T_totalFilterLatencyEst" Direction="Send" Signal="T_totalFilterLatencyEst" Stub="true" >
+			<Signals>
+				<Signal Name="T_totalFilterLatencyEst_Latency" Element="Latency" />
+			</Signals>
+		</Port>
+		<Port Name="Ag_chassisRollAngleEst" Direction="Send" Signal="Ag_chassisRollAngleEst" Stub="true" >
+			<Signals>
+				<Signal Name="Ag_chassisRollAngleEst_Angle" Element="Angle" />
+			</Signals>
+		</Port>
+		<Port Name="E_chassisRollAngleEstQuality" Direction="Send" Signal="E_chassisRollAngleEstQuality" Stub="true" >
+			<Signals>
+				<Signal Name="E_chassisRollAngleEstQuality_RollAngleEstQly" Element="RollAngleEstQly" />
+			</Signals>
+		</Port>
+		<Port Name="A_spdXRateRefPoint" Direction="Send" Signal="A_spdXRateRefPoint" Stub="true" >
+			<Signals>
+				<Signal Name="A_spdXRateRefPoint_Acceleration" Element="Acceleration" />
+			</Signals>
+		</Port>
+		<Port Name="A_spdYRateRefPoint" Direction="Send" Signal="A_spdYRateRefPoint" Stub="true" >
+			<Signals>
+				<Signal Name="A_spdYRateRefPoint_Acceleration" Element="Acceleration" />
+			</Signals>
+		</Port>
+		<Port Name="Ag_roadWheelAngle" Direction="Send" Signal="Ag_roadWheelAngle" Stub="true" >
+			<Signals>
+				<Signal Name="Ag_roadWheelAngle_RoadWheelAngle" Element="RoadWheelAngle" />
+			</Signals>
+		</Port>
+		<Port Name="A_accYDueToBankAngle" Direction="Send" Signal="A_accYDueToBankAngle" Stub="true" >
+			<Signals>
+				<Signal Name="A_accYDueToBankAngle_Acceleration" Element="Acceleration" />
+			</Signals>
+		</Port>
+		<Port Name="LongMotionDirection" Direction="Send" Signal="LongMotionDirection" Stub="true" >
+			<Signals>
+				<Signal Name="LongMotionDirection_LongMotionDirection" Element="LongMotionDirection" />
+			</Signals>
+		</Port>
+		<Port Name="LongMotionDirectionQuality" Direction="Send" Signal="LongMotionDirectionQuality" Stub="true" >
+			<Signals>
+				<Signal Name="LongMotionDirectionQuality_LongMotDirQuality" Element="LongMotDirQuality" />
+			</Signals>
+		</Port>
+		<Port Name="LongMotionDirection_ErrorStatus" Direction="Send" Signal="LongMotionDirection_ErrorStatus" Stub="true" >
+			<Signals>
+				<Signal Name="LongMotionDirection_ErrorStatus_LongMotionDirErrorSts" Element="LongMotionDirErrorSts" />
+			</Signals>
+		</Port>
+		<Port Name="D_nonlinearSteeringRatio" Direction="Send" Signal="D_nonlinearSteeringRatio" Stub="true" >
+			<Signals>
+				<Signal Name="D_nonlinearSteeringRatio_SteeringRatio" Element="SteeringRatio" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdXRefPointQly" Direction="Send" Signal="E_spdXRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdXRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdYRefPointQly" Direction="Send" Signal="E_spdYRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdYRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_accXRefPointQly" Direction="Send" Signal="E_accXRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_accXRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_accYRefPointQly" Direction="Send" Signal="E_accYRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_accYRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_yawRateRearAxleQly" Direction="Send" Signal="E_yawRateRearAxleQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_yawRateRearAxleQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_yawAccRearAxleQly" Direction="Send" Signal="E_yawAccRearAxleQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_yawAccRearAxleQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_sideslipRefPointQly" Direction="Send" Signal="E_sideslipRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_sideslipRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_roadWheelAngleQly" Direction="Send" Signal="E_roadWheelAngleQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_roadWheelAngleQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_crvtPathRefPointQly" Direction="Send" Signal="E_crvtPathRefPointQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_crvtPathRefPointQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_equivalentRearAxlePositionQly" Direction="Send" Signal="E_equivalentRearAxlePositionQly" Stub="true" >
+			<Signals>
+				<Signal Name="E_equivalentRearAxlePositionQly_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdYRefPoint" Direction="Send" Signal="V_spdYRefPoint" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdYRefPoint_Speed" Element="Speed" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax1L" Direction="Send" Signal="V_spdAtWhl_Ax1L" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax1L_V_spdAtWhl_Ax1" Element="V_spdAtWhl_Ax1" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax1R" Direction="Send" Signal="V_spdAtWhl_Ax1R" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax1R_V_spdAtWhl_Ax1R" Element="V_spdAtWhl_Ax1R" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax2L" Direction="Send" Signal="V_spdAtWhl_Ax2L" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax2L_V_spdAtWhl_Ax2L" Element="V_spdAtWhl_Ax2L" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax2R" Direction="Send" Signal="V_spdAtWhl_Ax2R" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax2R_V_spdAtWhl_Ax2R" Element="V_spdAtWhl_Ax2R" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax3L" Direction="Send" Signal="V_spdAtWhl_Ax3L" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax3L_V_spdAtWhl_Ax3L" Element="V_spdAtWhl_Ax3L" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax3R" Direction="Send" Signal="V_spdAtWhl_Ax3R" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax3R_V_spdAtWhl_Ax3R" Element="V_spdAtWhl_Ax3R" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax4L" Direction="Send" Signal="V_spdAtWhl_Ax4L" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax4L_V_spdAtWhl_Ax4L" Element="V_spdAtWhl_Ax4L" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax4R" Direction="Send" Signal="V_spdAtWhl_Ax4R" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax4R_V_spdAtWhl_Ax4R" Element="V_spdAtWhl_Ax4R" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax5L" Direction="Send" Signal="V_spdAtWhl_Ax5L" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax5L_V_spdAtWhl_Ax5L" Element="V_spdAtWhl_Ax5L" />
+			</Signals>
+		</Port>
+		<Port Name="V_spdAtWhl_Ax5R" Direction="Send" Signal="V_spdAtWhl_Ax5R" Stub="true" >
+			<Signals>
+				<Signal Name="V_spdAtWhl_Ax5R_V_spdAtWhl_Ax5R" Element="V_spdAtWhl_Ax5R" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax1L" Direction="Send" Signal="E_spdAtWhlQly_Ax1L" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax1L_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax1R" Direction="Send" Signal="E_spdAtWhlQly_Ax1R" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax1R_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax2L" Direction="Send" Signal="E_spdAtWhlQly_Ax2L" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax2L_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax2R" Direction="Send" Signal="E_spdAtWhlQly_Ax2R" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax2R_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax3L" Direction="Send" Signal="E_spdAtWhlQly_Ax3L" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax3L_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax3R" Direction="Send" Signal="E_spdAtWhlQly_Ax3R" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax3R_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax4L" Direction="Send" Signal="E_spdAtWhlQly_Ax4L" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax4L_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax4R" Direction="Send" Signal="E_spdAtWhlQly_Ax4R" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax4R_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax5R" Direction="Send" Signal="E_spdAtWhlQly_Ax5R" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax5R_SignalQuality" Element="SignalQuality" />
+			</Signals>
+		</Port>
+		<Port Name="E_spdAtWhlQly_Ax5L" Direction="Send" Signal="E_spdAtWhlQly_Ax5L" Stub="true" >
+			<Signals>
+				<Signal Name="E_spdAtWhlQly_Ax5L_SignalQuality" Element="SignalQuality" />
 			</Signals>
 		</Port>
 	</SenderReceiverPorts>

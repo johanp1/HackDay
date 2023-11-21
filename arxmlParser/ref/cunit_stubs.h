@@ -38,12 +38,6 @@ typedef struct
 
 	struct
 	{
-		SpeedRpm16bit_T par;
-		Std_ReturnType ret;
-	} Rte_EngineSpeed_EngineSpeed;
-
-	struct
-	{
 		Percent8bit125NegOffset_T par;
 		Std_ReturnType ret;
 	} Rte_ActualEnginePercentTorque_ActualEnginePercentTorque;
@@ -68,63 +62,15 @@ typedef struct
 
 	struct
 	{
-		TransmissionShiftInProcess_T par;
-		Std_ReturnType ret;
-	} Rte_TransmissionShiftInProcess_TransmissionShiftInProcess;
-
-	struct
-	{
 		DisengageEngage_T par;
 		Std_ReturnType ret;
 	} Rte_TransmissionDrivelineEngaged_TransmissionDrivelineEngaged;
 
 	struct
 	{
-		TransmissionGear_T par;
-		Std_ReturnType ret;
-	} Rte_TransmissionCurrentGear_TransmissionCurrentGear;
-
-	struct
-	{
-		ACC_SGO_Status_T par;
-		Std_ReturnType ret;
-	} Rte_ACC_SGO_Status_ACC_SGO_Status;
-
-	struct
-	{
 		RoadInclinationPerc_T par;
 		Std_ReturnType ret;
 	} Rte_RoadInclinationPerc_RoadInclinationPerc;
-
-	struct
-	{
-		OffOn_T par;
-		Std_ReturnType ret;
-	} Rte_ABSAxle1Active_ABSAxle1Active;
-
-	struct
-	{
-		OffOn_T par;
-		Std_ReturnType ret;
-	} Rte_ABSAxle2Active_ABSAxle2Active;
-
-	struct
-	{
-		OffOn_T par;
-		Std_ReturnType ret;
-	} Rte_ABSAxle3Active_ABSAxle3Active;
-
-	struct
-	{
-		OffOn_T par;
-		Std_ReturnType ret;
-	} Rte_ABSAxle4Active_ABSAxle4Active;
-
-	struct
-	{
-		OffOn_T par;
-		Std_ReturnType ret;
-	} Rte_ABSAxle5Active_ABSAxle5Active;
 
 	struct
 	{
@@ -155,12 +101,6 @@ typedef struct
 		AxleLoad_T par;
 		Std_ReturnType ret;
 	} Rte_DriveAxleLoad_AxleLoad;
-
-	struct
-	{
-		FASFullyOperational_T par;
-		Std_ReturnType ret;
-	} Rte_FASFullyOperational_FASFullyOperational;
 
 	struct
 	{
@@ -200,7 +140,7 @@ typedef struct
 
 	struct
 	{
-		RoadWheelAngle_T par;
+		RWhlAg_T par;
 		Std_ReturnType ret;
 	} Rte_FrontRoadWheelAngleEstimate_FrontRoadWheelAngleEstimate;
 
@@ -230,21 +170,9 @@ typedef struct
 
 	struct
 	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_PusherAxleLeftWheelSpeed_PusherAxleLeftWheelSpeed;
-
-	struct
-	{
 		AxleLoad_T par;
 		Std_ReturnType ret;
 	} Rte_PusherAxleLoad_AxleLoad;
-
-	struct
-	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_PusherAxleRightWheelSpeed_PusherAxleRightWheelSpeed;
 
 	struct
 	{
@@ -302,18 +230,6 @@ typedef struct
 
 	struct
 	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_ScndFrAxleLeftWheelSpeed_ScndFrAxleLeftWheelSpeed;
-
-	struct
-	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_ScndFrAxleRightWheelSpeed_ScndFrAxleRightWheelSpeed;
-
-	struct
-	{
 		AxleLoad_T par;
 		Std_ReturnType ret;
 	} Rte_SecondaryDriveAxleLoad_AxleLoad;
@@ -326,21 +242,9 @@ typedef struct
 
 	struct
 	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_TagAxleLeftWheelSpeed_TagAxleLeftWheelSpeed;
-
-	struct
-	{
 		AxleLoad_T par;
 		Std_ReturnType ret;
 	} Rte_TagAxleLoad_AxleLoad;
-
-	struct
-	{
-		Speed16bit_T par;
-		Std_ReturnType ret;
-	} Rte_TagAxleRightWheelSpeed_TagAxleRightWheelSpeed;
 
 	struct
 	{
@@ -368,164 +272,392 @@ typedef struct
 
 	struct
 	{
-		Speed16bit_T par;
+		Percent8bit125NegOffset_T par;
 		Std_ReturnType ret;
-	} Rte_ScndRrDriveAxleLeftWheelSpeed_ScndRrDriveAxleLeftWheelSpeed;
+	} Rte_ActualEngineRetarderPercentTrq_ActualEngineRetarderPercentTrq;
 
 	struct
 	{
-		Speed16bit_T par;
+		YawRateChassis_T par;
 		Std_ReturnType ret;
-	} Rte_ScndRrDriveAxleRightWheelSpeed_ScndRrDriveAxleRightWheelSpeed;
+	} Rte_AgrV_yawChassis_YawRateChassis;
 
 	struct
 	{
-		Speed16bit_T par;
+		YawAccChassis_T par;
 		Std_ReturnType ret;
-	} Rte_FrontAxleSpeed_FrontAxleSpeed;
+	} Rte_AgrA_yawChassis_YawAccChassis;
 
 	struct
 	{
-		FullyOperational_T par;
+		Speed_T par;
 		Std_ReturnType ret;
-	} Rte_ABSFullyOperational_ABSFullyOperational;
+	} Rte_V_spdXRefPoint_SpdXRefPoint;
 
 	struct
 	{
-		InertiaQ_T par;
+		Acceleration_T par;
 		Std_ReturnType ret;
-	} Rte_VehicleYawInertia_VehicleYawInertia;
+	} Rte_A_accXRefPoint_AccXRefPoint;
 
 	struct
 	{
-		InertiaQ_T par;
+		Acceleration_T par;
 		Std_ReturnType ret;
-	} Rte_VehicleRollInertia_VehicleRollInertia;
+	} Rte_A_accYRefPoint_AccYRefPoint;
 
 	struct
 	{
-		InertiaQ_T par;
+		Angle_T par;
 		Std_ReturnType ret;
-	} Rte_VehiclePitchInertia_VehiclePitchInertia;
+	} Rte_Ag_sideslipRefPoint_SideslipRefPoint;
 
 	struct
 	{
-		AxleCurvature_T par;
+		Curvature_T par;
 		Std_ReturnType ret;
-	} Rte_RearAxleCurvature_RearAxleCurvature;
+	} Rte_Crvt_pathRefPoint_CrvtPathRefPoint;
 
 	struct
 	{
-		SpeedQ_T par;
+		CurvatureFac_T par;
 		Std_ReturnType ret;
-	} Rte_SpeedOverGround_SpeedOverGround;
+	} Rte_N_crvtFacRefPoint_CrvtFacRefPoint;
 
 	struct
 	{
-		AccelerationQ_T par;
+		EquivalentRearAxlePos_T par;
 		Std_ReturnType ret;
-	} Rte_LongitudinalAccelerationQ_LongitudinalAccelerationQ;
+	} Rte_L_equivalentRearAxlePosition_EquivalentRearAxlePos;
 
 	struct
 	{
-		AngleQ_T par;
+		MotionEstStatus_T par;
 		Std_ReturnType ret;
-	} Rte_ArticulationAngle_ArticulationAngle;
+	} Rte_E_motionEstStatus_MotionEstStatus;
 
 	struct
 	{
-		LoadQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_FrontAxleLoadQ_AxleLoadQ_I;
+	} Rte_D_yawRateVari_YawRateVari;
 
 	struct
 	{
-		LoadQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_PusherAxleLoadQ_AxleLoadQ_I;
+	} Rte_D_yawAccVari_YawAccVari;
 
 	struct
 	{
-		LoadQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_DriveAxleLoadQ_AxleLoadQ_I;
+	} Rte_D_spdXVari_SpdXVari;
 
 	struct
 	{
-		LoadQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_TrailerAxleLoadQ_AxleLoadQ_I;
+	} Rte_D_spdYVari_SpdYVari;
 
 	struct
 	{
-		LiftedQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_RearAxleLifted_RearAxleLifted_I;
+	} Rte_D_accXVari_AccXVari;
 
 	struct
 	{
-		MotionStateQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_MotionState_MotionState_I;
+	} Rte_D_accYVari_AccYVari;
 
 	struct
 	{
-		TrailerConnectedQ_T par;
+		Variance_T par;
 		Std_ReturnType ret;
-	} Rte_TrailerConnected_TrailerConnected;
+	} Rte_D_sideslipVari_SideslipVari;
 
 	struct
 	{
-		StandstillQ_T par;
+		Latency_T par;
 		Std_ReturnType ret;
-	} Rte_VehicleStandstill_VehicleStandstill;
+	} Rte_T_totalFilterLatencyEst_TotalFilterLatencyEst;
 
 	struct
 	{
-		VehicleStructureSts_T par;
+		Angle_T par;
 		Std_ReturnType ret;
-	} Rte_VehicleStructureSts_VehicleStructureSts;
+	} Rte_Ag_chassisRollAngleEst_RollAngleChassisEst;
+
+	struct
+	{
+		RollAngleEstQly_T par;
+		Std_ReturnType ret;
+	} Rte_E_chassisRollAngleEstQuality_RollAngleChassisEstQuality;
+
+	struct
+	{
+		Acceleration_T par;
+		Std_ReturnType ret;
+	} Rte_A_spdXRateRefPoint_SpdXRateRefPoint;
+
+	struct
+	{
+		Acceleration_T par;
+		Std_ReturnType ret;
+	} Rte_A_spdYRateRefPoint_SpdYRateRefPoint;
+
+	struct
+	{
+		RoadWheelAngle_T2 par;
+		Std_ReturnType ret;
+	} Rte_Ag_roadWheelAngle_RoadWheelAngle;
+
+	struct
+	{
+		Acceleration_T par;
+		Std_ReturnType ret;
+	} Rte_A_accYDueToBankAngle_AccYDueToBankAngle;
+
+	struct
+	{
+		LongMotionDirection_sg_T par;
+		Std_ReturnType ret;
+	} Rte_LongMotionDirection_LongMotionDirection;
+
+	struct
+	{
+		LongMotionDirectionQuality_T par;
+		Std_ReturnType ret;
+	} Rte_LongMotionDirectionQuality_LongMotionDirectionQuality;
+
+	struct
+	{
+		LongMotionDirErrorSts_T par;
+		Std_ReturnType ret;
+	} Rte_LongMotionDirection_ErrorStatus_LongMotionDirection_ErrorStatus;
+
+	struct
+	{
+		SteeringRatio_T par;
+		Std_ReturnType ret;
+	} Rte_D_nonlinearSteeringRatio_NonlinearSteeringRatio;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdXRefPointQly_SpdXRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdYRefPointQly_SpdYRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_accXRefPointQly_AccXRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_accYRefPointQly_AccYRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_yawRateRearAxleQly_YawRateRearAxleQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_yawAccRearAxleQly_YawAccRearAxleQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_sideslipRefPointQly_SideslipRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_roadWheelAngleQly_RoadWheelAngleQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_crvtPathRefPointQly_CrvtPathRefPointQly;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_equivalentRearAxlePositionQly_EquivalentRearAxlePositionQly;
+
+	struct
+	{
+		Speed_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdYRefPoint_SpdYRefPoint;
+
+	struct
+	{
+		V_spdAtWhl_Ax1L_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax1L_V_spdAtWhl_Ax1L;
+
+	struct
+	{
+		V_spdAtWhl_Ax1R_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax1R_V_spdAtWhl_Ax1R;
+
+	struct
+	{
+		V_spdAtWhl_Ax2L_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax2L_V_spdAtWhl_Ax2L;
+
+	struct
+	{
+		V_spdAtWhl_Ax2R_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax2R_V_spdAtWhl_Ax2R;
+
+	struct
+	{
+		V_spdAtWhl_Ax3L_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax3L_V_spdAtWhl_Ax3L;
+
+	struct
+	{
+		V_spdAtWhl_Ax3R_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax3R_V_spdAtWhl_Ax3R;
+
+	struct
+	{
+		V_spdAtWhl_Ax4L_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax4L_V_spdAtWhl_Ax4L;
+
+	struct
+	{
+		V_spdAtWhl_Ax4R_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax4R_V_spdAtWhl_Ax4R;
+
+	struct
+	{
+		V_spdAtWhl_Ax5L_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax5L_V_spdAtWhl_Ax5L;
+
+	struct
+	{
+		V_spdAtWhl_Ax5R_T par;
+		Std_ReturnType ret;
+	} Rte_V_spdAtWhl_Ax5R_V_spdAtWhl_Ax5R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax1L_E_spdAtWhlQly_Ax1L;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax1R_E_spdAtWhlQly_Ax1R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax2L_E_spdAtWhlQly_Ax2L;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax2R_E_spdAtWhlQly_Ax2R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax3L_E_spdAtWhlQly_Ax3L;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax3R_E_spdAtWhlQly_Ax3R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax4L_E_spdAtWhlQly_Ax4L;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax4R_E_spdAtWhlQly_Ax4R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax5R_E_spdAtWhlQly_Ax5R;
+
+	struct
+	{
+		SignalQuality_T par;
+		Std_ReturnType ret;
+	} Rte_E_spdAtWhlQly_Ax5L_E_spdAtWhlQly_Ax5L;
 
 } StubSignals_Type;
 
 extern StubSignals_Type p;
 
 void stubs_set_ASREngineControlActive_ASREngineControlActive(PassiveActive2_T par);
-void stubs_set_EngineSpeed_EngineSpeed(SpeedRpm16bit_T par);
 void stubs_set_ActualEnginePercentTorque_ActualEnginePercentTorque(Percent8bit125NegOffset_T par);
 void stubs_set_ActualDrvlnRetdrPercentTorque_ActualDrvlnRetdrPercentTorque(Percent8bit125NegOffset_T par);
 void stubs_set_EngineReferenceTorque_EngineReferenceTorque(Torque16bit_T par);
 void stubs_set_TransmissionActualGearRatio_TransmissionActualGearRatio(TransmissionActualGearRatio_T par);
-void stubs_set_TransmissionShiftInProcess_TransmissionShiftInProcess(TransmissionShiftInProcess_T par);
 void stubs_set_TransmissionDrivelineEngaged_TransmissionDrivelineEngaged(DisengageEngage_T par);
-void stubs_set_TransmissionCurrentGear_TransmissionCurrentGear(TransmissionGear_T par);
-void stubs_set_ACC_SGO_Status_ACC_SGO_Status(ACC_SGO_Status_T par);
 void stubs_set_RoadInclinationPerc_RoadInclinationPerc(RoadInclinationPerc_T par);
-void stubs_set_ABSAxle1Active_ABSAxle1Active(OffOn_T par);
-void stubs_set_ABSAxle2Active_ABSAxle2Active(OffOn_T par);
-void stubs_set_ABSAxle3Active_ABSAxle3Active(OffOn_T par);
-void stubs_set_ABSAxle4Active_ABSAxle4Active(OffOn_T par);
-void stubs_set_ABSAxle5Active_ABSAxle5Active(OffOn_T par);
 void stubs_set_ASRBrakeControlActive_ASRBrakeControlActive(PassiveActive2_T par);
 void stubs_set_ActualEHPusherWheelAngle_ActuaEHPusherWheelAngle(uint16 par);
 void stubs_set_ActualEHTagWheelAngle_ActualEHTagWheelAngle(uint16 par);
 void stubs_set_ActualTagWheelAngle_ActualTagWheelAngle(ActualTagWheelAngle_T par);
 void stubs_set_DriveAxleLoad_AxleLoad(AxleLoad_T par);
-void stubs_set_FASFullyOperational_FASFullyOperational(FASFullyOperational_T par);
 void stubs_set_FrAxleLtWhlBrakeApplPrsHiRng_FrAxleLtWhlBrakeApplPrsHiRng(PressureFactor5_T par);
 void stubs_set_FrAxleRtWhlBrakeApplPrsHiRng_FrAxleRtWhlBrakeApplPrsHiRng(PressureFactor5_T par);
 void stubs_set_FrontAxle1Load_AxleLoad(AxleLoad_T par);
 void stubs_set_FrontAxle2Load_AxleLoad(AxleLoad_T par);
 void stubs_set_FrontAxleLeftWheelSpeed_FrontAxleLeftWheelSpeed(Speed16bit_T par);
 void stubs_set_FrontAxleRightWheelSpeed_FrontAxleRightWheelSpeed(Speed16bit_T par);
-void stubs_set_FrontRoadWheelAngleEstimate_FrontRoadWheelAngleEstimate(RoadWheelAngle_T par);
+void stubs_set_FrontRoadWheelAngleEstimate_FrontRoadWheelAngleEstimate(RWhlAg_T par);
 void stubs_set_KFactor_KFactor(KFactor_T par);
 void stubs_set_LiftAxle1PositionStatus_LiftAxle1PositionStatus(LiftAxlePositionStatus_T par);
 void stubs_set_LiftAxle2PositionStatus_LiftAxle2PositionStatus(LiftAxlePositionStatus_T par);
 void stubs_set_LongitudinalAcceleration_LongitudinalAcceleration(Acceleration16bit_T par);
-void stubs_set_PusherAxleLeftWheelSpeed_PusherAxleLeftWheelSpeed(Speed16bit_T par);
 void stubs_set_PusherAxleLoad_AxleLoad(AxleLoad_T par);
-void stubs_set_PusherAxleRightWheelSpeed_PusherAxleRightWheelSpeed(Speed16bit_T par);
 void stubs_set_RearAxleLeftWheelSpeed_RearAxleLeftWheelSpeed(Speed16bit_T par);
 void stubs_set_RearAxleRightWheelSpeed_RearAxleRightWheelSpeed(Speed16bit_T par);
 void stubs_set_RearAxleSteeringFunctionStatus_RearAxleSteeringFunctionStatus(RearAxleSteeringFunctionStatus_T par);
@@ -535,67 +667,189 @@ void stubs_set_RrAxle2LtWhlBrakeApplPrsHiRng_RrAxle2LtWhlBrakeApplPrsHiRng(Press
 void stubs_set_RrAxle2RtWhlBrakeApplPrsHiRng_RrAxle2RtWhlBrakeApplPrsHiRng(PressureFactor5_T par);
 void stubs_set_RrAxle3LtWhlBrakeApplPrsHiRng_RrAxle3LtWhlBrakeApplPrsHiRng(PressureFactor5_T par);
 void stubs_set_RrAxle3RtWhlBrakeApplPrsHiRng_RrAxle3RtWhlBrakeApplPrsHiRng(PressureFactor5_T par);
-void stubs_set_ScndFrAxleLeftWheelSpeed_ScndFrAxleLeftWheelSpeed(Speed16bit_T par);
-void stubs_set_ScndFrAxleRightWheelSpeed_ScndFrAxleRightWheelSpeed(Speed16bit_T par);
 void stubs_set_SecondaryDriveAxleLoad_AxleLoad(AxleLoad_T par);
 void stubs_set_SteeringWheelAngle_SteeringWheelAngle(SteeringWheelAngle_T par);
-void stubs_set_TagAxleLeftWheelSpeed_TagAxleLeftWheelSpeed(Speed16bit_T par);
 void stubs_set_TagAxleLoad_AxleLoad(AxleLoad_T par);
-void stubs_set_TagAxleRightWheelSpeed_TagAxleRightWheelSpeed(Speed16bit_T par);
 void stubs_set_TransmOutputShaftSpeedSigned_TransmOutputShaftSpeedSigned(SpeedRpm16bitMinus4000_T par);
 void stubs_set_XPRsystemstate_XPRsystemstate(XPRsystemstate_T par);
 void stubs_set_YawRate_YawRate(uint16 par);
 void stubs_set_VehicleMode_VehicleMode(VehicleMode_T par);
-void stubs_set_ScndRrDriveAxleLeftWheelSpeed_ScndRrDriveAxleLeftWheelSpeed(Speed16bit_T par);
-void stubs_set_ScndRrDriveAxleRightWheelSpeed_ScndRrDriveAxleRightWheelSpeed(Speed16bit_T par);
-void stubs_set_FrontAxleSpeed_FrontAxleSpeed(Speed16bit_T par);
-void stubs_set_ABSFullyOperational_ABSFullyOperational(FullyOperational_T par);
-#define stubs_check_VehicleYawInertia_VehicleYawInertia(expected) _stubs_check_VehicleYawInertia_VehicleYawInertia(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_VehicleYawInertia_VehicleYawInertia(InertiaQ_T* expected, const char *file, const char *function, const int line);
+void stubs_set_ActualEngineRetarderPercentTrq_ActualEngineRetarderPercentTrq(Percent8bit125NegOffset_T par);
+#define stubs_check_AgrV_yawChassis_YawRateChassis(expected) _stubs_check_AgrV_yawChassis_YawRateChassis(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_AgrV_yawChassis_YawRateChassis(YawRateChassis_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_VehicleRollInertia_VehicleRollInertia(expected) _stubs_check_VehicleRollInertia_VehicleRollInertia(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_VehicleRollInertia_VehicleRollInertia(InertiaQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_AgrA_yawChassis_YawAccChassis(expected) _stubs_check_AgrA_yawChassis_YawAccChassis(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_AgrA_yawChassis_YawAccChassis(YawAccChassis_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_VehiclePitchInertia_VehiclePitchInertia(expected) _stubs_check_VehiclePitchInertia_VehiclePitchInertia(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_VehiclePitchInertia_VehiclePitchInertia(InertiaQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_V_spdXRefPoint_SpdXRefPoint(expected) _stubs_check_V_spdXRefPoint_SpdXRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdXRefPoint_SpdXRefPoint(Speed_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_RearAxleCurvature_RearAxleCurvature(expected) _stubs_check_RearAxleCurvature_RearAxleCurvature(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_RearAxleCurvature_RearAxleCurvature(AxleCurvature_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_A_accXRefPoint_AccXRefPoint(expected) _stubs_check_A_accXRefPoint_AccXRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_A_accXRefPoint_AccXRefPoint(Acceleration_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_SpeedOverGround_SpeedOverGround(expected) _stubs_check_SpeedOverGround_SpeedOverGround(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_SpeedOverGround_SpeedOverGround(SpeedQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_A_accYRefPoint_AccYRefPoint(expected) _stubs_check_A_accYRefPoint_AccYRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_A_accYRefPoint_AccYRefPoint(Acceleration_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_LongitudinalAccelerationQ_LongitudinalAccelerationQ(expected) _stubs_check_LongitudinalAccelerationQ_LongitudinalAccelerationQ(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_LongitudinalAccelerationQ_LongitudinalAccelerationQ(AccelerationQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_Ag_sideslipRefPoint_SideslipRefPoint(expected) _stubs_check_Ag_sideslipRefPoint_SideslipRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_Ag_sideslipRefPoint_SideslipRefPoint(Angle_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_ArticulationAngle_ArticulationAngle(expected) _stubs_check_ArticulationAngle_ArticulationAngle(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_ArticulationAngle_ArticulationAngle(AngleQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_Crvt_pathRefPoint_CrvtPathRefPoint(expected) _stubs_check_Crvt_pathRefPoint_CrvtPathRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_Crvt_pathRefPoint_CrvtPathRefPoint(Curvature_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_FrontAxleLoadQ_AxleLoadQ_I(expected) _stubs_check_FrontAxleLoadQ_AxleLoadQ_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_FrontAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_N_crvtFacRefPoint_CrvtFacRefPoint(expected) _stubs_check_N_crvtFacRefPoint_CrvtFacRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_N_crvtFacRefPoint_CrvtFacRefPoint(CurvatureFac_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_PusherAxleLoadQ_AxleLoadQ_I(expected) _stubs_check_PusherAxleLoadQ_AxleLoadQ_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_PusherAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_L_equivalentRearAxlePosition_EquivalentRearAxlePos(expected) _stubs_check_L_equivalentRearAxlePosition_EquivalentRearAxlePos(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_L_equivalentRearAxlePosition_EquivalentRearAxlePos(EquivalentRearAxlePos_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_DriveAxleLoadQ_AxleLoadQ_I(expected) _stubs_check_DriveAxleLoadQ_AxleLoadQ_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_DriveAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_E_motionEstStatus_MotionEstStatus(expected) _stubs_check_E_motionEstStatus_MotionEstStatus(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_motionEstStatus_MotionEstStatus(MotionEstStatus_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_TrailerAxleLoadQ_AxleLoadQ_I(expected) _stubs_check_TrailerAxleLoadQ_AxleLoadQ_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_TrailerAxleLoadQ_AxleLoadQ_I(LoadQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_yawRateVari_YawRateVari(expected) _stubs_check_D_yawRateVari_YawRateVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_yawRateVari_YawRateVari(Variance_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_RearAxleLifted_RearAxleLifted_I(expected) _stubs_check_RearAxleLifted_RearAxleLifted_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_RearAxleLifted_RearAxleLifted_I(LiftedQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_yawAccVari_YawAccVari(expected) _stubs_check_D_yawAccVari_YawAccVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_yawAccVari_YawAccVari(Variance_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_MotionState_MotionState_I(expected) _stubs_check_MotionState_MotionState_I(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_MotionState_MotionState_I(MotionStateQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_spdXVari_SpdXVari(expected) _stubs_check_D_spdXVari_SpdXVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_spdXVari_SpdXVari(Variance_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_TrailerConnected_TrailerConnected(expected) _stubs_check_TrailerConnected_TrailerConnected(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_TrailerConnected_TrailerConnected(TrailerConnectedQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_spdYVari_SpdYVari(expected) _stubs_check_D_spdYVari_SpdYVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_spdYVari_SpdYVari(Variance_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_VehicleStandstill_VehicleStandstill(expected) _stubs_check_VehicleStandstill_VehicleStandstill(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_VehicleStandstill_VehicleStandstill(StandstillQ_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_accXVari_AccXVari(expected) _stubs_check_D_accXVari_AccXVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_accXVari_AccXVari(Variance_T* expected, const char *file, const char *function, const int line);
 
-#define stubs_check_VehicleStructureSts_VehicleStructureSts(expected) _stubs_check_VehicleStructureSts_VehicleStructureSts(expected, __FILE__, __FUNCTION__, __LINE__);
-void _stubs_check_VehicleStructureSts_VehicleStructureSts(VehicleStructureSts_T* expected, const char *file, const char *function, const int line);
+#define stubs_check_D_accYVari_AccYVari(expected) _stubs_check_D_accYVari_AccYVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_accYVari_AccYVari(Variance_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_D_sideslipVari_SideslipVari(expected) _stubs_check_D_sideslipVari_SideslipVari(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_sideslipVari_SideslipVari(Variance_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_T_totalFilterLatencyEst_TotalFilterLatencyEst(expected) _stubs_check_T_totalFilterLatencyEst_TotalFilterLatencyEst(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_T_totalFilterLatencyEst_TotalFilterLatencyEst(Latency_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_Ag_chassisRollAngleEst_RollAngleChassisEst(expected) _stubs_check_Ag_chassisRollAngleEst_RollAngleChassisEst(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_Ag_chassisRollAngleEst_RollAngleChassisEst(Angle_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_chassisRollAngleEstQuality_RollAngleChassisEstQuality(expected) _stubs_check_E_chassisRollAngleEstQuality_RollAngleChassisEstQuality(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_chassisRollAngleEstQuality_RollAngleChassisEstQuality(RollAngleEstQly_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_A_spdXRateRefPoint_SpdXRateRefPoint(expected) _stubs_check_A_spdXRateRefPoint_SpdXRateRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_A_spdXRateRefPoint_SpdXRateRefPoint(Acceleration_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_A_spdYRateRefPoint_SpdYRateRefPoint(expected) _stubs_check_A_spdYRateRefPoint_SpdYRateRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_A_spdYRateRefPoint_SpdYRateRefPoint(Acceleration_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_Ag_roadWheelAngle_RoadWheelAngle(expected) _stubs_check_Ag_roadWheelAngle_RoadWheelAngle(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_Ag_roadWheelAngle_RoadWheelAngle(RoadWheelAngle_T2* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_A_accYDueToBankAngle_AccYDueToBankAngle(expected) _stubs_check_A_accYDueToBankAngle_AccYDueToBankAngle(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_A_accYDueToBankAngle_AccYDueToBankAngle(Acceleration_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_LongMotionDirection_LongMotionDirection(expected) _stubs_check_LongMotionDirection_LongMotionDirection(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_LongMotionDirection_LongMotionDirection(LongMotionDirection_sg_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_LongMotionDirectionQuality_LongMotionDirectionQuality(expected) _stubs_check_LongMotionDirectionQuality_LongMotionDirectionQuality(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_LongMotionDirectionQuality_LongMotionDirectionQuality(LongMotionDirectionQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_LongMotionDirection_ErrorStatus_LongMotionDirection_ErrorStatus(expected) _stubs_check_LongMotionDirection_ErrorStatus_LongMotionDirection_ErrorStatus(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_LongMotionDirection_ErrorStatus_LongMotionDirection_ErrorStatus(LongMotionDirErrorSts_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_D_nonlinearSteeringRatio_NonlinearSteeringRatio(expected) _stubs_check_D_nonlinearSteeringRatio_NonlinearSteeringRatio(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_D_nonlinearSteeringRatio_NonlinearSteeringRatio(SteeringRatio_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdXRefPointQly_SpdXRefPointQly(expected) _stubs_check_E_spdXRefPointQly_SpdXRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdXRefPointQly_SpdXRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdYRefPointQly_SpdYRefPointQly(expected) _stubs_check_E_spdYRefPointQly_SpdYRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdYRefPointQly_SpdYRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_accXRefPointQly_AccXRefPointQly(expected) _stubs_check_E_accXRefPointQly_AccXRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_accXRefPointQly_AccXRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_accYRefPointQly_AccYRefPointQly(expected) _stubs_check_E_accYRefPointQly_AccYRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_accYRefPointQly_AccYRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_yawRateRearAxleQly_YawRateRearAxleQly(expected) _stubs_check_E_yawRateRearAxleQly_YawRateRearAxleQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_yawRateRearAxleQly_YawRateRearAxleQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_yawAccRearAxleQly_YawAccRearAxleQly(expected) _stubs_check_E_yawAccRearAxleQly_YawAccRearAxleQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_yawAccRearAxleQly_YawAccRearAxleQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_sideslipRefPointQly_SideslipRefPointQly(expected) _stubs_check_E_sideslipRefPointQly_SideslipRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_sideslipRefPointQly_SideslipRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_roadWheelAngleQly_RoadWheelAngleQly(expected) _stubs_check_E_roadWheelAngleQly_RoadWheelAngleQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_roadWheelAngleQly_RoadWheelAngleQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_crvtPathRefPointQly_CrvtPathRefPointQly(expected) _stubs_check_E_crvtPathRefPointQly_CrvtPathRefPointQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_crvtPathRefPointQly_CrvtPathRefPointQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_equivalentRearAxlePositionQly_EquivalentRearAxlePositionQly(expected) _stubs_check_E_equivalentRearAxlePositionQly_EquivalentRearAxlePositionQly(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_equivalentRearAxlePositionQly_EquivalentRearAxlePositionQly(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdYRefPoint_SpdYRefPoint(expected) _stubs_check_V_spdYRefPoint_SpdYRefPoint(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdYRefPoint_SpdYRefPoint(Speed_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax1L_V_spdAtWhl_Ax1L(expected) _stubs_check_V_spdAtWhl_Ax1L_V_spdAtWhl_Ax1L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax1L_V_spdAtWhl_Ax1L(V_spdAtWhl_Ax1L_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax1R_V_spdAtWhl_Ax1R(expected) _stubs_check_V_spdAtWhl_Ax1R_V_spdAtWhl_Ax1R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax1R_V_spdAtWhl_Ax1R(V_spdAtWhl_Ax1R_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax2L_V_spdAtWhl_Ax2L(expected) _stubs_check_V_spdAtWhl_Ax2L_V_spdAtWhl_Ax2L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax2L_V_spdAtWhl_Ax2L(V_spdAtWhl_Ax2L_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax2R_V_spdAtWhl_Ax2R(expected) _stubs_check_V_spdAtWhl_Ax2R_V_spdAtWhl_Ax2R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax2R_V_spdAtWhl_Ax2R(V_spdAtWhl_Ax2R_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax3L_V_spdAtWhl_Ax3L(expected) _stubs_check_V_spdAtWhl_Ax3L_V_spdAtWhl_Ax3L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax3L_V_spdAtWhl_Ax3L(V_spdAtWhl_Ax3L_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax3R_V_spdAtWhl_Ax3R(expected) _stubs_check_V_spdAtWhl_Ax3R_V_spdAtWhl_Ax3R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax3R_V_spdAtWhl_Ax3R(V_spdAtWhl_Ax3R_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax4L_V_spdAtWhl_Ax4L(expected) _stubs_check_V_spdAtWhl_Ax4L_V_spdAtWhl_Ax4L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax4L_V_spdAtWhl_Ax4L(V_spdAtWhl_Ax4L_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax4R_V_spdAtWhl_Ax4R(expected) _stubs_check_V_spdAtWhl_Ax4R_V_spdAtWhl_Ax4R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax4R_V_spdAtWhl_Ax4R(V_spdAtWhl_Ax4R_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax5L_V_spdAtWhl_Ax5L(expected) _stubs_check_V_spdAtWhl_Ax5L_V_spdAtWhl_Ax5L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax5L_V_spdAtWhl_Ax5L(V_spdAtWhl_Ax5L_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_V_spdAtWhl_Ax5R_V_spdAtWhl_Ax5R(expected) _stubs_check_V_spdAtWhl_Ax5R_V_spdAtWhl_Ax5R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_V_spdAtWhl_Ax5R_V_spdAtWhl_Ax5R(V_spdAtWhl_Ax5R_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax1L_E_spdAtWhlQly_Ax1L(expected) _stubs_check_E_spdAtWhlQly_Ax1L_E_spdAtWhlQly_Ax1L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax1L_E_spdAtWhlQly_Ax1L(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax1R_E_spdAtWhlQly_Ax1R(expected) _stubs_check_E_spdAtWhlQly_Ax1R_E_spdAtWhlQly_Ax1R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax1R_E_spdAtWhlQly_Ax1R(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax2L_E_spdAtWhlQly_Ax2L(expected) _stubs_check_E_spdAtWhlQly_Ax2L_E_spdAtWhlQly_Ax2L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax2L_E_spdAtWhlQly_Ax2L(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax2R_E_spdAtWhlQly_Ax2R(expected) _stubs_check_E_spdAtWhlQly_Ax2R_E_spdAtWhlQly_Ax2R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax2R_E_spdAtWhlQly_Ax2R(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax3L_E_spdAtWhlQly_Ax3L(expected) _stubs_check_E_spdAtWhlQly_Ax3L_E_spdAtWhlQly_Ax3L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax3L_E_spdAtWhlQly_Ax3L(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax3R_E_spdAtWhlQly_Ax3R(expected) _stubs_check_E_spdAtWhlQly_Ax3R_E_spdAtWhlQly_Ax3R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax3R_E_spdAtWhlQly_Ax3R(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax4L_E_spdAtWhlQly_Ax4L(expected) _stubs_check_E_spdAtWhlQly_Ax4L_E_spdAtWhlQly_Ax4L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax4L_E_spdAtWhlQly_Ax4L(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax4R_E_spdAtWhlQly_Ax4R(expected) _stubs_check_E_spdAtWhlQly_Ax4R_E_spdAtWhlQly_Ax4R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax4R_E_spdAtWhlQly_Ax4R(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax5R_E_spdAtWhlQly_Ax5R(expected) _stubs_check_E_spdAtWhlQly_Ax5R_E_spdAtWhlQly_Ax5R(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax5R_E_spdAtWhlQly_Ax5R(SignalQuality_T* expected, const char *file, const char *function, const int line);
+
+#define stubs_check_E_spdAtWhlQly_Ax5L_E_spdAtWhlQly_Ax5L(expected) _stubs_check_E_spdAtWhlQly_Ax5L_E_spdAtWhlQly_Ax5L(expected, __FILE__, __FUNCTION__, __LINE__);
+void _stubs_check_E_spdAtWhlQly_Ax5L_E_spdAtWhlQly_Ax5L(SignalQuality_T* expected, const char *file, const char *function, const int line);
 
 #endif

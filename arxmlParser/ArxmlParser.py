@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-from collections import namedtuple
 
 class Port:
     """representation of a AUTOSAR-port"""
@@ -65,8 +64,12 @@ class ValueSignal(Signal):
     """representation of a AUTOSAR-value-signal"""
     def __init__(self, signal_name, signal_type, scale = '1', offset = '0'):
         super().__init__(signal_name, signal_type)
-        self.scale = scale
-        self.offset = offset
+        if signal_type.compu_method is not None:
+            self.scale = signal_type.compu_method.scale
+            self.offset = signal_type.compu_method.offset
+        else:
+            self.scale = scale
+            self.offset = offset
 
     def __repr__(self):
         super_repr = super().__repr__()
@@ -116,8 +119,12 @@ class ArraySignal(Signal):
     """representation of a AUTOSAR-array-signal"""
     def __init__(self, name, type_, scale = '1', offset = '0'):
         super().__init__(name, type_)
-        self.scale = scale
-        self.offset = offset
+        try:
+            self.scale = type_.element_type.compu_method.scale
+            self.offset = type_.element_type.compu_method.offset
+        except AttributeError:
+            self.scale = scale
+            self.offset = offset
 
     def __repr__(self):
         my_repr = super().__repr__() + '\n'
@@ -245,7 +252,6 @@ class ArxmlParser:
         for port in self.cal_array:
             if port.port_if in self.signal_dict:
                 port.signal_array.append(self.signal_dict[port.port_if])
-        #print(self.port_array)
 
     def _get_r_ports(self, swc_arxml):
         tree = ET.parse(swc_arxml)

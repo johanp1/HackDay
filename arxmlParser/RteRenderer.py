@@ -43,7 +43,7 @@ class CPortVisitor:
         self.renderer.render_cport_value_signal(self.port_name, signal)
 
     def renderStructSignal(self, signal):
-       pass
+       print('not implemented yet...')
 
     def renderStructElement(self, signal):
         pass
