@@ -1,10 +1,11 @@
-byt ut _ADT mot _T
-
+initvärden till parametrar...
 
 compu-method scale till signal scale blev inte supersnyggt
      type-klassen behöver en accept-metod och en visitor som 
      traverserar signalerna i en port och sätter scale/offset samt byter _ADT till _T
 
+appl_type_dict borde inte behöva skapa nya typer. den borde kunna 
+referera till impl-datattype-array'en
 
 ArxmlParser hanterar inte portar med flera signaler. 
 strukturen/typerna hanterar det men parsern lägger inte till fler än en signal
@@ -14,12 +15,12 @@ _get_signals behöver ändras lite
 
 
 
+KLAR byt ut _ADT mot _T
+     i get_appl_types:
+     skapa en dict istället, med key appl_type-namnet
+     ValueType(impl_data_type_name, self.compu_method_dict[compu_method_name])
 
-
-
-
-
-
+     impl_data_type_name == self.mapping_dict[appl_type]
 
 KLAR lägg till alla kategorier av compu-method
 
@@ -37,7 +38,8 @@ KLAR ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
 
 inte jätteviktigt:
-döp om renderXYZ till visitorXYZ
+döp om renderXYZ till visitXYZ
+
 
 P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
 

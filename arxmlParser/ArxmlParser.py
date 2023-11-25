@@ -216,7 +216,7 @@ class ArxmlParser:
         self.cal_array = []
         self.signal_dict = {}
         self.type_array = []
-        self.appl_type_array = []
+        self.appl_type_dict = {}
         self.compu_method_dict = {}
         self.mapping_dict = {}
         self._ns = ''
@@ -231,17 +231,12 @@ class ArxmlParser:
         self._get_p_ports(swc_arxml) #get component's p-ports
         self._get_c_ports(swc_arxml) #get component's c-ports
         self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
+        self._get_type_mapping(types_arxml) #get impl<->appl type mapping
         self._get_impl_types(types_arxml) #get all implementation data types in types_arxml
         self._get_appl_types(types_arxml) #get all application data types in types_arxml
-        self._get_type_mapping(types_arxml) #get impl<->appl type mapping
 
         self._get_signals(port_arxml) #get signal- and type of all sender/receiver port-if's in port_arxml
         self._get_parameter_if(port_arxml) #get type of all c-port-if's in port_arxml
-
-        self._assign_scaling()
-
-        #substitute appl-type for impl-type and add scaling
-        self._substitute_appl_types()
 
         #sender-receiver port mangling:
         for port in self.port_array:
@@ -317,13 +312,14 @@ class ArxmlParser:
             signal_name = variable_data_prototype.find('default_ns:SHORT-NAME', self._ns).text
             signal_type = variable_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
 
+            # create impl-type-typed signals in port-if
             for t in self.type_array:
                 if signal_type == t.name:
                     self.signal_dict[port_if_name] = t.create_signal(signal_name)
 
-            for t in self.appl_type_array:
-                if signal_type == t.name:
-                    self.signal_dict[port_if_name] = t.create_signal(signal_name)
+            # create appl-type-typed signals in port-if
+            if signal_type in self.appl_type_dict:
+                self.signal_dict[port_if_name] = self.appl_type_dict[signal_type].create_signal(signal_name)
 
             f_log.write('port-if: ' + port_if_name + ' signal_name: ' + signal_name + ' signal_type: ' + signal_type + '\n')
 
@@ -343,14 +339,15 @@ class ArxmlParser:
             # get port_if name
             prototype_name = parameter_data_prototype.find('default_ns:SHORT-NAME', self._ns).text 
             prototype_type = parameter_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
-
+ 
+            # create impl-type-typed signals in calib-if
             for t in self.type_array:
                 if prototype_type == t.name:
                     self.signal_dict[par_if_name] = t.create_signal(prototype_name)
 
-            for t in self.appl_type_array:
-                if prototype_type == t.name:
-                    self.signal_dict[par_if_name] = t.create_signal(prototype_name)
+            # create appl-type-typed signals in calib-if
+            if prototype_type in self.appl_type_dict:
+                self.signal_dict[par_if_name] = self.appl_type_dict[prototype_type].create_signal(prototype_name)
 
             f_log.write('port-if: ' + par_if_name + ' prototype_name: ' + prototype_name + ' prototype_type: ' + prototype_type + '\n')
 
@@ -455,44 +452,50 @@ class ArxmlParser:
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
-            sw_props = data_type.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
-            sw_props_variant = sw_props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
-            sw_props_conditional = sw_props_variant.find('default_ns:SW-DATA-DEF-PROPS-CONDITIONAL', self._ns)
-            
-            compu_method = sw_props_conditional.find('default_ns:COMPU-METHOD-REF', self._ns)
-            if compu_method is not None:
-                compu_method_name = compu_method.text.split('/')[-1]
-                if compu_method_name in self.compu_method_dict:
-                    self.appl_type_array.append(ValueType(data_type_name, self.compu_method_dict[compu_method_name]))
-                    f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+            if data_type_name in self.mapping_dict:
+                mapped_type = self.mapping_dict[data_type_name]
+
+                sw_props = data_type.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
+                sw_props_variant = sw_props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
+                sw_props_conditional = sw_props_variant.find('default_ns:SW-DATA-DEF-PROPS-CONDITIONAL', self._ns)
+                
+                compu_method = sw_props_conditional.find('default_ns:COMPU-METHOD-REF', self._ns)
+                if compu_method is not None:
+                    compu_method_name = compu_method.text.split('/')[-1]
+                    if compu_method_name in self.compu_method_dict:
+                        #self.appl_type_array.append(ValueType(data_type_name, self.compu_method_dict[compu_method_name]))
+                        self.appl_type_dict[data_type_name] = ValueType(mapped_type, self.compu_method_dict[compu_method_name])
+                        f_log.write('value_data_type_name ' + data_type_name + ' compu-method ' + compu_method_name + '\n')
+                    else:
+                        print('could not add type: ' + data_type_name + ', compum-method: ' + compu_method_name + ' not found')
                 else:
-                    print('could not add type: ' + data_type_name + ', compum-method: ' + compu_method_name + ' not found')
+                    #self.appl_type_array.append(ValueType(data_type_name))
+                    self.appl_type_dict[data_type_name] = ValueType(mapped_type)
+                    f_log.write('value_data_type_name ' + data_type_name)
             else:
-                self.appl_type_array.append(ValueType(data_type_name))
-                f_log.write('value_data_type_name ' + data_type_name)
+                print('could not add value type: ' + data_type_name + ', type not mapped to any implementation data type')
 
         #pick out the array data types
         tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-ARRAY-DATA-TYPE'
         for data_type in root.iter(tag):
             data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
 
-            element = data_type.find('default_ns:ELEMENT', self._ns)
-            element_name = element.find('default_ns:SHORT-NAME', self._ns).text
-            element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
-            nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
+            if data_type_name in self.mapping_dict:
+                mapped_type = self.mapping_dict[data_type_name]
+                element = data_type.find('default_ns:ELEMENT', self._ns)
+                element_name = element.find('default_ns:SHORT-NAME', self._ns).text
+                element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
+                nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
 
+                if element_type in self.mapping_dict:
+                    t = self.appl_type_dict[element_type]
+                    self.appl_type_dict[data_type_name] = ArrayType(mapped_type, nbr_of_elements, t)
 
-            found = False
-            for t in self.appl_type_array:
-                if element_type == t.name:
-                    found = True
-                    self.appl_type_array.append(ArrayType(data_type_name, nbr_of_elements, t))
-                    break
-
-            if found:
-                f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + nbr_of_elements + ' element_type ' + element_type + '\n')
+                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + nbr_of_elements + ' element_type ' + element_type + '\n')
+                else:
+                    print('could not add array element type : ' + data_type_name + ', type not mapped to any implementation data type')      
             else:
-                print(element_type + ' not found')
+                print('could not add array type : ' + data_type_name + ', type not mapped to any implementation data type')
 
         #pick out the "struct" data types
         struct_array = []
@@ -502,30 +505,33 @@ class ArxmlParser:
             struct_array.append(StructType(data_type_name))
 
         for struct_type in struct_array:
-            tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
-            for data_type in root.iter(tag):
-                data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
-                
-                struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
-                for struct_data_type in data_type.iter(struct_tag):
-                    element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
+            if data_type_name in self.mapping_dict:
+                mapped_type = self.mapping_dict[data_type_name]
 
-                    type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
-                    for data_def_props in struct_data_type.iter(type_ref_tag):
-                        element_type = data_def_props.text.split('/')[-1]
-                        
-                        found = False
-                        for t in self.appl_type_array:
-                            if element_type == t.name:
-                                found = True
+                tag = '{' + self._ns['default_ns'] + '}' + 'APPLICATION-RECORD-DATA-TYPE'
+                for data_type in root.iter(tag):
+                    data_type_name = data_type.find('default_ns:SHORT-NAME', self._ns).text
+                    
+                    struct_tag =  '{' + self._ns['default_ns']+ '}' + 'APPLICATION-RECORD-ELEMENT'
+                    for struct_data_type in data_type.iter(struct_tag):
+                        element_name = struct_data_type.find('default_ns:SHORT-NAME', self._ns).text # get struct element name
+
+                        type_ref_tag =  '{' + self._ns['default_ns']+ '}' + 'TYPE-TREF'
+                        for data_def_props in struct_data_type.iter(type_ref_tag):
+                            element_type = data_def_props.text.split('/')[-1]
+                            
+                            if element_type in self.mapping_dict:
+                                t = self.appl_type_dict[element_type]
                                 struct_type.add_element(element_name, t)
-                                break
 
-                        if found:
-                            f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
-                            self.appl_type_array.append(struct_type)
-                        else:
-                            print(element_type + ' not found')
+                                f_log.write('struct_data_type_name ' + data_type_name + ' element name ' + element_name + ' element_type ' + element_type + '\n')
+                                
+                            else:
+                                print(element_type + ' not found')
+
+                    self.appl_type_dict[data_type_name] = struct_type
+            else:
+                print('could not add struct type : ' + data_type_name + ', type not mapped to any implementation data type')
 
         f_log.close()
 
@@ -555,7 +561,7 @@ class ArxmlParser:
                 f_log.write('compu_method_name ' + compu_method_name + ' scale ' + scale + ' offset ' + offset + '\n')
             else:
                 self.compu_method_dict[compu_method_name] = CompuMethod(compu_method_name)
-                f_log.write('compu_method_name ' + compu_method_name)
+                f_log.write('compu_method_name ' + compu_method_name + '\n')
 
 
     def _get_type_mapping(self, types_arxml):
@@ -571,10 +577,3 @@ class ArxmlParser:
             self.mapping_dict[appl_type] = impl_type
 
             f_log.write('appl_type: ' + appl_type + ' maps to impl_type: ' + impl_type + '\n')
-
-    def _assign_scaling(self):
-        pass #for key, value in self.signal_dict.items():
-
-
-    def _substitute_appl_types(self):
-        pass

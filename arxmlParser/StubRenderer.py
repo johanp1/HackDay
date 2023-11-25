@@ -42,20 +42,19 @@ class CPortVisitor:
         self.port_name = ''
 
     def renderValueSignal(self, signal):
-        self.renderer.collect_stub_config_struct_elements(self.port_name, signal)
-        #self.renderer.collect_cport_stub_value_signals(self.port_name, signal)
-        #self.renderer.collect_cport_stub_set_signals(self.port_name, signal)
+        self.renderer.collect_stub_config_struct_value_type(self.port_name, signal)
+        self.renderer.collect_cport_stub_value_function(self.port_name, signal)
 
     def renderStructSignal(self, signal):
-        self.renderer.collect_stub_config_struct_elements(self.port_name, signal)
-        #self.renderer.collect_cport_stub_struct_signals(self.port_name, signal)
-        #self.renderer.collect_cport_stub_set_signals(self.port_name, signal)
+        self.renderer.collect_stub_config_struct_struct_type(self.port_name, signal)
+        self.renderer.collect_cport_stub_struct_function(self.port_name, signal)
 
     def renderStructElement(self, element):
         pass
 
     def renderArraySignal(self, signal):
-        pass
+        self.renderer.collect_stub_config_struct_array_type(self.port_name, signal)
+        self.renderer.collect_cport_stub_array_function(self.port_name, signal)
 
 class StubRenderer:
     def __init__(self, module, ldc, swc):
@@ -98,7 +97,8 @@ class StubRenderer:
         self.stub_check_functions = ''
         self.stub_check_function_prototypes = ''
 
-        self.config_struct_elements = ''
+        self.config_struct = ''
+        self.default_config = ''
         self.stub_config_functions = ''
 
     def __del__(self):
@@ -107,6 +107,7 @@ class StubRenderer:
         self._write_stub_signals()
         self._write_stub_set_signals()
         self._write_stub_check_signals()
+        self._write_config_stubs()
 
         self.f_header.write('#endif\n')
 
@@ -135,9 +136,46 @@ class StubRenderer:
         self.signal_struct_elements += '\t\t' + 'Std_ReturnType ret;\n'
         self.signal_struct_elements += '\t}' + ' ' + 'Rte_' + port_name + '_' + signal.name + ';\n\n'
 
-    def collect_stub_config_struct_elements(self, port_name, signal):
-        variable_name = port_name #remove '_T'
-        self.config_struct_elements += '\t\t' + signal.type.name + ' ' + variable_name + ';\n'
+    def collect_stub_config_struct_value_type(self, port_name, signal):
+        variable_name = port_name
+        self.config_struct += '\t\t' + signal.type.name + ' ' + variable_name + ';\n'
+        self.default_config += '\t0, /*' + variable_name + '*/\n'
+
+    def collect_stub_config_struct_struct_type(self, port_name, signal):
+        variable_name = port_name
+        self.config_struct += '\t\t' + signal.type.name + ' ' + variable_name + ';\n'
+
+        self.default_config += ', \{ /*' + variable_name + '*/\n'
+        for element in signal.element_array:
+            self.default_config += '\t\t0, /*' + element.name + '*/\n'
+        self.default_config += '\}\n'
+
+    def collect_stub_config_struct_array_type(self, port_name, signal):
+        variable_name = port_name
+        self.config_struct += '\t\t' + signal.type.name + ' ' + variable_name + ';\n'
+
+        self.default_config += '\t{'
+        for i in range(0, int(signal.type.size)-1):
+            self.default_config += '0, '
+        self.default_config += '0}, /*' + variable_name + '*/\n'
+
+    def collect_cport_stub_value_function(self, port_name, signal):
+        self.stub_config_functions += \
+            signal.type.name + ' Rte_Prm_' + port_name + '_' + signal.name + '()\n'
+        self.stub_config_functions += \
+            '{\n\treturn c.' + port_name + ';\n}\n\n'
+        
+    def collect_cport_stub_struct_function(self, port_name, signal):
+        self.stub_config_functions += \
+            signal.type.name + '* Rte_Prm_' + port_name + '_' + signal.name + '()\n'
+        self.stub_config_functions += \
+            '{\n\treturn &c.' + port_name + ';\n}\n\n'
+
+    def collect_cport_stub_array_function(self, port_name, signal):
+        self.stub_config_functions += \
+            signal.type.name + '* Rte_Prm_' + port_name + '_' + signal.name + '()\n'
+        self.stub_config_functions += \
+            '{\n\treturn &c.' + port_name + ';\n}\n\n'
 
     def collect_pport_stub_value_signals(self, port_name, signal):
         port_signal = port_name + '_' + signal.name
@@ -241,11 +279,17 @@ class StubRenderer:
 
     def _write_config_struct(self):
         self.f_header.write('typedef struct\n{\n')
-        self.f_header.write(self.config_struct_elements)
-
+        self.f_header.write(self.config_struct)
         s = '} StubConfig_Type;\n\n'
-        s += 'extern StubConfig_Type c;\n\n'
+
+        #s += 'extern StubConfig_Type c;\n\n'
+        s += 'StubConfig_Type c = {\n'
+        s += self.default_config
+        s += '};\n\n'
+    
         self.f_header.write(s)
+
+        #self.f_source.write('StubConfig_Type c;\n\n')
 
     def _write_stub_signals(self):
         self.f_source.write(self.stub_signals)
@@ -257,3 +301,6 @@ class StubRenderer:
     def _write_stub_check_signals(self):
         self.f_source.write(self.stub_check_functions)
         self.f_header.write(self.stub_check_function_prototypes)
+
+    def _write_config_stubs(self):
+        self.f_source.write(self.stub_config_functions)
