@@ -1,0 +1,159 @@
+<LdcConfig>
+  <Options>
+    <ValidateSymbols>false</ValidateSymbols>
+  </Options>
+<Parameters>
+    <Parameter Name="P1BGV" Value="72" />
+    <Parameter Name="P1E50" Value="2334" />
+    <Parameter Name="P1E5Z" Value="1000" />
+    <Parameter Name="P1IJ3" Value="4500" />
+    <Parameter Name="P1KJ7" Value="2334" />
+    <Parameter Name="P1M6I" Value="60000" />
+    <Parameter Name="X1BWH" Value="1" />
+    <Parameter Name="P1RPH" Value="0" />
+	<Parameter Name="P10WH" Value="127" />
+    <Parameter Name="P1A59" Value="0" />
+    <Parameter Name="P1A6U" Value="0" />
+    <Parameter Name="P1A70" Value="1" />
+    <Parameter Name="P1A7F" Value="1" />
+    <Parameter Name="P1A8L" Value="1" />
+	<Parameter Name="P1CSH" Value="0" />
+	<Parameter Name="P1CSG" Value="0" />
+	<Parameter Name="P1AZQ" Value="6144" />
+	<Parameter Name="X1C29" Value="122" />
+	<Parameter Name="X1C3A" Value="112" />
+	<Parameter Name="P10VS" Value="20" />
+	<Parameter Name="P10VT" Value="100" />
+	<Parameter Name="X1C3D" Value="25" />
+	<Parameter Name="X1C3E" Value="33" />
+	<Parameter Name="X1C3F" Value="139" />
+	<Parameter Name="X1C3G" Value="255" />
+	<Parameter Name="P10VW" Value="0" />
+	<Parameter Name="P10VX" Value="25" />
+	<Parameter Name="P10VY" Value="50" />
+	<Parameter Name="X1C3K" Value="50" />
+	<Parameter Name="X1C5P" Value="50" />
+	<Parameter Name="P1A6H" Value="12800" />
+	<Parameter Name="P1A62" Value="12800" />
+	<Parameter Name="P1A7N" Value="-32768" />
+	<Parameter Name="P1A78" Value="-32768" />
+	<Parameter Name="P1A8T" Value="-32768" />
+	<Parameter Name="P10WC" Value="100" />
+	<Parameter Name="P10WD" Value="100" />
+	<Parameter Name="P10WE" Value="100" />
+	<Parameter Name="P10WF" Value="100" />
+	<Parameter Name="P10WG" Value="100" />
+	<Parameter Name="P1A6K" Value="134" />
+	<Parameter Name="P1A65" Value="134" />
+	<Parameter Name="P1A7Q" Value="-32768" />
+	<Parameter Name="P1A8B" Value="-32768" />
+	<Parameter Name="P1A8W" Value="-32768" />
+	<Parameter Name="P1A6J" Value="352" />
+	<Parameter Name="P1A64" Value="352" />
+	<Parameter Name="P1A7P" Value="-32768" />
+	<Parameter Name="P1A8A" Value="-32768" />
+	<Parameter Name="P1A8V" Value="-32768" />
+	<Parameter Name="X1C4J" Value="1" />
+	<Parameter Name="X1C4U" Value="1" />
+	<Parameter Name="P10V1" Value="20" />
+	<Parameter Name="P10V2" Value="50" />
+	<Parameter Name="X1C5A" Value="0" />
+	<Parameter Name="X1C5B" Value="26" />
+	<Parameter Name="X1C5C" Value="26" />
+	<Parameter Name="X1C5D" Value="26" />
+	<Parameter Name="X1C5E" Value="3" />
+	<Parameter Name="X1C46" Value="100" />
+	<Parameter Name="X1C47" Value="75" />
+	<Parameter Name="X1C48" Value="100" />
+	<Parameter Name="X1C49" Value="2" />
+	<Parameter Name="X1C5Q" Value="0" />
+	<Parameter Name="X1C5T" Value="0" />
+	<Parameter Name="X1C5U" Value="5" />
+	<Parameter Name="X1C5W" Value="30" />
+	<Parameter Name="X1C6T" Value="127" />
+	<Parameter Name="X1C68" Value="0" />
+    <Parameter Name="X1C6U" Value="190" />
+    <Parameter Name="X1C6V" Value="228" />
+	<Parameter Name="X1C6Z" Value="1" />
+	<Parameter Name="X1C60" Value="1" />
+	<Parameter Name="X1C61" Value="2" />
+	<Parameter Name="X1C62" Value="1" />
+	<Parameter Name="X1C63" Value="0" />
+	<Parameter Name="X1C69" Value="40 40 100 60 60" />
+	<Parameter Name="X1C7C" Value="-8 -4 0 4 8" />
+	<Parameter Name="X1C8W" Value="1" />
+	<Parameter Name="X1C8Z" Value="0 30 100 30 0" />
+	<Parameter Name="X1C80" Value="-100 -3 0 3 100" />
+	<Parameter Name="X1C8X" Value="10" />
+	<Parameter Name="X1C8Y" Value="20" />
+	<Parameter Name="X1C9S" Value="10" />
+	<Parameter Name="X1C9T" Value="5" />
+	<Parameter Name="P1A6A" Value="1" />
+	<Parameter Name="P1A6V" Value="0" />
+	<Parameter Name="P1A7G" Value="1" />
+	<Parameter Name="P1A71" Value="1" />
+	<Parameter Name="P1A8M" Value="1" />
+	<Parameter Name="P1AK9" Value="25" />
+	<Parameter Name="P1AT2" Value="3" />
+	<Parameter Name="P1BGW" Value="72" />
+	<Parameter Name="P1BGX" Value="84" />
+	<Parameter Name="P1BGY" Value="72" />
+	<Parameter Name="P1BGZ" Value="84" />
+	<Parameter Name="P1CNH" Value="1370" />
+	<Parameter Name="P1CNJ" Value="1370" />
+	<Parameter Name="P1CSI" Value="0" />
+	<Parameter Name="P1KME" Value="1370" />
+	<Parameter Name="P10WU" Value="10 143" />
+	<Parameter Name="P10WW" Value="17 151" />
+	<Parameter Name="P10WY" Value="9 143" />
+	<Parameter Name="P10W0" Value="9 143" />
+	<Parameter Name="P10W2" Value="9 143" />
+	<Parameter Name="P10WV" Value="82 968" />
+	<Parameter Name="P10WX" Value="240 1310" />
+	<Parameter Name="P10WZ" Value="224 1192" />
+	<Parameter Name="P10W1" Value="82 968" />
+	<Parameter Name="P10W3" Value="82 968" />
+	<Parameter Name="P10VU" Value="1" />
+	<Parameter Name="X1DBH" Value="1" />
+	<Parameter Name="P10WT" Value="80" />
+	<Parameter Name="P1B8V" Value="0" />
+	<Parameter Name="P1B8U" Value="0" />
+	<Parameter Name="X1DBJ" Value="5" />
+	<Parameter Name="X1DBO" Value="1" />
+	<Parameter Name="X1DBP" Value="26" />
+	<Parameter Name="X1DBQ" Value="1" />
+	<Parameter Name="P10WR" Value="128" />
+	<Parameter Name="P10WS" Value="243" />
+	<Parameter Name="X1DCF" Value="20" />
+	<Parameter Name="X1DCG" Value="1" />
+	<Parameter Name="X1DCH" Value="255" />
+	<Parameter Name="X1DCI" Value="10" />
+	<Parameter Name="X1DU0" Value="8" />
+	<Parameter Name="X1DCK" Value="30" />
+	<Parameter Name="X1DU3" Value="2" />
+	<Parameter Name="X1DCM" Value="50" />
+    <Parameter Name="P1AFC" Value="0" />
+    <Parameter Name="P1A6R" Value="280" />
+    <Parameter Name="P1A7C" Value="408" />
+    <Parameter Name="P1A7X" Value="65535" />
+    <Parameter Name="P1A8I" Value="65535" />
+    <Parameter Name="P1A83" Value="65535" />
+    <Parameter Name="P1A6Q" Value="156" />
+    <Parameter Name="P1A7B" Value="56" />
+    <Parameter Name="P1A7W" Value="65535" />
+    <Parameter Name="P1A8H" Value="65535" />
+    <Parameter Name="P1A82" Value="65535" />
+	<Parameter Name="P1L1L" Value="4" />
+	<Parameter Name="P1K5K" Value="0" />
+	<Parameter Name="P11DU" Value="0" />
+</Parameters>
+  <DiagnosticEvents>
+	<DiagnosticEvent Name="D1ASM_64" TroubleCode="4219748" CountInStepSize="127" CountOutStepSize="127" EnableConditionCranking="false" HealingCycles="80" HealingSupport="true" UseJumpDownPrePassed="false" UseJumpUpPreFailed="false" />
+  </DiagnosticEvents>
+  <NvRamBlocks />
+  <Connections />
+  <Dependencies>
+   <Dependency Name="vasp.common.src" />
+  </Dependencies>
+  <Notifications />
+</LdcConfig>

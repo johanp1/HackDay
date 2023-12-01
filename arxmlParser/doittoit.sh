@@ -8,6 +8,7 @@ function compare {
 }
 
 python3 port_test.py
+python3 parser_test.py
 
 if python3 create_ports.py --port_arxml=arxml/PortInterfaces.arxml\
 						   --types_arxml=arxml/DataTypes.arxml\
@@ -23,6 +24,13 @@ if python3 create_ports.py --port_arxml=arxml/PortInterfaces.arxml\
 						   --can_db=can/CAN06-T3_1.9.0.dbc\
 						   --can_db=can/CAN32-T3_1.9.0.dbc; then
 	echo "create_ports succeeded"
+
+	# get default values for parameters in the stubbed rte 
+	python param_default.py arxml/StateEstimationCtrl.ldcxml out/cunit_stubs.h out/cunit_stubs_def.h 
+	rm out/cunit_stubs.h
+	mv out/cunit_stubs_def.h out/cunit_stubs.h
+
+	# compare with saved references
 	compare out/rte_data.h ref/rte_data.h
 	compare out/StateEstimationCtrl.xml ref/StateEstimationCtrl.xml
 	compare out/cunit_stubs.c ref/cunit_stubs.c

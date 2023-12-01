@@ -1,4 +1,4 @@
-initvärden till parametrar...
+tester...
 
 compu-method scale till signal scale blev inte supersnyggt
      type-klassen behöver en accept-metod och en visitor som 
@@ -12,8 +12,24 @@ strukturen/typerna hanterar det men parsern lägger inte till fler än en signal
 _get_signals behöver ändras lite
 
 
+inte jätteviktigt:
+     *döp om renderXYZ till visitXYZ
+
+     *P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
+
+     *pylint
+
+     *printf förutsätter int med %d, funkar inte för float
+
+     *assert förutsätter bool eller int. funkar inte för float
 
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+KLAR initvärden till parametrar...
 
 KLAR byt ut _ADT mot _T
      i get_appl_types:
@@ -37,14 +53,3 @@ KLAR ArxmlPArser - gör om namedtuple till klass med några olika subklasser
 
 
 
-inte jätteviktigt:
-döp om renderXYZ till visitXYZ
-
-
-P/RPortVisitor - kanske ett bättre namn skulle vara P/RSignalVisitor
-
-pylint
-
-printf förutsätter int med %d, funkar inte för float
-
-assert förutsätter bool eller int. funkar inte för float

@@ -6,13 +6,16 @@ class PPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.render_pport_value_signal(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.render_pport_struct_signal(self.port_name, signal)
 
-    def renderStructElement(self, element):
+    def visitStructElement(self, element):
+        pass
+
+    def visitArraySignal(self, signal):
         pass
 
 class RPortVisitor:
@@ -21,16 +24,16 @@ class RPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.render_rport_signal(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.render_rport_signal(self.port_name, signal)
 
-    def renderStructElement(self, signal):
+    def visitStructElement(self, signal):
         pass
 
-    def renderArraySignal(self, signal):
+    def visitArraySignal(self, signal):
         pass
 
 class CPortVisitor:
@@ -39,16 +42,16 @@ class CPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.render_cport_value_signal(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
-       print('not implemented yet...')
+    def visitStructSignal(self, signal):
+        print('not implemented yet...')
 
-    def renderStructElement(self, signal):
+    def visitStructElement(self, signal):
         pass
 
-    def renderArraySignal(self, signal):
+    def visitArraySignal(self, signal):
         self.renderer.render_cport_array_signal(self.port_name, signal)
 
 class RteRenderer:
@@ -85,19 +88,19 @@ class RteRenderer:
         self.f_out.write('#endif\n')
         self.f_out.close()
 
-    def renderPPort(self, port):
+    def visitPPort(self, port):
         """Accept function (from Visitor-pattern) for P-Port"""
         self.pport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.pport_visitor)
 
-    def renderRPort(self, port):
+    def visitRPort(self, port):
         """Accept function (from Visitor-pattern) for R-Port"""
         self.rport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.rport_visitor)
 
-    def renderCPort(self, port):
+    def visitCPort(self, port):
         self.cport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.cport_visitor)
@@ -156,21 +159,23 @@ class RteRenderer:
     def render_cport_value_signal(self, port_name, signal):
         scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
         offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+        var_name = port_name + '_' + signal.name
 
         #print(port.port_name + ' ' + ' port_if ' + port.port_if)
-        s = '\t' + port_name + ' = ' + scale_str + 'Rte_Prm_' + port_name + '_' + signal.name + '()' +  offset_str + ';\n'
+        s = '\t' + var_name + ' = (real32_T)(' + scale_str + 'Rte_Prm_' + port_name + '_' + signal.name + '()' +  offset_str + ');\n'
 
         self.f_out.write(s)
 
     def render_cport_array_signal(self, port_name, signal):
-        scale_str = '' if signal.scale == '1' else str(signal.scale) + '*'
+        scale_str = '' if signal.scale == '1' else str(signal.scale) + ' * '
         offset_str = '' if signal.offset == '0' else ' + (' + str(signal.offset) + ')'
+        var_name = port_name + '_' + signal.name
 
         s = ''
-        int(signal.type.size)
-        for i in range(int(signal.type.size)):
-            s += '\t' + port_name + '[' + str(i) + ']' + ' = '\
+ 
+        for i in range(signal.type.size):
+            s += '\t' + var_name + '[' + str(i) + ']' + ' = (real32_T)('\
               + scale_str + '(*Rte_Prm_' + port_name + '_' + signal.name + '())' + '[' + str(i) + ']'\
-              +  offset_str + ';\n'
+              +  offset_str + ');\n'
 
         self.f_out.write(s)

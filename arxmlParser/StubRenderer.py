@@ -5,17 +5,20 @@ class PPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.collect_stub_struct_elements(self.port_name, signal)
         self.renderer.collect_pport_stub_value_signals(self.port_name, signal)
         self.renderer.collect_pport_stub_check_value_signals(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.collect_stub_struct_elements(self.port_name, signal)
         self.renderer.collect_pport_stub_struct_signals(self.port_name, signal)
         self.renderer.collect_pport_stub_check_stuct_signals(self.port_name, signal)
 
-    def renderStructElement(self, element):
+    def visitStructElement(self, element):
+        pass
+
+    def visitArraySignal(self, signal):
         pass
 
 class RPortVisitor:
@@ -23,17 +26,20 @@ class RPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.collect_stub_struct_elements(self.port_name, signal)
         self.renderer.collect_rport_stub_value_signals(self.port_name, signal)
         self.renderer.collect_rport_stub_set_signals(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.collect_stub_struct_elements(self.port_name, signal)
         self.renderer.collect_rport_stub_struct_signals(self.port_name, signal)
         self.renderer.collect_rport_stub_set_signals(self.port_name, signal)
 
-    def renderStructElement(self, element):
+    def visitStructElement(self, element):
+        pass
+
+    def visitArraySignal(self, signal):
         pass
 
 class CPortVisitor:
@@ -41,18 +47,18 @@ class CPortVisitor:
         self.renderer = renderer
         self.port_name = ''
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.collect_stub_config_struct_value_type(self.port_name, signal)
         self.renderer.collect_cport_stub_value_function(self.port_name, signal)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.collect_stub_config_struct_struct_type(self.port_name, signal)
         self.renderer.collect_cport_stub_struct_function(self.port_name, signal)
 
-    def renderStructElement(self, element):
+    def visitStructElement(self, element):
         pass
 
-    def renderArraySignal(self, signal):
+    def visitArraySignal(self, signal):
         self.renderer.collect_stub_config_struct_array_type(self.port_name, signal)
         self.renderer.collect_cport_stub_array_function(self.port_name, signal)
 
@@ -114,17 +120,17 @@ class StubRenderer:
         self.f_header.close()
         self.f_source.close()
 
-    def renderPPort(self, port):
+    def visitPPort(self, port):
         self.pport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.pport_visitor)
 
-    def renderRPort(self, port):
+    def visitRPort(self, port):
         self.rport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.rport_visitor)
 
-    def renderCPort(self, port):
+    def visitCPort(self, port):
         self.cport_visitor.port_name = port.port_name
         for signal in port.signal_array:
             signal.accept(self.cport_visitor)
@@ -155,7 +161,7 @@ class StubRenderer:
         self.config_struct += '\t\t' + signal.type.name + ' ' + variable_name + ';\n'
 
         self.default_config += '\t{'
-        for i in range(0, int(signal.type.size)-1):
+        for i in range(0, signal.type.size-1):
             self.default_config += '0, '
         self.default_config += '0}, /*' + variable_name + '*/\n'
 

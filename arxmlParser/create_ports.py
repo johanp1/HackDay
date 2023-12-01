@@ -81,9 +81,8 @@ class OptParser:
 def main():
     optParser = OptParser(sys.argv[1:])
 
-    ap = ArxmlParser.ArxmlParser()
-    ap.parse(optParser.namespace, \
-             optParser.swc_arxml, \
+    ap = ArxmlParser.ArxmlParser(optParser.namespace)
+    ap.parse(optParser.swc_arxml, \
              optParser.port_arxml, \
              optParser.types_arxml)
 

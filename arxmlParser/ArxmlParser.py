@@ -23,7 +23,7 @@ class PPort(Port):
         return 'p-port: ' + str_ + '\n'
 
     def accept(self, visitor):
-        visitor.renderPPort(self)
+        visitor.visitPPort(self)
 
 class RPort(Port):
     """representation of a required AUTOSAR-port"""
@@ -34,7 +34,7 @@ class RPort(Port):
         return 'r-port: ' + str_  + '\n'
 
     def accept(self, visitor):
-        visitor.renderRPort(self)
+        visitor.visitRPort(self)
 
 class CPort(Port):
     """representation of a AUTOSAR-calibration-port"""
@@ -45,7 +45,7 @@ class CPort(Port):
         return 'c-port: ' + str_  + '\n'
 
     def accept(self, visitor):
-        visitor.renderCPort(self)
+        visitor.visitCPort(self)
 
 
 class Signal:
@@ -77,7 +77,7 @@ class ValueSignal(Signal):
 
     def accept(self, visitor):
         """visitor method"""
-        visitor.renderValueSignal(self)
+        visitor.visitValueSignal(self)
 
 class StructSignal(Signal):
     """representation of a AUTOSAR-struct-signal"""
@@ -97,7 +97,7 @@ class StructSignal(Signal):
 
     def accept(self, visitor):
         """visitor method"""
-        visitor.renderStructSignal(self)
+        visitor.visitStructSignal(self)
 
 class StructSignalElement:
     """this might be the same as ValueSignal"""
@@ -113,7 +113,7 @@ class StructSignalElement:
 
     def accept(self, visitor):
         """visitor method"""
-        visitor.renderStructElement(self)
+        visitor.visitStructElement(self)
 
 class ArraySignal(Signal):
     """representation of a AUTOSAR-array-signal"""
@@ -134,7 +134,7 @@ class ArraySignal(Signal):
 
     def accept(self, visitor):
         """visitor method"""
-        visitor.renderArraySignal(self)
+        visitor.visitArraySignal(self)
 
 class Type:
     """representation of a generic AUTOSAR-type"""
@@ -171,7 +171,7 @@ class ArrayType(Type):
 
     def __repr__(self):
         super_repr = super().__repr__()
-        return '\tArrayType ' + super_repr + ' size: ' + self.size + ' element type: '\
+        return '\tArrayType ' + super_repr + ' size: ' + str(self.size) + ' element type: '\
             + repr(self.element_type) + '\n'
 
     def create_signal(self, signal_name):
@@ -211,7 +211,7 @@ class CompuMethod:
 
 class ArxmlParser:
     """ArxmlParser"""
-    def __init__(self):
+    def __init__(self, namespace):
         self.port_array = []
         self.cal_array = []
         self.signal_dict = {}
@@ -219,20 +219,20 @@ class ArxmlParser:
         self.appl_type_dict = {}
         self.compu_method_dict = {}
         self.mapping_dict = {}
+
         self._ns = ''
-
-    def parse(self, namespace, swc_arxml, port_arxml, types_arxml):
-        """Parse arxml files"""
-        ET.register_namespace('', namespace)
-        #ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
-
         self._ns = {'default_ns':namespace}
+        #ET.register_namespace('xsi', 'http://www.w3.org/2001/XMLSchema-instance')
+        ET.register_namespace('', namespace)
+
+    def parse(self, swc_arxml, port_arxml, types_arxml):
+        """Parse arxml files"""
         self._get_r_ports(swc_arxml) #get component's r-ports
         self._get_p_ports(swc_arxml) #get component's p-ports
         self._get_c_ports(swc_arxml) #get component's c-ports
-        self._get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
+        self.get_compu_methods(types_arxml) #get all "SCALE_LINEAR" compu-methods in types_arxml
         self._get_type_mapping(types_arxml) #get impl<->appl type mapping
-        self._get_impl_types(types_arxml) #get all implementation data types in types_arxml
+        self.get_impl_types(types_arxml) #get all implementation data types in types_arxml
         self._get_appl_types(types_arxml) #get all application data types in types_arxml
 
         self._get_signals(port_arxml) #get signal- and type of all sender/receiver port-if's in port_arxml
@@ -339,7 +339,7 @@ class ArxmlParser:
             # get port_if name
             prototype_name = parameter_data_prototype.find('default_ns:SHORT-NAME', self._ns).text 
             prototype_type = parameter_data_prototype.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
- 
+
             # create impl-type-typed signals in calib-if
             for t in self.type_array:
                 if prototype_type == t.name:
@@ -353,7 +353,7 @@ class ArxmlParser:
 
         f_log.close()
 
-    def _get_impl_types(self, types_arxml):
+    def get_impl_types(self, types_arxml):
         tree = ET.parse(types_arxml)
         root = tree.getroot()
         f_log = open('./logs/types.txt', 'w', encoding="utf-8")
@@ -420,7 +420,8 @@ class ArxmlParser:
             if data_type_category == 'ARRAY':
                 elements = data_type.find('default_ns:SUB-ELEMENTS', self._ns)
                 element = elements.find('default_ns:IMPLEMENTATION-DATA-TYPE-ELEMENT', self._ns)
-                array_size = element.find('default_ns:ARRAY-SIZE', self._ns).text
+                
+                array_size = int(element.find('default_ns:ARRAY-SIZE', self._ns).text)
 
                 props = element.find('default_ns:SW-DATA-DEF-PROPS', self._ns)
                 variants = props.find('default_ns:SW-DATA-DEF-PROPS-VARIANTS', self._ns)
@@ -435,7 +436,7 @@ class ArxmlParser:
                         break
 
                 if found:
-                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + array_size + ' element_type ' + element_type + '\n')
+                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + str(array_size) + ' element_type ' + element_type + '\n')
                 else:
                     print(element_type + ' not found')
 
@@ -485,13 +486,13 @@ class ArxmlParser:
                 element = data_type.find('default_ns:ELEMENT', self._ns)
                 element_name = element.find('default_ns:SHORT-NAME', self._ns).text
                 element_type = element.find('default_ns:TYPE-TREF', self._ns).text.split('/')[-1]
-                nbr_of_elements = element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text
+                nbr_of_elements = int(element.find('default_ns:MAX-NUMBER-OF-ELEMENTS', self._ns).text)
 
                 if element_type in self.mapping_dict:
                     t = self.appl_type_dict[element_type]
                     self.appl_type_dict[data_type_name] = ArrayType(mapped_type, nbr_of_elements, t)
 
-                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + nbr_of_elements + ' element_type ' + element_type + '\n')
+                    f_log.write('array_data_type_name ' + data_type_name + ' array size: ' + str(nbr_of_elements) + ' element_type ' + element_type + '\n')
                 else:
                     print('could not add array element type : ' + data_type_name + ', type not mapped to any implementation data type')      
             else:
@@ -535,7 +536,7 @@ class ArxmlParser:
 
         f_log.close()
 
-    def _get_compu_methods(self, types_arxml):
+    def get_compu_methods(self, types_arxml):
         """ creates dictionary with SCALE_LINEAR compu methods, dict-key is the compu-method name"""
         tree = ET.parse(types_arxml)
         root = tree.getroot()

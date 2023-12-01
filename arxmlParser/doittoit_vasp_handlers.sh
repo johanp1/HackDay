@@ -19,7 +19,7 @@ if python3 create_ports.py --port_arxml=../../vasp_classic/vasp_handlers/davinci
 	
 	cp out/DACU_Components_VASP.xml out/refDACU_Components_VASP.xml
 	
-   echo "patching with DacuVaspApp.xml"
+    echo "patching with DacuVaspApp.xml"
 	python3 patcher.py out/refDACU_Components_VASP.xml ../../vasp_classic/vasp/SW_C/autosar4/DacuVaspApp.xml out/temp.xml
 	
 	echo "patching with Vcm.xml"

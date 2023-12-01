@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file was saved with a tool from Vector Informatik GmbH
+-->
+<AUTOSAR xsi:schemaLocation="http://autosar.org/schema/r4.0 AUTOSAR_4-2-2.xsd" xmlns="http://autosar.org/schema/r4.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <AR-PACKAGES>
+    <AR-PACKAGE UUID="">
+      <SHORT-NAME>Test</SHORT-NAME>
+      <AR-PACKAGES>
+        <AR-PACKAGE UUID="">
+          <COMPU-METHOD UUID="69001101-0242-0000-0000-000000000000">
+            <SHORT-NAME>Element1CompuMethod_T</SHORT-NAME>
+            <CATEGORY>SCALE_LINEAR</CATEGORY>
+            <COMPU-INTERNAL-TO-PHYS>
+              <COMPU-SCALES>
+                <COMPU-SCALE>
+                  <COMPU-RATIONAL-COEFFS>
+                    <COMPU-NUMERATOR>
+                      <V>1</V>
+                      <V>0.5</V>
+                    </COMPU-NUMERATOR>
+                    <COMPU-DENOMINATOR>
+                      <V>1</V>
+                    </COMPU-DENOMINATOR>
+                  </COMPU-RATIONAL-COEFFS>
+                </COMPU-SCALE>
+              </COMPU-SCALES>
+            </COMPU-INTERNAL-TO-PHYS>
+          </COMPU-METHOD>
+          <COMPU-METHOD UUID="69001101-0242-0000-0000-000000000000">
+            <SHORT-NAME>Element2CompuMethod_T</SHORT-NAME>
+            <CATEGORY>SCALE_LINEAR</CATEGORY>
+            <COMPU-INTERNAL-TO-PHYS>
+              <COMPU-SCALES>
+                <COMPU-SCALE>
+                  <COMPU-RATIONAL-COEFFS>
+                    <COMPU-NUMERATOR>
+                      <V>0</V>
+                      <V>0.5</V>
+                    </COMPU-NUMERATOR>
+                    <COMPU-DENOMINATOR>
+                      <V>1</V>
+                    </COMPU-DENOMINATOR>
+                  </COMPU-RATIONAL-COEFFS>
+                </COMPU-SCALE>
+              </COMPU-SCALES>
+            </COMPU-INTERNAL-TO-PHYS>
+          </COMPU-METHOD>
+          <COMPU-METHOD UUID="69001101-0242-0000-0000-000000000000">
+            <SHORT-NAME>Element3CompuMethod_T</SHORT-NAME>
+            <CATEGORY>SCALE_LINEAR</CATEGORY>
+            <COMPU-INTERNAL-TO-PHYS>
+              <COMPU-SCALES>
+                <COMPU-SCALE>
+                  <COMPU-RATIONAL-COEFFS>
+                    <COMPU-NUMERATOR>
+                      <V>0</V>
+                      <V>0.25</V>
+                    </COMPU-NUMERATOR>
+                    <COMPU-DENOMINATOR>
+                      <V>1</V>
+                    </COMPU-DENOMINATOR>
+                  </COMPU-RATIONAL-COEFFS>
+                </COMPU-SCALE>
+              </COMPU-SCALES>
+            </COMPU-INTERNAL-TO-PHYS>
+          </COMPU-METHOD>
+          <COMPU-METHOD UUID="69001101-0242-0000-0000-000000000000">
+            <SHORT-NAME>ValueCompuMethod_T</SHORT-NAME>
+            <CATEGORY>SCALE_LINEAR</CATEGORY>
+            <COMPU-INTERNAL-TO-PHYS>
+              <COMPU-SCALES>
+                <COMPU-SCALE>
+                  <COMPU-RATIONAL-COEFFS>
+                    <COMPU-NUMERATOR>
+                      <V>-10</V>
+                      <V>5</V>
+                    </COMPU-NUMERATOR>
+                    <COMPU-DENOMINATOR>
+                      <V>1</V>
+                    </COMPU-DENOMINATOR>
+                  </COMPU-RATIONAL-COEFFS>
+                </COMPU-SCALE>
+              </COMPU-SCALES>
+            </COMPU-INTERNAL-TO-PHYS>
+          </COMPU-METHOD>
+          <COMPU-METHOD UUID="69001101-0242-0000-0000-000000000000">
+            <SHORT-NAME>ArrayElementCompuMethod_T</SHORT-NAME>
+            <CATEGORY>SCALE_LINEAR</CATEGORY>
+            <COMPU-INTERNAL-TO-PHYS>
+              <COMPU-SCALES>
+                <COMPU-SCALE>
+                  <COMPU-RATIONAL-COEFFS>
+                    <COMPU-NUMERATOR>
+                      <V>0</V>
+                      <V>2</V>
+                    </COMPU-NUMERATOR>
+                    <COMPU-DENOMINATOR>
+                      <V>1</V>
+                    </COMPU-DENOMINATOR>
+                  </COMPU-RATIONAL-COEFFS>
+                </COMPU-SCALE>
+              </COMPU-SCALES>
+            </COMPU-INTERNAL-TO-PHYS>
+          </COMPU-METHOD>
+          <IMPLEMENTATION-DATA-TYPE UUID="2cd2a786-af80-5a8c-610f-076c79b396ec">
+            <SHORT-NAME>Array_T</SHORT-NAME>
+            <CATEGORY>ARRAY</CATEGORY>
+            <SUB-ELEMENTS>
+              <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="28ed6079-8dd3-5cc2-0cb5-42297412c1ea">
+                <SHORT-NAME>ArrayElement</SHORT-NAME>
+                <CATEGORY>TYPE_REFERENCE</CATEGORY>
+                <ARRAY-SIZE>5</ARRAY-SIZE>
+                <ARRAY-SIZE-SEMANTICS>FIXED-SIZE</ARRAY-SIZE-SEMANTICS>
+                <SW-DATA-DEF-PROPS>
+                  <SW-DATA-DEF-PROPS-VARIANTS>
+                    <SW-DATA-DEF-PROPS-CONDITIONAL>
+                      <IMPLEMENTATION-DATA-TYPE-REF DEST="IMPLEMENTATION-DATA-TYPE">ArrayElement_T</IMPLEMENTATION-DATA-TYPE-REF>
+                    </SW-DATA-DEF-PROPS-CONDITIONAL>
+                  </SW-DATA-DEF-PROPS-VARIANTS>
+                </SW-DATA-DEF-PROPS>
+              </IMPLEMENTATION-DATA-TYPE-ELEMENT>
+            </SUB-ELEMENTS>
+          </IMPLEMENTATION-DATA-TYPE>
+          <IMPLEMENTATION-DATA-TYPE>
+            <SHORT-NAME>ArrayElement_T</SHORT-NAME>
+            <CATEGORY>VALUE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                  <BASE-TYPE-REF DEST="SW-BASE-TYPE">uint8_BaseType</BASE-TYPE-REF>
+                  <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+          </IMPLEMENTATION-DATA-TYPE>
+          <IMPLEMENTATION-DATA-TYPE>
+            <SHORT-NAME>Value_T</SHORT-NAME>
+            <CATEGORY>VALUE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                  <BASE-TYPE-REF DEST="SW-BASE-TYPE">uint8_BaseType</BASE-TYPE-REF>
+                  <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+          </IMPLEMENTATION-DATA-TYPE>
+           <IMPLEMENTATION-DATA-TYPE>
+            <SHORT-NAME>Element1_T</SHORT-NAME>
+            <CATEGORY>VALUE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                  <BASE-TYPE-REF DEST="SW-BASE-TYPE">uint16</BASE-TYPE-REF>
+                  <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+          </IMPLEMENTATION-DATA-TYPE>
+          <IMPLEMENTATION-DATA-TYPE>
+            <SHORT-NAME>Element2_T</SHORT-NAME>
+            <CATEGORY>VALUE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                  <BASE-TYPE-REF DEST="SW-BASE-TYPE">Value_T</BASE-TYPE-REF>
+                  <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+          </IMPLEMENTATION-DATA-TYPE>
+          <IMPLEMENTATION-DATA-TYPE>
+            <SHORT-NAME>Element3_T</SHORT-NAME>
+            <CATEGORY>VALUE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                  <BASE-TYPE-REF DEST="SW-BASE-TYPE">Boolean_T</BASE-TYPE-REF>
+                  <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+          </IMPLEMENTATION-DATA-TYPE>
+          <IMPLEMENTATION-DATA-TYPE UUID="F6968D7C-7E38-4333-9113-10D72DED57DC">
+            <SHORT-NAME>Struct_T</SHORT-NAME>
+            <CATEGORY>STRUCTURE</CATEGORY>
+            <SW-DATA-DEF-PROPS>
+              <SW-DATA-DEF-PROPS-VARIANTS>
+                <SW-DATA-DEF-PROPS-CONDITIONAL>
+                    <SW-CALIBRATION-ACCESS>NOT-ACCESSIBLE</SW-CALIBRATION-ACCESS>
+                </SW-DATA-DEF-PROPS-CONDITIONAL>
+              </SW-DATA-DEF-PROPS-VARIANTS>
+            </SW-DATA-DEF-PROPS>
+            <SUB-ELEMENTS>
+                <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="7910036E-2FFD-400A-A142-3CAE2B1B199A">
+                    <SHORT-NAME>element1</SHORT-NAME>
+                    <CATEGORY>TYPE_REFERENCE</CATEGORY>
+                    <SW-DATA-DEF-PROPS>
+                        <SW-DATA-DEF-PROPS-VARIANTS>
+                            <SW-DATA-DEF-PROPS-CONDITIONAL>
+                                <IMPLEMENTATION-DATA-TYPE-REF DEST="IMPLEMENTATION-DATA-TYPE">Element1_T</IMPLEMENTATION-DATA-TYPE-REF>
+                            </SW-DATA-DEF-PROPS-CONDITIONAL>
+                        </SW-DATA-DEF-PROPS-VARIANTS>
+                    </SW-DATA-DEF-PROPS>
+                </IMPLEMENTATION-DATA-TYPE-ELEMENT>
+                <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="2502C845-BCD3-4F9E-B0B4-E6F0DA17B73B">
+                    <SHORT-NAME>element2</SHORT-NAME>
+                    <CATEGORY>TYPE_REFERENCE</CATEGORY>
+                    <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                        <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <IMPLEMENTATION-DATA-TYPE-REF DEST="IMPLEMENTATION-DATA-TYPE">Element2_T</IMPLEMENTATION-DATA-TYPE-REF>
+                        </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                    </SW-DATA-DEF-PROPS>
+                </IMPLEMENTATION-DATA-TYPE-ELEMENT>
+                <IMPLEMENTATION-DATA-TYPE-ELEMENT UUID="AF5AF05C-AD94-4BEB-BE5A-ED3E2A02E283">
+                  <SHORT-NAME>element3</SHORT-NAME>
+                  <CATEGORY>TYPE_REFERENCE</CATEGORY>
+                  <SW-DATA-DEF-PROPS>
+                    <SW-DATA-DEF-PROPS-VARIANTS>
+                      <SW-DATA-DEF-PROPS-CONDITIONAL>
+                        <IMPLEMENTATION-DATA-TYPE-REF DEST="IMPLEMENTATION-DATA-TYPE">Element3_T</IMPLEMENTATION-DATA-TYPE-REF>
+                      </SW-DATA-DEF-PROPS-CONDITIONAL>
+                    </SW-DATA-DEF-PROPS-VARIANTS>
+                  </SW-DATA-DEF-PROPS>
+                </IMPLEMENTATION-DATA-TYPE-ELEMENT>
+            </SUB-ELEMENTS>
+          </IMPLEMENTATION-DATA-TYPE>
+        </AR-PACKAGE>
+      </AR-PACKAGES>
+    </AR-PACKAGE>
+  </AR-PACKAGES>
+</AUTOSAR>

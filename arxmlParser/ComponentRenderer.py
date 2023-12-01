@@ -6,10 +6,10 @@ class PPortVisitor:
         self.port_name = ''
         self.stubbed = True
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.render_value_signal(self.port_name, 'Send', signal, self.stubbed)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.render_struct_signal(self.port_name, 'Send', signal, self.stubbed)
 
 class RPortVisitor:
@@ -18,10 +18,10 @@ class RPortVisitor:
         self.port_name = ''
         self.stubbed = True
 
-    def renderValueSignal(self, signal):
+    def visitValueSignal(self, signal):
         self.renderer.render_value_signal(self.port_name, 'Receive', signal, self.stubbed)
 
-    def renderStructSignal(self, signal):
+    def visitStructSignal(self, signal):
         self.renderer.render_struct_signal(self.port_name, 'Receive', signal, self.stubbed)
 
 class ComponentRenderer:
@@ -44,14 +44,14 @@ class ComponentRenderer:
 
         self.f_out.close()
 
-    def renderPPort(self, port):
+    def visitPPort(self, port):
         """Accept function (from Visitor-pattern) for P-Port"""
         self.pport_visitor.port_name = port.port_name
         self.pport_visitor.stubbed = port.stubbed
         for signal in port.signal_array:
             signal.accept(self.pport_visitor)
 
-    def renderRPort(self, port):
+    def visitRPort(self, port):
         """Accept function (from Visitor-pattern) for R-Port"""
         self.rport_visitor.port_name = port.port_name
         self.rport_visitor.stubbed = port.stubbed

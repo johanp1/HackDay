@@ -10,25 +10,25 @@ class TestVisitor:
       self.visited_signal = ''
       self.visited_element = ''
 
-   def renderPPort(self, port):
+   def visitPPort(self, port):
       self.visited_pport = port.port_name
       for signal in port.signal_array:
          signal.accept(self)
 
-   def renderRPort(self, port):
+   def visitRPort(self, port):
       self.visited_rport = port.port_name
       for signal in port.signal_array:
          signal.accept(self)
 
-   def renderValueSignal(self, signal):
+   def visitValueSignal(self, signal):
       self.visited_signal = signal.name
 
-   def renderStructSignal(self, signal):
+   def visitStructSignal(self, signal):
       self.visited_signal = signal.name
       for element in signal.element_array:
          element.accept(self)
 
-   def renderStructElement(self, element):
+   def visitStructElement(self, element):
       self.visited_element = element.name
 
 class TestPort(unittest.TestCase):
