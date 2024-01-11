@@ -10,11 +10,12 @@ set(TEST_SOURCE
   buffer_tests.cpp
   button_tests.cpp
   encoder_tests.cpp
+  event_generator_tests.cpp
   event_parser_tests.cpp
+  joystick_tests.cpp
   receiver_tests.cpp
   selector_tests.cpp
   sender_tests.cpp
-  event_generator_tests.cpp
   main.cpp)
 
 add_executable(arduinoEvents_test ${TEST_SOURCE})

@@ -14,6 +14,7 @@ add_library(arduinoEvents
     event.cpp
     event_generator.cpp
     event_parser.cpp
+    joystick.cpp
     receiver.cpp
     selector.cpp
     sender.cpp)
