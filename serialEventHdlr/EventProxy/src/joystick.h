@@ -13,11 +13,12 @@ class Joystick : public EventGenerator {
    ~Joystick();
 
    void scan(void);
-   byte getPos();
+   int GetPos();
    
  private:
+   int ReadAD();
    unsigned int pin_;
-   unsigned int pos_; // debounced state
+   int pos_; // debounced state
 };
 
 #endif // __JOYSTICK_H__

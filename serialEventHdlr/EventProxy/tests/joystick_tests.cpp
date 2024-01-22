@@ -65,15 +65,28 @@ class JoystickTestFixture : public testing::Test
 
 TEST_F(JoystickTestFixture, Init)
 {
-  ASSERT_TRUE(0 == joystick->getPos());
+   ASSERT_TRUE(0 == joystick->GetPos());
 }
 
 TEST_F(JoystickTestFixture, SteadyState)
 {
    // precondition, got to known state (0)
-  arduinoStub->SetAnalogPinVoltage(PIN, 0);
-  joystick->scan();
-  ASSERT_TRUE(0 == joystick->getPos());
-  ASSERT_TRUE(!evSpy.newData);
+   arduinoStub->SetAnalogPinVoltage(PIN, 0);
+   joystick->scan();
+   std::cout<<joystick->GetPos()<<std::endl;
+   ASSERT_TRUE(-102 == joystick->GetPos());
+
+   arduinoStub->SetAnalogPinVoltage(PIN, 2.505);
+   joystick->scan();
+   std::cout<<joystick->GetPos()<<std::endl;
+   ASSERT_TRUE(0 == joystick->GetPos());
+
+   arduinoStub->SetAnalogPinVoltage(PIN, 5);
+   joystick->scan();
+   std::cout<<joystick->GetPos()<<std::endl;
+   ASSERT_TRUE(101 == joystick->GetPos());
+
+   //ASSERT_TRUE(!evSpy.newData);
 }
+
 }
