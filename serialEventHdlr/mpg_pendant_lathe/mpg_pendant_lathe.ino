@@ -1,4 +1,5 @@
 #include "button.h"
+#include "joystick.h"
 #include "sender.h"
 #include "event_listner.h"
 #include "buffer.h"
@@ -9,7 +10,7 @@
 #include "lcd_writer.h"
 #include <LiquidCrystal_PCF8574.h>
 
-constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors;
+constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 2;
 
 template<typename F, typename O>
 class ControllerEventHandler : public EventFunctor
@@ -65,7 +66,6 @@ void setup() {
   eventGenerators[3] = new Button("est", kEStopButtonPin, kButtonDebounceDelay);
   eventGenerators[3]->addEventListner(&sender);
 
-
   eventGenerators[4] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);
   eventGenerators[4]->addEventListner(&sender);
 
@@ -75,6 +75,14 @@ void setup() {
   
   eventGenerators[5] = new Selector("sels", cScaleSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);
   eventGenerators[5]->addEventListner(&sender);
+
+  Joystick* x_joystick = new Joystick("x", kJoystickXPin);
+  eventGenerators[6] = x_joystick;
+  eventGenerators[6]->addEventListner(&sender);
+
+  Joystick* z_joystick = new Joystick("z", kJoystickZPin);
+  eventGenerators[7] = z_joystick;
+  eventGenerators[7]->addEventListner(&sender);
 
   // register serial events the view's event handlers
   receiver.addEventListner(axisView->GetController());
@@ -86,6 +94,9 @@ void setup() {
 
   axisView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"sela"}, enableAxisViewWrapper, axisView->GetController())));
   spindleView->GetController()->AddAcceptedHandler(*(new ControllerEventHandler<void (&)(String&, Controller<LiquidCrystal_PCF8574>*), Controller<LiquidCrystal_PCF8574>>(String{"sela"}, enableSpindleViewWrapper, spindleView->GetController())));
+
+  x_joystick->Calibrate();
+  z_joystick->Calibrate();
 }
 
 void loop() {
@@ -100,6 +111,8 @@ void loop() {
   eventGenerators[3]->scan();
   eventGenerators[4]->scan();
   eventGenerators[5]->scan();
+  eventGenerators[6]->scan();
+  eventGenerators[7]->scan();
 
   //send heart-beat every <kHeartbeatPeriod> [ms]
   if (millis() > heartbeatTimer)

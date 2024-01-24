@@ -1,6 +1,4 @@
 #include "joystick.h"
-#include <iostream>
-#include <string>
 
 auto constexpr k_default_idle_ad_val = 512;
 
@@ -27,7 +25,7 @@ void Joystick::scan(void)
    } 
 }
 
-byte Joystick::GetPos()
+int Joystick::GetPos()
 {
   return pos_;
 }

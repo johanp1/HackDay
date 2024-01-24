@@ -17,6 +17,8 @@ constexpr auto kJogNegButtonPin = 4;
 
 constexpr auto kAxisSelectorPin = A1;
 constexpr auto cScaleSelectorPin = A0;
+constexpr auto kJoystickXPin = A2;
+constexpr auto kJoystickZPin = A3;
 
 constexpr auto kHeartbeatPeriod = 2000; //ms
 
