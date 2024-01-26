@@ -147,4 +147,34 @@ TEST_F(MpgTestFixture, selectAxisViewTest)
    ASSERT_TRUE(onLcd("*z:", 1));
 }
 
+TEST_F(MpgTestFixture, moveJoystickXTest)
+{
+   // joystick in middle pos (0)
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 2.5);
+   setup();
+   loop();
+   // nothing should have happened
+   ASSERT_TRUE(SubstringFind(Serial.getData(), ""));
+
+   arduinoStub->SetAnalogPinVoltage(kJoystickXPin, 2.0);
+   loop();
+   ASSERT_TRUE(hasBeenSent("x_"));
+}
+
+TEST_F(MpgTestFixture, moveJoystickZTest)
+{
+   // joystick in middle pos (0)
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 2.5);
+   setup();
+   loop();
+   // nothing should have happened
+   ASSERT_TRUE(SubstringFind(Serial.getData(), ""));
+
+   //move the joystick
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 3.6);
+   loop();
+   // check for joystick event
+   ASSERT_TRUE(hasBeenSent("z_"));
+}
+
 }
