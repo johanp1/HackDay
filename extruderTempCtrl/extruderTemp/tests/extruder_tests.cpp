@@ -19,6 +19,10 @@ TEST(ExtruderTestGroup, setPwm)
 {
    Extruder extruder(c_tempPin, c_pwmPin);
    extruder.SetTempPwmDuty(120);
+   ASSERT_EQ(0, arduinoStub->GetAnalogWrite(c_pwmPin));
+
+   extruder.SetEnabled(true);
+   extruder.SetTempPwmDuty(120);
    ASSERT_EQ(120, arduinoStub->GetAnalogWrite(c_pwmPin));
 }
 
@@ -50,7 +54,7 @@ TEST(ExtruderTestGroup, setDebug)
    extruder.SetDebug(0);
    ASSERT_TRUE(Serial.getData().compare(""s) == 0);
 
-   string expected = string("debug: 1\n");
+   string expected = string("extruder::debug_: 1\n");
    extruder.SetDebug(1);
    ASSERT_TRUE(Serial.getData().compare(expected) == 0);
 }

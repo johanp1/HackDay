@@ -75,7 +75,7 @@ TEST(ControllerTestGroup, CalcOutput)
                    1);// beta
 
    PIDController tempCtrl(1000, p, 0, 5);
-   tempCtrl.SetEnable(true);
+   tempCtrl.SetEnabled(true);
 
    tempCtrl.SetRef(1);
    tempCtrl.Step(0);
@@ -93,7 +93,7 @@ TEST(ControllerTestGroup, setDebug)
    tempCtrl.SetDebug(0);
    ASSERT_TRUE(Serial.getData().compare(""s) == 0);
 
-   string expected = string("debug: 1\n");
+   string expected = string("controller::debug_: 1\n");
    tempCtrl.SetDebug(1);
    ASSERT_TRUE(Serial.getData().compare(expected) == 0);
 }
