@@ -3,48 +3,26 @@
 #include "receiver.h"
 #include "src/extruder.h"
 
-void setRefTemp(int newRef);
-
-class SetTempCommandHandler : public CommandHandler
+template<typename F, typename O>
+class EventHandler : public EventFunctor
 {
-   public:
-   SetTempCommandHandler() : CommandHandler{String("sp")} {}; 
+  public:
+    EventHandler(String const &event_name, F f, O* o) : EventFunctor{event_name}, f_(f), o_(o) {};
 
-   void operator()(String& _parsedData)
-   {
-	  setRefTemp(_parsedData.toInt());
-   };
+    void operator()(String& parsed_data)
+    {
+      f_(parsed_data, o_);
+    };
+    
+    O* o_;
+    F f_;
 };
 
-class SetEnableCommandHandler : public CommandHandler
-{
-   public:
-   SetEnableCommandHandler(PIDController& ctrl) : CommandHandler{String("en")}, controller(ctrl) {}; 
+static void setEnableWrapper(String& s, PIDController* c);
+static void setRefTempWrapper(String& s, PIDController* c);
 
-   void operator()(String& _parsedData)
-   {
-	  controller.SetEnable(_parsedData.toInt() > 0 ? true : false);
-   };
-   
-   private:
-    PIDController& controller;
-};
-
-class SetDebugCommandHandler : public CommandHandler
-{
-   public:
-   SetDebugCommandHandler(PIDController& ctrl, Extruder& ext) : CommandHandler{String("debug")}, controller(ctrl), extruder(ext) {}; 
-
-   void operator()(String& _parsedData)
-   {
-	  controller.SetDebug(_parsedData.toInt() > 0 ? true : false);
-      extruder.SetDebug(_parsedData.toInt() > 0 ? true : false);
-   };
-   
-   private:
-    PIDController& controller;
-	Extruder& extruder;
-};
+template<typename O>
+static void setDebugWrapper(String& s, O* o);
 
 // defines pins numbers
 const int pwmPin = 5;
@@ -62,9 +40,6 @@ PIDController tempCtrl(1000, p, 0, 200);
 Extruder extruder(tempPin, pwmPin);
 Receiver receiver(String("rec"));
 EventParser ep;
-SetTempCommandHandler setTempHandler;
-SetEnableCommandHandler setEnableHandler{tempCtrl};
-SetDebugCommandHandler setDebugHandler{tempCtrl, extruder};
 
 void setup() {
   Serial.begin(38400);  // opens serial port, sets data rate to 38400 bps
@@ -77,33 +52,29 @@ void setup() {
   analogWrite(pwmPin, 0);
 
   receiver.addEventListner(&ep);
-  ep.AddAcceptedCmd(setTempHandler);
-  ep.AddAcceptedCmd(setEnableHandler);
-  ep.AddAcceptedCmd(setDebugHandler);
+
+  ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"en"}, setEnableWrapper, &tempCtrl)));
+  ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"sp"}, setRefTempWrapper, &tempCtrl)));
+  ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"debug"}, setDebugWrapper, &tempCtrl)));
+  ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Extruder*), Extruder>(String{"debug"}, setDebugWrapper, &extruder)));
 
   Serial.println("setup done"); // tell server setup is done
 }
 
 void loop()
 {
-  int duty = 0; //0-255
   int currTemp;
 
   currTemp = extruder.ReadTemp();
 
-  duty = tempCtrl.Step(currTemp, refTemp);  // temp in [0.1 degrees]
+  tempCtrl.Step(currTemp);  // temp in [0.1 degrees]
 
   Serial.print("mv_");
   Serial.println((int)(currTemp/10));
 
-  extruder.SetTempPwmDuty(duty);
+  extruder.SetTempPwmDuty(tempCtrl.GetOut());
 
   delay(1000); // One second delay
-}
-
-void setRefTemp(int newRef)
-{
-  refTemp = newRef * 10; // convert to 0.1 degrees unit
 }
 
 void serialEvent()
@@ -111,3 +82,18 @@ void serialEvent()
   receiver.scan();
 }
 
+static void setEnableWrapper(String& s, PIDController* c)
+{
+  c->SetEnable(s.toInt() > 0 ? true : false);
+}
+
+static void setRefTempWrapper(String& s, PIDController* c)
+{
+  c->SetRef(s.toInt()*10); // convert to 0.1 degrees unit
+}
+
+template<typename O>
+static void setDebugWrapper(String& s, O* o)
+{
+  o->SetDebug(s.toInt() > 0 ? true : false);
+}
