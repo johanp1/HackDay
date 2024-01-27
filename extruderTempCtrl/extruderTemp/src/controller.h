@@ -32,14 +32,15 @@ class PIDController
    void Step(int y);
    int GetOut(void);
    PIDParameters const& GetPar() const;
-   void SetEnable(bool e);
+   void SetEnabled(bool e);
    void SetDebug(bool d);
+   bool IsEnabled();
    
    private:
    int Saturate(int in);
    int CalcOutput(int y, int yRef);
    
-   class PIDParameters par;
+   class PIDParameters par_;
 
    int h; //period [ms]
    int min;
@@ -49,8 +50,8 @@ class PIDController
    int yPrev;
    int yRef;
    int v; //output from controller
-   bool enabled;
-   bool debug;
+   bool enabled_;
+   bool debug_;
 };
 
 #endif

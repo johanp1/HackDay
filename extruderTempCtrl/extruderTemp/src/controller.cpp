@@ -2,7 +2,7 @@
 #include "Arduino.h"
 
 #define DEBUG 0
-#define debug_print(x)   if(debug){Serial.print(#x); Serial.print(": "); Serial.println(x);}
+#define debug_print(x)   if(debug_){Serial.print("controller::"); Serial.print(#x); Serial.print(": "); Serial.println(x);}
 
 PIDController::PIDController(int period)
 {
@@ -18,8 +18,8 @@ PIDController::PIDController(int period)
    v = 0;
    yRef = 0;
    yPrev = 0;
-   enabled = false;
-   debug = 0;
+   enabled_ = false;
+   debug_ = 0;
 }  
 
 PIDController::PIDController(int period, PIDParameters const& p, int _min, int _max)
@@ -34,13 +34,13 @@ PIDController::PIDController(int period, PIDParameters const& p, int _min, int _
    v = 0;
    yRef = 0;
    yPrev = 0;
-   enabled = false;
-   debug = 0;
+   enabled_ = false;
+   debug_ = 0;
 }
 
 void PIDController::SetPar(PIDParameters const& p)
 {
-   par.Set(p);
+   par_.Set(p);
 }  
 
 void PIDController::SetRef(int yRef_)
@@ -50,17 +50,18 @@ void PIDController::SetRef(int yRef_)
 
 PIDParameters const& PIDController::GetPar() const
 {
-   return par;
+   return par_;
 }
 
-void PIDController::SetEnable(bool e)
+void PIDController::SetEnabled(bool e)
 {
-   enabled = e;
+   enabled_ = e;
+   debug_print(enabled_);
 }
 
 void PIDController::Step(int y)
 {
-   if (enabled == true)
+   if (enabled_ == true)
    {
       v = CalcOutput(y, yRef);
    } 
@@ -73,8 +74,13 @@ int PIDController::GetOut(void)
 
 void PIDController::SetDebug(bool d)
 {
-  debug = d;
-  debug_print(debug);
+  debug_ = d;
+  debug_print(debug_);
+}
+
+bool PIDController::IsEnabled()
+{
+   return enabled_;
 }
 
 int PIDController::Saturate(int in)
@@ -104,19 +110,19 @@ int PIDController::CalcOutput(int y, int yRef)
   debug_print(yRef);
   debug_print(e);
 
-  if (par.Td != 0)
+  if (par_.Td != 0)
   {  // only update D if Td not zero
-    D = (par.Td*D)/(par.Td+par.N*h) - ((par.K*par.Td*par.N)*(y - yPrev))/(par.Td + par.N*h);
+    D = (par_.Td*D)/(par_.Td+par_.N*h) - ((par_.K*par_.Td*par_.N)*(y - yPrev))/(par_.Td + par_.N*h);
     debug_print(D);
   }
    
-  v = par.K*(par.beta*yRef-y) + I + D; // v(t) = K*e(t) + I(t-1) + D(t)
+  v = par_.K*(par_.beta*yRef-y) + I + D; // v(t) = K*e(t) + I(t-1) + D(t)
   u = Saturate(v);
   debug_print(v);
   debug_print(u);
  
-  I_term1 = (int)((long)par.K*(long)h*(long)e)/par.Ti;
-  I_term2 = (int)((long)h*(long)(u-v))/par.Tr;
+  I_term1 = (int)((long)par_.K*(long)h*(long)e)/par_.Ti;
+  I_term2 = (int)((long)h*(long)(u-v))/par_.Tr;
   debug_print(I_term1);
   debug_print(I_term2);
   I = I + I_term1 + I_term2;

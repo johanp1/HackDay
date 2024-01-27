@@ -5,15 +5,18 @@
 class Extruder
 {
    public:
-   Extruder(int tempSensPin_, int pwmPin_);
+   Extruder(int tempSensPin, int pwmPin);
    void SetDebug(bool d);
+   void SetEnabled(bool e);
    void SetTempPwmDuty(int d);
    int ReadTemp();
-
+   bool IsEnabled();
+   
    private:
-   bool debug;
-   int tempSensPin;
-   int pwmPin;
+   bool debug_;
+   bool enabled_;
+   int tempSensPin_;
+   int pwmPin_;
 };
 
 #endif

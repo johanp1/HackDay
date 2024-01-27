@@ -18,7 +18,9 @@ class EventHandler : public EventFunctor
     F f_;
 };
 
-static void setEnableWrapper(String& s, PIDController* c);
+template<typename O>
+static void setEnableWrapper(String& s, O* o);
+
 static void setRefTempWrapper(String& s, PIDController* c);
 
 template<typename O>
@@ -54,6 +56,7 @@ void setup() {
   receiver.addEventListner(&ep);
 
   ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"en"}, setEnableWrapper, &tempCtrl)));
+  ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Extruder*), Extruder>(String{"en"}, setEnableWrapper, &extruder)));
   ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"sp"}, setRefTempWrapper, &tempCtrl)));
   ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, PIDController*), PIDController>(String{"debug"}, setDebugWrapper, &tempCtrl)));
   ep.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Extruder*), Extruder>(String{"debug"}, setDebugWrapper, &extruder)));
@@ -65,15 +68,21 @@ void loop()
 {
   int currTemp;
 
-  currTemp = extruder.ReadTemp();
+  if (extruder.IsEnabled())
+  {
+    currTemp = extruder.ReadTemp();
+    tempCtrl.Step(currTemp);  // temp in [0.1 degrees] 
+    Serial.print("mv_");
+    Serial.println((int)(currTemp/10));
+    
+    extruder.SetTempPwmDuty(tempCtrl.GetOut());
+  }
+  else
+  {
+    extruder.SetTempPwmDuty(0);
+  }
 
-  tempCtrl.Step(currTemp);  // temp in [0.1 degrees]
-
-  Serial.print("mv_");
-  Serial.println((int)(currTemp/10));
-
-  extruder.SetTempPwmDuty(tempCtrl.GetOut());
-
+  
   delay(1000); // One second delay
 }
 
@@ -82,9 +91,10 @@ void serialEvent()
   receiver.scan();
 }
 
-static void setEnableWrapper(String& s, PIDController* c)
+template<typename O>
+static void setEnableWrapper(String& s, O* o)
 {
-  c->SetEnable(s.toInt() > 0 ? true : false);
+  o->SetEnabled(s.toInt() > 0 ? true : false);
 }
 
 static void setRefTempWrapper(String& s, PIDController* c)
