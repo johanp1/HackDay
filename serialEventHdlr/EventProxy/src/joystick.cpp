@@ -6,8 +6,13 @@ auto constexpr k_default_idle_ad_val = 512;
 Joystick::Joystick(const String& Name,
 		             const unsigned int Pin) : EventGenerator(Name), pin_(Pin)
 {
-   pos_ = 0;
-   offset = 0;
+   pos_ = 0; 
+   mid_ = k_default_idle_ad_val;
+
+   low_ = 0; // read from eeprom
+   hi_ = 1023; // read from eeprom
+
+   CreateMap(low_, mid_, hi_);
 }
 
 Joystick::~Joystick()
@@ -30,32 +35,75 @@ int Joystick::GetPos()
   return pos_;
 }
 
-void Joystick::Calibrate()
+void Joystick::CalibrateMid()
+{
+   Calibrate(mid_);
+}
+
+void Joystick::CalibrateHi()
+{
+   Calibrate(hi_);
+   // save hi_ to eeprom
+}
+
+void Joystick::CalibrateLow()
+{
+   Calibrate(low_);
+   // save low_ to eeprom
+}
+
+void Joystick::Calibrate(int &v)
 {
    // mean value over 3 samples
-   offset = k_default_idle_ad_val - analogRead(pin_);
-   offset = (offset + k_default_idle_ad_val - analogRead(pin_))/2;
-   offset = (offset + k_default_idle_ad_val - analogRead(pin_))/2;
+   v =  analogRead(pin_);
+   v = (v + analogRead(pin_))/2;
+   v = (v + analogRead(pin_))/2;
+   
+   // save low_ to eeprom
+
+   CreateMap(low_, mid_, hi_);
+}
+
+// calculates a1, a2, b1, b2, c1, c2 in
+// y1 = a1x^2 + b1x + c1, 0 <= x < 51
+// y2 = a2x^2 + b2x + c2, 51 <= x <= 102
+//
+// y1(low) = -100, y1(mid) = 0, y1'(mid) = 0
+// y2(mid) = 0, y2'(mid) = 0, y2(high) = 100
+void Joystick::CreateMap(int low_val, int mid_val, int hi_val)
+{
+   // reduce resulotion
+   int low = low_val/10;
+   int mid = mid_val/10;
+   int hi = hi_val/10;
+
+   // coefficians for 0 <= x < 51
+   a1 = -100.0f/(float)(low*low-mid*mid - 2*mid*(low-mid)); 
+   b1 = -2*a1*mid;
+   c1 = a1*mid*mid;
+
+   // coefficians for  51 <= x <= 102
+   a2 = 100.0f/(float)(hi*hi-mid*mid - 2*mid*(hi-mid));
+   b2 = -2*a2*mid;
+   c2 = a2*mid*mid;   
 }
 
 //  y = ax^2 + bx + c
-//  y(0) = -102, y(512) = 0, y(1023) = 102, y'(512) = 0
-//  0<=x<512:    y = -2/51*(x/10)^2 + 4x - 102
-//  512<=x<1023: y =  2/51*(x/10)^2 - 4x + 102
+//  low <= x < mid:   y1(x)
+//  mid <= x <= high: y2(x)
 int Joystick::Map2Pos(int ad_val)
 {
    int ret_val = 0;
-   int x = (ad_val+offset)/10; // ad_val ([0-1023]+offset)/10
+   int x = ad_val/10; // ad_val ([0-1023]+offset_mid)/10
    long temp = 0;
 
-   // map to desired curv
-   if (ad_val < 512)
+   if (ad_val < mid_)
    {
-      temp = -(2*x*x)/51 + 4*x - 102;
+      temp = a1*x*x + b1*x + c1;
    }
    else // 512 <= ad_val <= 1023 
    {
-      temp = (2*x*x)/51 -4*x + 102;
+      temp = a2*x*x + b2*x + c2;
    }
    ret_val = (int)temp;
 

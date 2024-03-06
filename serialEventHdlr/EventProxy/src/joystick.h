@@ -14,13 +14,25 @@ class Joystick : public EventGenerator {
 
    void scan(void);
    int GetPos();
-   void Calibrate();
+   void CalibrateHi();
+   void CalibrateMid();
+   void CalibrateLow();
    
  private:
+   void CreateMap(int lo, int mid, int hi);
    int Map2Pos(int ad_val);
+   void Calibrate(int &v);
+
    unsigned int pin_;
-   int pos_; // debounced state
-   int offset;
+   int pos_; // current joystick position
+
+   int low_;
+   int mid_;
+   int hi_;
+
+   // coefficients for mapping ad_val to pos
+   float a1, b1, c1; 
+   float a2, b2, c2; 
 };
 
 #endif // __JOYSTICK_H__

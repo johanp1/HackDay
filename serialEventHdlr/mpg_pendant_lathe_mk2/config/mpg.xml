@@ -1,0 +1,11 @@
+<mpg>  
+   <halpin>"axis-selector"<event>sela</event><type>s32</type></halpin>
+   <halpin>"scale-selector"<event>sels</event><type>s32</type></halpin>
+   <halpin>"jog-pos-btn"<event>jpos</event><type>bit</type></halpin> 
+   <halpin>"jog-neg-btn"<event>jneg</event><type>bit</type></halpin>
+   <halpin>"estop-btn"<event>est</event><type>bit</type></halpin>
+   <halpin>"func-btn"<event>func</event><type>bit</type></halpin>
+   <halpin>"x-pos"<event>xpos</event><type>float</type><direction>in</direction></halpin>
+   <halpin>"z-pos"<event>zpos</event><type>float</type><direction>in</direction></halpin>
+   <halpin>"spindle-speed"<event>ss</event><type>float</type><direction>in</direction></halpin>
+</mpg>
