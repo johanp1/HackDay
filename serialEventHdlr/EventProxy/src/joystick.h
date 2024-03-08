@@ -9,7 +9,8 @@ class Joystick : public EventGenerator {
  public:
     // constructor 
    Joystick(const String& Name,
-		       const unsigned int Pin);
+		       const unsigned int Pin,
+           const  unsigned int eeAdressBase = 0);
    ~Joystick();
 
    void scan(void);
@@ -25,7 +26,7 @@ class Joystick : public EventGenerator {
 
    unsigned int pin_;
    int pos_; // current joystick position
-
+   unsigned int ee_base_address_;
    int low_;
    int mid_;
    int hi_;

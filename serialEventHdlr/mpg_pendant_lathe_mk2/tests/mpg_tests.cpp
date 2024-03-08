@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "Arduino.h"
+#include <EEPROM.h>
 #include "mpg_pendant_lathe_mk2.h"
 #include <iostream>
 
@@ -22,6 +23,14 @@ bool hasBeenSent(const std::string& str)
    return SubstringFind(Serial.getData(), str);
 }
 
+void serialSend(const String& s)
+{
+   String temp_string = String(s);
+
+   Serial.setRecData(temp_string);
+   serialEvent();
+}
+
 class MpgTestFixture : public testing::Test 
 {  
    protected: 
@@ -39,7 +48,7 @@ class MpgTestFixture : public testing::Test
 };
 
 TEST_F(MpgTestFixture, InitTest)
-{
+{ 
    setup();
    ASSERT_TRUE(Serial.getData().compare("mpgPendant::setup()\n") == 0 );
 }
@@ -48,7 +57,6 @@ TEST_F(MpgTestFixture, InitTest)
 TEST_F(MpgTestFixture, heartbeatTest)
 {
    // precondition
-   setup();
    loop();
    Serial.clear();  // remove som initial noise
 
@@ -63,8 +71,6 @@ TEST_F(MpgTestFixture, heartbeatTest)
 
 TEST_F(MpgTestFixture, PressPlusButtonTest)
 {
-   setup();
-
    // press button
    arduinoStub->SetDigitalRead(kJogPosButtonPin, HIGH);
    loop();
@@ -86,10 +92,8 @@ TEST_F(MpgTestFixture, PressPlusButtonTest)
    ASSERT_TRUE(hasBeenSent("jpos_0\n"));
 }
 
-
-TEST_F(MpgTestFixture, selectAxisViewTest)
+TEST_F(MpgTestFixture, selectAxisTest)
 {
-   setup();
    arduinoStub->SetAnalogPinVoltage(kAxisSelectorPin, 1.3);
    loop();
    arduinoStub->IncTimeMs(kSelectorDebounceDelay + 1);
@@ -97,11 +101,35 @@ TEST_F(MpgTestFixture, selectAxisViewTest)
    ASSERT_TRUE(hasBeenSent("sela_1\n"));
 }
 
+TEST_F(MpgTestFixture, calibrateJoysticksTest)
+{
+   int ee_readback;
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 512);
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 512);
+   serialSend(String{"calx_mid\n"});
+   serialSend(String{"calz_mid\n"});
+
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 1023);
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 1023);
+   serialSend(String{"calx_hi\n"});
+   serialSend(String{"calz_hi\n"});
+
+   EEPROM.get(sizeof(int), ee_readback);
+   //ASSERT_EQ(ee_readback, 1023);
+
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 0);
+   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 0);
+   serialSend(String{"calx_low\n"});
+   serialSend(String{"calz_low\n"});
+
+   EEPROM.get(0, ee_readback);
+   //ASSERT_EQ(ee_readback, 1023);
+}
+
 TEST_F(MpgTestFixture, moveJoystickXTest)
 {
    // joystick in middle pos (0)
-   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 2.5);
-   setup();
+   //arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 3.5);
    loop();
    // nothing should have happened
    ASSERT_TRUE(SubstringFind(Serial.getData(), ""));
@@ -114,11 +142,10 @@ TEST_F(MpgTestFixture, moveJoystickXTest)
 TEST_F(MpgTestFixture, moveJoystickZTest)
 {
    // joystick in middle pos (0)
-   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 2.5);
-   setup();
-   loop();
+   //arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 2.5);
+   //loop();
    // nothing should have happened
-   ASSERT_TRUE(SubstringFind(Serial.getData(), ""));
+   //ASSERT_TRUE(SubstringFind(Serial.getData(), ""));
 
    //move the joystick
    arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 3.6);

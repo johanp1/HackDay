@@ -1,18 +1,21 @@
 #include "joystick.h"
+#include <EEPROM.h>
 
 auto constexpr k_default_idle_ad_val = 512;
+auto constexpr k_ee_address_low_value = 0;
+auto constexpr k_ee_address_hi_offset = sizeof(int);
 
 //   public:
 Joystick::Joystick(const String& Name,
-		             const unsigned int Pin) : EventGenerator(Name), pin_(Pin)
+		             const unsigned int Pin,
+                   const  unsigned int eeBaseAdress) : EventGenerator(Name), pin_(Pin), ee_base_address_(eeBaseAdress)
 {
    pos_ = 0; 
-   mid_ = k_default_idle_ad_val;
+   
+   EEPROM.get(ee_base_address_, low_);
+   EEPROM.get(ee_base_address_ + k_ee_address_hi_offset, hi_);
 
-   low_ = 0; // read from eeprom
-   hi_ = 1023; // read from eeprom
-
-   CreateMap(low_, mid_, hi_);
+   Calibrate(mid_);
 }
 
 Joystick::~Joystick()
@@ -40,16 +43,16 @@ void Joystick::CalibrateMid()
    Calibrate(mid_);
 }
 
-void Joystick::CalibrateHi()
-{
-   Calibrate(hi_);
-   // save hi_ to eeprom
-}
-
 void Joystick::CalibrateLow()
 {
    Calibrate(low_);
-   // save low_ to eeprom
+   EEPROM.put(ee_base_address_, low_);
+}
+
+void Joystick::CalibrateHi()
+{
+   Calibrate(hi_);
+   EEPROM.put(ee_base_address_ + k_ee_address_hi_offset, hi_);
 }
 
 void Joystick::Calibrate(int &v)

@@ -39,7 +39,7 @@ static EventGenerator* event_generators[kNbrOfEventGenerators];
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 static Joystick* x_joystick = new Joystick("x", kJoystickXPin);
-static Joystick* z_joystick = new Joystick("z", kJoystickZPin);
+static Joystick* z_joystick = new Joystick("z", kJoystickZPin, 2*sizeof(int));
 
 static unsigned long heartbeatTimer = kHeartbeatPeriod;
 
@@ -77,9 +77,6 @@ void setup() {
   eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calx"}, calibrateWrapper, x_joystick)));
   eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calz"}, calibrateWrapper, z_joystick)));
   eventParser.AddAcceptedHandler(*(new ResetEventFunctor(String{"rst"})));
-
-  x_joystick->Calibrate();
-  z_joystick->Calibrate();
 }
 
 void loop() {  
@@ -116,5 +113,16 @@ static void resetWrapper()
 
 static void calibrateWrapper(String& str, Joystick* j)
 {
-
+  if (str.compareTo("hi") == 0)
+  {
+    j->CalibrateHi();
+  }
+  if (str.compareTo("mid") == 0)
+  {
+    j->CalibrateMid();
+  }
+  if (str.compareTo("low") == 0)
+  {
+    j->CalibrateLow();
+  }
 }
