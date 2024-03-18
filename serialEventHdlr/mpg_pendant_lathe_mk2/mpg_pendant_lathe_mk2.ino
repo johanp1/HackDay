@@ -7,6 +7,7 @@
 #include "event_parser.h"
 #include "receiver.h"
 #include "mpg_pendant_lathe_mk2.h"
+#include <avr/wdt.h>
 
 constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 2;
 
@@ -108,7 +109,7 @@ void serialEvent()
 
 static void resetWrapper()
 {
-  setup();
+  wdt_enable(WDTO_15MS);
 }
 
 static void calibrateWrapper(String& str, Joystick* j)
