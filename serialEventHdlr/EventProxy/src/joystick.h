@@ -10,7 +10,10 @@ class Joystick : public EventGenerator {
     // constructor 
    Joystick(const String& Name,
 		       const unsigned int Pin,
-           const  unsigned int eeAdressBase = 0);
+           const bool flipped = false,
+           const unsigned int x_low = 0,
+           const unsigned int x_mid = 512,
+           const unsigned int x_hi = 1023);
    ~Joystick();
 
    void scan(void);
@@ -20,16 +23,16 @@ class Joystick : public EventGenerator {
    void CalibrateLow();
    
  private:
-   void CreateMap(int lo, int mid, int hi);
-   int Map2Pos(int ad_val);
-   void Calibrate(int &v);
+   void CreateMap(unsigned int lo, unsigned int mid, unsigned int hi);
+   int Map2Pos(unsigned int ad_val);
+   void Calibrate(unsigned int &v);
 
    unsigned int pin_;
    int pos_; // current joystick position
-   unsigned int ee_base_address_;
-   int low_;
-   int mid_;
-   int hi_;
+   bool flipped_;
+   unsigned int x_low_; // ad value when joystick in "lowest" position
+   unsigned int x_mid_; // ad value when joystick in "mid"/neutral position
+   unsigned int x_hi_; // ad value when joystick in "highest" position
 
    // coefficients for mapping ad_val to pos
    float a1, b1, c1; 
