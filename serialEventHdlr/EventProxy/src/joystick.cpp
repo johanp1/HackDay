@@ -1,8 +1,6 @@
 #include "joystick.h"
 
 auto constexpr k_default_idle_ad_val = 512;
-auto constexpr k_ee_address_low_value = 0;
-auto constexpr k_ee_address_hi_offset = sizeof(int);
 
 //   public:
 Joystick::Joystick(const String& Name,
@@ -24,10 +22,10 @@ Joystick::~Joystick()
 // returns debounced selector state
 void Joystick::scan(void)
 {
-   int new_pos = Map2Pos(analogRead(pin_));
-   if(pos_ != new_pos)
+   int mapped_pos = Map2Pos(ReadPos());
+   if(pos_ != mapped_pos)
    {
-      pos_ = new_pos;
+      pos_ = mapped_pos;
       generateEvent(pos_);
    } 
 }
@@ -35,6 +33,11 @@ void Joystick::scan(void)
 int Joystick::GetPos()
 {
   return pos_;
+}
+
+void Joystick::SetFlipped(bool flipped)
+{
+   flipped_ = flipped;
 }
 
 void Joystick::CalibrateMid()
@@ -55,9 +58,9 @@ void Joystick::CalibrateHi()
 void Joystick::Calibrate(unsigned int &v)
 {
    // mean value over 3 samples
-   v =  analogRead(pin_);
-   v = (v + analogRead(pin_))/2;
-   v = (v + analogRead(pin_))/2;
+   v =  ReadPos();
+   v = (v + ReadPos())/2;
+   v = (v + ReadPos())/2;
    
    CreateMap(x_low_, x_mid_, x_hi_);
 }
@@ -84,6 +87,12 @@ void Joystick::CreateMap(unsigned int low_val, unsigned int mid_val, unsigned in
    a2 = 100.0f/(float)(x_hi*x_hi-x_mid*x_mid - 2*x_mid*(x_hi-x_mid));
    b2 = -2*a2*x_mid;
    c2 = a2*x_mid*x_mid;   
+}
+
+unsigned int Joystick::ReadPos()
+{
+   unsigned int pos = analogRead(pin_);
+   return flipped_ ? x_low_ + x_hi_ - pos : pos; 
 }
 
 //  y = ax^2 + bx + c

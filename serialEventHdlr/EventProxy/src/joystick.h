@@ -18,12 +18,14 @@ class Joystick : public EventGenerator {
 
    void scan(void);
    int GetPos();
+   void SetFlipped(bool flipped);
    void CalibrateHi();
    void CalibrateMid();
    void CalibrateLow();
    
  private:
    void CreateMap(unsigned int lo, unsigned int mid, unsigned int hi);
+   unsigned int ReadPos();
    int Map2Pos(unsigned int ad_val);
    void Calibrate(unsigned int &v);
 

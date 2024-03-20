@@ -215,15 +215,34 @@ TEST_F(JoystickTestFixture, test_flipped)
    
    my_joystick.scan();
    ASSERT_EQ(0, my_joystick.GetPos());
-/*
+
    arduinoStub->SetAnalogPinAdVal(my_pin, 1023);
    my_joystick.scan();
    ASSERT_EQ(-100, my_joystick.GetPos());
 
    arduinoStub->SetAnalogPinAdVal(my_pin, 0);
    my_joystick.scan();
-   ASSERT_EQ(100, my_joystick.GetPos());*/
+   ASSERT_EQ(100, my_joystick.GetPos());
 }
 
+TEST_F(JoystickTestFixture, test_flipped_calibrated)
+{
+   auto constexpr my_pin = 1;
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 600); // initial value of ad converter
+   Joystick my_joystick("apa", my_pin, true, 100, 600, 900);
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   my_joystick.scan();
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 100);
+   my_joystick.scan();
+   ASSERT_EQ(100, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 900);
+   my_joystick.scan();
+   ASSERT_EQ(-100, my_joystick.GetPos());
+}
 
 }
