@@ -23,3 +23,17 @@ constexpr auto kJoystickZPin = A3;
 constexpr auto kHeartbeatPeriod = 2000; //ms
 
 constexpr auto kLoopDelayTime = 10; //milli sec
+
+typedef struct 
+{
+    unsigned int low;
+    unsigned int mid;
+    unsigned int hi;
+    bool flipped;
+} JoystickCalibData;
+
+typedef struct 
+{
+    JoystickCalibData x;
+    JoystickCalibData z;
+} CalibData;

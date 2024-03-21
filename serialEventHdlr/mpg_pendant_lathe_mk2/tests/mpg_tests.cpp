@@ -40,6 +40,7 @@ class MpgTestFixture : public testing::Test
    {
       arduinoStub->Reset();
       Serial.clear();
+      EEPROM.clear();
    }
    
    void TearDown()
@@ -152,6 +153,18 @@ TEST_F(MpgTestFixture, moveJoystickZTest)
    loop();
    // check for joystick event
    ASSERT_TRUE(hasBeenSent("z_"));
+}
+
+TEST_F(MpgTestFixture, flipJoystickTest)
+{
+   CalibData eeprom_readback;
+
+   EEPROM.get(0, eeprom_readback);
+
+   serialSend(String{"flipx_1\n"});
+   
+   EEPROM.get(0, eeprom_readback);
+   // check for joystick event
 }
 
 }
