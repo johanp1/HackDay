@@ -12,11 +12,18 @@
 
 constexpr auto kNbrOfEventGenerators = kNbrOfButtons + kNbrOfSelectors + 2;
 
-class ResetEventFunctor : public EventFunctor
+template<typename F>
+class EventHandlerNoArgs : public EventFunctor
 {
-public:
-   ResetEventFunctor(String const &event_name) : EventFunctor(event_name){};
-   void operator()(){setup();};
+  public:
+    EventHandlerNoArgs(String const &event_name, F f) : EventFunctor{event_name}, f_(f) {};
+
+    void operator()()
+    {
+      f_();
+    };
+
+    F f_;
 };
 
 template<typename F, typename O>
@@ -51,11 +58,10 @@ class CalibEventHandler : public EventFunctor
 };
 
 static void readCalibDataFromEEPROM();
-static void calibrateWrapper(String& str, Joystick* j);
 static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d);
-static void flipWrapper(String& str, Joystick* j);
 static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d);
 static void resetWrapper();
+static void printCalibDataWrapper();
 
 static Sender sender;
 static EventGenerator* event_generators[kNbrOfEventGenerators];
@@ -107,7 +113,8 @@ void setup() {
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calz"}, calibrateWrapper, z_joystick)));
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipx"}, flipWrapper, x_joystick)));
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipz"}, flipWrapper, z_joystick)));
-  eventParser.AddAcceptedHandler(*(new ResetEventFunctor(String{"rst"})));
+  eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"rst"}, resetWrapper)));
+  eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"get"}, printCalibDataWrapper)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calx"}, calibrateWrapper, x_joystick, calibData.x)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calz"}, calibrateWrapper, z_joystick, calibData.z)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"flipx"}, flipWrapper, x_joystick, calibData.x)));
@@ -164,43 +171,25 @@ static void readCalibDataFromEEPROM()
   EEPROM.put(0, calibData);
 }
 
-static void calibrateWrapper(String& str, Joystick* j)
-{
-  if (str.compareTo("hi") == 0)
-  {
-    j->CalibrateHi();
-  }
-  if (str.compareTo("mid") == 0)
-  {
-    j->CalibrateMid();
-  }
-  if (str.compareTo("low") == 0)
-  {
-    j->CalibrateLow();
-  }
-}
-
 static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d)
 {
   if (str.compareTo("hi") == 0)
   {
-    j->CalibrateHi();
+    j->Calibrate(hi);
   }
   if (str.compareTo("mid") == 0)
   {
-    j->CalibrateMid();
+    j->Calibrate(mid);
   }
   if (str.compareTo("low") == 0)
   {
-    j->CalibrateLow();
+    j->Calibrate(low);
   }
-  // do something with d...
-}
 
-static void flipWrapper(String& str, Joystick* j)
-{
-  bool flipped = str.toInt() > 0 ? true : false; 
-  j->SetFlipped(flipped);
+  d.hi = j->GetLimits().x_hi;
+  d.mid = j->GetLimits().x_mid;
+  d.low = j->GetLimits().x_low;
+  EEPROM.put(0, calibData);
 }
 
 static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d)
@@ -217,4 +206,18 @@ static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d)
 static void resetWrapper()
 {
   wdt_enable(WDTO_15MS);
+}
+
+static void printCalibDataWrapper()
+{
+  Serial.println(calibData.x.hi);
+  Serial.println(calibData.x.mid);
+  Serial.println(calibData.x.low);
+  Serial.println(calibData.x.flipped);
+
+  Serial.println(calibData.z.hi);
+  Serial.println(calibData.z.mid);
+  Serial.println(calibData.z.low);
+  Serial.println(calibData.z.flipped);
+
 }
