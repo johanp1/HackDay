@@ -8,11 +8,14 @@ Joystick::Joystick(const String& Name,
                    const bool flipped,
                    const unsigned int x_low,
                    const unsigned int x_mid,
-                   const unsigned int x_hi) : EventGenerator(Name), pin_(Pin), flipped_(flipped), x_low_(x_low), x_mid_(x_mid), x_hi_(x_hi)
+                   const unsigned int x_hi) : EventGenerator(Name), pin_(Pin), flipped_(flipped)
 {
    pos_ = 0; 
+   limits_.x_low = x_low;
+   limits_.x_mid = x_mid;
+   limits_.x_hi = x_hi;
 
-   Calibrate(x_mid_);
+   Calibrate(limits_.x_mid);
 }
 
 Joystick::~Joystick()
@@ -40,29 +43,25 @@ void Joystick::SetFlipped(bool flipped)
    flipped_ = flipped;
 }
 
-void Joystick::CalibrateMid()
+void Joystick::Calibrate(JoystickLimitPosition pos)
 {
-   Calibrate(x_mid_);
+   if (pos == low)
+   {
+      Calibrate(limits_.x_low);
+   }
+   if (pos == mid)
+   {
+      Calibrate(limits_.x_mid);
+   }
+   if (pos == hi)
+   {
+      Calibrate(limits_.x_hi);
+   }
 }
 
-void Joystick::CalibrateLow()
+const JoystickLimits& Joystick::GetLimits()
 {
-   Calibrate(x_low_);
-}
-
-void Joystick::CalibrateHi()
-{
-   Calibrate(x_hi_);
-}
-
-void Joystick::Calibrate(unsigned int &v)
-{
-   // mean value over 3 samples
-   v =  ReadPos();
-   v = (v + ReadPos())/2;
-   v = (v + ReadPos())/2;
-   
-   CreateMap(x_low_, x_mid_, x_hi_);
+   return limits_;
 }
 
 // calculates a1, a2, b1, b2, c1, c2 in
@@ -71,12 +70,12 @@ void Joystick::Calibrate(unsigned int &v)
 //
 // y1(x_low) = -100, y1(x_mid) = 0, y1'(x_mid) = 0
 // y2(x_mid) = 0, y2'(x_mid) = 0, y2(high) = 100
-void Joystick::CreateMap(unsigned int low_val, unsigned int mid_val, unsigned int hi_val)
+void Joystick::CreateMap()
 {
    // reduce resulotion
-   int x_low = low_val/10;
-   int x_mid = mid_val/10;
-   int x_hi = hi_val/10;
+   int x_low = limits_.x_low/10;
+   int x_mid = limits_.x_mid/10;
+   int x_hi = limits_.x_hi/10;
 
    // coefficians for 0 <= x < 51
    a1 = -100.0f/(float)(x_low*x_low-x_mid*x_mid - 2*x_mid*(x_low-x_mid)); 
@@ -92,7 +91,7 @@ void Joystick::CreateMap(unsigned int low_val, unsigned int mid_val, unsigned in
 unsigned int Joystick::ReadPos()
 {
    unsigned int pos = analogRead(pin_);
-   return flipped_ ? x_low_ + x_hi_ - pos : pos; 
+   return flipped_ ? limits_.x_low + limits_.x_hi - pos : pos; 
 }
 
 //  y = ax^2 + bx + c
@@ -104,7 +103,7 @@ int Joystick::Map2Pos(unsigned int ad_val)
    int x = ad_val/10;; // ad_val ([0-1023]+offset_mid)/10
    long temp = 0;
 
-   if (ad_val < x_mid_)
+   if (ad_val < limits_.x_mid)
    {
       temp = a1*x*x + b1*x + c1;
    }
@@ -115,4 +114,14 @@ int Joystick::Map2Pos(unsigned int ad_val)
    ret_val = (int)temp;
 
    return ret_val;
+}
+
+void Joystick::Calibrate(unsigned int &v)
+{
+   // mean value over 3 samples
+   v =  ReadPos();
+   v = (v + ReadPos())/2;
+   v = (v + ReadPos())/2;
+   
+   CreateMap();
 }

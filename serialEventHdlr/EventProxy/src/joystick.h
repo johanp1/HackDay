@@ -4,8 +4,23 @@
 #include <Arduino.h>
 #include "event_generator.h"
 
-class Joystick : public EventGenerator {
- 
+struct JoystickLimitsStruct
+{
+  unsigned int x_low; // ad value when joystick in "lowest" position
+  unsigned int x_mid; // ad value when joystick in "mid"/neutral position
+  unsigned int x_hi; // ad value when joystick in "highest" position
+};
+using JoystickLimits = JoystickLimitsStruct;
+
+enum JoystickLimitPositionEnum
+{
+  low = 0,
+  mid = 1,
+  hi = 2,
+};
+using JoystickLimitPosition = JoystickLimitPositionEnum;
+
+class Joystick : public EventGenerator { 
  public:
     // constructor 
    Joystick(const String& Name,
@@ -19,12 +34,12 @@ class Joystick : public EventGenerator {
    void scan(void);
    int GetPos();
    void SetFlipped(bool flipped);
-   void CalibrateHi();
-   void CalibrateMid();
-   void CalibrateLow();
-   
+   void Calibrate(JoystickLimitPosition pos);
+   const JoystickLimits& GetLimits();
+
  private:
    void CreateMap(unsigned int lo, unsigned int mid, unsigned int hi);
+   void CreateMap();
    unsigned int ReadPos();
    int Map2Pos(unsigned int ad_val);
    void Calibrate(unsigned int &v);
@@ -32,9 +47,7 @@ class Joystick : public EventGenerator {
    unsigned int pin_;
    int pos_; // current joystick position
    bool flipped_;
-   unsigned int x_low_; // ad value when joystick in "lowest" position
-   unsigned int x_mid_; // ad value when joystick in "mid"/neutral position
-   unsigned int x_hi_; // ad value when joystick in "highest" position
+   JoystickLimits limits_;
 
    // coefficients for mapping ad_val to pos
    float a1, b1, c1; 

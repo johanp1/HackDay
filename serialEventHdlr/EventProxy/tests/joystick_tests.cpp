@@ -122,7 +122,7 @@ TEST_F(JoystickTestFixture, test_steady_state)
 TEST_F(JoystickTestFixture, test_calibration_mid)
 {
     arduinoStub->SetAnalogPinAdVal(PIN, 520);
-    joystick->CalibrateMid();
+    joystick->Calibrate(mid);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
 
@@ -136,7 +136,7 @@ TEST_F(JoystickTestFixture, test_calibration_mid)
 
     // calibrate again
     arduinoStub->SetAnalogPinAdVal(PIN, 500);
-    joystick->CalibrateMid();
+    joystick->Calibrate(mid);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
 
@@ -155,7 +155,7 @@ TEST_F(JoystickTestFixture, test_map_creation)
 
     // calibrate high
     arduinoStub->SetAnalogPinAdVal(PIN, 1000);
-    joystick->CalibrateHi();
+    joystick->Calibrate(hi);
     joystick->scan();
     ASSERT_EQ(100, joystick->GetPos());
     //EEPROM.get(sizeof(int), eeprom_readback);
@@ -171,7 +171,7 @@ TEST_F(JoystickTestFixture, test_map_creation)
 
     // calibrate low value at ad_val = 1000
     arduinoStub->SetAnalogPinAdVal(PIN, 100);
-    joystick->CalibrateLow();
+    joystick->Calibrate(low);
     joystick->scan();
     ASSERT_EQ(-100, joystick->GetPos()); // almost -100...
     //EEPROM.get(0, eeprom_readback);
@@ -184,6 +184,10 @@ TEST_F(JoystickTestFixture, test_map_creation)
     arduinoStub->SetAnalogPinAdVal(PIN, 512);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
+
+   ASSERT_EQ(100, joystick->GetLimits().x_low);
+   ASSERT_EQ(512, joystick->GetLimits().x_mid);
+   ASSERT_EQ(1000, joystick->GetLimits().x_hi);
 }
 
 TEST_F(JoystickTestFixture, test_calibrated)
