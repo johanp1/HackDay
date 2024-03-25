@@ -75,6 +75,9 @@ static unsigned long heartbeatTimer = kHeartbeatPeriod;
 static CalibData calibData;
 
 void setup() {  
+  wdt_disable();
+  wdt_reset();
+
   Serial.begin(38400);
   Serial.setTimeout(500);
   Serial.println("mpgPendant::setup()");
@@ -113,7 +116,7 @@ void setup() {
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calz"}, calibrateWrapper, z_joystick)));
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipx"}, flipWrapper, x_joystick)));
   //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipz"}, flipWrapper, z_joystick)));
-  eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"rst"}, resetWrapper)));
+  eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"rst"}, softReset)));
   eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"get"}, printCalibDataWrapper)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calx"}, calibrateWrapper, x_joystick, calibData.x)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calz"}, calibrateWrapper, z_joystick, calibData.z)));
@@ -126,8 +129,8 @@ void loop() {
   event_generators[1]->scan();
   event_generators[2]->scan();
   event_generators[3]->scan();
-  event_generators[4]->scan();
-  event_generators[5]->scan();
+  //event_generators[4]->scan();
+  //event_generators[5]->scan();
   event_generators[6]->scan();
   event_generators[7]->scan();
 
@@ -136,7 +139,7 @@ void loop() {
   {
     String tmpStr = "hb";
     C_Event hb_ev = C_Event(tmpStr, 1);
-    sender.HandleEvent(hb_ev);
+    //sender.HandleEvent(hb_ev);
     heartbeatTimer = millis() + kHeartbeatPeriod;
   }
 
@@ -152,7 +155,7 @@ static void readCalibDataFromEEPROM()
 {
   EEPROM.get(0, calibData);
 
-  if (calibData.x.low & 0xffff == 0xffff)
+  if (calibData.x.flipped & 0xff == 0xff)
   {
     // not calibrated
     calibData.x.low = 0;
@@ -160,7 +163,7 @@ static void readCalibDataFromEEPROM()
     calibData.x.hi = 1023;
     calibData.x.flipped = false;
   }
-  if (calibData.z.low & 0xffff == 0xffff)
+  if (calibData.z.flipped & 0xff == 0xff)
   {
     // not calibrated
     calibData.z.low = 0;
@@ -203,21 +206,23 @@ static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d)
 }
 
 
-static void resetWrapper()
+static void softReset()
 {
   wdt_enable(WDTO_15MS);
 }
 
 static void printCalibDataWrapper()
 {
+  Serial.println("x:");
   Serial.println(calibData.x.hi);
   Serial.println(calibData.x.mid);
   Serial.println(calibData.x.low);
   Serial.println(calibData.x.flipped);
-
+  Serial.println("z:");
   Serial.println(calibData.z.hi);
   Serial.println(calibData.z.mid);
   Serial.println(calibData.z.low);
   Serial.println(calibData.z.flipped);
+  Serial.print("\n");
 
 }

@@ -100,7 +100,7 @@ unsigned int Joystick::ReadPos()
 int Joystick::Map2Pos(unsigned int ad_val)
 {
    int ret_val = 0;
-   int x = ad_val/10;; // ad_val ([0-1023]+offset_mid)/10
+   int x = ad_val/10; // ad_val ([0-1023]+offset_mid)/10
    long temp = 0;
 
    if (ad_val < limits_.x_mid)
