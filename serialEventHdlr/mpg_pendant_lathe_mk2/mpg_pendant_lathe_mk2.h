@@ -1,4 +1,5 @@
 #include "event_generator.h"
+#include "joystick.h"
 
 constexpr auto kNbrOfButtons = 4;
 constexpr auto kNbrOfSelectors = 2;
@@ -26,9 +27,7 @@ constexpr auto kLoopDelayTime = 10; //milli sec
 
 typedef struct 
 {
-    unsigned int low;
-    unsigned int mid;
-    unsigned int hi;
+    JoystickLimits limits;
     bool flipped;
 } JoystickCalibData;
 

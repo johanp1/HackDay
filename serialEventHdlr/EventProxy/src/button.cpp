@@ -5,7 +5,7 @@
 // constructor 
 Button::Button(const String& argName, const int argPin, const unsigned long argDebounceDelay) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
 {
-  state = LOW;
+  state = readCurrentState();
   prevState = state;
   time = 0;
   pinMode(pin, INPUT);
@@ -14,13 +14,11 @@ Button::Button(const String& argName, const int argPin, const unsigned long argD
 // returns debounced button state
 void Button::scan(void)
 {
-   unsigned int currState = (unsigned int)digitalRead(pin); // read pin
-
+   ButtonState currState = readCurrentState();
+   
    if (currState != prevState)
    {
-      //Serial.print("new state?");
-      // reset the debouncing timer
-      time = millis();
+      time = millis();   // reset the debouncing timer
    }
 
    if ((millis() - time) >= debounceTime) {
@@ -35,7 +33,7 @@ void Button::scan(void)
    prevState = currState;
 }
 
-unsigned int Button::getState()
+ButtonState Button::getState()
 {
   return state;
 }

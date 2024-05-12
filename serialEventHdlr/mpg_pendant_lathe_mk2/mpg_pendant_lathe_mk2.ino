@@ -1,5 +1,4 @@
 #include "button.h"
-#include "joystick.h"
 #include "sender.h"
 #include "event_listner.h"
 #include "buffer.h"
@@ -60,7 +59,7 @@ class CalibEventHandler : public EventFunctor
 static void readCalibDataFromEEPROM();
 static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d);
 static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d);
-static void resetWrapper();
+static void softReset();
 static void printCalibDataWrapper();
 
 static Sender sender;
@@ -101,8 +100,8 @@ void setup() {
   event_generators[5]->addEventListner(&sender);
 
   readCalibDataFromEEPROM();
-  x_joystick = new Joystick("x", kJoystickXPin, calibData.x.flipped, calibData.x.low, calibData.x.mid, calibData.x.hi);
-  z_joystick = new Joystick("z", kJoystickZPin, calibData.z.flipped, calibData.z.low, calibData.z.mid, calibData.z.hi);
+  x_joystick = new Joystick("x", kJoystickXPin, calibData.x.flipped, calibData.x.limits.x_low, calibData.x.limits.x_mid, calibData.x.limits.x_hi);
+  z_joystick = new Joystick("z", kJoystickZPin, calibData.z.flipped, calibData.z.limits.x_low, calibData.z.limits.x_mid, calibData.z.limits.x_hi);
 
   event_generators[6] = x_joystick;
   event_generators[6]->addEventListner(&sender);
@@ -129,8 +128,8 @@ void loop() {
   event_generators[1]->scan();
   event_generators[2]->scan();
   event_generators[3]->scan();
-  //event_generators[4]->scan();
-  //event_generators[5]->scan();
+  event_generators[4]->scan();
+  event_generators[5]->scan();
   event_generators[6]->scan();
   event_generators[7]->scan();
 
@@ -139,7 +138,7 @@ void loop() {
   {
     String tmpStr = "hb";
     C_Event hb_ev = C_Event(tmpStr, 1);
-    //sender.HandleEvent(hb_ev);
+    sender.HandleEvent(hb_ev);
     heartbeatTimer = millis() + kHeartbeatPeriod;
   }
 
@@ -158,17 +157,17 @@ static void readCalibDataFromEEPROM()
   if (calibData.x.flipped & 0xff == 0xff)
   {
     // not calibrated
-    calibData.x.low = 0;
-    calibData.x.mid = 512;
-    calibData.x.hi = 1023;
+    calibData.x.limits.x_low = 0;
+    calibData.x.limits.x_mid = 512;
+    calibData.x.limits.x_hi = 1023;
     calibData.x.flipped = false;
   }
   if (calibData.z.flipped & 0xff == 0xff)
   {
     // not calibrated
-    calibData.z.low = 0;
-    calibData.z.mid = 512;
-    calibData.z.hi = 1023;
+    calibData.z.limits.x_low = 0;
+    calibData.z.limits.x_mid = 512;
+    calibData.z.limits.x_hi = 1023;
     calibData.z.flipped = false;
   }
   EEPROM.put(0, calibData);
@@ -189,9 +188,9 @@ static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d)
     j->Calibrate(low);
   }
 
-  d.hi = j->GetLimits().x_hi;
-  d.mid = j->GetLimits().x_mid;
-  d.low = j->GetLimits().x_low;
+  d.limits.x_hi = j->GetLimits().x_hi;
+  d.limits.x_mid = j->GetLimits().x_mid;
+  d.limits.x_low = j->GetLimits().x_low;
   EEPROM.put(0, calibData);
 }
 
@@ -214,14 +213,14 @@ static void softReset()
 static void printCalibDataWrapper()
 {
   Serial.println("x:");
-  Serial.println(calibData.x.hi);
-  Serial.println(calibData.x.mid);
-  Serial.println(calibData.x.low);
+  Serial.println(calibData.x.limits.x_hi);
+  Serial.println(calibData.x.limits.x_mid);
+  Serial.println(calibData.x.limits.x_low);
   Serial.println(calibData.x.flipped);
   Serial.println("z:");
-  Serial.println(calibData.z.hi);
-  Serial.println(calibData.z.mid);
-  Serial.println(calibData.z.low);
+  Serial.println(calibData.z.limits.x_hi);
+  Serial.println(calibData.z.limits.x_mid);
+  Serial.println(calibData.z.limits.x_low);
   Serial.println(calibData.z.flipped);
   Serial.print("\n");
 
