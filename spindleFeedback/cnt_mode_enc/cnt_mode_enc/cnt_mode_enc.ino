@@ -10,8 +10,7 @@ void setup() {
   timer2Init();
   sei();
   
-  //  wdInit();
-  wdt_enable(WDTO_2S);
+  //wdt_enable(WDTO_2S);
   
   pinMode(5, INPUT);
 
@@ -49,17 +48,6 @@ void timer2Init( void )
   OCR2A = 77;                              // compare match every 5th milli-sec @20MHz
   TCNT2   = 0;                              // clear timer2
 }
-
-
-void wdInit(void)
-{
-   wdr();
-   // Start timed equence
-   WDTCSR |= (1<<WDCE) | (1<<WDE);
-   // Set new prescaler(time-out) value = 256K cycles (~2 s)
-   WDTCSR = (1<<WDE) | (1<<WDP2) | (1<<WDP1) | (1<<WDP0);
-}
-
 
 ISR( TIMER2_COMPA_vect  )
 { 
