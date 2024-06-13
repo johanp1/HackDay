@@ -6,9 +6,8 @@
 
 struct JoystickLimitsStruct
 {
-  unsigned int x_low; // ad value when joystick in "lowest" position
-  unsigned int x_mid; // ad value when joystick in "mid"/neutral position
-  unsigned int x_hi; // ad value when joystick in "highest" position
+  unsigned int low; // ad value when joystick in "lowest" position
+  unsigned int hi; // ad value when joystick in "highest" position
 };
 using JoystickLimits = JoystickLimitsStruct;
 
@@ -27,7 +26,6 @@ class Joystick : public EventGenerator {
 		       const unsigned int Pin,
            const bool flipped = false,
            const unsigned int x_low = 0,
-           const unsigned int x_mid = 512,
            const unsigned int x_hi = 1023);
    ~Joystick();
 
@@ -48,6 +46,7 @@ class Joystick : public EventGenerator {
    int pos_; // current joystick position
    bool flipped_;
    JoystickLimits limits_;
+   unsigned int mid_; // ad value when joystick in "mid"/neutral position
 
    // coefficients for mapping ad_val to pos
    float a1, b1, c1; 

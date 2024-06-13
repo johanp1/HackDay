@@ -100,8 +100,8 @@ void setup() {
   event_generators[5]->addEventListner(&sender);
 
   readCalibDataFromEEPROM();
-  x_joystick = new Joystick("x", kJoystickXPin, calibData.x.flipped, calibData.x.limits.x_low, calibData.x.limits.x_mid, calibData.x.limits.x_hi);
-  z_joystick = new Joystick("z", kJoystickZPin, calibData.z.flipped, calibData.z.limits.x_low, calibData.z.limits.x_mid, calibData.z.limits.x_hi);
+  x_joystick = new Joystick("x", kJoystickXPin, calibData.x.flipped, calibData.x.limits.low, calibData.x.limits.hi);
+  z_joystick = new Joystick("z", kJoystickZPin, calibData.z.flipped, calibData.z.limits.low, calibData.z.limits.hi);
 
   event_generators[6] = x_joystick;
   event_generators[6]->addEventListner(&sender);
@@ -157,17 +157,15 @@ static void readCalibDataFromEEPROM()
   if (calibData.x.flipped & 0xff == 0xff)
   {
     // not calibrated
-    calibData.x.limits.x_low = 0;
-    calibData.x.limits.x_mid = 512;
-    calibData.x.limits.x_hi = 1023;
+    calibData.x.limits.low = 0;
+    calibData.x.limits.hi = 1023;
     calibData.x.flipped = false;
   }
   if (calibData.z.flipped & 0xff == 0xff)
   {
     // not calibrated
-    calibData.z.limits.x_low = 0;
-    calibData.z.limits.x_mid = 512;
-    calibData.z.limits.x_hi = 1023;
+    calibData.z.limits.low = 0;
+    calibData.z.limits.hi = 1023;
     calibData.z.flipped = false;
   }
   EEPROM.put(0, calibData);
@@ -188,9 +186,8 @@ static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d)
     j->Calibrate(low);
   }
 
-  d.limits.x_hi = j->GetLimits().x_hi;
-  d.limits.x_mid = j->GetLimits().x_mid;
-  d.limits.x_low = j->GetLimits().x_low;
+  d.limits.hi = j->GetLimits().hi;
+  d.limits.low = j->GetLimits().low;
   EEPROM.put(0, calibData);
 }
 
@@ -213,14 +210,12 @@ static void softReset()
 static void printCalibDataWrapper()
 {
   Serial.println("x:");
-  Serial.println(calibData.x.limits.x_hi);
-  Serial.println(calibData.x.limits.x_mid);
-  Serial.println(calibData.x.limits.x_low);
+  Serial.println(calibData.x.limits.hi);
+  Serial.println(calibData.x.limits.low);
   Serial.println(calibData.x.flipped);
   Serial.println("z:");
-  Serial.println(calibData.z.limits.x_hi);
-  Serial.println(calibData.z.limits.x_mid);
-  Serial.println(calibData.z.limits.x_low);
+  Serial.println(calibData.z.limits.hi);
+  Serial.println(calibData.z.limits.low);
   Serial.println(calibData.z.flipped);
   Serial.print("\n");
 

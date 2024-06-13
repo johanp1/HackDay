@@ -121,12 +121,12 @@ TEST_F(MpgTestFixture, calibrateJoysticksTest)
    serialSend(String{"calz_low\n"});
 
    EEPROM.get(0, ee_readback);
-   ASSERT_EQ(ee_readback.x.limits.x_hi, 1021);
-   ASSERT_EQ(ee_readback.z.limits.x_hi, 1022);
-   ASSERT_EQ(ee_readback.x.limits.x_mid, 510);
-   ASSERT_EQ(ee_readback.z.limits.x_mid, 511);
-   ASSERT_EQ(ee_readback.x.limits.x_low, 1);
-   ASSERT_EQ(ee_readback.z.limits.x_low, 2);
+   ASSERT_EQ(ee_readback.x.limits.hi, 1021);
+   ASSERT_EQ(ee_readback.z.limits.hi, 1022);
+   //ASSERT_EQ(ee_readback.x.limits.x_mid, 510);
+   //ASSERT_EQ(ee_readback.z.limits.x_mid, 511);
+   ASSERT_EQ(ee_readback.x.limits.low, 1);
+   ASSERT_EQ(ee_readback.z.limits.low, 2);
 }
 
 TEST_F(MpgTestFixture, moveJoystickXTest)
