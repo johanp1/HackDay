@@ -4,10 +4,13 @@
 #include <Arduino.h>
 #include "event_generator.h"
 
+using AdValue = unsigned int; //type for A/D value
+using Position = int; // type for joystick position
+
 struct JoystickLimitsStruct
 {
-  unsigned int low; // ad value when joystick in "lowest" position
-  unsigned int hi; // ad value when joystick in "highest" position
+  AdValue low; // ad value when joystick in "lowest" position
+  AdValue hi; // ad value when joystick in "highest" position
 };
 using JoystickLimits = JoystickLimitsStruct;
 
@@ -19,14 +22,30 @@ enum JoystickLimitPositionEnum
 };
 using JoystickLimitPosition = JoystickLimitPositionEnum;
 
+class PositionMap
+{
+  public:
+  PositionMap(const AdValue low = 0, const AdValue mid = 512, const AdValue hi = 1023);
+  virtual ~PositionMap();
+
+  void CalcMap(const AdValue low, const AdValue mid, const AdValue hi);
+  Position Map2Pos(AdValue ad_val);
+
+  private:
+  AdValue mid_;
+
+  // coefficients for mapping ad_val to pos
+  float a1, b1, c1; 
+  float a2, b2, c2; 
+};
+
 class Joystick : public EventGenerator { 
  public:
-    // constructor 
    Joystick(const String& Name,
 		       const unsigned int Pin,
            const bool flipped = false,
-           const unsigned int x_low = 0,
-           const unsigned int x_hi = 1023);
+           const AdValue x_low = 0,
+           const AdValue x_hi = 1023);
    ~Joystick();
 
    void scan(void);
@@ -36,21 +55,15 @@ class Joystick : public EventGenerator {
    const JoystickLimits& GetLimits();
 
  private:
-   void CreateMap(unsigned int lo, unsigned int mid, unsigned int hi);
-   void CreateMap();
-   unsigned int ReadPos();
-   int Map2Pos(unsigned int ad_val);
-   void Calibrate(unsigned int &v);
+   AdValue Read();
+   void Calibrate(AdValue &v);
 
    unsigned int pin_;
-   int pos_; // current joystick position
+   Position pos_; // current joystick position
    bool flipped_;
    JoystickLimits limits_;
-   unsigned int mid_; // ad value when joystick in "mid"/neutral position
-
-   // coefficients for mapping ad_val to pos
-   float a1, b1, c1; 
-   float a2, b2, c2; 
+   AdValue mid_; // ad value when joystick in "mid"/neutral position
+   PositionMap map_;
 };
 
 #endif // __JOYSTICK_H__

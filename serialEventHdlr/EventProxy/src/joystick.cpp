@@ -1,13 +1,15 @@
 #include "joystick.h"
 
 auto constexpr k_default_idle_ad_val = 512;
+auto constexpr k_position_max = 100;
+auto constexpr k_position_min = -100;
 
 //   public:
 Joystick::Joystick(const String& Name,
 		             const unsigned int Pin,
                    const bool flipped,
-                   const unsigned int x_low,
-                   const unsigned int x_hi) : EventGenerator(Name), pin_(Pin), flipped_(flipped)
+                   const AdValue x_low,
+                   const AdValue x_hi) : EventGenerator(Name), pin_(Pin), flipped_(flipped)
 {
    pos_ = 0; 
    limits_.low = x_low;
@@ -23,7 +25,7 @@ Joystick::~Joystick()
 // returns debounced selector state
 void Joystick::scan(void)
 {
-   int mapped_pos = Map2Pos(ReadPos());
+   auto mapped_pos = map_.Map2Pos(Read());
    if(pos_ != mapped_pos)
    {
       pos_ = mapped_pos;
@@ -62,46 +64,70 @@ const JoystickLimits& Joystick::GetLimits()
    return limits_;
 }
 
-// calculates a1, a2, b1, b2, c1, c2 in
-// y1 = a1x^2 + b1x + c1, 0 <= x < 51
-// y2 = a2x^2 + b2x + c2, 51 <= x <= 102
+AdValue Joystick::Read()
+{
+   AdValue pos = analogRead(pin_);
+   return flipped_ ? limits_.low + limits_.hi - pos : pos; 
+}
+
+void Joystick::Calibrate(AdValue &v)
+{
+   // mean value over 3 samples
+   v =  Read();
+   v = (v + Read())/2;
+   v = (v + Read())/2;
+   
+   map_.CalcMap(limits_.low, mid_, limits_.hi);
+}
+
+PositionMap::PositionMap(const AdValue low, const AdValue mid, const AdValue hi)
+{
+   mid_ = mid;
+   CalcMap(low, mid, hi);
+}
+
+PositionMap::~PositionMap()
+{
+}
+
+// function for creating mapping coefficients.
+// values read from the AD converter [0, 1023] needs to be mapped 
+// to a value between [-100, 100].
+//
+// the calculated coefficients assumes the mapping function is a 2nd order polynomial.
+// the mapping is split according to:
+// y1 = a1x^2 + b1x + c1, low <= x < mid
+// y2 = a2x^2 + b2x + c2, mid <= x <= high
 //
 // y1(x_low) = -100, y1(x_mid) = 0, y1'(x_mid) = 0
 // y2(x_mid) = 0, y2'(x_mid) = 0, y2(high) = 100
-void Joystick::CreateMap()
+void PositionMap::CalcMap(const AdValue low, const AdValue mid, const AdValue hi)
 {
    // reduce resulotion
-   int x_low = limits_.low/10;
-   int x_mid = mid_/10;
-   int x_hi = limits_.hi/10;
+   auto x_low = low/10;
+   auto x_mid = mid/10;
+   auto x_hi = hi/10;
 
    // coefficians for 0 <= x < 51
-   a1 = -100.0f/(float)(x_low*x_low-x_mid*x_mid - 2*x_mid*(x_low-x_mid)); 
+   a1 = k_position_min/(float)(x_low*x_low-x_mid*x_mid - 2*x_mid*(x_low-x_mid)); 
    b1 = -2.0f*a1*x_mid;
    c1 = a1*x_mid*x_mid;
 
    // coefficians for  51 <= x <= 102
-   a2 = 100.0f/(float)(x_hi*x_hi-x_mid*x_mid - 2*x_mid*(x_hi-x_mid));
+   a2 = k_position_max/(float)(x_hi*x_hi-x_mid*x_mid - 2*x_mid*(x_hi-x_mid));
    b2 = -2*a2*x_mid;
    c2 = a2*x_mid*x_mid;   
 }
 
-unsigned int Joystick::ReadPos()
+// function for mapping the values read from the AD converter to a joystick position
+// as per the pre-defined mapp calculated with CreateMap()
+Position PositionMap::Map2Pos(AdValue v)
 {
-   unsigned int pos = analogRead(pin_);
-   return flipped_ ? limits_.low + limits_.hi - pos : pos; 
-}
-
-//  y = ax^2 + bx + c
-//  x_low <= x < x_mid:   y1(x)
-//  x_mid <= x <= high: y2(x)
-int Joystick::Map2Pos(unsigned int ad_val)
-{
-   int ret_val = 0;
-   int x = ad_val/10; // ad_val ([0-1023]+offset_mid)/10
+   Position ret_val = 0;
+   AdValue x = v/10; // ad_val ([0-1023]+offset_mid)/10
    long temp = 0;
 
-   if (ad_val < mid_)
+   if (v < mid_)
    {
       temp = a1*x*x + b1*x + c1;
    }
@@ -109,17 +135,12 @@ int Joystick::Map2Pos(unsigned int ad_val)
    {
       temp = a2*x*x + b2*x + c2;
    }
-   ret_val = (int)temp;
+
+   //saturate
+   temp = temp > k_position_max ? k_position_max : temp;
+   temp = temp < k_position_min ? k_position_min : temp;
+
+   ret_val = (Position)temp;
 
    return ret_val;
-}
-
-void Joystick::Calibrate(unsigned int &v)
-{
-   // mean value over 3 samples
-   v =  ReadPos();
-   v = (v + ReadPos())/2;
-   v = (v + ReadPos())/2;
-   
-   CreateMap();
 }
