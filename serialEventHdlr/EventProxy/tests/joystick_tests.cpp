@@ -4,7 +4,7 @@
 //#include <array>
 #include <iostream>
 #include <string>
-#include <EEPROM.h>
+
 
 constexpr int PIN = 2;
 
@@ -53,8 +53,6 @@ class JoystickTestFixture : public testing::Test
    {
       arduinoStub->Reset();
       arduinoStub->SetAnalogPinAdVal(PIN, 512);
-      EEPROM.put(0, 0);
-      EEPROM.put(sizeof(int), 1023);
 
       evSpy.reset();
       joystick = std::make_unique<Joystick>("test", PIN);
@@ -69,7 +67,7 @@ class JoystickTestFixture : public testing::Test
 
    float AdVal2Volt(unsigned int val)
    {
-      return (5.0f*val)/1024;
+      return (5.0f*val)/1024.0f;
    }
 };
 
@@ -124,7 +122,7 @@ TEST_F(JoystickTestFixture, test_steady_state)
 TEST_F(JoystickTestFixture, test_calibration_mid)
 {
     arduinoStub->SetAnalogPinAdVal(PIN, 520);
-    joystick->CalibrateMid();
+    joystick->Calibrate(mid);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
 
@@ -138,7 +136,7 @@ TEST_F(JoystickTestFixture, test_calibration_mid)
 
     // calibrate again
     arduinoStub->SetAnalogPinAdVal(PIN, 500);
-    joystick->CalibrateMid();
+    joystick->Calibrate(mid);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
 
@@ -153,15 +151,11 @@ TEST_F(JoystickTestFixture, test_calibration_mid)
 
 TEST_F(JoystickTestFixture, test_map_creation)
 {
-    int eeprom_readback;
-
     // calibrate high
     arduinoStub->SetAnalogPinAdVal(PIN, 1000);
-    joystick->CalibrateHi();
+    joystick->Calibrate(hi);
     joystick->scan();
     ASSERT_EQ(100, joystick->GetPos());
-    EEPROM.get(sizeof(int), eeprom_readback);
-    ASSERT_EQ(eeprom_readback, 1000); // close enough
 
     // check mid and low not changed by hi-calibration
     arduinoStub->SetAnalogPinAdVal(PIN, 512);
@@ -173,11 +167,9 @@ TEST_F(JoystickTestFixture, test_map_creation)
 
     // calibrate low value at ad_val = 1000
     arduinoStub->SetAnalogPinAdVal(PIN, 100);
-    joystick->CalibrateLow();
+    joystick->Calibrate(low);
     joystick->scan();
     ASSERT_EQ(-100, joystick->GetPos()); // almost -100...
-    EEPROM.get(0, eeprom_readback);
-    ASSERT_EQ(eeprom_readback, 100); // close enough
 
    // check mid and high not changed by low-calibration
     arduinoStub->SetAnalogPinAdVal(PIN, 1000);
@@ -186,24 +178,97 @@ TEST_F(JoystickTestFixture, test_map_creation)
     arduinoStub->SetAnalogPinAdVal(PIN, 512);
     joystick->scan();
     ASSERT_EQ(0, joystick->GetPos());
+
+   ASSERT_EQ(100, joystick->GetLimits().low);
+   //ASSERT_EQ(512, joystick->GetLimits().x_mid);
+   ASSERT_EQ(1000, joystick->GetLimits().hi);
 }
 
-TEST_F(JoystickTestFixture, test_non_default_ee_base)
+TEST_F(JoystickTestFixture, test_calibrated)
 {
-    int eeprom_readback;
    auto constexpr my_pin = 1;
-   Joystick my_joystick("apa", my_pin, 8);
 
-   arduinoStub->SetAnalogPinAdVal(my_pin, 50);
-   my_joystick.CalibrateLow();
-   EEPROM.get(8, eeprom_readback);
-   ASSERT_EQ(eeprom_readback, 50);
+   arduinoStub->SetAnalogPinAdVal(my_pin, 600); // initial value of ad converter
+   Joystick my_joystick("apa", my_pin, false, 100, 900);
+   ASSERT_EQ(0, my_joystick.GetPos());
 
-   arduinoStub->SetAnalogPinAdVal(my_pin, 800);
-   my_joystick.CalibrateHi();
-   EEPROM.get(8 + sizeof(int), eeprom_readback);
-   ASSERT_EQ(eeprom_readback, 800);
+   my_joystick.scan();
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 100);
+   my_joystick.scan();
+   ASSERT_EQ(-99, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 900);
+   my_joystick.scan();
+   ASSERT_EQ(100, my_joystick.GetPos());
 }
 
+TEST_F(JoystickTestFixture, test_flipped)
+{
+   auto constexpr my_pin = 1;
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 512); // initial value of ad converter
+   Joystick my_joystick("apa", my_pin, true);
+   
+   my_joystick.scan();
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 1023);
+   my_joystick.scan();
+   ASSERT_EQ(-100, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 0);
+   my_joystick.scan();
+   ASSERT_EQ(100, my_joystick.GetPos());
+}
+
+TEST_F(JoystickTestFixture, test_flipped_calibrated)
+{
+   auto constexpr my_pin = 1;
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 600); // initial value of ad converter
+   Joystick my_joystick("apa", my_pin, true, 100, 900);
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   my_joystick.scan();
+   ASSERT_EQ(0, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 100);
+   my_joystick.scan();
+   ASSERT_EQ(100, my_joystick.GetPos());
+
+   arduinoStub->SetAnalogPinAdVal(my_pin, 900);
+   my_joystick.scan();
+   ASSERT_EQ(-100, my_joystick.GetPos());
+}
+
+TEST_F(JoystickTestFixture, test_high_saturation)
+{
+    // calibrate high
+    arduinoStub->SetAnalogPinAdVal(PIN, 900);
+    joystick->Calibrate(hi);
+    joystick->scan();
+    ASSERT_EQ(100, joystick->GetPos());
+
+    // set ad value larger than calibrated value
+    arduinoStub->SetAnalogPinAdVal(PIN, 1000);
+    joystick->scan();
+    ASSERT_EQ(100, joystick->GetPos());
+}
+
+TEST_F(JoystickTestFixture, test_low_saturation)
+{
+    // calibrate high
+    arduinoStub->SetAnalogPinAdVal(PIN, 100);
+    joystick->Calibrate(low);
+    joystick->scan();
+    ASSERT_EQ(-100, joystick->GetPos());
+
+    // set ad value smaller than calibrated value
+    arduinoStub->SetAnalogPinAdVal(PIN, 10);
+    joystick->scan();
+    ASSERT_EQ(-100, joystick->GetPos());
+}
 
 }

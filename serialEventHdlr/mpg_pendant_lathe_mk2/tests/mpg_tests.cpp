@@ -40,6 +40,7 @@ class MpgTestFixture : public testing::Test
    {
       arduinoStub->Reset();
       Serial.clear();
+      EEPROM.clear();
    }
    
    void TearDown()
@@ -103,27 +104,29 @@ TEST_F(MpgTestFixture, selectAxisTest)
 
 TEST_F(MpgTestFixture, calibrateJoysticksTest)
 {
-   int ee_readback;
-   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 512);
-   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 512);
+   CalibData ee_readback;
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 510);
+   arduinoStub->SetAnalogPinAdVal(kJoystickZPin, 511);
    serialSend(String{"calx_mid\n"});
    serialSend(String{"calz_mid\n"});
 
-   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 1023);
-   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 1023);
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 1021);
+   arduinoStub->SetAnalogPinAdVal(kJoystickZPin, 1022);
    serialSend(String{"calx_hi\n"});
    serialSend(String{"calz_hi\n"});
 
-   EEPROM.get(sizeof(int), ee_readback);
-   //ASSERT_EQ(ee_readback, 1023);
-
-   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 0);
-   arduinoStub->SetAnalogPinVoltage(kJoystickZPin, 0);
+   arduinoStub->SetAnalogPinAdVal(kJoystickXPin, 1);
+   arduinoStub->SetAnalogPinAdVal(kJoystickZPin, 2);
    serialSend(String{"calx_low\n"});
    serialSend(String{"calz_low\n"});
 
    EEPROM.get(0, ee_readback);
-   //ASSERT_EQ(ee_readback, 1023);
+   ASSERT_EQ(ee_readback.x.limits.hi, 1021);
+   ASSERT_EQ(ee_readback.z.limits.hi, 1022);
+   //ASSERT_EQ(ee_readback.x.limits.x_mid, 510);
+   //ASSERT_EQ(ee_readback.z.limits.x_mid, 511);
+   ASSERT_EQ(ee_readback.x.limits.low, 1);
+   ASSERT_EQ(ee_readback.z.limits.low, 2);
 }
 
 TEST_F(MpgTestFixture, moveJoystickXTest)
@@ -152,6 +155,16 @@ TEST_F(MpgTestFixture, moveJoystickZTest)
    loop();
    // check for joystick event
    ASSERT_TRUE(hasBeenSent("z_"));
+}
+
+TEST_F(MpgTestFixture, flipJoystickTest)
+{
+   CalibData eeprom_readback;
+
+   serialSend(String{"flipx_1\n"});
+   
+   EEPROM.get(0, eeprom_readback);
+   ASSERT_EQ(eeprom_readback.x.flipped, true);
 }
 
 }
