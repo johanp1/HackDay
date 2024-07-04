@@ -15,7 +15,7 @@ Joystick::Joystick(const String& Name,
    limits_.low = x_low;
    limits_.hi = x_hi;
 
-   Calibrate(mid_);
+   Calibrate(mid);
 }
 
 Joystick::~Joystick()
@@ -45,21 +45,28 @@ void Joystick::SetFlipped(bool flipped)
 
 void Joystick::Calibrate(JoystickLimitPosition pos)
 {
+   // mean value over 3 samples
+   AdValue v =  Read();
+   v = (v + Read())/2;
+   v = (v + Read())/2;
+
    if (pos == low)
    {
-      Calibrate(limits_.low);
+      limits_.low = v;
    }
    if (pos == mid)
    {
-      Calibrate(mid_);
+      limits_.mid = v;
    }
    if (pos == hi)
    {
-      Calibrate(limits_.hi);
+      limits_.hi = v;
    }
+
+   map_.CalcMap(limits_.low, limits_.mid, limits_.hi);
 }
 
-const JoystickLimits& Joystick::GetLimits()
+const MapPoints& Joystick::GetLimits()
 {
    return limits_;
 }
@@ -68,16 +75,6 @@ AdValue Joystick::Read()
 {
    AdValue pos = analogRead(pin_);
    return flipped_ ? limits_.low + limits_.hi - pos : pos; 
-}
-
-void Joystick::Calibrate(AdValue &v)
-{
-   // mean value over 3 samples
-   v =  Read();
-   v = (v + Read())/2;
-   v = (v + Read())/2;
-   
-   map_.CalcMap(limits_.low, mid_, limits_.hi);
 }
 
 PositionMap::PositionMap(const AdValue low, const AdValue mid, const AdValue hi)
@@ -118,6 +115,8 @@ void PositionMap::CalcMap(const AdValue low, const AdValue mid, const AdValue hi
    b2 = -2*a2*x_mid;
    c2 = a2*x_mid*x_mid;   
 }
+
+void CalcMap(const MapPoints& map_points);
 
 // function for mapping the values read from the AD converter to a joystick position
 // as per the pre-defined mapp calculated with CreateMap()
