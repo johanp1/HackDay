@@ -165,10 +165,16 @@ class Controller:
 
     def set_scanning_order_row_major(self):
         self._comm_hdlr.write_message('rf_' + str(ScanningOrder.RowMajor.value))
-        print('rf_' + str(ScanningOrder.RowMajor.value))
+
     def set_scanning_order_column_major(self):
         self._comm_hdlr.write_message('rf_' + str(ScanningOrder.ColumnMajor.value))
-        print('rf_' + str(ScanningOrder.ColumnMajor.value))
+
+    def set_horizontal_scan_increment(self, inc):
+        self._comm_hdlr.write_message('hi_' + str(inc))
+
+    def set_vertical_scan_increment(self, inc):
+        self._comm_hdlr.write_message('vi_' + str(inc))
+
     def update(self):
         pass
 
@@ -259,6 +265,13 @@ class View:
         self.current_vertical_jog_increment = tk.StringVar()
         self.current_vertical_jog_increment.set(JOG_INCREMENT[1])
 
+        SCAN_INCREMENT = [0.225, 0.45, 0.9, 1.8]
+        self.current_horizontal_scan_increment = tk.StringVar()
+        self.current_horizontal_scan_increment.set(SCAN_INCREMENT[0])
+
+        self.current_vertical_scan_increment = tk.StringVar()
+        self.current_vertical_scan_increment.set(SCAN_INCREMENT[0])
+
         self._file_name=tk.StringVar()
         self._file_name.set(model.get_file_name())
 
@@ -278,49 +291,57 @@ class View:
         # Vertical control frame content
         tk.Label(vertical_ctrl_frame, text="Vertical control:").grid(row=0, column=0, padx=5, pady=5)
 
-        tk.Label(vertical_ctrl_frame, text="jog increment:").grid(row=1, column=0, padx=5, pady=5)
-        port_option_menu = tk.OptionMenu(vertical_ctrl_frame, self.current_vertical_jog_increment, *JOG_INCREMENT, command = self._controller.set_vertical_jog_increment)
-        port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+        tk.Label(vertical_ctrl_frame, text="scan increment:").grid(row=1, column=0, padx=5, pady=5)
+        v_scan_inc_option_menu = tk.OptionMenu(vertical_ctrl_frame, self.current_vertical_scan_increment, *SCAN_INCREMENT, command = self._controller.set_vertical_scan_increment)
+        v_scan_inc_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+
+        tk.Label(vertical_ctrl_frame, text="jog increment:").grid(row=2, column=0, padx=5, pady=5)
+        v_jog_inc_option_menu = tk.OptionMenu(vertical_ctrl_frame, self.current_vertical_jog_increment, *JOG_INCREMENT, command = self._controller.set_vertical_jog_increment)
+        v_jog_inc_option_menu.grid(row=2, column=1, padx=5, pady=5, sticky="n")
 
         btn_ver_home = tk.Button(master = vertical_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.vertical_go_home)
-        btn_ver_home.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+        btn_ver_home.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_home = tk.Button(master=vertical_ctrl_frame, text="Set Vertical Home", padx=5, pady=5, command=self._controller.vertical_home)
-        btn_set_home.grid(row=2, column=1, padx=5, pady=5, sticky="n")
+        btn_set_home.grid(row=3, column=1, padx=5, pady=5, sticky="n")
 
         btn_jog_up = tk.Button(master=vertical_ctrl_frame, text="jog up", padx=5, pady=5, command=self._controller.vertical_jog_up)
-        btn_jog_up.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
+        btn_jog_up.grid(row=4, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_upper = tk.Button(master=vertical_ctrl_frame, text="set upper limit", padx=5, pady=5, command=self._controller.vertical_end)
-        btn_set_upper.grid(row=3, column=1, padx=5, pady=5, sticky='nw')
+        btn_set_upper.grid(row=4, column=1, padx=5, pady=5, sticky='nw')
 
         btn_jog_down = tk.Button(master = vertical_ctrl_frame, text="jog down", padx=5, pady=5, command=self._controller.vertical_jog_down)
-        btn_jog_down.grid(row=4, column=0, padx=5, pady=5, sticky="nw")
+        btn_jog_down.grid(row=5, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_lower = tk.Button(master = vertical_ctrl_frame, text="set lower limit", padx=5, pady=5, command=self._controller.vertical_start)
-        btn_set_lower.grid(row=4, column=1, padx=5, pady=5, sticky="nw")
+        btn_set_lower.grid(row=5, column=1, padx=5, pady=5, sticky="nw")
 
         # horizontal control frame content
         tk.Label(horizontal_ctrl_frame, text="Horizontal control:").grid(row=0, column=0, padx=5, pady=5)
 
-        tk.Label(horizontal_ctrl_frame, text="jog increment:").grid(row=1, column=0, padx=5, pady=5)
+        tk.Label(horizontal_ctrl_frame, text="scan increment:").grid(row=1, column=0, padx=5, pady=5)
+        h_scan_inc_option_menu = tk.OptionMenu(horizontal_ctrl_frame, self.current_horizontal_scan_increment, *SCAN_INCREMENT, command = self._controller.set_horizontal_scan_increment)
+        h_scan_inc_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+
+        tk.Label(horizontal_ctrl_frame, text="jog increment:").grid(row=2, column=0, padx=5, pady=5)
         port_option_menu = tk.OptionMenu(horizontal_ctrl_frame, self.current_horizontal_jog_increment, *JOG_INCREMENT, command = self._controller.set_horizontal_jog_increment)
-        port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
+        port_option_menu.grid(row=2, column=1, padx=5, pady=5, sticky="n")
 
         btn_hor_home = tk.Button(master=horizontal_ctrl_frame, text="go home", padx=5, pady=5, command=self._controller.horizontal_go_home)
-        btn_hor_home.grid(row=2, column=0, padx=5, pady=5, sticky="nw")
+        btn_hor_home.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
 
         btn_jog_ccw = tk.Button(master = horizontal_ctrl_frame, text="jog ccw", padx=5, pady=5, command=self._controller.horizontal_jog_ccw)
-        btn_jog_ccw.grid(row=3, column=0, padx=5, pady=5, sticky="nw")
+        btn_jog_ccw.grid(row=4, column=0, padx=5, pady=5, sticky="nw")
 
         btn_jog_cw = tk.Button(master=horizontal_ctrl_frame, text="jog cw", padx=5, pady=5, command=self._controller.horizontal_jog_cw)
-        btn_jog_cw.grid(row=3, column=1, padx=5, pady=5, sticky="nw")
+        btn_jog_cw.grid(row=4, column=1, padx=5, pady=5, sticky="nw")
 
         btn_set_start = tk.Button(master = horizontal_ctrl_frame, text="set as start ", padx=5, pady=5, command=self._controller.horizontal_start)
-        btn_set_start.grid(row=4, column=0, padx=5, pady=5, sticky="nw")
+        btn_set_start.grid(row=5, column=0, padx=5, pady=5, sticky="nw")
 
         btn_set_end = tk.Button(master=horizontal_ctrl_frame, text="set as end", padx=5, pady=5, command=self._controller.horizontal_end)
-        btn_set_end.grid(row=4, column=1, padx=5, pady=5, sticky="nw")
+        btn_set_end.grid(row=5, column=1, padx=5, pady=5, sticky="nw")
 
         # control frame content
         self.btn_start = tk.Button(master = ctrl_frame, padx=5, pady=5)
@@ -398,7 +419,7 @@ class OutputFileHandler:
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(h_angle + ' ' + v_angle + ' ' + dist)
+            self.f_log.write(h_angle + '  ' + v_angle + '  ' + dist)
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.SCANNING:

@@ -1,11 +1,20 @@
+ändra:
+    constexpr float kHorizontalIncrement = 0.225f;
+    constexpr float kVerticalIncrement = 0.225f;
+    
+    får blir member-variabler...
+
 testa:
-*t_on = 250us, t_off = 250us,
-*t_delta = 500us, number_of_ramp_steps = 30 kanske...
-*increment = 0.225
+    *t_on = 250us, t_off = 250us,
+    *t_delta = 500us, number_of_ramp_steps = 30 kanske...
+    *increment = 0.225
 
 fixa tillbaka "ramping" i axel_ctrl.c::MoveRequest ev. bara för horizontalAxisCtrl
+
 row_first av/på från scanner.py
+
 combobox för increment
+
 
 KLAR testfall för "scan" i scanner_ctrl
 KLAR ta bort test-mode och done, och test-knappen

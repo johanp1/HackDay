@@ -28,6 +28,8 @@ static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setLimitWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -56,6 +58,8 @@ void setup() {
   EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
   EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
+  EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
+  EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
 
   cli();
   timer2Init();
@@ -83,9 +87,13 @@ void setup() {
   eventParser.AddAcceptedHandler(*verticalGetHandler);
   eventParser.AddAcceptedHandler(*horizontalGetHandler);
   eventParser.AddAcceptedHandler(*setRowFirstHandler);
-
+  eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
+  eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
+ 
   horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
   verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
+  scannerCtrl.SetHorizontalIncrement(0.225); // 1/horizontal_scale [units/step] minimum increment...
+  scannerCtrl.SetVerticalIncrement(0.225);
 }
 
 void loop() {
@@ -189,4 +197,16 @@ static void getPosWrapper(AxisCtrl* axisCtrl)
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
 {
   ctrl->SetRowFirst(str.toInt() > 0 ? true : false);
+}
+
+static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
+{
+   auto inc = str.toFloat();
+   ctrl->SetHorizontalIncrement(inc);
+}
+
+static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
+{
+   auto inc = str.toFloat();
+   ctrl->SetVerticalIncrement(inc);
 }
