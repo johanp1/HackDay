@@ -399,7 +399,8 @@ class MessageBroker:
 
     def message_handler(self, message):
         print(message)
-        de_serialized_message = message.split('_')
+        
+        de_serialized_message = message.strip('\n').split('_')
         event_name = de_serialized_message[0]
         event_data = de_serialized_message[1:]
         if event_name in self.brokee_dict:
@@ -419,7 +420,7 @@ class OutputFileHandler:
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(h_angle + '  ' + v_angle + '  ' + dist)
+            self.f_log.write(h_angle + '  ' + v_angle + '  ' + dist + '\n')
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.SCANNING:
