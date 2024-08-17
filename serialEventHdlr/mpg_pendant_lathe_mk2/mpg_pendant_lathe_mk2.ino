@@ -59,7 +59,6 @@ class CalibEventHandler : public EventFunctor
 static void readCalibDataFromEEPROM();
 static void calibrateWrapper(String& str, Joystick* j, JoystickCalibData& d);
 static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d);
-static void softReset();
 static void printCalibDataWrapper();
 
 static Sender sender;
@@ -81,16 +80,16 @@ void setup() {
   Serial.setTimeout(500);
   Serial.println("mpgPendant::setup()");
 
-  event_generators[0] = new Button("func", kFuncButtonPin, kButtonDebounceDelay);
+  event_generators[0] = new ButtonPullup("func", kFuncButtonPin, kButtonDebounceDelay);
   event_generators[0]->addEventListner(&sender);
 
-  event_generators[1] = new Button("jpos", kJogPosButtonPin, kButtonDebounceDelay);
+  event_generators[1] = new ButtonPullup("jpos", kJogPosButtonPin, kButtonDebounceDelay);
   event_generators[1]->addEventListner(&sender);
 
-  event_generators[2] = new Button("jneg", kJogNegButtonPin, kButtonDebounceDelay);
+  event_generators[2] = new ButtonPullup("jneg", kJogNegButtonPin, kButtonDebounceDelay);
   event_generators[2]->addEventListner(&sender);
 
-  event_generators[3] = new Button("est", kEStopButtonPin, kButtonDebounceDelay);
+  event_generators[3] = new ButtonPullup("est", kEStopButtonPin, kButtonDebounceDelay);
   event_generators[3]->addEventListner(&sender);
 
   event_generators[4] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);
@@ -111,11 +110,6 @@ void setup() {
 
   receiver.addEventListner(&eventParser);
 
-  //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calx"}, calibrateWrapper, x_joystick)));
-  //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"calz"}, calibrateWrapper, z_joystick)));
-  //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipx"}, flipWrapper, x_joystick)));
-  //eventParser.AddAcceptedHandler(*(new EventHandler<void (&)(String&, Joystick*), Joystick>(String{"flipz"}, flipWrapper, z_joystick)));
-  eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"rst"}, softReset)));
   eventParser.AddAcceptedHandler(*(new EventHandlerNoArgs<void (&)()>(String{"get"}, printCalibDataWrapper)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calx"}, calibrateWrapper, x_joystick, calibData.x)));
   eventParser.AddAcceptedHandler(*(new CalibEventHandler<void (&)(String&, Joystick*, JoystickCalibData&), Joystick, JoystickCalibData&>(String{"calz"}, calibrateWrapper, z_joystick, calibData.z)));
@@ -138,7 +132,7 @@ void loop() {
   {
     String tmpStr = "hb";
     C_Event hb_ev = C_Event(tmpStr, 1);
-    sender.HandleEvent(hb_ev);
+    //sender.HandleEvent(hb_ev);
     heartbeatTimer = millis() + kHeartbeatPeriod;
   }
 
@@ -199,12 +193,6 @@ static void flipWrapper(String& str, Joystick* j, JoystickCalibData& d)
   //store the joystick::flipped
   d.flipped = flipped;
   EEPROM.put(0, calibData);
-}
-
-
-static void softReset()
-{
-  wdt_enable(WDTO_15MS);
 }
 
 static void printCalibDataWrapper()

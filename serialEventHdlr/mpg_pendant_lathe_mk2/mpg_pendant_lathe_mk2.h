@@ -13,11 +13,12 @@ constexpr byte kSelectorStateValueUncertainty = 50;
 
 constexpr auto kFuncButtonPin = 3;
 constexpr auto kEStopButtonPin = 2;
-constexpr auto kJogPosButtonPin = 5;
-constexpr auto kJogNegButtonPin = 4;
+constexpr auto kJogPosButtonPin = 4;
+constexpr auto kJogNegButtonPin = 5;
+constexpr auto kShiftButtonPin = 6;
 
-constexpr auto kAxisSelectorPin = A1;
-constexpr auto cScaleSelectorPin = A0;
+constexpr auto kAxisSelectorPin = A0;
+constexpr auto cScaleSelectorPin = A1;
 constexpr auto kJoystickXPin = A2;
 constexpr auto kJoystickZPin = A3;
 
@@ -27,7 +28,7 @@ constexpr auto kLoopDelayTime = 10; //milli sec
 
 typedef struct 
 {
-    JoystickLimits limits;
+    MapPoints limits;
     bool flipped;
 } JoystickCalibData;
 
