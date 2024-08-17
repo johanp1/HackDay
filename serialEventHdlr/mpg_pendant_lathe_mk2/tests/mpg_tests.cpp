@@ -41,6 +41,8 @@ class MpgTestFixture : public testing::Test
       arduinoStub->Reset();
       Serial.clear();
       EEPROM.clear();
+
+      arduinoStub->SetDigitalRead(kJogPosButtonPin, HIGH);
    }
    
    void TearDown()
@@ -73,7 +75,7 @@ TEST_F(MpgTestFixture, heartbeatTest)
 TEST_F(MpgTestFixture, PressPlusButtonTest)
 {
    // press button
-   arduinoStub->SetDigitalRead(kJogPosButtonPin, HIGH);
+   arduinoStub->SetDigitalRead(kJogPosButtonPin, LOW);
    loop();
    ASSERT_FALSE(hasBeenSent("jpos_1\n"));
    arduinoStub->IncTimeMs(kButtonDebounceDelay + 1);
@@ -81,14 +83,10 @@ TEST_F(MpgTestFixture, PressPlusButtonTest)
    ASSERT_TRUE(hasBeenSent("jpos_1\n"));
 
    // release button
-   arduinoStub->SetDigitalRead(kJogPosButtonPin, LOW);
-   loop();
-   loop();
+   arduinoStub->SetDigitalRead(kJogPosButtonPin, HIGH);
    loop();
    ASSERT_FALSE(hasBeenSent("jpos_0\n"));
-   //arduinoStub->IncTimeMs(kButtonDebounceDelay + 1);
-   loop();
-   loop();
+   arduinoStub->IncTimeMs(kButtonDebounceDelay + 1);
    loop();
    ASSERT_TRUE(hasBeenSent("jpos_0\n"));
 }

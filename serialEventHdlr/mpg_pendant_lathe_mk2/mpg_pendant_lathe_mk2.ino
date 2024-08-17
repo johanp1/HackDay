@@ -132,7 +132,7 @@ void loop() {
   {
     String tmpStr = "hb";
     C_Event hb_ev = C_Event(tmpStr, 1);
-    //sender.HandleEvent(hb_ev);
+    sender.HandleEvent(hb_ev);
     heartbeatTimer = millis() + kHeartbeatPeriod;
   }
 
