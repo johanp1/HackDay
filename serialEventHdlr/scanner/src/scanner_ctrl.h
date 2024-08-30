@@ -165,8 +165,19 @@ void ScannerCtrl<Lidar>::Update()
             // the move was possible, save it as new target
             minorAxisConfig_.target_position = next_minor_target;
           
-            // go to major axis start pos
-            majorAxisConfig_.target_position = majorAxisConfig_.start_position;
+            // start new major axis iteration
+            if (true /*!scan_both_ways_*/)
+            {
+              majorAxisConfig_.target_position = majorAxisConfig_.start_position;
+            }
+            else
+            {
+			  auto temp = majorAxisConfig_.end_position;
+              majorAxisConfig_.increment = -majorAxisConfig_.increment; // flip increment, i.e. move the other direction
+			  majorAxisConfig_.end_position = majorAxisConfig_.start_position;
+			  majorAxisConfig_.start_position = temp;
+              next_major_target = NextTargetPos(majorAxisConfig_);
+            }
             majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
           }
         }
