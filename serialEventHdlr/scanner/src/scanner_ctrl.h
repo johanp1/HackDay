@@ -5,6 +5,7 @@
 #include "Arduino.h"
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
+enum ScanningDirection { kPositive, kNegative };
 
 constexpr float kDefaultHorizontalIncrement = 0.225f;
 constexpr float kDefaultVerticalIncrement = 0.225f;
@@ -24,6 +25,7 @@ struct AxisConfig
   Position start_position;
   float increment;
 };
+
 
 template <class Lidar>
 class ScannerCtrl
@@ -45,6 +47,7 @@ class ScannerCtrl
   void SetHorizontalIncrement(float increment) {horizontal_increment_ = increment;};
   void SetVerticalIncrement(float increment) {vertical_increment_ = increment;};
   void SetRowFirst(bool rf);
+  void SetBothWays(bool b);
 
   private:
   void Scan();
@@ -52,6 +55,8 @@ class ScannerCtrl
   
 
   Mode mode_ = kModeNotHomed;
+  ScanningDirection direction_ = kPositive;
+  bool both_ways_ = false;
 
   Position horizontal_end_position_ = kDefaultHorizontalEndPosition;
   Position horizontal_start_position_ = kDefaultHorizontalStartPosition;
@@ -123,8 +128,8 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
       minorAxisConfig_.increment = horizontal_increment_;
     }
 
-    majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
-    minorAxisCtrl_->MoveToAbsolutPosition(minorAxisConfig_.target_position);
+    majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.start_position);
+    minorAxisCtrl_->MoveToAbsolutPosition(minorAxisConfig_.start_position);
 
     mode_ = kModeScanning;
   }
@@ -165,19 +170,27 @@ void ScannerCtrl<Lidar>::Update()
             // the move was possible, save it as new target
             minorAxisConfig_.target_position = next_minor_target;
           
-            // start new major axis iteration
-            if (true /*!scan_both_ways_*/)
+            if (!both_ways_)
             {
+              // return to major axis start pos
               majorAxisConfig_.target_position = majorAxisConfig_.start_position;
             }
             else
             {
-			  auto temp = majorAxisConfig_.end_position;
-              majorAxisConfig_.increment = -majorAxisConfig_.increment; // flip increment, i.e. move the other direction
-			  majorAxisConfig_.end_position = majorAxisConfig_.start_position;
-			  majorAxisConfig_.start_position = temp;
-              next_major_target = NextTargetPos(majorAxisConfig_);
+              if (direction_ == kPositive) 
+              { // ended up in end-pos with positive direction
+                direction_ = kNegative; // flip direction
+                majorAxisConfig_.target_position = majorAxisConfig_.end_position - majorAxisConfig_.increment;
+              }
+              else
+              {
+                direction_ = kPositive; // flip direction
+                majorAxisConfig_.target_position -= majorAxisConfig_.start_position + majorAxisConfig_.increment;
+              }
+
+              //direction_ = (direction_ == kPositive ? kNegative : kPositive);
             }
+
             majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
           }
         }
@@ -265,7 +278,6 @@ void ScannerCtrl<Lidar>::SetVerticalHomePosition()
   SetMode(kModeInactive);
 };
 
-
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
 {
@@ -273,6 +285,16 @@ void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
   cli();  // serial.send seems to be upset by interrupts...
   Serial.print("rm_");
   Serial.println(row_first_);
+  sei();
+}
+
+template <class Lidar>
+void ScannerCtrl<Lidar>::SetBothWays(bool b)
+{
+  both_ways_ = b;
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.print("bw_");
+  Serial.println(both_ways_);
   sei();
 }
 
