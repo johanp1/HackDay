@@ -200,7 +200,8 @@ class Model:
         self._file_name = 'scan.txt'
         self.horizontal_jog_increment = 0
         self.vertical_jog_increment = 0
-        self.scanning_order = ScanningOrder.RowMajor
+        #self.scanning_order = ScanningOrder.RowMajor
+        self.scanning_order = ScanningOrder.ColumnMajor
 
     def attatch(self, o):
         self._observers.append(o)
@@ -265,12 +266,12 @@ class View:
         self.current_vertical_jog_increment = tk.StringVar()
         self.current_vertical_jog_increment.set(JOG_INCREMENT[1])
 
-        SCAN_INCREMENT = [0.225, 0.45, 0.9, 1.8]
+        SCAN_INCREMENT = [0.112, 0.225, 0.45, 0.9]
         self.current_horizontal_scan_increment = tk.StringVar()
-        self.current_horizontal_scan_increment.set(SCAN_INCREMENT[0])
+        self.current_horizontal_scan_increment.set(SCAN_INCREMENT[1])
 
         self.current_vertical_scan_increment = tk.StringVar()
-        self.current_vertical_scan_increment.set(SCAN_INCREMENT[0])
+        self.current_vertical_scan_increment.set(SCAN_INCREMENT[1])
 
         self._file_name=tk.StringVar()
         self._file_name.set(model.get_file_name())
