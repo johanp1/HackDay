@@ -424,6 +424,7 @@ TEST(ScannerCtrlTestSuite, test_vertical_limits)
             EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
             ////////////
 
+            // test that major axis retract back to start-pos
             // this is not needed for the absolut last iteration
             if (j != vertical_iterations)
             {
@@ -467,9 +468,10 @@ TEST(ScannerCtrlTestSuite, test_scan_both_ways)
     EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(-5.0f)).Times(1);
     scannerCtrl.SetMode(kModeScanning);
     
-    j = 0;//for(j = 0; j <= vertical_iterations; j++)
-    //{
-        // one horizontal rev...
+    j = 0;
+    while (j <= vertical_iterations)
+    {
+        // scan from start-pos to end-pos (positive direction)
         for (i = 0; i < horizontal_iterations; i++)
         {
             InSequence seq;
@@ -495,17 +497,60 @@ TEST(ScannerCtrlTestSuite, test_scan_both_ways)
             EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
             ////////////
 
+            // test that major axis retract back to start-pos
             // this is not needed for the absolut last iteration
             if (j != vertical_iterations)
             {
                 ExpectedMoveToPos(mockVerticalAxisCtrl, -5.0f+(j+1)*kDefaultVerticalIncrement);
-                EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(0.0f)).Times(1).WillOnce(Return(kOk));
             }
-            
+
             scannerCtrl.Update();
         }
-    //}
-    //ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
+
+        //scan from end-pos to start-pos (negative direction)
+        if (j != vertical_iterations)
+        {
+            j++; //inc vertical counter
+            for (i = 0; i < horizontal_iterations; i++)
+            //i=0;
+            {
+                InSequence seq;
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+                EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+                // from scan()
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+                EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+                //////////////
+
+                ExpectedMoveToPos(mockHorizontalAxisCtrl, 10.0f - (i+1)*kDefaultHorizontalIncrement, 0.15f);
+                scannerCtrl.Update();
+            }
+            
+            //last iteration
+            {
+                InSequence seq;
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+                EXPECT_CALL(mockVerticalAxisCtrl, GetStatus()).Times(1).WillOnce(Return(kIdle));
+
+                // from scan
+                EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1);
+                EXPECT_CALL(mockVerticalAxisCtrl, GetPosition()).Times(1);
+                ////////////
+
+                // test that major axis retract back to start-pos
+                // this is not needed for the absolut last iteration
+                
+                {
+                    ExpectedMoveToPos(mockVerticalAxisCtrl, -5.0f+(j+1)*kDefaultVerticalIncrement);
+                }
+                
+                scannerCtrl.Update();
+            }
+        }
+        j++; //inc vertical counter
+    }
+    ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 
 }

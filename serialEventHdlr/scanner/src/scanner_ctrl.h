@@ -51,8 +51,8 @@ class ScannerCtrl
 
   private:
   void Scan();
-  Position NextTargetPos(AxisConfig& config);
-  
+  Position NextTargetPos(AxisConfig& config, ScanningDirection direction = kPositive);
+  bool IsPosInsideStartEnd(Position pos, AxisConfig& config, float tol = 0.1f);
 
   Mode mode_ = kModeNotHomed;
   ScanningDirection direction_ = kPositive;
@@ -151,8 +151,8 @@ void ScannerCtrl<Lidar>::Update()
       Scan();
       
       // set next target, if increment makes us pass the end-pos let's consider this rev done
-      auto next_major_target = NextTargetPos(majorAxisConfig_);
-      if (next_major_target <= majorAxisConfig_.end_position)
+      auto next_major_target = NextTargetPos(majorAxisConfig_, direction_);
+      if (IsPosInsideStartEnd(next_major_target, majorAxisConfig_, 0.005f))
       {
         if (majorAxisCtrl_->MoveToAbsolutPosition(next_major_target) == kOk)
         {
@@ -174,24 +174,14 @@ void ScannerCtrl<Lidar>::Update()
             {
               // return to major axis start pos
               majorAxisConfig_.target_position = majorAxisConfig_.start_position;
+              majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
             }
             else
             {
-              if (direction_ == kPositive) 
-              { // ended up in end-pos with positive direction
-                direction_ = kNegative; // flip direction
-                majorAxisConfig_.target_position = majorAxisConfig_.end_position - majorAxisConfig_.increment;
-              }
-              else
-              {
-                direction_ = kPositive; // flip direction
-                majorAxisConfig_.target_position -= majorAxisConfig_.start_position + majorAxisConfig_.increment;
-              }
-
-              //direction_ = (direction_ == kPositive ? kNegative : kPositive);
+              // flip direction
+              direction_ = (direction_ == kPositive ? kNegative : kPositive);
             }
 
-            majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
           }
         }
         else
@@ -325,9 +315,15 @@ void ScannerCtrl<Lidar>::Scan()
 };
  
 template <class Lidar>
-Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config)
+Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config, ScanningDirection direction)
 {
-  return config.target_position + config.increment;
+  return config.target_position + config.increment * (direction == kPositive ? 1: -1);
+}
+
+template <class Lidar>
+bool ScannerCtrl<Lidar>::IsPosInsideStartEnd(Position pos, AxisConfig& config, float tol)
+{
+  return (pos <= config.end_position + tol) && (pos >= config.start_position - tol);
 }
 
 #endif
