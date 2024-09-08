@@ -64,8 +64,8 @@ class ScannerCtrl
   float horizontal_increment_ = kDefaultHorizontalIncrement;
   float vertical_increment_ = kDefaultVerticalIncrement;
 
-  bool both_ways_ = false; // scan both ways, i.e. from start-end, inc minor, then scan from end to start and so on...
-  bool row_first_ = true; // scanning row first then increment vertical axis
+  bool both_ways_ = true; // scan both ways, i.e. from start-end, inc minor, then scan from end to start and so on...
+  bool row_first_ = false; // scanning row first then increment vertical axis
                           // if false, obviously, scanning will first move along vertical limits, then increment horizontally
 
   int lidar_bias_correction_counter_ = 0;
