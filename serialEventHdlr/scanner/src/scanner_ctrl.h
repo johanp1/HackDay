@@ -11,7 +11,6 @@ constexpr float kDefaultVerticalIncrement = 0.225f;
 
 constexpr Position kDefaultHorizontalStartPosition = 0.0f;
 constexpr Position kDefaultVerticalStartPosition = -45.0f;
-
 constexpr Position kDefaultHorizontalEndPosition = 360.0f - kDefaultHorizontalIncrement;
 constexpr Position kDefaultVerticalEndPosition = 45.0f;
 
@@ -24,6 +23,7 @@ struct AxisConfig
   Position start_position;
   float increment;
 };
+
 
 template <class Lidar>
 class ScannerCtrl
@@ -45,13 +45,15 @@ class ScannerCtrl
   void SetHorizontalIncrement(float increment) {horizontal_increment_ = increment;};
   void SetVerticalIncrement(float increment) {vertical_increment_ = increment;};
   void SetRowFirst(bool rf);
+  void SetBothWays(bool b);
 
   private:
   void Scan();
   Position NextTargetPos(AxisConfig& config);
-  
+  bool IsPosInsideStartEnd(Position pos, AxisConfig& config, float tol = 0.1f);
 
   Mode mode_ = kModeNotHomed;
+
 
   Position horizontal_end_position_ = kDefaultHorizontalEndPosition;
   Position horizontal_start_position_ = kDefaultHorizontalStartPosition;
@@ -61,7 +63,8 @@ class ScannerCtrl
   float horizontal_increment_ = kDefaultHorizontalIncrement;
   float vertical_increment_ = kDefaultVerticalIncrement;
 
-  bool row_first_ = true; // scanning row first then increment vertical axis
+  bool both_ways_ = true; // scan both ways, i.e. from start-end, inc minor, then scan from end to start and so on...
+  bool row_first_ = false; // scanning row first then increment vertical axis
                           // if false, obviously, scanning will first move along vertical limits, then increment horizontally
 
   int lidar_bias_correction_counter_ = 0;
@@ -123,8 +126,8 @@ void ScannerCtrl<Lidar>::SetMode(Mode m)
       minorAxisConfig_.increment = horizontal_increment_;
     }
 
-    majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
-    minorAxisCtrl_->MoveToAbsolutPosition(minorAxisConfig_.target_position);
+    majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.start_position);
+    minorAxisCtrl_->MoveToAbsolutPosition(minorAxisConfig_.start_position);
 
     mode_ = kModeScanning;
   }
@@ -147,7 +150,7 @@ void ScannerCtrl<Lidar>::Update()
       
       // set next target, if increment makes us pass the end-pos let's consider this rev done
       auto next_major_target = NextTargetPos(majorAxisConfig_);
-      if (next_major_target <= majorAxisConfig_.end_position)
+      if (IsPosInsideStartEnd(next_major_target, majorAxisConfig_, 0.005f))
       {
         if (majorAxisCtrl_->MoveToAbsolutPosition(next_major_target) == kOk)
         {
@@ -165,9 +168,17 @@ void ScannerCtrl<Lidar>::Update()
             // the move was possible, save it as new target
             minorAxisConfig_.target_position = next_minor_target;
           
-            // go to major axis start pos
-            majorAxisConfig_.target_position = majorAxisConfig_.start_position;
-            majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
+            if (!both_ways_)
+            {
+              // return to major axis start pos
+              majorAxisConfig_.target_position = majorAxisConfig_.start_position;
+              majorAxisCtrl_->MoveToAbsolutPosition(majorAxisConfig_.target_position);
+            }
+            else
+            {
+              // flip direction
+              majorAxisConfig_.increment = -majorAxisConfig_.increment;
+            }
           }
         }
         else
@@ -254,7 +265,6 @@ void ScannerCtrl<Lidar>::SetVerticalHomePosition()
   SetMode(kModeInactive);
 };
 
-
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
 {
@@ -262,6 +272,16 @@ void ScannerCtrl<Lidar>::SetRowFirst(bool rf)
   cli();  // serial.send seems to be upset by interrupts...
   Serial.print("rm_");
   Serial.println(row_first_);
+  sei();
+}
+
+template <class Lidar>
+void ScannerCtrl<Lidar>::SetBothWays(bool b)
+{
+  both_ways_ = b;
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.print("bw_");
+  Serial.println(both_ways_);
   sei();
 }
 
@@ -281,13 +301,19 @@ void ScannerCtrl<Lidar>::Scan()
 
   distance = lidar_.distance(bias_correction_flag);
 
-  sendStr.concat(horizontal_pos);
-  sendStr.concat("_");
-  sendStr.concat(vertical_pos);
-  sendStr.concat("_");
-  sendStr.concat(distance);
+  //sendStr.concat(horizontal_pos);
+  //sendStr.concat("_");
+  //sendStr.concat(vertical_pos);
+  //sendStr.concat("_");
+  //sendStr.concat(distance);
   cli();  // serial.send seems to be upset by interrupts...
-  Serial.println(sendStr);
+  Serial.print("scan_");
+  Serial.print(horizontal_pos, 4);
+  Serial.print('_');
+  Serial.print(vertical_pos, 4);
+  Serial.print('_');
+  Serial.println(distance);
+  //Serial.println(sendStr);
   sei();
 };
  
@@ -295,6 +321,12 @@ template <class Lidar>
 Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config)
 {
   return config.target_position + config.increment;
+}
+
+template <class Lidar>
+bool ScannerCtrl<Lidar>::IsPosInsideStartEnd(Position pos, AxisConfig& config, float tol)
+{
+  return (pos <= config.end_position + tol) && (pos >= config.start_position - tol);
 }
 
 #endif

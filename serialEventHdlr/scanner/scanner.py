@@ -200,7 +200,8 @@ class Model:
         self._file_name = 'scan.txt'
         self.horizontal_jog_increment = 0
         self.vertical_jog_increment = 0
-        self.scanning_order = ScanningOrder.RowMajor
+        #self.scanning_order = ScanningOrder.RowMajor
+        self.scanning_order = ScanningOrder.ColumnMajor
 
     def attatch(self, o):
         self._observers.append(o)
@@ -256,7 +257,7 @@ class View:
 
         self.current_port = tk.StringVar()
 
-        JOG_INCREMENT = [1, 15, 45, 90]
+        JOG_INCREMENT = [1, 5, 10, 15, 45]
         self._model.set_horizontal_jog_increment(JOG_INCREMENT[1])
         self.current_horizontal_jog_increment = tk.StringVar()
         self.current_horizontal_jog_increment.set(JOG_INCREMENT[1])
@@ -265,7 +266,7 @@ class View:
         self.current_vertical_jog_increment = tk.StringVar()
         self.current_vertical_jog_increment.set(JOG_INCREMENT[1])
 
-        SCAN_INCREMENT = [0.225, 0.45, 0.9, 1.8]
+        SCAN_INCREMENT = [0.1125, 0.225, 0.45, 0.9]
         self.current_horizontal_scan_increment = tk.StringVar()
         self.current_horizontal_scan_increment.set(SCAN_INCREMENT[0])
 
@@ -398,7 +399,7 @@ class MessageBroker:
         self.brokee_dict[event_name] = handler
 
     def message_handler(self, message):
-        print(message)
+        #print(message)
         
         de_serialized_message = message.strip('\n').split('_')
         event_name = de_serialized_message[0]
@@ -407,8 +408,7 @@ class MessageBroker:
             try:
                 self.brokee_dict[event_name](*event_data)
             except TypeError:
-                pass
-                #print('unable to invoke handler, too manny args supplied')
+                print('unable to invoke handler, too manny args supplied')
 
 
 class OutputFileHandler:
@@ -420,7 +420,7 @@ class OutputFileHandler:
 
     def print_scan(self, h_angle, v_angle, dist):
         if not self.f_log.closed:
-            self.f_log.write(h_angle + '  ' + v_angle + '  ' + dist + '\n')
+            self.f_log.write(h_angle + '  ' + v_angle + '  ' + dist)
 
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.SCANNING:

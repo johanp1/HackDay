@@ -15,8 +15,8 @@ constexpr int motor2_step_pin = 6;  // y-axis step
 constexpr int motor2_dir_pin = 3;   // y-axis dir
 constexpr int enable_pin = 8;
 
-constexpr micro_sec t_on = 500;
-constexpr micro_sec t_off = 500;
+constexpr micro_sec t_on = 250;
+constexpr micro_sec t_off = 250;
 
 static void timer2Init( void );
 
@@ -45,8 +45,8 @@ void setup() {
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
   lidar.configure(0); // Change this number to try out alternate configurations
 
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
-  //EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
+  EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ham"}, axisAbsMoveWrapper, &horizontalAxisCtrl);
@@ -74,8 +74,8 @@ void setup() {
   Serial.println("scanner::setup()"); // tell server setup is done
 
   receiver.addEventListner(&eventParser);
-  //eventParser.AddAcceptedHandler(*step1Handler);
-  //eventParser.AddAcceptedHandler(*step2Handler);
+  eventParser.AddAcceptedHandler(*step1Handler);
+  eventParser.AddAcceptedHandler(*step2Handler);
   eventParser.AddAcceptedHandler(*horizontalMoveHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*horizontalMoveHomeHandler);
@@ -90,10 +90,10 @@ void setup() {
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
  
-  horizontalAxisCtrl.SetScale(2.0f*4.0f*200.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
-  verticalAxisCtrl.SetScale(4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
-  scannerCtrl.SetHorizontalIncrement(0.225); // 1/horizontal_scale [units/step] minimum increment...
-  scannerCtrl.SetVerticalIncrement(0.225);
+  horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
+  verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
+  scannerCtrl.SetHorizontalIncrement(0.1125); // 1/horizontal_scale [units/step] minimum increment...
+  scannerCtrl.SetVerticalIncrement(0.1125);
 }
 
 void loop() {
@@ -146,7 +146,9 @@ static void axisRelMoveWrapper(String& str, AxisCtrl* axisCtrl)
 
 static void axisAbsMoveWrapper(String& str, AxisCtrl* axisCtrl)
 {
-  axisCtrl->MoveToAbsolutPosition(0);
+  auto pos = str.toFloat();
+
+  axisCtrl->MoveToAbsolutPosition(pos);
 }
 
 static void modeWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl)
