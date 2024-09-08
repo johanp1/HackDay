@@ -5,7 +5,6 @@
 #include "Arduino.h"
 
 enum Mode {kModeNotHomed, kModeInactive, kModeScanning};
-enum ScanningDirection { kPositive, kNegative };
 
 constexpr float kDefaultHorizontalIncrement = 0.225f;
 constexpr float kDefaultVerticalIncrement = 0.225f;
@@ -51,12 +50,11 @@ class ScannerCtrl
 
   private:
   void Scan();
-  Position NextTargetPos(AxisConfig& config, ScanningDirection direction = kPositive);
+  Position NextTargetPos(AxisConfig& config);
   bool IsPosInsideStartEnd(Position pos, AxisConfig& config, float tol = 0.1f);
 
   Mode mode_ = kModeNotHomed;
-  ScanningDirection direction_ = kPositive;
-  bool both_ways_ = false;
+
 
   Position horizontal_end_position_ = kDefaultHorizontalEndPosition;
   Position horizontal_start_position_ = kDefaultHorizontalStartPosition;
@@ -66,6 +64,7 @@ class ScannerCtrl
   float horizontal_increment_ = kDefaultHorizontalIncrement;
   float vertical_increment_ = kDefaultVerticalIncrement;
 
+  bool both_ways_ = false; // scan both ways, i.e. from start-end, inc minor, then scan from end to start and so on...
   bool row_first_ = true; // scanning row first then increment vertical axis
                           // if false, obviously, scanning will first move along vertical limits, then increment horizontally
 
@@ -151,7 +150,7 @@ void ScannerCtrl<Lidar>::Update()
       Scan();
       
       // set next target, if increment makes us pass the end-pos let's consider this rev done
-      auto next_major_target = NextTargetPos(majorAxisConfig_, direction_);
+      auto next_major_target = NextTargetPos(majorAxisConfig_);
       if (IsPosInsideStartEnd(next_major_target, majorAxisConfig_, 0.005f))
       {
         if (majorAxisCtrl_->MoveToAbsolutPosition(next_major_target) == kOk)
@@ -179,9 +178,8 @@ void ScannerCtrl<Lidar>::Update()
             else
             {
               // flip direction
-              direction_ = (direction_ == kPositive ? kNegative : kPositive);
+              majorAxisConfig_.increment = -majorAxisConfig_.increment;
             }
-
           }
         }
         else
@@ -315,9 +313,9 @@ void ScannerCtrl<Lidar>::Scan()
 };
  
 template <class Lidar>
-Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config, ScanningDirection direction)
+Position ScannerCtrl<Lidar>::NextTargetPos(AxisConfig& config)
 {
-  return config.target_position + config.increment * (direction == kPositive ? 1: -1);
+  return config.target_position + config.increment;
 }
 
 template <class Lidar>
