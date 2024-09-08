@@ -11,7 +11,6 @@ constexpr float kDefaultVerticalIncrement = 0.225f;
 
 constexpr Position kDefaultHorizontalStartPosition = 0.0f;
 constexpr Position kDefaultVerticalStartPosition = -45.0f;
-
 constexpr Position kDefaultHorizontalEndPosition = 360.0f - kDefaultHorizontalIncrement;
 constexpr Position kDefaultVerticalEndPosition = 45.0f;
 
@@ -302,13 +301,19 @@ void ScannerCtrl<Lidar>::Scan()
 
   distance = lidar_.distance(bias_correction_flag);
 
-  sendStr.concat(horizontal_pos);
-  sendStr.concat("_");
-  sendStr.concat(vertical_pos);
-  sendStr.concat("_");
-  sendStr.concat(distance);
+  //sendStr.concat(horizontal_pos);
+  //sendStr.concat("_");
+  //sendStr.concat(vertical_pos);
+  //sendStr.concat("_");
+  //sendStr.concat(distance);
   cli();  // serial.send seems to be upset by interrupts...
-  Serial.println(sendStr);
+  Serial.print("scan_");
+  Serial.print(horizontal_pos, 4);
+  Serial.print('_');
+  Serial.print(vertical_pos, 4);
+  Serial.print('_');
+  Serial.println(distance);
+  //Serial.println(sendStr);
   sei();
 };
  
