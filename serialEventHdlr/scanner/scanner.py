@@ -175,6 +175,12 @@ class Controller:
     def set_vertical_scan_increment(self, inc):
         self._comm_hdlr.write_message('vi_' + str(inc))
 
+    def set_scan_both_ways(self):
+        self._comm_hdlr.write_message('sbw_' + '1')
+
+    def set_scan_one_way(self):
+        self._comm_hdlr.write_message('sbw_' + '0')
+
     def update(self):
         pass
 
@@ -191,6 +197,13 @@ class Controller:
             self._model.set_scanning_order(int(v))
         except ValueError:
             pass
+
+    def handle_scan_both_ways_event(self, v):
+        """gets serialized data from event brooker"""
+        try:
+            self._model.set_scan_both_ways(int(v))
+        except ValueError:
+            pass
         
 class Model:
     def __init__(self, available_ports):
@@ -202,6 +215,7 @@ class Model:
         self.vertical_jog_increment = 0
         #self.scanning_order = ScanningOrder.RowMajor
         self.scanning_order = ScanningOrder.ColumnMajor
+        self.scan_both_ways = True
 
     def attatch(self, o):
         self._observers.append(o)
@@ -246,6 +260,14 @@ class Model:
 
     def get_scanning_order(self):
         return self.scanning_order
+
+    def set_scan_both_ways(self, o):
+        if self.scan_both_ways != o:
+            self.scan_both_ways = o
+            self.notify()
+
+    def get_scan_both_ways(self):
+        return self.scan_both_ways
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -351,6 +373,9 @@ class View:
         self.btn_test = tk.Button(master=ctrl_frame, padx=5, pady=5)
         self.btn_test.grid(row=1, column=0, padx=5, pady=5, sticky="n")
 
+        self.btn_sbw = tk.Button(master=ctrl_frame, padx=5, pady=5)
+        self.btn_sbw.grid(row=2, column=0, padx=5, pady=5, sticky="n")
+
         self.update()
 
         # config frame content
@@ -386,6 +411,11 @@ class View:
         
         if self._model.get_scanning_order() == ScanningOrder.ColumnMajor:
             self.btn_test.config(text = "Set Row Major", command=self._controller.set_scanning_order_row_major)
+        
+        if self._model.get_scan_both_ways():
+            self.btn_sbw.config(text = "Set scan one way", command=self._controller.set_scan_one_way)
+        else:
+            self.btn_sbw.config(text = "Set scan both ways", command=self._controller.set_scan_both_ways)
 
     def start(self):
         self.window.mainloop()
@@ -477,6 +507,7 @@ def main():
     message_broker.attach_handler('rm', view._controller.handle_scanning_order_event)
     message_broker.attach_handler('scan', output_file_handler.print_scan)
     message_broker.attach_handler('pos', print_pos)
+    message_broker.attach_handler('sbw', view._controller.handle_scan_both_ways_event)
 
     view.start()
 

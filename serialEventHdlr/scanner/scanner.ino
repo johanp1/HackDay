@@ -90,8 +90,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
  
-  horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*ratio*(steps/unit)
-  verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // steps/unit (degrees) #microsteps*(steps/unit)
+  horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*ratio*(steps/unit)
+  verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*(steps/unit)
   scannerCtrl.SetHorizontalIncrement(0.1125); // 1/horizontal_scale [units/step] minimum increment...
   scannerCtrl.SetVerticalIncrement(0.1125);
 }
