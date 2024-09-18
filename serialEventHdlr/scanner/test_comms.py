@@ -36,6 +36,15 @@ class TestComms:
             print('recieving: sbw_0')
             self._msg_handler('sbw_0')
 
+        if s.startswith('vrm'):
+            rel_move_dist = s.split('_')[1]
+            self._msg_handler('vpos_' + rel_move_dist)
+
+        if s.startswith('hrm'):
+            rel_move_dist = s.split('_')[1]
+            self._msg_handler('hpos_' + rel_move_dist)
+
+
     def get_available_ports(self):    # get available ports
         available_ports = ['COM5', 'COM6']
         return available_ports

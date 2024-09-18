@@ -205,6 +205,18 @@ class Controller:
         except ValueError:
             pass
         
+    def handle_vertical_pos_event(self, v):
+        try:
+            self._model.set_vertical_pos(v)
+        except ValueError:
+            pass
+
+    def handle_horizontal_pos_event(self, v):
+        try:
+            self._model.set_horizontal_pos(v)
+        except ValueError:
+            pass
+
 class Model:
     def __init__(self, available_ports):
         self._available_ports = available_ports
@@ -216,6 +228,8 @@ class Model:
         #self.scanning_order = ScanningOrder.RowMajor
         self.scanning_order = ScanningOrder.ColumnMajor
         self.scan_both_ways = True
+        self.vertical_pos = 0
+        self.horizontal_pos = 0
 
     def attatch(self, o):
         self._observers.append(o)
@@ -268,6 +282,20 @@ class Model:
 
     def get_scan_both_ways(self):
         return self.scan_both_ways
+    
+    def get_vertical_pos(self):
+        return self.vertical_pos
+    
+    def get_horizontal_pos(self):
+        return self.horizontal_pos
+    
+    def set_vertical_pos(self, pos):
+        self.vertical_pos = pos
+        self.notify()
+    
+    def set_horizontal_pos(self, pos):
+        self.horizontal_pos = pos
+        self.notify()
 
 class View:
     def __init__(self, model, comm_hdlr):
@@ -310,6 +338,9 @@ class View:
 
         cfg_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
         cfg_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+
+        status_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
+        status_frame.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
 
         # Vertical control frame content
         tk.Label(vertical_ctrl_frame, text="Vertical control:").grid(row=0, column=0, padx=5, pady=5)
@@ -376,8 +407,6 @@ class View:
         self.btn_sbw = tk.Button(master=ctrl_frame, padx=5, pady=5)
         self.btn_sbw.grid(row=2, column=0, padx=5, pady=5, sticky="n")
 
-        self.update()
-
         # config frame content
         available_ports = model.get_available_ports()
         if not available_ports:
@@ -392,6 +421,12 @@ class View:
         port_option_menu = tk.OptionMenu(cfg_frame, self.current_port, *available_ports, command = self._controller.set_selected_port)
         port_option_menu.grid(row=1, column=1, padx=5, pady=5, sticky="n")
 
+         # status control frame content
+        self.mode_label = tk.Label(status_frame, text="not homed")
+        self.mode_label.grid(row=0, column=0, padx=5, pady=5)
+
+        self.update()
+
     def validate(self, file_name):
         self._model.set_file_name(file_name)
         return True
@@ -399,12 +434,15 @@ class View:
     def update(self):
         if self._model.get_scanner_mode() == ScannerMode.NOT_HOMED:
             self.btn_start.config(text="Start", state="disable")
+            self.mode_label.config(text="not homed", bg='red')
 
         if self._model.get_scanner_mode() == ScannerMode.INACTIVE:
             self.btn_start.config(text="Start", command=self._controller.start, state="normal")
+            self.mode_label.config(text="inactive", bg='green')
 
         if self._model.get_scanner_mode() == ScannerMode.SCANNING: #scanning mode
             self.btn_start.config(text = "Stop", command=self._controller.stop, state="normal")
+            self.mode_label.config(text="scanning...", bg='orange')
 
         if self._model.get_scanning_order() == ScanningOrder.RowMajor:
             self.btn_test.config(text = "Set Col Major", command=self._controller.set_scanning_order_column_major)
@@ -416,6 +454,9 @@ class View:
             self.btn_sbw.config(text = "Set scan one way", command=self._controller.set_scan_one_way)
         else:
             self.btn_sbw.config(text = "Set scan both ways", command=self._controller.set_scan_both_ways)
+
+        print(self._model.get_horizontal_pos())
+        print(self._model.get_vertical_pos())
 
     def start(self):
         self.window.mainloop()
@@ -431,7 +472,7 @@ class MessageBroker:
     def message_handler(self, message):
         #print(message)
         
-        de_serialized_message = message.strip('\n').split('_')
+        de_serialized_message = message.split('_')
         event_name = de_serialized_message[0]
         event_data = de_serialized_message[1:]
         if event_name in self.brokee_dict:
@@ -507,8 +548,10 @@ def main():
     message_broker.attach_handler('rm', view._controller.handle_scanning_order_event)
     message_broker.attach_handler('scan', output_file_handler.print_scan)
     message_broker.attach_handler('pos', print_pos)
+    message_broker.attach_handler('vpos', view._controller.handle_vertical_pos_event)
+    message_broker.attach_handler('hpos', view._controller.handle_horizontal_pos_event)
     message_broker.attach_handler('sbw', view._controller.handle_scan_both_ways_event)
-
+    
     view.start()
 
 if __name__ == '__main__':

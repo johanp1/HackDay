@@ -1,6 +1,5 @@
 ändra:
 
-"homed" indication
 
 position-labels
     gör blockande moveRequests som skickar pos...
@@ -10,6 +9,7 @@ testa:
 
 
 
+KLAR "homed" indication
 KLAR scan_both_ways button
 KLAR fixa tillbaka "ramping" i axel_ctrl.c::MoveRequest ev. bara för horizontalAxisCtrl
 KLAR row_first av/på från scanner.py
