@@ -207,13 +207,13 @@ class Controller:
         
     def handle_vertical_pos_event(self, v):
         try:
-            self._model.set_vertical_pos(v)
+            self._model.set_vertical_pos(float(v))
         except ValueError:
             pass
 
     def handle_horizontal_pos_event(self, v):
         try:
-            self._model.set_horizontal_pos(v)
+            self._model.set_horizontal_pos(float(v))
         except ValueError:
             pass
 
@@ -425,6 +425,15 @@ class View:
         self.mode_label = tk.Label(status_frame, text="not homed")
         self.mode_label.grid(row=0, column=0, padx=5, pady=5)
 
+        tk.Label(status_frame, text='vertical position:').grid(row=1, column=0, padx=5, pady=5)
+        self.vpos_label = tk.Label(status_frame, text=str(self._model.get_vertical_pos()))
+        self.vpos_label.grid(row=1, column=1, padx=5, pady=5)
+
+        tk.Label(status_frame, text='horizontal position:').grid(row=2, column=0, padx=5, pady=5)
+        self.hpos_label = tk.Label(status_frame, text=str(self._model.get_horizontal_pos()))
+        self.hpos_label.grid(row=2, column=1, padx=5, pady=5)
+        
+
         self.update()
 
     def validate(self, file_name):
@@ -455,9 +464,9 @@ class View:
         else:
             self.btn_sbw.config(text = "Set scan both ways", command=self._controller.set_scan_both_ways)
 
-        print(self._model.get_horizontal_pos())
-        print(self._model.get_vertical_pos())
-
+        self.vpos_label.config(text = str(self._model.get_vertical_pos()))
+        self.hpos_label.config(text = str(self._model.get_horizontal_pos()))
+        
     def start(self):
         self.window.mainloop()
 
