@@ -206,6 +206,12 @@ void ScannerCtrl<Lidar>::SetHorizontalStartPosition()
 
   // set this pos as start
   horizontalAxisCtrl_.SetHome(0.0f);
+
+  String sendStr{"hpos_"};
+  sendStr.concat(verticalAxisCtrl_.GetPosition());
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
 };
 
 template <class Lidar>
@@ -227,11 +233,11 @@ void ScannerCtrl<Lidar>::SetVerticalStartPosition()
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
   vertical_start_position_ = verticalAxisCtrl_.GetPosition();
  
-  String sendStr{"start pos "};
+/*  String sendStr{"start pos "};
   sendStr.concat(vertical_start_position_);
   cli();  // serial.send seems to be upset by interrupts...
   Serial.println(sendStr);
-  sei();
+  sei();*/
 };
 
 template <class Lidar>
@@ -243,26 +249,26 @@ void ScannerCtrl<Lidar>::SetVerticalEndPosition()
   {
     vertical_end_position_ = pos;
   
-    String sendStr{"end pos "};
+/*    String sendStr{"end pos "};
     sendStr.concat(vertical_end_position_);
     cli();  // serial.send seems to be upset by interrupts...
     Serial.println(sendStr);
     sei();
+    */
   }
 };
 
 template <class Lidar>
 void ScannerCtrl<Lidar>::SetVerticalHomePosition()
 {
-  String sendStr{"curr pos "};
+  verticalAxisCtrl_.SetHome(0.0f);
+  SetMode(kModeInactive);
+
+  String sendStr{"vpos_"};
   sendStr.concat(verticalAxisCtrl_.GetPosition());
-  sendStr.concat(" is now 0");
   cli();  // serial.send seems to be upset by interrupts...
   Serial.println(sendStr);
   sei();
-
-  verticalAxisCtrl_.SetHome(0.0f);
-  SetMode(kModeInactive);
 };
 
 template <class Lidar>

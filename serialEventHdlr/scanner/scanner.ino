@@ -30,6 +30,8 @@ static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void horizontalJogWrapper(String& str, AxisCtrl* axisCtrl);
+static void verticalJogWrapper(String& str, AxisCtrl* axisCtrl);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -60,6 +62,9 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
+
 
   cli();
   timer2Init();
@@ -89,6 +94,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*setRowFirstHandler);
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
+  eventParser.AddAcceptedHandler(*horizontalJogHandler);
+  eventParser.AddAcceptedHandler(*verticalJogHandler);
  
   horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*ratio*(steps/unit)
   verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*(steps/unit)
@@ -212,3 +219,12 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
    auto inc = str.toFloat();
    ctrl->SetVerticalIncrement(inc);
 }
+
+static void horizontalJogWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+{
+  auto pos = str.toFloat();
+
+  horizontalAxisCtrl->MoveToRelativePosition(pos);
+}
+
+static void verticalJogWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
