@@ -150,6 +150,7 @@ TEST(ScannerCtrlTestSuite, test_basic_scanning)
     ASSERT_TRUE(scannerCtrl.GetMode() == kModeInactive);
 }
 */
+
 TEST(ScannerCtrlTestSuite, test_scanning_set_horizontal_start_pos)
 {
     constexpr float increment = 0.225;
@@ -164,6 +165,9 @@ TEST(ScannerCtrlTestSuite, test_scanning_set_horizontal_start_pos)
     int i;
     int horizontal_iterations = (int)((kDefaultHorizontalEndPosition - 30.0f)/increment);
   
+    scannerCtrl.SetRowFirst(true);
+    scannerCtrl.SetBothWays(false);
+
     // precondition - set a new start pos at current pos 30
     EXPECT_CALL(mockHorizontalAxisCtrl, GetPosition()).Times(1).WillOnce(Return(30.0f));
     EXPECT_CALL(mockHorizontalAxisCtrl, SetHome(0.0)).Times(1);
@@ -215,6 +219,9 @@ TEST(ScannerCtrlTestSuite, test_scanning_set_horizontal_end_pos)
     MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+
+    scannerCtrl.SetRowFirst(true);
+    scannerCtrl.SetBothWays(false);
 
     int i;
     int horizontal_iterations = (int)((90.0f)/kDefaultHorizontalIncrement);
@@ -269,6 +276,9 @@ TEST(ScannerCtrlTestSuite, test_horizontal_negative_start_pos)
     MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+
+    scannerCtrl.SetRowFirst(true);
+    scannerCtrl.SetBothWays(false);
 
     int i;
     int horizontal_iterations = (int)(kDefaultHorizontalEndPosition/kDefaultHorizontalIncrement);
@@ -325,6 +335,9 @@ TEST(ScannerCtrlTestSuite, test_horizontal_negative_end_pos)
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
 
+    scannerCtrl.SetRowFirst(true);
+    scannerCtrl.SetBothWays(false);
+
     int i;
     int horizontal_iterations = (int)((330.0f)/kDefaultHorizontalIncrement);
   
@@ -377,6 +390,8 @@ TEST(ScannerCtrlTestSuite, test_vertical_limits)
     MockAxisCtrl mockVerticalAxisCtrl(mockStepGen);
     MockLidar mockLidar;
     ScannerCtrl<MockLidar> scannerCtrl(mockLidar, mockVerticalAxisCtrl, mockHorizontalAxisCtrl);
+    scannerCtrl.SetRowFirst(true);
+    scannerCtrl.SetBothWays(false);
     int j;
     int i;
     int vertical_iterations = (int)((20.0f)/kDefaultVerticalIncrement);
@@ -462,7 +477,8 @@ TEST(ScannerCtrlTestSuite, test_scan_both_ways)
     scannerCtrl.SetVerticalStartPosition();
 
     scannerCtrl.SetBothWays(true);
-
+    scannerCtrl.SetRowFirst(true);
+    
     // start the scanning
     EXPECT_CALL(mockHorizontalAxisCtrl, MoveToAbsolutPosition(kDefaultHorizontalStartPosition)).Times(1);
     EXPECT_CALL(mockVerticalAxisCtrl, MoveToAbsolutPosition(-5.0f)).Times(1);

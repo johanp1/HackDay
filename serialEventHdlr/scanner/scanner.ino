@@ -30,8 +30,7 @@ static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
-static void horizontalJogWrapper(String& str, AxisCtrl* axisCtrl);
-static void verticalJogWrapper(String& str, AxisCtrl* axisCtrl);
+static void jogWrapper(String &str, AxisCtrl* axisCtrl, String &ret);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -44,27 +43,29 @@ static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
 void setup() {  
+  String vret = String{"vpos"};
+  String hret = String{"hpos"};
+  
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
   lidar.configure(0); // Change this number to try out alternate configurations
 
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ham"}, axisAbsMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vam"}, axisAbsMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"set"}, setLimitWrapper, &scannerCtrl);
-  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
-  EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
+  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
+  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
-
+  EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &verticalAxisCtrl, hret);
+  EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
 
   cli();
   timer2Init();
@@ -81,16 +82,16 @@ void setup() {
   receiver.addEventListner(&eventParser);
   eventParser.AddAcceptedHandler(*step1Handler);
   eventParser.AddAcceptedHandler(*step2Handler);
-  eventParser.AddAcceptedHandler(*horizontalMoveHandler);
-  eventParser.AddAcceptedHandler(*verticalMoveHandler);
+  //eventParser.AddAcceptedHandler(*horizontalMoveHandler);
+  //eventParser.AddAcceptedHandler(*verticalMoveHandler);
   eventParser.AddAcceptedHandler(*horizontalMoveHomeHandler);
   eventParser.AddAcceptedHandler(*verticalMoveHomeHandler);
   eventParser.AddAcceptedHandler(*setHorizontalUPSHandler);
   eventParser.AddAcceptedHandler(*setVerticalUPSHandler);
   eventParser.AddAcceptedHandler(*modeHandler);
   eventParser.AddAcceptedHandler(*setLimitHandler);
-  eventParser.AddAcceptedHandler(*verticalGetHandler);
-  eventParser.AddAcceptedHandler(*horizontalGetHandler);
+  //eventParser.AddAcceptedHandler(*verticalGetHandler);
+  //eventParser.AddAcceptedHandler(*horizontalGetHandler);
   eventParser.AddAcceptedHandler(*setRowFirstHandler);
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
@@ -220,11 +221,20 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
    ctrl->SetVerticalIncrement(inc);
 }
 
-static void horizontalJogWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+static void jogWrapper(String& str, AxisCtrl* axisCtrl, String& out)
 {
   auto pos = str.toFloat();
 
-  horizontalAxisCtrl->MoveToRelativePosition(pos);
-}
+  axisCtrl->MoveToRelativePosition(pos);
 
-static void verticalJogWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
+  while(axisCtrl->GetStatus() != kIdle)
+  {
+    delay(100);
+    String sendStr{out};
+    sendStr.concat("_");
+    sendStr.concat(axisCtrl->GetPosition());
+    cli();  // serial.send seems to be upset by interrupts...
+    Serial.println(sendStr);
+    sei();
+  }
+}

@@ -207,8 +207,7 @@ void ScannerCtrl<Lidar>::SetHorizontalStartPosition()
   // set this pos as start
   horizontalAxisCtrl_.SetHome(0.0f);
 
-  String sendStr{"hpos_"};
-  sendStr.concat(verticalAxisCtrl_.GetPosition());
+  String sendStr{"hpos_0.0"};
   cli();  // serial.send seems to be upset by interrupts...
   Serial.println(sendStr);
   sei();
@@ -232,12 +231,6 @@ void ScannerCtrl<Lidar>::SetVerticalStartPosition()
 {
   // re-calc end pos. end pos should be a absolut pos, not an offset to start
   vertical_start_position_ = verticalAxisCtrl_.GetPosition();
- 
-/*  String sendStr{"start pos "};
-  sendStr.concat(vertical_start_position_);
-  cli();  // serial.send seems to be upset by interrupts...
-  Serial.println(sendStr);
-  sei();*/
 };
 
 template <class Lidar>
@@ -248,13 +241,6 @@ void ScannerCtrl<Lidar>::SetVerticalEndPosition()
   if (pos > vertical_start_position_)
   {
     vertical_end_position_ = pos;
-  
-/*    String sendStr{"end pos "};
-    sendStr.concat(vertical_end_position_);
-    cli();  // serial.send seems to be upset by interrupts...
-    Serial.println(sendStr);
-    sei();
-    */
   }
 };
 
@@ -307,11 +293,6 @@ void ScannerCtrl<Lidar>::Scan()
 
   distance = lidar_.distance(bias_correction_flag);
 
-  //sendStr.concat(horizontal_pos);
-  //sendStr.concat("_");
-  //sendStr.concat(vertical_pos);
-  //sendStr.concat("_");
-  //sendStr.concat(distance);
   cli();  // serial.send seems to be upset by interrupts...
   Serial.print("scan_");
   Serial.print(horizontal_pos, 4);
