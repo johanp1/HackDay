@@ -64,8 +64,8 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &verticalAxisCtrl, hret);
-  EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandler2<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
+  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &verticalAxisCtrl, hret);
+  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
 
   cli();
   timer2Init();

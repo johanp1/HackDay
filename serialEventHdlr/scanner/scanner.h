@@ -35,10 +35,10 @@ class EventHandlerNoArg : public EventFunctor
 
 
 template<typename F, typename O, typename D>
-class EventHandler2 : public EventFunctor
+class EventHandlerExtendedArg : public EventFunctor
 {
   public:
-    EventHandler2(String const &event_name, F f, O* o, D &d) : EventFunctor{event_name}, f_(f), o_(o), d_(d){};
+    EventHandlerExtendedArg(String const &event_name, F f, O* o, D &d) : EventFunctor{event_name}, f_(f), o_(o), d_(d){};
 
     void operator()(String& parsed_data)
     {

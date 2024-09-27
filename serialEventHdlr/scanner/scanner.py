@@ -304,6 +304,7 @@ class View:
         self._model.attatch(self)
 
         self.window = tk.Tk()
+        self.window.resizable(False, False)
 
         self.current_port = tk.StringVar()
 
@@ -326,21 +327,30 @@ class View:
         self._file_name=tk.StringVar()
         self._file_name.set(model.get_file_name())
 
+        nw_frame = tk.Frame(self.window)
+        nw_frame.grid(row=0, column=0)
+        ne_frame = tk.Frame(self.window)
+        ne_frame.grid(row=0, column=1)
+        sw_frame = tk.Frame(self.window)
+        sw_frame.grid(row=1, column=0)
+        se_frame = tk.Frame(self.window)
+        se_frame.grid(row=1, column=1)
+        
         #the top level frames
-        vertical_ctrl_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
+        vertical_ctrl_frame = tk.Frame(nw_frame, relief=tk.GROOVE, borderwidth=3)
         vertical_ctrl_frame.grid(row=0, column=0, padx=5, pady=5)
 
-        horizontal_ctrl_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
-        horizontal_ctrl_frame.grid(row=0, column=1, padx=5, pady=5, sticky="nw")
+        horizontal_ctrl_frame = tk.Frame(ne_frame, relief=tk.GROOVE, borderwidth=3)
+        horizontal_ctrl_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
 
-        ctrl_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
-        ctrl_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
+        ctrl_frame = tk.Frame(sw_frame, relief=tk.GROOVE, borderwidth=3)
+        ctrl_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
 
-        cfg_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
-        cfg_frame.grid(row=1, column=1, padx=5, pady=5, sticky="nw")
+        cfg_frame = tk.Frame(se_frame, relief=tk.GROOVE, borderwidth=3)
+        cfg_frame.grid(row=0, column=0, padx=5, pady=5, sticky="nw")
 
-        status_frame = tk.Frame(self.window, relief=tk.GROOVE, borderwidth=3)
-        status_frame.grid(row=2, column=1, padx=5, pady=5, sticky="nw")
+        status_frame = tk.Frame(se_frame, relief=tk.GROOVE, borderwidth=3)
+        status_frame.grid(row=1, column=0, padx=5, pady=5, sticky="nw")
 
         # Vertical control frame content
         tk.Label(vertical_ctrl_frame, text="Vertical control:").grid(row=0, column=0, padx=5, pady=5)
@@ -432,7 +442,14 @@ class View:
         tk.Label(status_frame, text='horizontal position:').grid(row=2, column=0, padx=5, pady=5)
         self.hpos_label = tk.Label(status_frame, text=str(self._model.get_horizontal_pos()))
         self.hpos_label.grid(row=2, column=1, padx=5, pady=5)
-        
+
+        #adjust frame sizes
+        self.window.update()        
+        common_width = cfg_frame.winfo_width()
+        horizontal_ctrl_frame.config(width=common_width)
+        vertical_ctrl_frame.config(width=common_width)
+        status_frame.config(width=common_width)
+        self.window.update()
 
         self.update()
 
