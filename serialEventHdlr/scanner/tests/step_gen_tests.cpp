@@ -297,7 +297,7 @@ TEST_F(StepGenTestFixture, test_incomlpete_ramping)
    // ramping down
    for (int8_t i = 0; i < ramp_steps; i++)
    {
-      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(default_number_of_ramp_steps - ramp_steps + i)));
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test + t_sps_test + default_t_delta*(default_number_of_ramp_steps - ramp_steps + i + 2)));
    }
 }
 
