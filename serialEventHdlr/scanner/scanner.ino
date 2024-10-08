@@ -42,10 +42,10 @@ ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-void setup() {  
-  String vret = String{"vpos"};
-  String hret = String{"hpos"};
-  
+String vret = String{"vpos"};
+String hret = String{"hpos"};
+
+void setup() {    
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
   lidar.configure(0); // Change this number to try out alternate configurations
 
@@ -64,7 +64,7 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &verticalAxisCtrl, hret);
+  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &horizontalAxisCtrl, hret);
   EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
 
   cli();
