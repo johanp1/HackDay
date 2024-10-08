@@ -29,6 +29,12 @@ class MockStepObserver : public StepObserver
       nbrOfCalls++;
    }
 
+   void Reset()
+   {
+      hasBeenCalled = false;
+      nbrOfCalls = 0;
+   }
+
    bool hasBeenCalled = false;
    int nbrOfCalls = 0;
 };
@@ -328,5 +334,21 @@ TEST(StepGenTestGroup, test_direction_flipped)
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == HIGH);
    ASSERT_TRUE(s.GetDirection() == direction_forward);
 }
+
+// test generating one step with specified speed
+TEST_F(StepGenTestFixture, test_step_step_req_done_observer)
+{
+   MockStepObserver stepObserver;
+   stepGen->Attach(&stepObserver);
+
+   stepGen->Step(10); 
+
+   for (int8_t i = 0; i < 10; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(stepObserver.nbrOfCalls = i + 1);
+   }
+}
+
 
 }
