@@ -36,12 +36,12 @@ class TestComms:
             print('recieving: sbw_0')
             self._msg_handler('sbw_0')
 
-        if s.startswith('vrm'):
+        if s.startswith('vjog'):
             rel_move_dist = s.split('_')[1]
             print('recieving: vpos_' + rel_move_dist)
             self._msg_handler('vpos_' + rel_move_dist)
 
-        if s.startswith('hrm'):
+        if s.startswith('hjog'):
             rel_move_dist = s.split('_')[1]
             print('recieving: hpos_' + rel_move_dist)
             self._msg_handler('hpos_' + rel_move_dist)

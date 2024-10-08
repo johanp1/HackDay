@@ -116,16 +116,16 @@ class Controller:
         self._model.attatch(self)
 
     def horizontal_jog_ccw(self):
-        self._comm_hdlr.write_message('hrm_-' + str(self._model.get_horizontal_jog_increment()))
+        self._comm_hdlr.write_message('hjog_-' + str(self._model.get_horizontal_jog_increment()))
         
     def horizontal_jog_cw(self):
-        self._comm_hdlr.write_message('hrm_' + str(self._model.get_horizontal_jog_increment()))
+        self._comm_hdlr.write_message('hjog_' + str(self._model.get_horizontal_jog_increment()))
 
     def vertical_jog_up(self):
-        self._comm_hdlr.write_message('vrm_' + str(self._model.get_vertical_jog_increment()))
+        self._comm_hdlr.write_message('vjog_' + str(self._model.get_vertical_jog_increment()))
 
     def vertical_jog_down(self):
-        self._comm_hdlr.write_message('vrm_-' + str(self._model.get_vertical_jog_increment()))
+        self._comm_hdlr.write_message('vjog_-' + str(self._model.get_vertical_jog_increment()))
 
     def horizontal_go_home(self):
         self._comm_hdlr.write_message('ham_0')
