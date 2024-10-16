@@ -17,7 +17,6 @@ constexpr unsigned int default_number_of_ramp_steps = 43; // calculated with oca
 class StepObserver
 {
    public:
-   virtual void Update() {};
    virtual void operator()() {};
 };
 

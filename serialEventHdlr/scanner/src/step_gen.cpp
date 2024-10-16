@@ -50,10 +50,7 @@ void StepGen::Update()
          {
             SetState(state_inactive);
 
-            if (doneObserver_ != nullptr)
-            {
-               (*doneObserver_)();
-            } 
+            UpdateDoneObserver();
          }
       }  
    }
@@ -211,7 +208,7 @@ void StepGen::UpdateDoneObserver()
 { 
    if (doneObserver_ != nullptr)
    {
-      doneObserver_->Update();
+      (*doneObserver_)();
    } 
 };
 

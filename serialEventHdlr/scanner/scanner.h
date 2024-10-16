@@ -51,11 +51,4 @@ class EventHandlerExtendedArg : public EventFunctor
     F f_;
 };
 
-class StepDoneObserver : public StepObserver
-{
-  public:
-  StepDoneObserver() {};
-  void Update() override {};
-};
-
 #endif //__C_SCANNER_H__

@@ -3,7 +3,7 @@
 
 AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale)
 {
-    stepGen_.AttachStepObserver(this);
+    stepGen_.AttachStepObserver(&stepUpdater_);
 }
 
 AxisCtrl::~AxisCtrl()
@@ -77,9 +77,17 @@ AxisCrtlStatus AxisCtrl::GetStatus()
     return stepGen_.IsBusy() ? kMoving : kIdle;
 }
 
-void AxisCtrl::Update()
+void AxisCtrl::UpdatePosition()
 {
     position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
+}
+
+void AxisCtrl::UpdatePositionWrapper(AxisCtrl* a)
+{
+    if (a != nullptr)
+    {
+        a->UpdatePosition();
+    }
 }
 
 RotaryAxisCtrl::RotaryAxisCtrl(StepGen& s, float scale) : AxisCtrl(s, scale) {}
@@ -93,7 +101,7 @@ void RotaryAxisCtrl::SetHome(float offset)
     position_ = fmod(offset, kDegreesPerRev);
 }
 
-void RotaryAxisCtrl::Update()
+void RotaryAxisCtrl::UpdatePosition()
 {
     position_ += (stepGen_.GetDirection() == direction_forward ? 1 : -1)/scale_;
     position_ = fmod(position_, kDegreesPerRev);
