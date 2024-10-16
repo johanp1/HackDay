@@ -39,7 +39,7 @@ void StepGen::Update()
       if (IsLowDone())
       {
          // notify observer that this "step" is done
-         UpdateObserver();
+         UpdateStepObserver();
 
          // start next step, or stop if all steps done
          if (curr_step_ > 0)
@@ -49,6 +49,11 @@ void StepGen::Update()
          else
          {
             SetState(state_inactive);
+
+            if (doneObserver_ != nullptr)
+            {
+               (*doneObserver_)();
+            } 
          }
       }  
    }
@@ -115,9 +120,19 @@ Direction StepGen::GetDirection()
    return ((digitalRead(dir_pin_) == LOW ) ^ (flipped_ == true) ? direction_forward : direction_reverse);
 }
 
-void StepGen::Attach(StepObserver *stepObserver)
+void StepGen::AttachStepObserver(StepObserver *o)
 {
-   stepObserver_ = stepObserver;
+   stepObserver_ = o;
+}
+
+void StepGen::AttachDoneObserver(StepObserver *o)
+{
+   doneObserver_ = o;
+}
+
+void StepGen::DetachDoneObserver()
+{
+   doneObserver_ = nullptr;
 }
 
 void StepGen::StartNextStep()
@@ -184,11 +199,19 @@ bool StepGen::IsLowDone()
    return current_time - t_start_ >= t_on_ + t_off_ + t_off_sps_ + t_off_ramp_;
 }
 
-void StepGen::UpdateObserver() 
+void StepGen::UpdateStepObserver() 
 { 
    if (stepObserver_ != nullptr)
    {
-      stepObserver_->Update();
+      (*stepObserver_)();
+   } 
+};
+
+void StepGen::UpdateDoneObserver() 
+{ 
+   if (doneObserver_ != nullptr)
+   {
+      doneObserver_->Update();
    } 
 };
 

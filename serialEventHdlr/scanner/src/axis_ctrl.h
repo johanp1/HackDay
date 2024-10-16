@@ -25,6 +25,7 @@ class AxisCtrl : public StepObserver
    virtual void SetHome(float offset = 0.0f);
    virtual AxisCrtlStatus GetStatus();
    void Update() override;
+   StepGen& GetStepGen() {return stepGen_;};
    
    protected:
    float scale_ = 1.0f; // step/degree

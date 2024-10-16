@@ -8,6 +8,7 @@
 #include "src/scanner_ctrl.h"
 #include <Wire.h>
 #include "LIDARLite.h"
+//#include <iostream>
 
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
@@ -224,10 +225,11 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
 static void jogWrapper(String& str, AxisCtrl* axisCtrl, String& out)
 {
   auto pos = str.toFloat();
-
+  axisCtrl->GetStepGen();
+  //attach
   axisCtrl->MoveToRelativePosition(pos);
 
-  while(axisCtrl->GetStatus() != kIdle)
+  /*while(axisCtrl->GetStatus() != kIdle)
   {
     delay(100);
     String sendStr{out};
@@ -236,5 +238,5 @@ static void jogWrapper(String& str, AxisCtrl* axisCtrl, String& out)
     cli();  // serial.send seems to be upset by interrupts...
     Serial.println(sendStr);
     sei();
-  }
+  }*/
 }

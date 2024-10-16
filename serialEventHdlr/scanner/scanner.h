@@ -2,6 +2,7 @@
 #define __C_SCANNER_H__
 
 #include "event_parser.h"
+#include "step_gen.h"
 
 template<typename F, typename O>
 class EventHandler : public EventFunctor
@@ -48,6 +49,13 @@ class EventHandlerExtendedArg : public EventFunctor
     O* o_;
     D& d_;
     F f_;
+};
+
+class StepDoneObserver : public StepObserver
+{
+  public:
+  StepDoneObserver() {};
+  void Update() override {};
 };
 
 #endif //__C_SCANNER_H__

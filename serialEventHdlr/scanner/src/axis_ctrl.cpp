@@ -3,7 +3,7 @@
 
 AxisCtrl::AxisCtrl(StepGen& s, float scale) : stepGen_(s), scale_(scale)
 {
-    stepGen_.Attach(this);
+    stepGen_.AttachStepObserver(this);
 }
 
 AxisCtrl::~AxisCtrl()

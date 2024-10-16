@@ -18,12 +18,15 @@ constexpr unsigned long kDefaultMaxTOffRamp = default_number_of_ramp_steps * def
 
 constexpr micro_sec periodicity = 250; // us
 
+class MockStepObserver;
+static void observerWrapper(MockStepObserver* s);
+
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
 class MockStepObserver : public StepObserver
 {
    public:
-   void Update() override
+   void Update()
    {
       hasBeenCalled = true;
       nbrOfCalls++;
@@ -39,19 +42,29 @@ class MockStepObserver : public StepObserver
    int nbrOfCalls = 0;
 };
 
+static void observerWrapper(MockStepObserver* s)
+{
+   if (s != nullptr)
+   {
+      s->Update();
+   }     
+}
+
 class StepGenTestFixture : public testing::Test 
 {
   protected: 
    std::unique_ptr<StepGen> stepGen;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
-   MockStepObserver *stepObserver;
+   MockStepObserver *mockStepObserver;
+   StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>* stepObserver2;
 
    void SetUp()
    {
       arduinoStub->Reset();
       stepGen = std::make_unique<StepGen>(test_step_pin, test_dir_pin, t_on_test, t_off_test);
-      stepObserver = new MockStepObserver;
-      stepGen->Attach(stepObserver);
+      mockStepObserver = new MockStepObserver;
+      stepObserver2 = new StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>(mockStepObserver, observerWrapper);
+      stepGen->AttachStepObserver(stepObserver2);
    }
    
    void TearDown()
@@ -106,7 +119,7 @@ TEST_F(StepGenTestFixture, test_one_step)
 {
    stepGen->Step();
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
-   ASSERT_TRUE(stepObserver->hasBeenCalled);
+   ASSERT_TRUE(mockStepObserver->hasBeenCalled);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
@@ -119,7 +132,7 @@ TEST_F(StepGenTestFixture, test_two_steps)
    ASSERT_TRUE(stepGen->IsBusy());
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
    ASSERT_FALSE(stepGen->IsBusy());
-   ASSERT_TRUE(stepObserver->nbrOfCalls == 2);
+   ASSERT_TRUE(mockStepObserver->nbrOfCalls == 2);
 }
 
 // test step returns busy if current step is not done
@@ -335,19 +348,62 @@ TEST(StepGenTestGroup, test_direction_flipped)
    ASSERT_TRUE(s.GetDirection() == direction_forward);
 }
 
-// test generating one step with specified speed
-TEST_F(StepGenTestFixture, test_step_step_req_done_observer)
+TEST_F(StepGenTestFixture, test_step_req_done_observer)
 {
-   MockStepObserver stepObserver;
-   stepGen->Attach(&stepObserver);
+   MockStepObserver mockStepObserver;
+   MockStepObserver doneObserver;
+   stepGen->AttachStepObserver(&mockStepObserver);
+   stepGen->AttachDoneObserver(&doneObserver);
 
    stepGen->Step(10); 
-
+   ASSERT_FALSE(doneObserver.hasBeenCalled);
    for (int8_t i = 0; i < 10; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(mockStepObserver.nbrOfCalls = i + 1);
+   }
+   ASSERT_TRUE(doneObserver.hasBeenCalled);
+}
+
+TEST_F(StepGenTestFixture, test_detatch_done_observer)
+{
+   MockStepObserver stepObserver;
+   MockStepObserver doneObserver;
+   stepGen->AttachStepObserver(&stepObserver);
+   stepGen->AttachDoneObserver(&doneObserver);
+
+   // precond
+   // attach doneObserver. make sure it gets called
+   stepGen->Step(5); 
+   ASSERT_FALSE(doneObserver.hasBeenCalled);
+   for (int8_t i = 0; i < 5; i++)
    {
       ASSERT_TRUE(checkStep(t_on_test, t_off_test));
       ASSERT_TRUE(stepObserver.nbrOfCalls = i + 1);
    }
+   ASSERT_TRUE(doneObserver.hasBeenCalled);
+   doneObserver.Reset();
+
+   // test
+   // detach, request steps
+   stepGen->DetachDoneObserver();
+   stepGen->Step(5); 
+   ASSERT_FALSE(doneObserver.hasBeenCalled);
+   for (int8_t i = 0; i < 5; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(stepObserver.nbrOfCalls = i + 1);
+   }
+   ASSERT_FALSE(doneObserver.hasBeenCalled);
+}
+
+TEST_F(StepGenTestFixture, test_step_req_done_observer2)
+{
+   MockStepObserver stepObserver;
+   StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)> stepObserver2(&stepObserver, observerWrapper);
+   ASSERT_FALSE(stepObserver.hasBeenCalled);
+   stepObserver2();
+   ASSERT_TRUE(stepObserver.hasBeenCalled);
 }
 
 
