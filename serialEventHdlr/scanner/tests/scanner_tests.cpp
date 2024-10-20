@@ -14,6 +14,7 @@ extern void TIMER2_COMPA_vect();
 
 namespace {
 
+enum Axis { kHorizontal, kVertical };
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
 // find str2 in str1
@@ -62,6 +63,18 @@ bool checkPos(float actual, float expected, float tol = 0.1f)
    return (actual <= expected + tol) && (actual >= expected - tol);
 }
 
+bool checkJogDone(Axis a)
+{
+   string serial_data = Serial.getData();
+   bool ret_val = substringFind(serial_data, "hpos"s);
+   float actual = stof(serial_data.substr(5, serial_data.length()));
+   float expected = horizontalAxisCtrl.GetPosition();
+   cout << serial_data << endl;
+   cout << actual << endl;
+   cout << expected << endl;
+   return ret_val && checkPos(actual, expected);
+}
+
 TEST(ScannerTestSuite, scannerTest)
 {
    setup();
@@ -75,30 +88,47 @@ TEST(ScannerTestSuite, scannerTest)
    ASSERT_TRUE(horizontalAxisCtrl.GetPosition() == 0.0f);
    ASSERT_TRUE(verticalAxisCtrl.GetPosition() == 0.0f);
 
+   Serial.clear();
+   
    // Test Set Horizontal position ///////////////////////////////////////////////////
    serialSend(String{"hjog_33\n"});
-   RunMs(2000);
-  
+   RunMs(3000);
+   ASSERT_TRUE(checkJogDone(kHorizontal));
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 33.0f, 0.25f));
 
    serialSend(String{"hjog_-40\n"});
-   RunMs(2000);
+   RunMs(3000);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.4f));
 
    // Test Set Vertical position ////////////////////////////////////////////////////
    serialSend(String{"vjog_33\n"});
-   RunMs(2000);
+   RunMs(3000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 33.0f, 0.4f));
 
    serialSend(String{"vjog_-40\n"});
-   RunMs(2000);
+   RunMs(3000);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f, 0.25f));
 
    // Test Set Horizontal start position ////////////////////////////////////////////
+   // horizontal start is always 0
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), -7.0f, 0.25f));
    serialSend(String{"set_hs\n"});
    RunMs(10);
    ASSERT_TRUE(checkPos(horizontalAxisCtrl.GetPosition(), 0.0f));
+
+   // Test Set vertical start position ////////////////////////////////////////////
+   // vertical start can be any angle
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
+   serialSend(String{"set_vs\n"});
+   RunMs(10);
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
+
+   // Test Set vertical hom position ////////////////////////////////////////////
+   // vertical is always 0
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
+   serialSend(String{"set_vh\n"});
+   RunMs(10);
+   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 0.0f));
 
    // Test Set Horizontal end position /////////////////////////////////////////////
    serialSend(String{"hjog_29.7.0\n"});

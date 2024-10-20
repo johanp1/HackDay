@@ -31,7 +31,10 @@ static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
-static void jogWrapper(String &str, AxisCtrl* axisCtrl, String &ret);
+static void horizontalJogWrapper(String &str, AxisCtrl* axisCtrl);
+static void verticalJogWrapper(String &str, AxisCtrl* axisCtrl);
+static void horizontalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/);
+static void verticalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -43,8 +46,11 @@ ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-String vret = String{"vpos"};
-String hret = String{"hpos"};
+static String vret = String{"vpos"};
+static String hret = String{"hpos"};
+
+StepObserver2<AxisCtrl, void (&)(AxisCtrl* s)> verticalJogDoneObserver{&verticalAxisCtrl, verticalJogDoneHandler};
+StepObserver2<AxisCtrl, void (&)(AxisCtrl* s)> horizontalJogDoneObserver{&horizontalAxisCtrl, horizontalJogDoneHandler};
 
 void setup() {    
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
@@ -65,8 +71,8 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &horizontalAxisCtrl, hret);
-  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
+  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
 
   cli();
   timer2Init();
@@ -222,21 +228,58 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
    ctrl->SetVerticalIncrement(inc);
 }
 
-static void jogWrapper(String& str, AxisCtrl* axisCtrl, String& out)
+static void verticalJogWrapper(String& str, AxisCtrl* axisCtrl)
 {
-  auto pos = str.toFloat();
-  axisCtrl->GetStepGen();
-  //attach
-  axisCtrl->MoveToRelativePosition(pos);
+  //attach observer to be called when jog completed
+  axisCtrl->GetStepGen().AttachDoneObserver(&verticalJogDoneObserver);
 
-  /*while(axisCtrl->GetStatus() != kIdle)
-  {
-    delay(100);
-    String sendStr{out};
-    sendStr.concat("_");
-    sendStr.concat(axisCtrl->GetPosition());
-    cli();  // serial.send seems to be upset by interrupts...
-    Serial.println(sendStr);
-    sei();
-  }*/
+  auto pos = str.toFloat();  
+  axisCtrl->MoveToRelativePosition(pos);
 }
+
+static void horizontalJogWrapper(String& str, AxisCtrl* axisCtrl)
+{
+  //attach observer to be called when jog completed
+  axisCtrl->GetStepGen().AttachDoneObserver(&horizontalJogDoneObserver);
+
+  auto pos = str.toFloat();  
+  axisCtrl->MoveToRelativePosition(pos);
+}
+
+static void verticalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/)
+{
+  axisCtrl->GetStepGen().DetachDoneObserver();
+
+  //String sendStr{str};
+  String sendStr{"vpos"};
+  sendStr.concat("_");
+  sendStr.concat(axisCtrl->GetPosition());
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
+}
+
+static void horizontalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/)
+{
+  axisCtrl->GetStepGen().DetachDoneObserver();
+
+  //String sendStr{str};
+  String sendStr{"hpos"};
+  sendStr.concat("_");
+  sendStr.concat(axisCtrl->GetPosition());
+  cli();  // serial.send seems to be upset by interrupts...
+  Serial.println(sendStr);
+  sei();
+}
+
+
+/*
+template <typename O, typename F>
+class JogHandler : public StepObserver2
+{
+  public:
+  JogHandler(AxisCtrl* axisCtrl, String& str) : StepObserver2<AxisCtrl*, void (&)(AxisCtrl*)>(axisCtrl, JogHandler::Update), str_(str);
+  void Update(AxisCtrl* axisCtrl);
+  String& str_;
+};
+*/
