@@ -28,7 +28,7 @@ class AxisCtrl
    StepGen& GetStepGen() {return stepGen_;};
    static void UpdatePositionWrapper(AxisCtrl* a);
 
-   StepObserver2<AxisCtrl, void (&)(AxisCtrl* a)> stepUpdater_{this, AxisCtrl::UpdatePositionWrapper};
+   StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* a)> stepUpdater_{this, AxisCtrl::UpdatePositionWrapper};
 
    protected:
    float scale_ = 1.0f; // step/degree

@@ -21,10 +21,10 @@ class StepObserver
 };
 
 template <typename O, typename F>
-class StepObserver2 : public StepObserver
+class StepObserverHandler : public StepObserver
 {
    public:
-   StepObserver2(O* o, F f) : o_(o), f_(f) {};
+   StepObserverHandler(O* o, F f) : o_(o), f_(f) {};
 
    void operator()() override
     {

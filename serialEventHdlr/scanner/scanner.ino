@@ -49,8 +49,8 @@ static EventParser eventParser;
 static String vret = String{"vpos"};
 static String hret = String{"hpos"};
 
-StepObserver2<AxisCtrl, void (&)(AxisCtrl* s)> verticalJogDoneObserver{&verticalAxisCtrl, verticalJogDoneHandler};
-StepObserver2<AxisCtrl, void (&)(AxisCtrl* s)> horizontalJogDoneObserver{&horizontalAxisCtrl, horizontalJogDoneHandler};
+StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> verticalJogDoneObserver{&verticalAxisCtrl, verticalJogDoneHandler};
+StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> horizontalJogDoneObserver{&horizontalAxisCtrl, horizontalJogDoneHandler};
 
 void setup() {    
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
@@ -275,10 +275,10 @@ static void horizontalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/)
 
 /*
 template <typename O, typename F>
-class JogHandler : public StepObserver2
+class JogHandler : public StepObserverHandler
 {
   public:
-  JogHandler(AxisCtrl* axisCtrl, String& str) : StepObserver2<AxisCtrl*, void (&)(AxisCtrl*)>(axisCtrl, JogHandler::Update), str_(str);
+  JogHandler(AxisCtrl* axisCtrl, String& str) : StepObserverHandler<AxisCtrl*, void (&)(AxisCtrl*)>(axisCtrl, JogHandler::Update), str_(str);
   void Update(AxisCtrl* axisCtrl);
   String& str_;
 };

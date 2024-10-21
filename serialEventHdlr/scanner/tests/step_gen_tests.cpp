@@ -22,7 +22,7 @@ class MockStepObserver;
 
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
-class MockStepObserver : public StepObserver
+class MockStepObserver
 {
    public:
    void Reset()
@@ -50,14 +50,14 @@ class StepGenTestFixture : public testing::Test
    std::unique_ptr<StepGen> stepGen;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
    MockStepObserver *mockStepObserver;
-   StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>* stepObserver2;
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* stepObserver2;
 
    void SetUp()
    {
       arduinoStub->Reset();
       stepGen = std::make_unique<StepGen>(test_step_pin, test_dir_pin, t_on_test, t_off_test);
       mockStepObserver = new MockStepObserver;
-      stepObserver2 = new StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>(mockStepObserver, MockStepObserver::UpdateWrapper);
+      stepObserver2 = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(mockStepObserver, MockStepObserver::UpdateWrapper);
       stepGen->AttachStepObserver(stepObserver2);
    }
    
@@ -344,13 +344,10 @@ TEST(StepGenTestGroup, test_direction_flipped)
 
 TEST_F(StepGenTestFixture, test_step_req_done_observer)
 {
-   MockStepObserver mockStepObserver;
    MockStepObserver mockDoneObserver;
-   StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
+   doneObserver = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
 
-   doneObserver = new StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
-
-   stepGen->AttachStepObserver(&mockStepObserver);
    stepGen->AttachDoneObserver(doneObserver);
 
    stepGen->Step(10); 
@@ -358,7 +355,7 @@ TEST_F(StepGenTestFixture, test_step_req_done_observer)
    for (int8_t i = 0; i < 10; i++)
    {
       ASSERT_TRUE(checkStep(t_on_test, t_off_test));
-      ASSERT_TRUE(mockStepObserver.nbrOfCalls = i + 1);
+      ASSERT_TRUE(mockStepObserver->nbrOfCalls = i + 1);
    }
    ASSERT_TRUE(mockDoneObserver.hasBeenCalled);
    delete doneObserver;
@@ -368,8 +365,8 @@ TEST_F(StepGenTestFixture, test_detatch_done_observer)
 {
 
    MockStepObserver mockDoneObserver;
-   StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
-   doneObserver = new StepObserver2<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
+   doneObserver = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
    stepGen->AttachDoneObserver(doneObserver);
 
    // precond
