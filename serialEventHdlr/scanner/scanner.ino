@@ -46,9 +46,6 @@ ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-static String vret = String{"vpos"};
-static String hret = String{"hpos"};
-
 StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> verticalJogDoneObserver{&verticalAxisCtrl, verticalJogDoneHandler};
 StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> horizontalJogDoneObserver{&horizontalAxisCtrl, horizontalJogDoneHandler};
 

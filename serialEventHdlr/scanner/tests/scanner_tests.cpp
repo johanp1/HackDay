@@ -79,8 +79,6 @@ bool checkJogDone(Axis a, float expected_pos)
    {
       ret_val = substringFind(serial_data, "vpos"s);
       pos_according_to_axisctrl = verticalAxisCtrl.GetPosition();
-      cout << pos_according_to_axisctrl << endl;
-      cout << serial_data << endl;
    }
 
    
@@ -133,17 +131,23 @@ TEST(ScannerTestSuite, scannerTest)
    // vertical start can be any angle
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
    serialSend(String{"set_vs\n"});
-   RunMs(10);
+   RunMs(100);
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
 
    // Test Set vertical home position ////////////////////////////////////////////
-   // vertical is always 0
+   // vertical is always 0, transition to mode_1 = homed
    ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), -7.0f));
    serialSend(String{"set_vh\n"});
-   RunMs(10);
-   cout << verticalAxisCtrl.GetPosition() << endl;
-   ASSERT_TRUE(checkJogDone(kVertical, 0.0f));
-   ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 0.0f));
+   RunMs(100);
+   {
+      auto serial_data = Serial.getData();
+      ASSERT_TRUE(substringFind(serial_data, "mode_1"s));
+      ASSERT_TRUE(substringFind(serial_data, "vpos_0"s));
+
+      ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 0.0f));
+   }
+   
+   //ASSERT_TRUE(checkJogDone(kVertical, 0.0f));
 
    // Test Set Horizontal end position /////////////////////////////////////////////
    serialSend(String{"hjog_29.7.0\n"});
