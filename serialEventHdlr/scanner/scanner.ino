@@ -31,10 +31,6 @@ static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
-static void horizontalJogWrapper(String &str, AxisCtrl* axisCtrl);
-static void verticalJogWrapper(String &str, AxisCtrl* axisCtrl);
-static void horizontalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/);
-static void verticalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -46,8 +42,10 @@ ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> verticalJogDoneObserver{&verticalAxisCtrl, verticalJogDoneHandler};
-StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* s)> horizontalJogDoneObserver{&horizontalAxisCtrl, horizontalJogDoneHandler};
+String vpos = String{"vpos"};
+JogHandler verticalJogHandler(verticalAxisCtrl, vpos);
+String hpos = String{"hpos"};
+JogHandler horizontalJogHandler(horizontalAxisCtrl, hpos);
 
 void setup() {    
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
@@ -68,8 +66,11 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
-  EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
+  EventHandler<void (&)(String&, JogHandler*), JogHandler>* horizontalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"hjog"}, JogHandler::JogStartHandler, &horizontalJogHandler);
+  EventHandler<void (&)(String&, JogHandler*), JogHandler>* verticalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"vjog"}, JogHandler::JogStartHandler, &verticalJogHandler);
+
 
   cli();
   timer2Init();
@@ -99,8 +100,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*setRowFirstHandler);
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
-  eventParser.AddAcceptedHandler(*horizontalJogHandler);
-  eventParser.AddAcceptedHandler(*verticalJogHandler);
+  eventParser.AddAcceptedHandler(*horizontalJogHdlr);
+  eventParser.AddAcceptedHandler(*verticalJogHdlr);
  
   horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*ratio*(steps/unit)
   verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*(steps/unit)
@@ -224,59 +225,3 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
    auto inc = str.toFloat();
    ctrl->SetVerticalIncrement(inc);
 }
-
-static void verticalJogWrapper(String& str, AxisCtrl* axisCtrl)
-{
-  //attach observer to be called when jog completed
-  axisCtrl->GetStepGen().AttachDoneObserver(&verticalJogDoneObserver);
-
-  auto pos = str.toFloat();  
-  axisCtrl->MoveToRelativePosition(pos);
-}
-
-static void horizontalJogWrapper(String& str, AxisCtrl* axisCtrl)
-{
-  //attach observer to be called when jog completed
-  axisCtrl->GetStepGen().AttachDoneObserver(&horizontalJogDoneObserver);
-
-  auto pos = str.toFloat();  
-  axisCtrl->MoveToRelativePosition(pos);
-}
-
-static void verticalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/)
-{
-  axisCtrl->GetStepGen().DetachDoneObserver();
-
-  //String sendStr{str};
-  String sendStr{"vpos"};
-  sendStr.concat("_");
-  sendStr.concat(axisCtrl->GetPosition());
-  cli();  // serial.send seems to be upset by interrupts...
-  Serial.println(sendStr);
-  sei();
-}
-
-static void horizontalJogDoneHandler(AxisCtrl* axisCtrl /*, String& str*/)
-{
-  axisCtrl->GetStepGen().DetachDoneObserver();
-
-  //String sendStr{str};
-  String sendStr{"hpos"};
-  sendStr.concat("_");
-  sendStr.concat(axisCtrl->GetPosition());
-  cli();  // serial.send seems to be upset by interrupts...
-  Serial.println(sendStr);
-  sei();
-}
-
-
-/*
-template <typename O, typename F>
-class JogHandler : public StepObserverHandler
-{
-  public:
-  JogHandler(AxisCtrl* axisCtrl, String& str) : StepObserverHandler<AxisCtrl*, void (&)(AxisCtrl*)>(axisCtrl, JogHandler::Update), str_(str);
-  void Update(AxisCtrl* axisCtrl);
-  String& str_;
-};
-*/

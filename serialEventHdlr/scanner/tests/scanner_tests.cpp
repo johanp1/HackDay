@@ -63,7 +63,7 @@ bool checkPos(float actual, float expected, float tol = 0.1f)
    return (actual <= expected + tol) && (actual >= expected - tol);
 }
 
-bool checkJogDone(Axis a, float expected_pos)
+bool checkJogDone(Axis a, float expected_pos, bool debug = false)
 {
    bool ret_val = false;
    float pos_according_to_axisctrl = 0.0f;
@@ -81,6 +81,14 @@ bool checkJogDone(Axis a, float expected_pos)
       pos_according_to_axisctrl = verticalAxisCtrl.GetPosition();
    }
 
+   if (debug)
+   {
+      cout << (a == kHorizontal ? "Horizontal:" : "Vertical:") << endl;
+      cout << "serial_data " << serial_data << endl;
+      cout << "expected_pos " << expected_pos << endl;
+      cout << "pos_according_to_axisctrl " << pos_according_to_axisctrl << " " << checkPos(pos_according_to_axisctrl, expected_pos) << endl;
+      cout << "pos_according_to_handler " << pos_according_to_handler << " " << checkPos(pos_according_to_handler, expected_pos) << endl;
+   }
    
    return ret_val && checkPos(pos_according_to_handler, expected_pos) 
                   && checkPos(pos_according_to_axisctrl, expected_pos);
@@ -150,13 +158,13 @@ TEST(ScannerTestSuite, scannerTest)
    //ASSERT_TRUE(checkJogDone(kVertical, 0.0f));
 
    // Test Set Horizontal end position /////////////////////////////////////////////
-   serialSend(String{"hjog_29.7.0\n"});
+   /*serialSend(String{"hjog_29.7.0\n"});
    RunMs(2000);
    serialSend(String{"set_he\n"});
    RunMs(10);
 
    serialSend(String{"hjog_-29.7\n"}); // go back to abs pos 0
-   RunMs(2000);
+   RunMs(2000);*/
 
    // Test start test mode /////////////////////////////////////////////////////////
 //   serialSend(String{"mode_1\n"});
