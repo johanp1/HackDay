@@ -2,6 +2,8 @@
 #define __C_SCANNER_H__
 
 #include "event_parser.h"
+#include "step_gen.h"
+#include "axis_ctrl.h"
 
 template<typename F, typename O>
 class EventHandler : public EventFunctor
@@ -48,6 +50,49 @@ class EventHandlerExtendedArg : public EventFunctor
     O* o_;
     D& d_;
     F f_;
+};
+
+class JogHandler
+{
+  public:
+  JogHandler(AxisCtrl& a, String& name) : axisCtrl_(a), name_(name)
+  {
+    jogDoneObserver_ = new StepObserverHandler<JogHandler, void (&)(JogHandler* h)>(this, JogDoneHandler); 
+  };
+
+  static void JogStartHandler(String& str, JogHandler* h)
+  {
+    h->JogStartHandlerInternal(str);
+  };
+
+  void JogStartHandlerInternal(String& str)
+  {
+    //attach observer to be called when jog completed
+    axisCtrl_.GetStepGen().AttachDoneObserver(jogDoneObserver_);
+
+    auto pos = str.toFloat();  
+    axisCtrl_.MoveToRelativePosition(pos);
+  };
+
+  static void JogDoneHandler(JogHandler* h) {h->JogDoneHandlerInternal();};
+
+  void JogDoneHandlerInternal()
+  {
+    axisCtrl_.GetStepGen().DetachDoneObserver();
+
+    //String sendStr{str};
+    String sendStr{name_};
+    sendStr.concat("_");
+    sendStr.concat(axisCtrl_.GetPosition());
+    cli();  // serial.send seems to be upset by interrupts...
+    Serial.println(sendStr);
+    sei();
+  };
+
+  private:
+  StepObserverHandler<JogHandler, void (&)(JogHandler*)>* jogDoneObserver_;
+  AxisCtrl& axisCtrl_;
+  const String name_;
 };
 
 #endif //__C_SCANNER_H__

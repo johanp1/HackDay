@@ -8,6 +8,7 @@
 #include "src/scanner_ctrl.h"
 #include <Wire.h>
 #include "LIDARLite.h"
+//#include <iostream>
 
 constexpr int motor1_step_pin = 5; // x-axis step
 constexpr int motor1_dir_pin = 2;  // x-axis dir
@@ -30,7 +31,6 @@ static void getPosWrapper(AxisCtrl* axisCtrl);
 static void setRowFirstWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setHorizontalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
 static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctrl);
-static void jogWrapper(String &str, AxisCtrl* axisCtrl, String &ret);
 
 static StepGen stepGen1(motor1_step_pin, motor1_dir_pin, t_on, t_off, false, 500, 60);
 static StepGen stepGen2(motor2_step_pin, motor2_dir_pin, t_on, t_off, true, 500, 30);
@@ -42,8 +42,10 @@ ScannerCtrl<LIDARLite> scannerCtrl(lidar, verticalAxisCtrl, horizontalAxisCtrl);
 static Receiver receiver(String("rec"));
 static EventParser eventParser;
 
-String vret = String{"vpos"};
-String hret = String{"hpos"};
+String vpos = String{"vpos"};
+JogHandler verticalJogHandler(verticalAxisCtrl, vpos);
+String hpos = String{"hpos"};
+JogHandler horizontalJogHandler(horizontalAxisCtrl, hpos);
 
 void setup() {    
   lidar.begin(0, true); // Set configuration to default and I2C to 400 kHz
@@ -64,8 +66,11 @@ void setup() {
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* horizontalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"hjog"}, jogWrapper, &horizontalAxisCtrl, hret);
-  EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>* verticalJogHandler = new EventHandlerExtendedArg<void (&)(String&, AxisCtrl*, String&), AxisCtrl, String&>(String{"vjog"}, jogWrapper, &verticalAxisCtrl, vret);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
+  EventHandler<void (&)(String&, JogHandler*), JogHandler>* horizontalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"hjog"}, JogHandler::JogStartHandler, &horizontalJogHandler);
+  EventHandler<void (&)(String&, JogHandler*), JogHandler>* verticalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"vjog"}, JogHandler::JogStartHandler, &verticalJogHandler);
+
 
   cli();
   timer2Init();
@@ -95,8 +100,8 @@ void setup() {
   eventParser.AddAcceptedHandler(*setRowFirstHandler);
   eventParser.AddAcceptedHandler(*setHorizontalIncrementHandler);
   eventParser.AddAcceptedHandler(*setVerticalIncrementHandler);
-  eventParser.AddAcceptedHandler(*horizontalJogHandler);
-  eventParser.AddAcceptedHandler(*verticalJogHandler);
+  eventParser.AddAcceptedHandler(*horizontalJogHdlr);
+  eventParser.AddAcceptedHandler(*verticalJogHdlr);
  
   horizontalAxisCtrl.SetScale(2.0f*4.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*ratio*(steps/unit)
   verticalAxisCtrl.SetScale(8.0f*400.0f/360.0f); // 8.8889 steps/unit (degrees) #microsteps*(steps/unit)
@@ -219,22 +224,4 @@ static void setVerticalIncrementWrapper(String& str, ScannerCtrl<LIDARLite>* ctr
 {
    auto inc = str.toFloat();
    ctrl->SetVerticalIncrement(inc);
-}
-
-static void jogWrapper(String& str, AxisCtrl* axisCtrl, String& out)
-{
-  auto pos = str.toFloat();
-
-  axisCtrl->MoveToRelativePosition(pos);
-
-  while(axisCtrl->GetStatus() != kIdle)
-  {
-    delay(100);
-    String sendStr{out};
-    sendStr.concat("_");
-    sendStr.concat(axisCtrl->GetPosition());
-    cli();  // serial.send seems to be upset by interrupts...
-    Serial.println(sendStr);
-    sei();
-  }
 }

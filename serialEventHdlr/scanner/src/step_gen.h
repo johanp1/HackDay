@@ -17,7 +17,22 @@ constexpr unsigned int default_number_of_ramp_steps = 43; // calculated with oca
 class StepObserver
 {
    public:
-   virtual void Update() = 0;
+   virtual void operator()() {};
+};
+
+template <typename O, typename F>
+class StepObserverHandler : public StepObserver
+{
+   public:
+   StepObserverHandler(O* o, F f) : o_(o), f_(f) {};
+
+   void operator()() override
+    {
+      f_(o_);
+    };
+
+   O* o_;
+   F f_;
 };
 
 class StepGen
@@ -33,8 +48,12 @@ class StepGen
    virtual void SetUseRamping(bool use_ramping);
    virtual void SetDirection(Direction d);
    virtual Direction GetDirection();
-   void Attach(StepObserver *stepObserver);
-   
+
+   void AttachStepObserver(StepObserver *stepObserver);   
+   void AttachDoneObserver(StepObserver *stepObserver);
+
+   void DetachDoneObserver();
+
    private:
    void StartNextStep(); // start one step
    void TransitionTo(State *state);
@@ -42,7 +61,8 @@ class StepGen
    unsigned int CalcNbrOfRampSteps(unsigned int steps); // calculate how many ramping up/down steps we can squeez in
    bool IsHighDone();  // is the "on" part of the step done
    bool IsLowDone();  // is the "off" part of the step done
-   void UpdateObserver();
+   void UpdateStepObserver();
+   void UpdateDoneObserver();
    void SetState(State s);
 
    micro_sec t_on_; // the step's "on-time" length
@@ -59,6 +79,7 @@ class StepGen
    micro_sec t_delta_;
 
    StepObserver *stepObserver_ = nullptr;
+   StepObserver *doneObserver_ = nullptr;
    State state_;
    Pin step_pin_;
    Pin dir_pin_;

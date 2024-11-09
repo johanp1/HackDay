@@ -11,7 +11,7 @@ enum MoveRequestStatus {kOk, kNotOk};
 
 using Position = float;
 
-class AxisCtrl : public StepObserver
+class AxisCtrl
 {
    public:
    AxisCtrl(StepGen& s, float scale = 1.0f);
@@ -24,13 +24,17 @@ class AxisCtrl : public StepObserver
    virtual MoveRequestStatus MoveToAbsolutPosition(Position pos);
    virtual void SetHome(float offset = 0.0f);
    virtual AxisCrtlStatus GetStatus();
-   void Update() override;
-   
+   virtual void UpdatePosition();
+   StepGen& GetStepGen() {return stepGen_;};
+   static void UpdatePositionWrapper(AxisCtrl* a);
+
+   StepObserverHandler<AxisCtrl, void (&)(AxisCtrl* a)> stepUpdater_{this, AxisCtrl::UpdatePositionWrapper};
+
    protected:
    float scale_ = 1.0f; // step/degree
    Position position_ = 0.0f;
    StepGen& stepGen_;
-
+   
    MoveRequestStatus MoveRequest(float pos);
 };
 
@@ -43,7 +47,7 @@ class RotaryAxisCtrl : public AxisCtrl
    MoveRequestStatus MoveToAbsolutPosition(Position pos) override;
 
    void SetHome(float offset = 0.0f) override;
-   void Update() override;
+   void UpdatePosition() override;
 };
 
 #endif //__C_AXIS_CTRL_H__

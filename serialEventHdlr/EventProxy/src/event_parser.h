@@ -3,7 +3,7 @@
 
 #include "event_listner.h"
 
-constexpr byte c_maxNbrOfAcceptedHandlers = 12;
+constexpr byte c_maxNbrOfAcceptedHandlers = 16;
 
 class EventFunctor
 {

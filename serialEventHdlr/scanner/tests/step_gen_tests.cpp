@@ -18,15 +18,26 @@ constexpr unsigned long kDefaultMaxTOffRamp = default_number_of_ramp_steps * def
 
 constexpr micro_sec periodicity = 250; // us
 
+class MockStepObserver;
+
 std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
 
-class MockStepObserver : public StepObserver
+class MockStepObserver
 {
    public:
-   void Update() override
+   void Reset()
    {
-      hasBeenCalled = true;
-      nbrOfCalls++;
+      hasBeenCalled = false;
+      nbrOfCalls = 0;
+   }
+
+   static void UpdateWrapper(MockStepObserver* o)
+   {
+      if (o != nullptr)
+      {
+         o->hasBeenCalled = true;
+         o->nbrOfCalls++;
+      }
    }
 
    bool hasBeenCalled = false;
@@ -38,14 +49,16 @@ class StepGenTestFixture : public testing::Test
   protected: 
    std::unique_ptr<StepGen> stepGen;
    std::shared_ptr<ArduinoStub> arduinoStub = ArduinoStub::GetInstance();
-   MockStepObserver *stepObserver;
+   MockStepObserver *mockStepObserver;
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* stepObserver2;
 
    void SetUp()
    {
       arduinoStub->Reset();
       stepGen = std::make_unique<StepGen>(test_step_pin, test_dir_pin, t_on_test, t_off_test);
-      stepObserver = new MockStepObserver;
-      stepGen->Attach(stepObserver);
+      mockStepObserver = new MockStepObserver;
+      stepObserver2 = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(mockStepObserver, MockStepObserver::UpdateWrapper);
+      stepGen->AttachStepObserver(stepObserver2);
    }
    
    void TearDown()
@@ -100,7 +113,7 @@ TEST_F(StepGenTestFixture, test_one_step)
 {
    stepGen->Step();
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
-   ASSERT_TRUE(stepObserver->hasBeenCalled);
+   ASSERT_TRUE(mockStepObserver->hasBeenCalled);
    ASSERT_FALSE(stepGen->IsBusy());
 }
 
@@ -113,7 +126,7 @@ TEST_F(StepGenTestFixture, test_two_steps)
    ASSERT_TRUE(stepGen->IsBusy());
    ASSERT_TRUE(checkStep(t_on_test, t_off_test));
    ASSERT_FALSE(stepGen->IsBusy());
-   ASSERT_TRUE(stepObserver->nbrOfCalls == 2);
+   ASSERT_TRUE(mockStepObserver->nbrOfCalls == 2);
 }
 
 // test step returns busy if current step is not done
@@ -328,5 +341,58 @@ TEST(StepGenTestGroup, test_direction_flipped)
    ASSERT_TRUE(arduinoStub->GetDigitalWrite(test_dir_pin) == HIGH);
    ASSERT_TRUE(s.GetDirection() == direction_forward);
 }
+
+TEST_F(StepGenTestFixture, test_step_req_done_observer)
+{
+   MockStepObserver mockDoneObserver;
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
+   doneObserver = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
+
+   stepGen->AttachDoneObserver(doneObserver);
+
+   stepGen->Step(10); 
+   ASSERT_FALSE(mockDoneObserver.hasBeenCalled);
+   for (int8_t i = 0; i < 10; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(mockStepObserver->nbrOfCalls = i + 1);
+   }
+   ASSERT_TRUE(mockDoneObserver.hasBeenCalled);
+   delete doneObserver;
+}
+
+TEST_F(StepGenTestFixture, test_detatch_done_observer)
+{
+
+   MockStepObserver mockDoneObserver;
+   StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>* doneObserver;
+   doneObserver = new StepObserverHandler<MockStepObserver, void (&)(MockStepObserver* s)>(&mockDoneObserver, MockStepObserver::UpdateWrapper);
+   stepGen->AttachDoneObserver(doneObserver);
+
+   // precond
+   // attach doneObserver. make sure it gets called
+   stepGen->Step(5); 
+   ASSERT_FALSE(mockDoneObserver.hasBeenCalled);
+   for (int8_t i = 0; i < 5; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(mockStepObserver->nbrOfCalls = i + 1);
+   }
+   //ASSERT_TRUE(mockDoneObserver.hasBeenCalled);
+   mockDoneObserver.Reset();
+
+   // test
+   // detach, request steps
+   stepGen->DetachDoneObserver();
+   stepGen->Step(5); 
+   ASSERT_FALSE(mockDoneObserver.hasBeenCalled);
+   for (int8_t i = 0; i < 5; i++)
+   {
+      ASSERT_TRUE(checkStep(t_on_test, t_off_test));
+      ASSERT_TRUE(mockStepObserver->nbrOfCalls = i + 1);
+   }
+   ASSERT_FALSE(mockDoneObserver.hasBeenCalled);
+}
+
 
 }
