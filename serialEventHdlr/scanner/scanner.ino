@@ -2,10 +2,7 @@
 #include "scanner.h"
 #include "receiver.h"
 #include "event_generator.h"
-#include "src/step_gen.h"
-#include "src/axis_ctrl.h"
 #include "Arduino.h"
-#include "src/scanner_ctrl.h"
 #include <Wire.h>
 #include "LIDARLite.h"
 //#include <iostream>

@@ -2,8 +2,9 @@
 #define __C_SCANNER_H__
 
 #include "event_parser.h"
-#include "step_gen.h"
-#include "axis_ctrl.h"
+#include "src/step_gen.h"
+#include "src/axis_ctrl.h"
+#include "src/scanner_ctrl.h"
 
 template<typename F, typename O>
 class EventHandler : public EventFunctor

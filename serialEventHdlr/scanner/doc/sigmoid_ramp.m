@@ -1,5 +1,5 @@
 steps_per_rev = 2.0*4.0*400.0; % gear-ratio*microsteps*motorns steg
-ramp_time = 0.5; % tiden från 0-max-speed
+ramp_time = 1; %0.5; % tiden från 0-max-speed
 
 t_on_min = 250*10^-6; % microsekunder
 t_off_min = 250*10^-6;
@@ -17,9 +17,15 @@ alfa = 50; %påhittat
 v = v_max/2*(1+((t + offset) .* alfa ./ (1 + abs((t + offset) .* alfa)))); 
 figure(1)
 plot(t, v)
+ylabel("v")
+xlabel("t")
 
-%räkna ut T för en given v:
-T = 1./(steps_per_rev*v)
-t_off_ramp = T-t_on_min
+%räkna ut T (periodtid för en puls) givet v:
+T = 1./(steps_per_rev*v);
+
+%räkna ut t_off
+t_off = T-t_on_min;
 figure(2)
-plot(t, t_off_ramp)
+plot(t, t_off)
+ylabel("t-off-ramp")
+xlabel("t")
