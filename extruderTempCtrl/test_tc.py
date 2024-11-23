@@ -1,7 +1,7 @@
 #! /usr/bin/python
 import unittest
-import comms
 import hal_exruder_temp_ctrl
+import comms
 
 class TestComp(unittest.TestCase):
    def setUp(self):
@@ -15,29 +15,30 @@ class TestComp(unittest.TestCase):
 
    def test_setTempWhenDisabled(self):
       self.tempCtrler.setRefTemp(200)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == '')
+      print(self.tempCtrler.tempController.serial.writeBuf)
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == b'')
 
    def test_setEnable(self):
       self.tempCtrler.setEnable(True)
       self.assertTrue(self.tempCtrler.enable == True)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_1\n')
-
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == b'en_1\n')
+   
    def test_setDisnable(self):
       self.tempCtrler.setEnable(True)
       self.assertTrue(self.tempCtrler.enable == True)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_1\n')
-      self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == b'en_1\n')
+      self.tempCtrler.tempController.serial.writeBuf = b'' #clear writebuf
 
       self.tempCtrler.setEnable(False)
       self.assertTrue(self.tempCtrler.enable == False)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'en_0\n')
-
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == b'en_0\n')
+   
    def test_setTemp(self):
       self.tempCtrler.setEnable(True)
-      self.tempCtrler.tempController.serial.writeBuf = '' #clear writebuf
+      self.tempCtrler.tempController.serial.writeBuf = b'' #clear writebuf
       
       self.tempCtrler.setRefTemp(200)
-      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == 'sp_200\n')
+      self.assertTrue(self.tempCtrler.tempController.serial.writeBuf == b'sp_200\n')
 
    def test_getCurrTemp(self):
       # send a message. i.e call the registered callbak with the "received" message

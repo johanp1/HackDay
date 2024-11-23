@@ -115,7 +115,7 @@ class OutPin(Pin):
       try:
          self.val = self._type_saturate(self.type, int(v))
       except ValueError:
-            print 'OutPin::set() value error catched on: ' + self.name
+            print('OutPin::set() value error catched on: ' + self.name)
 
 class Observer:
    """ container for notification-function """
@@ -128,7 +128,7 @@ class Observer:
          #print 'observer::update name: ' + name + ' val: ' + str(val)
          self.update_cb(name, val)
       except ValueError:
-         print 'Observer::notify() value error catched on: ' + self.name
+         print('Observer::notify() value error catched on: ' + self.name)
 
 class HALComponentWrapper:   
    def __init__(self, name):
@@ -227,7 +227,7 @@ class OptParser:
          elif o == "-w":
             self.watchdog_reset = True
          else:
-            print o, a
+            print(o, a)
             assert False, "unhandled option"
       
       if self.xml_file == '':
@@ -254,12 +254,12 @@ class OptParser:
 
    def _usage(self):
       """ print command line options """
-      print "usage serialEventHandler.py -h -c <name> -d/--debug=<level> -p/--port= <serial port> <path/>in_file.xml\n"\
+      print("usage serialEventHandler.py -h -c <name> -d/--debug=<level> -p/--port= <serial port> <path/>in_file.xml\n"\
          "in_file  -  input xml-file describing what knobs and/or button are on the pendant\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
          "-w                       # start watchdog deamon" \
-         "-h                       # Help test"
+         "-h                       # Help test")
 
 """ Parser data container"""
 HalPin = namedtuple("HalPin", ['name', 'event', 'type', 'direction'])
@@ -321,7 +321,7 @@ def main():
    watchdogEnabled = optParser.get_watchdog_reset()
    periodicity = optParser.get_periodicity()
    
-   print optParser
+   print(optParser)
       
    xmlParser = XmlParser(xmlFile)
 
@@ -334,7 +334,7 @@ def main():
    for pin in parsed_data:
       c.add_pin(pin.event, pin.name, pin.type, pin.direction)
       
-   print c
+   print(c)
 
    # ready signal to HAL, component and it's pins are ready created
    c.setReady()

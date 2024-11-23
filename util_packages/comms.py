@@ -28,8 +28,12 @@ class Message:
    def __init__(self, name = '', data = ''):
       self.name = name
       try:
-         self.data = str(data).encode('ascii') #serialize, filter strange characters
+         if str(data).isascii():
+            self.data = str(data)
+         else:
+            self.data = ''
       except:
+         print("data was not a possible to convert to ascii-encoded unicode string")
          self.data = ''
 
    def __repr__(self):
@@ -71,7 +75,7 @@ class instrument:
          self.serial.open()
          #print 'comms::opening port'
       except serial.SerialException:
-         print 'unable to open port...'
+         print('serial.SerialException caught: unable to open port...')
 
    def close(self):
       self.serial.close()
@@ -98,8 +102,11 @@ class instrument:
             self.msg_hdlr(Message(*msg_str))
             self.watchdog_daemon.ping()
 
-
    def generateEvent(self, name, data = ''):
+      """
+      name - is a string
+      data - can be any thing possible to serialize into string
+      """
       self.writeMessage(Message(name, data))
 
    def writeMessage(self, m):
@@ -118,9 +125,17 @@ class instrument:
       return self.serial.is_open
 
    def _write(self, s):
+      """
+      writes string s to serial port
+      string needs to be converted to bytes
+      """
       if self.is_open() == True:
-         #serial expects a byte-array and not a string
-         self.serial.write(''.join(s).encode('utf-8', 'ignore'))
+         #serial expects data with type <bytes> and not a string
+         if isinstance(s, bytes):
+            self.serial.write(s)   
+
+         if isinstance(s, str):   
+            self.serial.write(s.encode('utf-8', 'ignore'))
          
      
    def _read(self):
@@ -129,7 +144,7 @@ class instrument:
       if self.is_open() == True:
          b = self.serial.read_until() #blocks until '\n' received or timeout
          
-      return b.decode('utf-8', 'ignore')        #convert byte array to string
+      return b.decode('utf-8', 'ignore')        #convert bytes to string
 
    def _watchdogClose(self):
       self.closed_by_watchdog = True

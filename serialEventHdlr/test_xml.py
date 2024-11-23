@@ -1,8 +1,7 @@
 #! /usr/bin/python
 import unittest
 import serialEventHandler as eh
-#import comms  
-import subprocess
+import os
 
 class TestXml(unittest.TestCase):
    def createTestFile(self):
@@ -27,11 +26,10 @@ class TestXml(unittest.TestCase):
       f.close()
    
    def setUp(self):
-      #subprocess.call("rm test.xml", shell=True) 
       self.f = self.createTestFile()
    
-   def tearDown(self):
-      subprocess.call("rm test.xml", shell=True) 
+   def tearDown(self): 
+      os.remove("test.xml")
 
    def test_empty(self):
       x = eh.XmlParser('test.xml')

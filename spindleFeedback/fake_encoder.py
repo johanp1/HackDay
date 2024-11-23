@@ -15,7 +15,7 @@ class FakeEncoder:
 
    def clear(self):
       self._position = 0
-      print 'FakeEncoder::clearing position data'
+      print('FakeEncoder::clearing position data')
 
    def handleEvent(self, event):
       if (event.name == 'pos'):
@@ -81,7 +81,7 @@ class OptParser:
             elif o in ("-p", "--port"):
                self.port = a
             else:
-               print o, a
+               print(o, a)
                assert False, "unhandled option"
          
                
@@ -93,10 +93,10 @@ class OptParser:
    
    def _usage(self):
       """ print command line options """
-      print "usage serial_mpg.py -h -c <name> -p/--port= <serial port>\n"\
+      print("usage serial_mpg.py -h -c <name> -p/--port= <serial port>\n"\
          "-c <name>                # name of component in HAL. 'mpg' default\n"\
          "-p/--port= <serial port> # default serial port to use. '/dev/ttyS2' default\n"\
-         "-h                       # print this test"
+         "-h                       # print this test")
 
 
 def main():
@@ -104,7 +104,7 @@ def main():
    componentName = optParser.getName()
    portName = optParser.getPort()
 
-   print optParser
+   print(optParser)
 
    fakeEncoder = FakeEncoder(0.05, 500)
    speedCounter = comms.instrument(portName, fakeEncoder.handleEvent, False) #serial adaptor, watchdog disabled

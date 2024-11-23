@@ -39,7 +39,7 @@ class TempControllerFacade:
       self.tempController = comms.instrument(port, self.msgHandler) #serial adaptor
       self.currTemp = 100
       self.refTemp = 100
-      self.enable = True
+      self.enable = False
 
    def msgHandler(self, m):
       if (m.name == 'mv'):
@@ -49,14 +49,14 @@ class TempControllerFacade:
       self.enable = en
 
       if en == True:   
-         self.tempController.writeMessage(comms.Message('en' , '1'))
+         self.tempController.writeMessage(comms.Message('en', '1'))
       else:
-         self.tempController.writeMessage(comms.Message('en' , '0'))
+         self.tempController.writeMessage(comms.Message('en', '0'))
 
    def setRefTemp(self, refT):
       if self.enable == True:
          if self.refTemp != refT:
-            self.tempController.writeMessage(comms.Message('sp' , str(refT)))
+            self.tempController.writeMessage(comms.Message('sp', str(refT)))
             self.refTemp = refT
    
 
@@ -79,7 +79,7 @@ def main():
       elif o in ("-p", "--port"):
          port = a
       else:
-         print o
+         print(o)
          assert False, "unhandled option"
 
    h = HalAdapter(name)

@@ -31,7 +31,7 @@ class TestComp(unittest.TestCase):
       self.assertTrue(len(self.local_c.pin_dict) == 0)
    
    def notify(self, name, val):
-      print name + ' has changed to ' + str(val)
+      print(name + ' has changed to ' + str(val))
 
    def test_setReady(self):
       self.assertFalse(self.c.hal.readyFlag)

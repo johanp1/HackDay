@@ -43,14 +43,14 @@ class WatchDogDaemon(threading.Thread):
 
    def run(self):
       if self.enabled:
-         print "Starting watchdog deamon..."
+         print("Starting watchdog deamon...")
          while(self.enabled):
             time.sleep(self.periodicity)
 
             if not self.wd.insideMargin():
                self.reset()
 
-         print "stopping watchdog deamon..."
+         print("stopping watchdog deamon...")
 
    def setEnabled(self, enabled):
       if self.enabled == False and enabled == True:
@@ -67,7 +67,7 @@ class WatchDogDaemon(threading.Thread):
 
 
 def reset():
-   print 'reset'
+   print('reset')
 
 def main():
    i = 0
@@ -76,8 +76,8 @@ def main():
    try:
       while 1:
          time.sleep(1)
-         print 'main_' + str(i)
-         print wdd.is_alive()
+         print('main_' + str(i))
+         print(wdd.is_alive())
          i = i+1
 
          if i == 5 or i == 15:

@@ -8,7 +8,19 @@ class SerialException(Exception):
 class Serial(threading.Thread):
 
    def __init__(self, start_deamon = False):
-      self.reset()
+      self.port = 1
+      self.baudrate = 9600
+      self.parity = 'N'
+      self.bytesize = 8
+      self.stopbits = 1
+      self.xonxoff = False
+      self.in_waiting = False
+      self.is_open = False
+      
+      self.msgs = [b''] # array of bytes
+      self.nbr_msgs = 0
+      self.writeBuf = b''
+
       threading.Thread.__init__(self)
       self.daemon=True
 
@@ -18,7 +30,7 @@ class Serial(threading.Thread):
    def run(self):
       while (True):
          try:
-            input_str = raw_input()
+            input_str = input()
          except EOFError: 
             raise SystemExit
 
@@ -28,17 +40,17 @@ class Serial(threading.Thread):
          time.sleep(0.1) 
 
    def reset(self):
-      self.port = 1
-      self.baudrate = 9600
-      self.parity = 'N'
-      self.bytesize = 8
-      self.stopbits = 1
-      self.xonxoff = False
+      #self.port = 1
+      #self.baudrate = 9600
+      #self.parity = 'N'
+      #self.bytesize = 8
+      #self.stopbits = 1
+      #self.xonxoff = False
       self.in_waiting = False
-      self.msgs = ['']
+      self.msgs = [b''] # array of bytes
       self.nbr_msgs = 0
-      self.writeBuf = ''
-      self.is_open = False
+      self.writeBuf = b'' #write() stores it's values here
+      #self.is_open = False
 
    def open(self):
       self.is_open = True
@@ -65,11 +77,20 @@ class Serial(threading.Thread):
          return retStr
 
    def write(self, b):
-      self.writeBuf += (b.decode('utf-8'))
+      """ 
+      b - data to send, dataype bytes
 
-   def stub_set_read(self, array_of_strings):
-      self.nbr_msgs = len(array_of_strings)
-      self.msgs = array_of_strings
+      Unicode strings must be encoded (e.g. 'hello'.encode('utf-8')
+      """
+      # make sure b is of datatype bytes
+      if isinstance(b, bytes):
+         self.writeBuf += b
+      else:
+         raise Exception("input must be bytes")
+
+   def stub_set_read(self, array_of_bytes):
+      self.nbr_msgs = len(array_of_bytes)
+      self.msgs = array_of_bytes
       
       if self.nbr_msgs > 0:
          self.in_waiting = True

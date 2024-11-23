@@ -30,7 +30,7 @@ class inputDeamon(threading.Thread):
 def main():
    id = inputDeamon()
    while 1: 
-      print "input_str = {}".format(id.get_input())
+      print("input_str = {}".format(id.get_input()))
       time.sleep(0.1)
 
 if (__name__ == '__main__'): 
