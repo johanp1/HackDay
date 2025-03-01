@@ -155,6 +155,14 @@ TEST(ScannerTestSuite, scannerTest)
       ASSERT_TRUE(checkPos(verticalAxisCtrl.GetPosition(), 0.0f));
    }
    
+   /* also test:
+   mode
+   hups
+   vups
+   rf
+   hi
+   vi
+   */
    //ASSERT_TRUE(checkJogDone(kVertical, 0.0f));
 
    // Test Set Horizontal end position /////////////////////////////////////////////

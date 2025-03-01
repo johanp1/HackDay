@@ -284,7 +284,6 @@ void ScannerCtrl<Lidar>::Scan()
   int distance;
   auto horizontal_pos = horizontalAxisCtrl_.GetPosition();
   auto vertical_pos = verticalAxisCtrl_.GetPosition();
-  String sendStr{"scan_"};
 
   if (++lidar_bias_correction_counter_ >= kLidarBiasCorrectionInterval)
   {

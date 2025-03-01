@@ -53,23 +53,23 @@ void setup() {
 
   EventHandler<void (&)(String&, StepGen*), StepGen>* step1Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step1"}, stepWrapper, &stepGen1);
   EventHandler<void (&)(String&, StepGen*), StepGen>* step2Handler = new EventHandler<void (&)(String&, StepGen*), StepGen>(String{"step2"}, stepWrapper, &stepGen2);
-  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
-  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"ham"}, axisAbsMoveWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHomeHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vam"}, axisAbsMoveWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setHorizontalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hups"}, setUnitsPerSecWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* setVerticalUPSHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vups"}, setUnitsPerSecWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* modeHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"mode"}, modeWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setLimitHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"set"}, setLimitWrapper, &scannerCtrl);
-  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
-  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setRowFirstHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"rf"}, setRowFirstWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setHorizontalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"hi"}, setHorizontalIncrementWrapper, &scannerCtrl);
   EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>* setVerticalIncrementHandler = new EventHandler<void (&)(String&, ScannerCtrl<LIDARLite>*), ScannerCtrl<LIDARLite>>(String{"vi"}, setVerticalIncrementWrapper, &scannerCtrl);
-  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
-  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
   EventHandler<void (&)(String&, JogHandler*), JogHandler>* horizontalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"hjog"}, JogHandler::JogStartHandler, &horizontalJogHandler);
   EventHandler<void (&)(String&, JogHandler*), JogHandler>* verticalJogHdlr = new EventHandler<void (&)(String&, JogHandler*), JogHandler>(String{"vjog"}, JogHandler::JogStartHandler, &verticalJogHandler);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hrm"}, axisRelMoveWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalMoveHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vrm"}, axisRelMoveWrapper, &verticalAxisCtrl);
+  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* verticalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"getv"}, getPosWrapper, &verticalAxisCtrl);
+  //EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>* horizontalGetHandler = new EventHandlerNoArg<void (&)(AxisCtrl*), AxisCtrl>(String{"geth"}, getPosWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* horizontalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"hjog"}, horizontalJogWrapper, &horizontalAxisCtrl);
+  //EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>* verticalJogHandler = new EventHandler<void (&)(String&, AxisCtrl*), AxisCtrl>(String{"vjog"}, verticalJogWrapper, &verticalAxisCtrl);
 
 
   cli();
