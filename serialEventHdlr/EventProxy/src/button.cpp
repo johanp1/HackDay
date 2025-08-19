@@ -3,11 +3,12 @@
 //   public:
 
 // constructor 
-Button::Button(const String& argName, const int argPin, const unsigned long argDebounceDelay) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay)
+Button::Button(const String& argName, const int argPin, const unsigned long argDebounceDelay, const bool flipped) : EventGenerator(argName), pin(argPin), debounceTime(argDebounceDelay), flipped_{flipped}
 {
   state = readCurrentState();
   prevState = state;
   time = 0;
+
   pinMode(pin, INPUT);
 }
 
@@ -15,7 +16,7 @@ Button::Button(const String& argName, const int argPin, const unsigned long argD
 void Button::scan(void)
 {
    ButtonState currState = readCurrentState();
-   
+
    if (currState != prevState)
    {
       time = millis();   // reset the debouncing timer
@@ -36,4 +37,18 @@ void Button::scan(void)
 ButtonState Button::getState()
 {
   return state;
+}
+
+ButtonState Button::readCurrentState()
+{
+   // xor
+   if (!(digitalRead(pin) == HIGH) != !flipped_) {
+      return BUTTON_PRESSED;
+   }
+   return BUTTON_RELEASED;
+}
+
+ButtonState ButtonPullup::readCurrentState() 
+{
+   return Button::readCurrentState() == BUTTON_PRESSED ? BUTTON_RELEASED : BUTTON_PRESSED;
 }

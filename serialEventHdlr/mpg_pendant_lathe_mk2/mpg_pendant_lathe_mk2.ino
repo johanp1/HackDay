@@ -89,7 +89,7 @@ void setup() {
   event_generators[2] = new ButtonPullup("jneg", kJogNegButtonPin, kButtonDebounceDelay);
   event_generators[2]->addEventListner(&sender);
 
-  event_generators[3] = new ButtonPullup("est", kEStopButtonPin, kButtonDebounceDelay);
+  event_generators[3] = new ButtonPullup("est", kEStopButtonPin, kButtonDebounceDelay, true);
   event_generators[3]->addEventListner(&sender);
 
   event_generators[4] = new Selector("sela", kAxisSelectorPin, kSelectorDebounceDelay, kSelectorStateVolts, kNbrOfSelectorStates, kSelectorStateValueUncertainty);

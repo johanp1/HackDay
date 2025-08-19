@@ -10,18 +10,19 @@ class Button : public EventGenerator
 {
  
  public:
-   Button(const String& argName, const int argPin, const unsigned long argDebounceDelay);
+   Button(const String& argName, const int argPin, const unsigned long argDebounceDelay, const bool flipped = false);
 
    virtual void scan(void);
    ButtonState getState();
    
-    virtual ButtonState readCurrentState() {return (unsigned int)digitalRead(pin) == LOW ? BUTTON_RELEASED : BUTTON_PRESSED;};
+    virtual ButtonState readCurrentState();
  protected:
    int pin;
    ButtonState state; // debounced buttons state
    ButtonState prevState;
    unsigned long debounceTime;
    unsigned long time;
+   bool flipped_;
 
   //private:
 };
@@ -29,11 +30,9 @@ class Button : public EventGenerator
 class ButtonPullup : public Button
 {
   public:
-    ButtonPullup(const String& argName, const int argPin, const unsigned long argDebounceDelay) : Button(argName, argPin, argDebounceDelay){pinMode(pin, INPUT_PULLUP); state = readCurrentState();};
+    ButtonPullup(const String& argName, const int argPin, const unsigned long argDebounceDelay, const bool flipped = false) : Button(argName, argPin, argDebounceDelay, flipped){pinMode(pin, INPUT_PULLUP); state = readCurrentState();};
 
-  //private:
-
-    ButtonState readCurrentState() override {return (unsigned int)digitalRead(pin) == LOW ? BUTTON_PRESSED : BUTTON_RELEASED;};
+    ButtonState readCurrentState() override;
 };
 
 #endif // __BUTTON_H__
